@@ -14,4 +14,7 @@ import java.util.List;
 public class Store extends Structure implements Source {
    private StoreType storeType;
 
+   public Store(StoreType storeType) {
+      this.storeType = storeType;
+   }
 }

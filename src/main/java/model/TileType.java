@@ -4,5 +4,5 @@ import lombok.Getter;
 
 @Getter
 public enum TileType {
-    GRASS(),FLOWER(),LAKE(),SNOW(),MUD();
+    GRASS(), FLOWER(), SNOW(), MUD(), FLAT(), PATH();
 }
