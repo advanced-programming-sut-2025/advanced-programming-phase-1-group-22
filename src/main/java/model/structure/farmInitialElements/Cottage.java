@@ -13,8 +13,20 @@ public class Cottage extends HardCodeFarmElements {
         super.setLength(6);
     }
 
+    public Cottage(HardCodeFarmElements hardCodeFarmElements) {
+        super(hardCodeFarmElements);
+    }
+
+    public Cottage() {
+    }
+
     @Override
     public void setWidth(Integer width) {
         super.setWidth(6);
+    }
+
+    @Override
+    public HardCodeFarmElements cloneEl() {
+        return new Cottage(this);
     }
 }

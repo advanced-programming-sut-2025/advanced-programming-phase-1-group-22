@@ -14,7 +14,7 @@ public enum FarmType {
     GRASS_FARM(50, 40), BLUE_FARM(60, 45), FLOWER_FARM(50, 40),
     ROCKY_FARM(60, 45),
     DESERT_FARM(40, 30);
-    private List<Structure> structures = new ArrayList<>();
+    private List<HardCodeFarmElements> structures = new ArrayList<>();
     private final Integer length;
     private final Integer width;
 

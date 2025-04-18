@@ -5,12 +5,14 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.util.List;
+
 @Getter
 @Setter
 @ToString
-public class Game  {
+public class Game {
     private Village village;
     private List<Player> players;
+    private Player currentPlayer;
     private List<NPCType> npcs;
     private List<Friendship> friendships;
     private TimeAndDate timeAndDate;
