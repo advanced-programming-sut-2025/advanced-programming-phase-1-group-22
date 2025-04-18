@@ -13,5 +13,12 @@ public class Tile {
     private Integer y;
     private Boolean isFilled = false;
     private Boolean isPassable = true;
-    private TileType tileType;
+    private TileType tileType = TileType.FLAT;
+
+    public Tile(Integer x, Integer y) {
+        this.x = x;
+        this.y = y;
+    }
+
+
 }
