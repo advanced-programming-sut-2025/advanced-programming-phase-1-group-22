@@ -1,0 +1,27 @@
+package command;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public enum GameMenuCommand implements Command{
+	SHOW_ENERGY("show\\s+energy"),
+	ENERGY_SET("set\\+energy\\s+-v\\s+(\\d+)"),
+	SET_ENERGY_UNLIMITED("energy\\s+unlimited"),
+	SHOW_INVENTORY("inventory\\s+show"),
+	;
+	private final String pattern;
+
+	GameMenuCommand(String pattern) {
+		this.pattern = pattern;
+	}
+
+	@Override
+	public Matcher getMatcher(String input) {
+		Matcher matcher = Pattern.compile(this.pattern).matcher(input);
+
+		if (matcher.matches()) {
+			return matcher;
+		}
+		return null;
+	}
+}
