@@ -5,6 +5,7 @@ import model.enums.Season;
 import model.products.Product;
 
 import java.util.List;
+
 @Getter
 public enum CropType implements Product {
     BLUE_JAZZ("Blue Jazz", (SeedType.JAZZ_SEEDS), List.
@@ -233,7 +234,11 @@ public enum CropType implements Product {
              boolean isForaging) {
         this.name = name;
         this.source = source;
-        this.harvestStages = List.copyOf(harvestStages);
+        if (harvestStages != null) {
+            this.harvestStages = List.copyOf(harvestStages);
+        } else {
+            this.harvestStages = null;
+        }
         this.oneTime = oneTime;
         this.regrowthTime = regrowthTime;
         this.baseSellPrice = baseSellPrice;

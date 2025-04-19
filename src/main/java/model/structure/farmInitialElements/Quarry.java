@@ -9,16 +9,9 @@ public class Quarry extends HardCodeFarmElements {
     public Quarry(Quarry quarry) {
         super(quarry);
     }
-public Quarry() {
 
-}
-    @Override
-    public void setLength(Integer length) {
+    public Quarry() {
         super.setLength(12);
-    }
-
-    @Override
-    public void setWidth(Integer width) {
         super.setWidth(12);
     }
 

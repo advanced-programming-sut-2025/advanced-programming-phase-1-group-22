@@ -9,16 +9,10 @@ public class Lake extends HardCodeFarmElements {
     public Lake(Lake lake) {
         super(lake);
     }
-public Lake() {
-}
-    @Override
-    public void setLength(Integer length) {
-        super.setLength(-1);
-    }
 
-    @Override
-    public void setWidth(Integer width) {
+    public Lake() {
         super.setWidth(-1);
+        super.setLength(-1);
     }
 
     @Override

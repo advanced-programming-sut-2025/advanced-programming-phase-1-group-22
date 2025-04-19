@@ -6,6 +6,7 @@ import model.structure.Structure;
 import model.structure.farmInitialElements.HardCodeFarmElements;
 import utils.App;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -14,18 +15,24 @@ import java.util.Random;
 @Setter
 public class Farm {
 
-    private List<Tile> tiles;
-    private List<Player> players;
-    private List<Structure> structures;
+    private List<Tile> tiles = new ArrayList<>();
+    private List<Player> players = new ArrayList<>();
+    private List<Structure> structures = new ArrayList<>();
     private Integer xCenter;
     private Integer yCenter;
     private FarmType farmType;
     private App app = App.getInstance();
-    private Integer farmXStart = xCenter - farmType.getLength() / 2;
-    private Integer farmYStart = yCenter - farmType.getWidth() / 2;
-    private Integer farmXEnd = xCenter + farmType.getLength() / 2;
-    private Integer farmYEnd = yCenter + farmType.getWidth() / 2;
+    private Integer farmXStart;
+    private Integer farmYStart;
+    private Integer farmXEnd;
+    private Integer farmYEnd;
     private Integer farmIndex = 0;
+
+    public Farm(Player player, FarmType farmType) {
+        this.players.add(player);
+        this.farmType = farmType;
+
+    }
 
     public void fillFarmType(int i) {
         farmIndex = i;
@@ -47,6 +54,14 @@ public class Farm {
                 yCenter = 96;
             }
         }
+        farmXStart = xCenter - farmType.getLength() / 2;
+        farmYStart = yCenter - farmType.getWidth() / 2;
+        farmXEnd = xCenter + farmType.getLength() / 2;
+        farmYEnd = yCenter + farmType.getWidth() / 2;
+        setFarmTiles();
+        getClone();
+        setFence();
+        setDoor();
     }
 
     public void setFarmTiles() {
@@ -58,7 +73,7 @@ public class Farm {
     public void getClone() {
         for (HardCodeFarmElements structure : farmType.getStructures()) {
             HardCodeFarmElements cloneEl = structure.cloneEl();
-
+            transmission(cloneEl);
             structures.add(cloneEl);
         }
     }
@@ -82,8 +97,8 @@ public class Farm {
 
     public void setDoor() {
         Random random = new Random();
-        int xRand = random.nextInt(farmYStart, farmYEnd);
-        int yRand = random.nextInt(farmXStart, farmXEnd);
+        int yRand = random.nextInt(farmYStart, farmYEnd);
+        int xRand = random.nextInt(farmXStart, farmXEnd);
         int xConst = 0;
         int yConst = 0;
         switch (farmIndex) {
