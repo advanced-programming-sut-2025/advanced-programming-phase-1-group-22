@@ -5,4 +5,9 @@ import model.Salable;
 @Getter
 public class Hay implements Salable {
     private final Integer price = 50 / 2;
+
+    @Override
+    public String getName() {
+        return "hay";
+    }
 }

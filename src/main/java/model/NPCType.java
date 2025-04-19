@@ -58,7 +58,7 @@ public enum NPCType {
                             Map.of(MineralType.GOLD, 500), 0),
                     new Mission(NPCType.valueOf("LIA"),
                             Map.of(FishType.SALMON, 1),
-                            Map.of(new Recipe("A receipe to make Salmon Dinner", 0), 1), 1),
+                            Map.of(new Recipe("salmon dinner recipe","A receipe to make Salmon Dinner", 0), 1), 1),
                     new Mission(NPCType.valueOf("LIA"),
                             Map.of(MineralType.WOOD, 200),
                             Map.of(CraftType.DELUXE_SCARECROW, 3), Season.SUMMER)));

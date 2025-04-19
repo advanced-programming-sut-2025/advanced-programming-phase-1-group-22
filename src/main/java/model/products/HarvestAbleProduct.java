@@ -58,4 +58,9 @@ public abstract class HarvestAbleProduct extends Structure implements Salable {
                 ", isEnormosable=" + isEnormosable +
                 '}';
     }
+
+    @Override
+    public String getName(){
+        return this.name.toLowerCase();
+    }
 }

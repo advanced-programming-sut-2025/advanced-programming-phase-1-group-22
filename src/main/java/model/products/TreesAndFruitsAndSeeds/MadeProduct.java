@@ -9,4 +9,9 @@ import model.products.Product;
 public class MadeProduct implements Salable {
     private MadeProductType madeProducts;
     private Integer price;
+
+    @Override
+    public String getName() {
+        return this.madeProducts.getName().toLowerCase();
+    }
 }

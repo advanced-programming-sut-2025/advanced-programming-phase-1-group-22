@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 @Getter
 public enum MixedSeedsType implements Source{
-    SPRING {
+    SPRING ("spring mixed seed"){
         @Override
         protected void initialize() {
             seedTypeList.add(SeedType.CAULIFLOWER_SEEDS);
@@ -20,7 +20,7 @@ public enum MixedSeedsType implements Source{
             seedTypeList.add(SeedType.STRAWBERRY_SEEDS);
         }
     },
-    SUMMER {
+    SUMMER ("summer mixed seed") {
         @Override
         protected void initialize() {
             seedTypeList.add(SeedType.CORN_SEEDS);
@@ -34,7 +34,7 @@ public enum MixedSeedsType implements Source{
             seedTypeList.add(SeedType.TOMATO_SEEDS);
         }
     },
-    FALL {
+    FALL ("fall mixed seed") {
         @Override
         protected void initialize() {
             seedTypeList.add(SeedType.ARTICHOKE_SEEDS);
@@ -48,19 +48,25 @@ public enum MixedSeedsType implements Source{
             seedTypeList.add(SeedType.CRANBERRY_SEEDS);
         }
     },
-    WINTER {
+    WINTER ("winter mixed seed") {
         @Override
         protected void initialize() {
             seedTypeList.add(SeedType.POWDERMELON_SEEDS);
         }
     };
 
+    private final String name;
     protected final List<SeedType> seedTypeList;
 
-    MixedSeedsType() {
+    MixedSeedsType(String name) {
+        this.name = name;
         this.seedTypeList = new ArrayList<>();
         initialize();
     }
 
     protected abstract void initialize();
+
+    public String getName(){
+        return this.name.toLowerCase();
+    }
 }

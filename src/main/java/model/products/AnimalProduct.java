@@ -12,4 +12,9 @@ public class AnimalProduct implements Salable {
     public AnimalProduct(AnimalProductType animalProductType) {
         this.animalProductType = animalProductType;
     }
+
+    @Override
+    public String getName() {
+        return this.animalProductType.getName();
+    }
 }

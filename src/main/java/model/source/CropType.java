@@ -232,4 +232,9 @@ public enum CropType implements Product {
     public int getSellPrice() {
         return baseSellPrice;
     }
+
+    @Override
+    public String getName(){
+        return this.name.toLowerCase();
+    }
 }

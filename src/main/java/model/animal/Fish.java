@@ -11,12 +11,16 @@ import model.products.Product;
 @Setter
 @ToString
 public class Fish implements Salable {
-    private String name;
-    private FishType fishType;
-    private Integer containingEnergy = 20; //TODO Energy not found
-    private Season season;
+	private FishType fishType;
+	private Integer containingEnergy = 20; //TODO Energy not found
+	private Season season;
 
-    public int getSellPrice() {
-        return this.fishType.getSellPrice();
-    }
+	public int getSellPrice() {
+		return this.fishType.getSellPrice();
+	}
+
+	@Override
+	public String getName() {
+		return this.fishType.getName();
+	}
 }

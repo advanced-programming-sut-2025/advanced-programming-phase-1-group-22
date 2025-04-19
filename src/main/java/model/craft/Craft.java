@@ -12,4 +12,9 @@ import model.structure.Structure;
 public class Craft extends Structure implements Salable {
     private Integer id;
     private CraftType craftType;
+
+    @Override
+    public String getName() {
+        return this.craftType.getName();
+    }
 }

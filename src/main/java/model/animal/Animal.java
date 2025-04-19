@@ -20,4 +20,8 @@ public class Animal extends Structure implements Salable {
     private Boolean shaving = false;
     private Boolean grassEaten = false;
 
+    @Override
+    public String getName() {
+        return this.animalType.getName();
+    }
 }
