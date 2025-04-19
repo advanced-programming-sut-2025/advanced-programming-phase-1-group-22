@@ -64,4 +64,9 @@ public enum SeedType implements Source {
         this.season = season;
         this.isForaging = isForaging;
     }
+
+    @Override
+    public String getName(){
+        return this.name.toLowerCase();
+    }
 }

@@ -5,11 +5,17 @@ import model.products.Product;
 
 @Getter
 public enum TrashCan implements Tool {
-    NORMAL(0), CUPPER(15), IRON(30),
-    GOLD(45), IRIDIUM(65);
+    NORMAL("normal trashcan",0),
+    CUPPER("cupper trashcan",15),
+    IRON("iron trashcan",30),
+    GOLD("gold trashcan",45),
+    IRIDIUM("iridium trashcan",65);
+
+    private final String name;
     private final Integer prunedValue;
 
-    TrashCan(int prunedValue) {
+    TrashCan(String name,int prunedValue) {
+        this.name = name;
         this.prunedValue = prunedValue;
     }
 
@@ -20,5 +26,10 @@ public enum TrashCan implements Tool {
     @Override
     public void addToolEfficiency(double efficiency) {
 
+    }
+
+    @Override
+    public String getName() {
+        return this.name.toLowerCase();
     }
 }

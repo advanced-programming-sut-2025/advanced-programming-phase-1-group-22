@@ -21,4 +21,9 @@ public class Crop extends HarvestAbleProduct implements Source {
                 cropType1.getEnergy(), cropType1.getSeasons(), cropType1.isCanBecomeGiant());
         this.cropType = cropType1;
     }
+
+    @Override
+    public String getName(){
+        return this.cropType.getName();
+    }
 }

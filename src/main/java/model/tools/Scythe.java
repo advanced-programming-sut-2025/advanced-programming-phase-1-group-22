@@ -14,4 +14,9 @@ public class Scythe implements Tool {
     public void addToolEfficiency(double efficiency) {
 
     }
+
+    @Override
+    public String getName() {
+        return "scythe";
+    }
 }

@@ -27,4 +27,16 @@ public class GameMenuController extends MenuController {
 			throw new InvalidInputException("there is no player");
 		}
 	}
+
+	public String showPlayerInventory(){
+		try {
+			return App.getInstance().getCurrentGame().getCurrentPlayer().getInventory().showInventory();
+		} catch (Exception e) {
+			throw new InvalidInputException("the inventory is empty");
+		}
+	}
+
+	public void removeFromPlayerInventory(String itemName){
+
+	}
 }

@@ -8,4 +8,9 @@ import model.Salable;
 public class Food implements Salable {
     private Integer id;
     private FoodType foodType;
+
+    @Override
+    public String getName() {
+        return this.foodType.getName();
+    }
 }

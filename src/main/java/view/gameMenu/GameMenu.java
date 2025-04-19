@@ -21,6 +21,8 @@ public class GameMenu extends Menu {
 		} else if ((matcher = GameMenuCommand.SET_ENERGY_UNLIMITED.getMatcher(input.trim()))!=null) {
 			gameMenuController.setPlayerUnlimitedEnergy();
 		} else if ((matcher = GameMenuCommand.SHOW_INVENTORY.getMatcher(input.trim()))!=null) {
+			System.out.println(gameMenuController.showPlayerInventory());
+		} else if ((matcher = GameMenuCommand.REMOVE_FROM_INVENTORY.getMatcher(input.trim()))!=null) {
 
 		}
 	}

@@ -11,7 +11,7 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-public class Store extends Structure implements Source {
+public class Store extends Structure{
    private StoreType storeType;
 
    public Store(StoreType storeType) {

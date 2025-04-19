@@ -6,7 +6,7 @@ import model.receipe.Recipe;
 import model.tools.FishingPole;
 @Getter
 public enum FishShopStuff {
-	FISH_SMOKER_RECIPE(new Recipe("A recipe to make Fish Smoker",10000),10000,0,1),
+	FISH_SMOKER_RECIPE(new Recipe("fish smoker recipe","A recipe to make Fish Smoker",10000),10000,0,1),
 	BAMBOO_POLE(FishingPole.BAMBOO,500,0,1),
 	TRAINING_ROD(FishingPole.TRAINING,25,0,1),
 	FIBERGLASS_ROD(FishingPole.FIBER_GLASS,1800,2,1),

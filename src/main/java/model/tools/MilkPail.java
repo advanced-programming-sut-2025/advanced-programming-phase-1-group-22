@@ -23,4 +23,9 @@ public class MilkPail implements Tool {
     public void addToolEfficiency(double efficiency) {
 
     }
+
+    @Override
+    public String getName() {
+        return "milkpail";
+    }
 }
