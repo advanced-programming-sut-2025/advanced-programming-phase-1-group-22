@@ -27,16 +27,36 @@ public class Player extends Actor {
     private Player couple;
     private List<Trade> gootenTradeList;
     private Boolean isFainted;
+
     public void faint(){
-
+        isFainted = true;
+        energy = 0;
     }
+
     public void changeEnergy(int currentEnergy){
-
-
-
+        if (energyIsInfinite){
+            energy += currentEnergy;
+        }
+        else {
+            energy = Math.min(energy + currentEnergy,maxEnergy);
+        }
     }
 
     public void resetEnergy(){
+        maxEnergy = 200;
+        if (isFainted){
+            energy = (int) (maxEnergy * 0.75);
+            isFainted = false;
+        }
+        else {
+            energy = maxEnergy;
+        }
+    }
 
+    public void setEnergyIsInfinite(Boolean energyIsInfinite) {
+        if (!energyIsInfinite){
+            energy = Math.min(energy,maxEnergy);
+        }
+        this.energyIsInfinite = energyIsInfinite;
     }
 }
