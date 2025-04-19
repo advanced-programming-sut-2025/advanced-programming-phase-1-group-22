@@ -8,20 +8,13 @@ import model.structure.Structure;
 @Getter
 @Setter
 public class Cottage extends HardCodeFarmElements {
-    @Override
-    public void setLength(Integer length) {
-        super.setLength(6);
-    }
 
     public Cottage(HardCodeFarmElements hardCodeFarmElements) {
         super(hardCodeFarmElements);
     }
 
     public Cottage() {
-    }
-
-    @Override
-    public void setWidth(Integer width) {
+        super.setLength(6);
         super.setWidth(6);
     }
 

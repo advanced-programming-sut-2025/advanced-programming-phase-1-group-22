@@ -11,16 +11,9 @@ public class GreenHouse extends HardCodeFarmElements {
     public GreenHouse(GreenHouse greenHouse) {
         super(greenHouse);
     }
+
     public GreenHouse() {
-
-    }
-    @Override
-    public void setLength(Integer length) {
         super.setLength(12);
-    }
-
-    @Override
-    public void setWidth(Integer width) {
         super.setWidth(10);
     }
 

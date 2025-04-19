@@ -8,6 +8,7 @@ import model.structure.stores.Store;
 import model.structure.stores.StoreType;
 import utils.App;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -16,17 +17,22 @@ import java.util.Random;
 @ToString
 public class Village {
     private List<Tile> tiles;
-    private List<Farm> farms;
-    private List<Structure> structures;
+    private List<Farm> farms=new ArrayList<>();
+    private List<Structure> structures=new ArrayList<>();
     private App app = App.getInstance();
 
     public Village() {
         fillStructures();
-        fillFarms();
     }
 
     public void shuffleFarms() {
-
+        Random random = new Random();
+        for (int i = 3; i > 0; i--) {
+            int j = random.nextInt(i + 1);
+            Farm temp = farms.get(i);
+            farms.set(i, farms.get(j));
+            farms.set(j, temp);
+        }
     }
 
     public void fillFarms() {

@@ -1,20 +1,20 @@
 package model.structure.farmInitialElements;
 
 import lombok.Getter;
-import lombok.Setter;
 import model.Pair;
 import model.structure.Structure;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-@Setter
 public abstract class HardCodeFarmElements extends Structure {
-    List<Pair> tilePairList;
+    List<Pair> tilePairList=new ArrayList<>();
     private Integer length;
     private Integer width;
 
     public HardCodeFarmElements() {
+
     }
 
     public HardCodeFarmElements(HardCodeFarmElements hardCodeFarmElements) {
@@ -24,4 +24,16 @@ public abstract class HardCodeFarmElements extends Structure {
     }
 
     public abstract HardCodeFarmElements cloneEl();
+
+    public void setTilePairList(List<Pair> tilePairList) {
+        this.tilePairList = tilePairList;
+    }
+
+    public void setLength(Integer length) {
+        this.length = length;
+    }
+
+    public void setWidth(Integer width) {
+        this.width = width;
+    }
 }
