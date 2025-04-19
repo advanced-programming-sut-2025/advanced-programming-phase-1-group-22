@@ -2,7 +2,13 @@ package model;
 
 import lombok.Getter;
 import lombok.Setter;
-import model.structure.Structure;
+import model.products.TreesAndFruitsAndSeeds.Tree;
+import model.products.TreesAndFruitsAndSeeds.TreeType;
+import model.source.Crop;
+import model.source.CropType;
+import model.source.Seed;
+import model.source.SeedType;
+import model.structure.*;
 import model.structure.farmInitialElements.HardCodeFarmElements;
 import utils.App;
 
@@ -31,7 +37,6 @@ public class Farm {
     public Farm(Player player, FarmType farmType) {
         this.players.add(player);
         this.farmType = farmType;
-
     }
 
     public void fillFarmType(int i) {
@@ -80,18 +85,24 @@ public class Farm {
 
     public void transmission(HardCodeFarmElements farmElements) {
         for (Pair pair : farmElements.getTilePairList()) {
-            farmElements.getTiles().add(app.getCurrentGame().tiles[pair.getX() + farmXStart][pair.getY() + farmYStart]);
+            Tile tile = app.getCurrentGame().tiles[pair.getX() + farmXStart][pair.getY() + farmYStart];
+            tile.setIsFilled(true);
+            farmElements.getTiles().add(tile);
         }
     }
 
     public void setFence() {
         for (int i = farmXStart; i < farmXEnd; i++) {
             app.getCurrentGame().getTiles()[i][farmYStart].setTileType(TileType.FENCE);
+            app.getCurrentGame().getTiles()[i][farmYStart].setIsFilled(true);
             app.getCurrentGame().getTiles()[i][farmYEnd].setTileType(TileType.FENCE);
+            app.getCurrentGame().getTiles()[i][farmYEnd].setIsFilled(true);
         }
         for (int i = farmYStart; i < farmYEnd; i++) {
             app.getCurrentGame().getTiles()[farmXStart][i].setTileType(TileType.FENCE);
+            app.getCurrentGame().getTiles()[farmXStart][i].setIsFilled(true);
             app.getCurrentGame().getTiles()[farmXEnd][i].setTileType(TileType.FENCE);
+            app.getCurrentGame().getTiles()[farmXEnd][i].setIsFilled(true);
         }
     }
 
@@ -122,4 +133,103 @@ public class Farm {
         app.getCurrentGame().getTiles()[xRand][yConst].setTileType(TileType.DOOR);
         app.getCurrentGame().getTiles()[xConst][yRand].setTileType(TileType.DOOR);
     }
+
+    public void generateRandomStructures() {
+        Random random = new Random();
+        int trunkRand = random.nextInt(10, 12);
+        int stoneRand = random.nextInt(12, 15);
+        int foragingRand = random.nextInt(14, 18);
+        int foragingRand2 = random.nextInt(12, 16);
+        for (int i = 0; i < trunkRand; i++) {
+            Trunk trunk = null;
+            switch (trunkRand % 3) {
+                case 0 -> {
+                    trunk = new Trunk(TrunkType.SMALL_TRUNK);
+                }
+                case 1 -> {
+                    trunk = new Trunk(TrunkType.NORMAL_TRUNK);
+                }
+                case 2 -> {
+                    trunk = new Trunk(TrunkType.LARGE_TRUNK);
+                }
+            }
+            setStructurePlace(trunk, trunk.getTrunkType().getLength(), trunk.getTrunkType().getWidth());
+        }
+        for (int i = 0; i < stoneRand; i++) {
+            Stone stone = null;
+            switch (stoneRand % 3) {
+                case 0 -> {
+                    stone = new Stone(StoneType.SMALL_STONE);
+                }
+                case 1 -> {
+                    stone = new Stone(StoneType.NORMAL_STONE);
+                }
+                case 2 -> {
+                    stone = new Stone(StoneType.LARGE_STONE);
+
+                }
+            }
+            setStructurePlace(stone, stone.getStoneType().getLength(), stone.getStoneType().getWidth());
+        }
+
+        for (int i = 0; i < foragingRand; i++) {
+            int foragingRandSeed = random.nextInt(0, 41);
+            Seed seed = new Seed(SeedType.values()[foragingRandSeed]);
+            setStructurePlace(seed, 1, 1);
+            int cropRand = random.nextInt(0, 21);
+            Crop crop = new Crop(CropType.values()[cropRand]);
+            setStructurePlace(crop, 1, 1);
+        }
+        for (int i = 0; i < foragingRand2; i++) {
+            int foragingRandTree = random.nextInt(0, 5);
+            Tree tree = new Tree(TreeType.values()[foragingRandTree]);
+            setStructurePlace(tree, 1, 1);
+        }
+    }
+
+    public void setStructurePlace(Structure structure, int length, int width) {
+        Tile[][] tiles1 = app.getCurrentGame().tiles;
+        List<Tile> tiles2 = new ArrayList<>();
+        boolean flag = true;
+        Random random = new Random();
+        int randX = -1;
+        int randY = -1;
+        for (int i = 0; i < 30; i++) {
+            randX = random.nextInt(farmXStart, farmXEnd);
+            randY = random.nextInt(farmYStart, farmYEnd);
+            for (int j = randX; j < randX + length; j++) {
+                for (int k = randY; k < randY + width; k++) {
+                    if (tiles1[j][k].getIsFilled()) {
+                        flag = false;
+                    } else {
+                        tiles2.add(tiles1[j][k]);
+                    }
+                }
+            }
+            if (flag) {
+                structure.getTiles().addAll(tiles2);
+                this.getStructures().add(structure);
+                return;
+            }
+            tiles2.clear();
+        }
+
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

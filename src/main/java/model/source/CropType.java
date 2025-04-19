@@ -174,47 +174,26 @@ public enum CropType implements Product {
             List.of(Season.SPRING, Season.SUMMER, Season.FALL), false, false),
 
     COMMON_MUSHROOM("Common Mushroom", null, null, true, 0, 40, true, 38, List.of(Season.SPECIAL), false, true),
-
     DAFFODIL("Daffodil", null, null, true, 0, 30, false, 0, List.of(Season.SPRING), false, true),
-
     DANDELION("Dandelion", null, null, true, 0, 40, true, 25, List.of(Season.SPRING), false, true),
-
     LEEK("Leek", null, null, true, 0, 60, true, 40, List.of(Season.SPRING), false, true),
-
     MOREL("Morel", null, null, true, 0, 150, true, 20, List.of(Season.SPRING), false, true),
-
     SALMONBERRY("Salmonberry", null, null, true, 0, 5, true, 25, List.of(Season.SPRING), false, true),
-
     SPRING_ONION("Spring Onion", null, null, true, 0, 8, true, 13, List.of(Season.SPRING), false, true),
-
     WILD_HORSERADISH("Wild Horseradish", null, null, true, 0, 50, true, 13, List.of(Season.SPRING), false, true),
-
     FIDDLEHEAD_FERN("Fiddlehead Fern", null, null, true, 0, 90, true, 25, List.of(Season.SUMMER), false, true),
-
     RED_MUSHROOM("Red Mushroom", null, null, true, 0, 75, true, -50, List.of(Season.SUMMER), false, true),
-
     SPICE_BERRY("Spice Berry", null, null, true, 0, 80, true, 25, List.of(Season.SUMMER), false, true),
-
     SWEET_PEA("Sweet Pea", null, null, true, 0, 50, false, 0, List.of(Season.SUMMER), false, true),
-
     BLACKBERRY("Blackberry", null, null, true, 0, 25, true, 25, List.of(Season.FALL), false, true),
-
     CHANTERELLE("Chanterelle", null, null, true, 0, 160, true, 75, List.of(Season.FALL), false, true),
-
     HAZELNUT("Hazelnut", null, null, true, 0, 40, true, 38, List.of(Season.FALL), false, true),
-
     PURPLE_MUSHROOM("Purple Mushroom", null, null, true, 0, 90, true, 30, List.of(Season.FALL), false, true),
-
     WILD_PLUM("Wild Plum", null, null, true, 0, 80, true, 25, List.of(Season.FALL), false, true),
-
     CROCUS("Crocus", null, null, true, 0, 60, false, 0, List.of(Season.WINTER), false, true),
-
     CRYSTAL_FRUIT("Crystal Fruit", null, null, true, 0, 150, true, 63, List.of(Season.WINTER), false, true),
-
     HOLLY("Holly", null, null, true, 0, 80, true, -37, List.of(Season.WINTER), false, true),
-
     SNOW_YAM("Snow Yam", null, null, true, 0, 100, true, 30, List.of(Season.WINTER), false, true),
-
     WINTER_ROOT("Winter Root", null, null, true, 0, 70, true, 25, List.of(Season.WINTER), false, true);
 
     private final String name;

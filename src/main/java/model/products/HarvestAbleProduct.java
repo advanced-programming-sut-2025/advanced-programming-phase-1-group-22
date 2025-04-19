@@ -6,12 +6,13 @@ import model.Salable;
 import model.enums.Season;
 import model.source.Seed;
 import model.source.Source;
+import model.structure.Structure;
 
 import java.util.List;
 
 @Getter
 @Setter
-public abstract class HarvestAbleProduct implements Salable {
+public abstract class HarvestAbleProduct extends Structure implements Salable {
     private Integer id;
     private String name;
     private Source source;
