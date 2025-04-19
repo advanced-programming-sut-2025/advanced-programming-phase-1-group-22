@@ -1,8 +1,11 @@
-import utils.InitialGame;
+import jakarta.persistence.EntityManagerFactory;
+import utils.HibernateUtil;
+import view.ViewRender;
 
 public class Main {
     public static void main(String[] args) {
-        InitialGame initialGame = new InitialGame();
-        initialGame.initial();
+        EntityManagerFactory entityManagerFactory = HibernateUtil.getEntityManagerFactory();
+        entityManagerFactory.createEntityManager();
+        new ViewRender().run();
     }
 }
