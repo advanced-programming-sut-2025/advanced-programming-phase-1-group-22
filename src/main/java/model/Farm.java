@@ -46,11 +46,11 @@ public class Farm {
                 yCenter = 23;
             }
             case 2 -> {
-                xCenter = 30;
                 yCenter = 96;
+                xCenter = 129;
             }
             case 3 -> {
-                xCenter = 129;
+                xCenter = 30;
                 yCenter = 96;
             }
         }
@@ -80,7 +80,7 @@ public class Farm {
 
     public void transmission(HardCodeFarmElements farmElements) {
         for (Pair pair : farmElements.getTilePairList()) {
-            tiles.add(app.getCurrentGame().tiles[pair.getX() + farmXStart][pair.getY() + farmYStart]);
+            farmElements.getTiles().add(app.getCurrentGame().tiles[pair.getX() + farmXStart][pair.getY() + farmYStart]);
         }
     }
 

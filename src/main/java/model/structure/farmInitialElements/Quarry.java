@@ -11,8 +11,8 @@ public class Quarry extends HardCodeFarmElements {
     }
 
     public Quarry() {
-        super.setLength(12);
-        super.setWidth(12);
+        super.setLength(10);
+        super.setWidth(10);
     }
 
     @Override

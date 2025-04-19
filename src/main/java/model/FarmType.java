@@ -60,7 +60,7 @@ public enum FarmType {
         Quarry quarry = new Quarry();
         GreenHouse greenHouse = new GreenHouse();
         Lake lake = new Lake();
-        setTilePairs(cottage, new Pair(6, 20));
+        setTilePairs(cottage, new Pair(6, 27));
         setTilePairs(greenHouse, new Pair(45, 3));
         setTilePairs(quarry, new Pair(45, 30));
         for (int i = 4; i < 14; i++) {
