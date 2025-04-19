@@ -15,7 +15,8 @@ public class InitialGame {
             npc.setMissions();
         }
         for (int i = 0; i < 4; i++) {
-            village.getFarms().add(new Farm(new Player(), FarmType.values()[i + 1]));
+            Farm farm = new Farm(new Player(), FarmType.values()[i + 1]);
+            village.getFarms().add(farm);
         }
         village.fillFarms();
         printMap(game);
@@ -36,9 +37,7 @@ public class InitialGame {
             }
         }
         for (Farm farm : game.getVillage().getFarms()) {
-//            System.err.println(farm.getStructures().size());
             for (Structure structure : farm.getStructures()) {
-//                System.err.println(structure.getTiles().size());
                 for (Tile tile : structure.getTiles()) {
                     str[tile.getX()][tile.getY()] = '1';
                 }

@@ -9,4 +9,8 @@ import model.structure.Structure;
 @ToString
 public class Tree extends Structure {
     TreeType treeType;
+
+    public Tree(TreeType treeType) {
+        this.treeType = treeType;
+    }
 }

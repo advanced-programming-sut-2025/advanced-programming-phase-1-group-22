@@ -40,6 +40,7 @@ public class Village {
         for (int i = 0; i < farms.size(); i++) {
             Farm farm = farms.get(i);
             farm.fillFarmType(i);
+            farm.generateRandomStructures();
         }
     }
 
@@ -100,6 +101,7 @@ public class Village {
         for (int i = 57; i < 63; i++) {
             for (int j = 77; j < 83; j++) {
                 fountain.getTiles().add(app.getCurrentGame().tiles[j][i]);
+                app.getCurrentGame().tiles[i][j].setIsFilled(true);
             }
         }
         structures.add(fountain);
@@ -150,6 +152,7 @@ public class Village {
         for (int i = xStart; i < xEnd; i++) {
             for (int j = yStart; j < yEnd; j++) {
                 store.getTiles().add(app.getCurrentGame().tiles[i][j]);
+                app.getCurrentGame().tiles[i][j].setIsFilled(true);
             }
         }
     }
@@ -158,6 +161,7 @@ public class Village {
         for (int i = xStart; i < xEnd; i++) {
             for (int j = yStart; j < yEnd; j++) {
                 NPC.getTiles().add(app.getCurrentGame().tiles[i][j]);
+                app.getCurrentGame().tiles[i][j].setIsFilled(true);
             }
         }
     }
