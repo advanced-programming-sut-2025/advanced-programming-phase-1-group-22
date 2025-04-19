@@ -13,8 +13,8 @@ public class GreenHouse extends HardCodeFarmElements {
     }
 
     public GreenHouse() {
-        super.setLength(12);
-        super.setWidth(10);
+        super.setLength(8);
+        super.setWidth(7);
     }
 
     @Override

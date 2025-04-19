@@ -17,8 +17,8 @@ import java.util.Random;
 @ToString
 public class Village {
     private List<Tile> tiles;
-    private List<Farm> farms=new ArrayList<>();
-    private List<Structure> structures=new ArrayList<>();
+    private List<Farm> farms = new ArrayList<>();
+    private List<Structure> structures = new ArrayList<>();
     private App app = App.getInstance();
 
     public Village() {
@@ -70,20 +70,20 @@ public class Village {
 
         StoreType marnieShop = StoreType.MARNIE_SHOP;
         randomNumber = getRandomNumber(1, 9);
-        addStores(marnieShop, randomNumber, 61, false);
+        addStores(marnieShop, randomNumber, 63, false);
 
         NPCType lia = NPCType.LIA;
         randomNumber = getRandomNumber(29, 37);
-        addNPC(lia, randomNumber, 61, false);
+        addNPC(lia, randomNumber, 66, false);
 
 
         NPCType ebigil = NPCType.EBIGIL;
         randomNumber = getRandomNumber(100, 112);
-        addNPC(ebigil, randomNumber, 61, false);
+        addNPC(ebigil, randomNumber, 66, false);
 
         NPCType harvey = NPCType.HARVEY;
         randomNumber = getRandomNumber(132, 145);
-        addNPC(harvey, randomNumber, 61, false);
+        addNPC(harvey, randomNumber, 66, false);
 
         NPCType rabin = NPCType.RABIN;
         randomNumber = getRandomNumber(30, 40);
@@ -99,7 +99,7 @@ public class Village {
         Fountain fountain = new Fountain();
         for (int i = 57; i < 63; i++) {
             for (int j = 77; j < 83; j++) {
-                fountain.getTiles().add(app.getCurrentGame().tiles[i][j]);
+                fountain.getTiles().add(app.getCurrentGame().tiles[j][i]);
             }
         }
         structures.add(fountain);
@@ -109,20 +109,14 @@ public class Village {
     private void setPath() {
         for (int i = 57; i < 63; i++) {
             for (int j = 0; j < 160; j++) {
-                for (Tile[] tile : app.getCurrentGame().tiles) {
-                    for (Tile tile1 : tile) {
-                        tile1.setTileType(TileType.PATH);
-                    }
-                }
+                Tile tile = app.getCurrentGame().tiles[j][i];
+                tile.setTileType(TileType.PATH);
             }
         }
         for (int i = 0; i < 120; i++) {
             for (int j = 77; j < 83; j++) {
-                for (Tile[] tile : app.getCurrentGame().tiles) {
-                    for (Tile tile1 : tile) {
-                        tile1.setTileType(TileType.PATH);
-                    }
-                }
+                Tile tile = app.getCurrentGame().tiles[j][i];
+                tile.setTileType(TileType.PATH);
             }
         }
     }
@@ -140,9 +134,9 @@ public class Village {
     public void addNPC(NPCType NPCType, int xStart, int yStart, boolean vertical) {
         NPC npc = new NPC(NPCType);
         if (vertical) {
-            setTileOfNPC(npc, xStart, yStart, xStart + 8, yStart + 12);
+            setTileOfNPC(npc, xStart, yStart, xStart + 4, yStart + 6);
         } else {
-            setTileOfNPC(npc, xStart, yStart, xStart + 12, yStart + 8);
+            setTileOfNPC(npc, xStart, yStart, xStart + 6, yStart + 4);
         }
         structures.add(npc);
     }
