@@ -24,6 +24,7 @@ public class Game {
     public Tile[][] tiles = new Tile[length][width];
 
     public void start() {
+        timeAndDate = new TimeAndDate();
         for (int i = 0; i < 160; i++) {
             for (int i1 = 0; i1 < 120; i1++) {
                 tiles[i][i1] = new Tile(i, i1);
@@ -61,7 +62,6 @@ public class Game {
         }
         i = (i == players.size() - 1) ? 0 : i+1;
 //        if (players.get(i).getIsFainted()) nextPlayer();
-        //TODO resetting energy and forwarding clock
         currentPlayer = players.get(i);
     }
 }

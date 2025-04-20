@@ -35,6 +35,7 @@ public class Player extends Actor {
     private Integer energy = 200;
     private Integer maxEnergy = 200;
     private Integer energyPerTurn = 50;
+    private Integer maxEnergyPerTurn = 50;
     private Boolean energyIsInfinite = false;
     private BackPack inventory;
     private Buff buff;

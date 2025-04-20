@@ -4,9 +4,12 @@ import controller.MenuController;
 import model.Game;
 import model.Menus;
 import model.Player;
+import model.TimeAndDate;
 import model.exception.InvalidInputException;
 import utils.App;
 import view.mainMenu.MainMenu;
+
+import java.sql.Time;
 
 public class GameMenuController extends MenuController {
     public void exitGame() {
@@ -42,8 +45,13 @@ public class GameMenuController extends MenuController {
     }
 
     public void nextTurn() {
+        Player player = App.getInstance().getCurrentGame().getCurrentPlayer();
+        player.setEnergyPerTurn(player.getMaxEnergyPerTurn());
         App.getInstance().getCurrentGame().nextPlayer();
-        //TODO Reset energy, forward the clock
+        TimeAndDate time = new TimeAndDate(0, 8);
+        if (App.getInstance().getCurrentGame().getTimeAndDate().compareTime(time) <= 0) {
+            player.setEnergy(player.getMaxEnergy()); //TODO implementing the faint
+        }
     }
 
     public void time() {
