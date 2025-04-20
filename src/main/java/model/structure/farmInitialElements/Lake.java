@@ -2,10 +2,13 @@ package model.structure.farmInitialElements;
 
 import lombok.Getter;
 import lombok.Setter;
+import model.shelter.FarmBuildingType;
 
 @Getter
 @Setter
 public class Lake extends HardCodeFarmElements {
+    private final FarmBuildingType farmBuildingType = FarmBuildingType.Lake;
+
     public Lake(Lake lake) {
         super(lake);
     }

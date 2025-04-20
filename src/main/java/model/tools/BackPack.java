@@ -23,19 +23,15 @@ public class BackPack {
     }
 
     public void deleteProductFromBackPack(String itemName, int itemNumber) {
-//        Salable currentProduct = null;
-//        for (Map.Entry<Salable, Integer> salableIntegerEntry : products.entrySet()) {
-//            if (salableIntegerEntry.getKey().getName().equals(itemName)){
-//                currentProduct = salableIntegerEntry.getKey();
-//            }
-//        }
-//        if (currentProduct == null){
-//            throw new InvalidInputException("the inventory dose not contain this item");
-//        }
-//        if (itemNumber > products.get(currentProduct)){
-//            products.remove(currentProduct);
-//        }
-//        else
+        Salable currentProduct = null;
+        for (Map.Entry<Salable, Integer> salableIntegerEntry : products.entrySet()) {
+            if (salableIntegerEntry.getKey().getName().equals(itemName)){
+                currentProduct = salableIntegerEntry.getKey();
+            }
+        }
+        if (currentProduct == null){
+            throw new InvalidInputException("the inventory does not contain this item");
+        }
 
     }
 

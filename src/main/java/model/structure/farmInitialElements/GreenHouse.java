@@ -3,11 +3,14 @@ package model.structure.farmInitialElements;
 import lombok.Getter;
 import lombok.Setter;
 import model.shelter.FarmBuilding;
+import model.shelter.FarmBuildingType;
 import model.structure.Structure;
 
 @Getter
 @Setter
 public class GreenHouse extends HardCodeFarmElements {
+    private final FarmBuildingType farmBuildingType = FarmBuildingType.GreenHouse;
+
     public GreenHouse(GreenHouse greenHouse) {
         super(greenHouse);
     }
