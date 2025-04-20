@@ -60,6 +60,8 @@ public class Player extends Actor {
         addBasicTools();
     }
 
+    private Pair position;
+    private FarmType farmType;
 
     public Player(Integer id, User user) {
         this.id = id;

@@ -17,7 +17,7 @@ public class MapSelectionMenu extends Menu {
         String input = scanner.nextLine();
         Matcher matcher;
         if ((matcher = isMatched(input, gameMap)) != null) {
-            controller.gameMap(matcher.group("players"));
+            controller.gameMap(matcher.group("mapNumber"));
         } else {
             throw new InvalidInputException("Please Select Your Maps!");
         }

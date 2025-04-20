@@ -48,4 +48,15 @@ public class Game {
     public void addPlayer(Player player) {
         players.add(player);
     }
+
+    public void nextPlayer() {
+        int i;
+        for (i = 0; i < players.size(); i++) {
+            if (currentPlayer == players.get(i)) break;
+        }
+        i = (i == players.size() - 1) ? 0 : i+1;
+//        if (players.get(i).getIsFainted()) nextPlayer();
+        //TODO resetting energy and forwarding clock
+        currentPlayer = players.get(i);
+    }
 }

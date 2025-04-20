@@ -2,8 +2,10 @@ package utils;
 
 import model.*;
 import model.structure.Structure;
+import model.structure.farmInitialElements.Cottage;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class InitialGame {
     public void initial(ArrayList<User> users) {
@@ -19,14 +21,27 @@ public class InitialGame {
         for (int i = 0; i < users.size(); i++) {
             game.addPlayer(new Player(i, users.get(i)));
         }
+        App.getInstance().setCurrentMenu(Menus.MapSelection);
+//        printMap(game);
+    }
+
+    public void completeMap() {
+        Game game = App.getInstance().getCurrentGame();
+        Village village = game.getVillage();
         for (int i = 0; i < 4; i++) {
             Player player = game.getPlayers().size() <= i ? null : game.getPlayers().get(i);
-            Farm farm = new Farm(player, FarmType.values()[i + 1]);
+            Farm farm;
+            if (player != null) {
+                farm = new Farm(player, player.getFarmType());
+                Tile tile = farm.getCottage().getTiles().getFirst();
+                player.setPosition(new Pair(tile.getX(), tile.getY()));
+            } else {
+                Random random = new Random();
+                farm = new Farm(null, FarmType.values()[random.nextInt(0,4)]);
+            }
             village.getFarms().add(farm);
         }
         village.fillFarms();
-        App.getInstance().setCurrentMenu(Menus.MapSelection);
-        printMap(game);
     }
 
     private void printMap(Game game) {
