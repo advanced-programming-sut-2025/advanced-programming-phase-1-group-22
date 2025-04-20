@@ -35,8 +35,6 @@ public enum FarmType {
         Quarry quarry = new Quarry();
         GreenHouse greenHouse = new GreenHouse();
         Lake lake = new Lake();
-        ShippingBin shippingBin = new ShippingBin();
-        setTilePairs(shippingBin,new Pair(3,3));
         setTilePairs(cottage, new Pair(36, 32));
         setTilePairs(greenHouse, new Pair(10, 22));
         setTilePairs(quarry, new Pair(28, 10));
@@ -45,7 +43,7 @@ public enum FarmType {
                 lake.getTilePairList().add(new Pair(i, j));
             }
         }
-        structures.addAll(List.of(cottage, quarry, greenHouse, lake,shippingBin));
+        structures.addAll(List.of(cottage, quarry, greenHouse, lake));
     }
 
     public void setTilePairs(HardCodeFarmElements hardCodeFarmElements, Pair pair) {
@@ -61,8 +59,6 @@ public enum FarmType {
         Quarry quarry = new Quarry();
         GreenHouse greenHouse = new GreenHouse();
         Lake lake = new Lake();
-        ShippingBin shippingBin = new ShippingBin();
-        setTilePairs(shippingBin,new Pair(6,16));
         setTilePairs(cottage, new Pair(6, 27));
         setTilePairs(greenHouse, new Pair(45, 3));
         setTilePairs(quarry, new Pair(45, 30));
@@ -71,7 +67,7 @@ public enum FarmType {
                 lake.getTilePairList().add(new Pair(i, j));
             }
         }
-        structures.addAll(List.of(cottage, quarry, greenHouse, lake,shippingBin));
+        structures.addAll(List.of(cottage, quarry, greenHouse, lake));
     }
 
     public void FlowerFarmInit() {
@@ -79,8 +75,6 @@ public enum FarmType {
         Quarry quarry = new Quarry();
         GreenHouse greenHouse = new GreenHouse();
         Lake lake = new Lake();
-        ShippingBin shippingBin = new ShippingBin();
-        setTilePairs(shippingBin,new Pair(46,36));
         setTilePairs(cottage, new Pair(2, 4));
         setTilePairs(greenHouse, new Pair(20, 2));
         setTilePairs(quarry, new Pair(2, 14));
@@ -89,7 +83,7 @@ public enum FarmType {
                 lake.getTilePairList().add(new Pair(i, j));
             }
         }
-        structures.addAll(List.of(cottage, quarry, greenHouse, lake,shippingBin));
+        structures.addAll(List.of(cottage, quarry, greenHouse, lake));
     }
 
     public void RockyFarmInit() {
@@ -97,8 +91,6 @@ public enum FarmType {
         Quarry quarry = new Quarry();
         GreenHouse greenHouse = new GreenHouse();
         Lake lake = new Lake();
-        ShippingBin shippingBin = new ShippingBin();
-        setTilePairs(shippingBin,new Pair(15,3));
         setTilePairs(cottage, new Pair(30, 20));
         setTilePairs(greenHouse, new Pair(45, 20));
         setTilePairs(quarry, new Pair(4, 3));
@@ -107,7 +99,7 @@ public enum FarmType {
                 lake.getTilePairList().add(new Pair(i, j));
             }
         }
-        structures.addAll(List.of(cottage, quarry, greenHouse, lake,shippingBin));
+        structures.addAll(List.of(cottage, quarry, greenHouse, lake));
     }
 
     public void DesertFarmInit() {
@@ -115,12 +107,10 @@ public enum FarmType {
         Quarry quarry = new Quarry();
         GreenHouse greenHouse = new GreenHouse();
         Lake lake = new Lake();
-        ShippingBin shippingBin = new ShippingBin();
-        setTilePairs(shippingBin,new Pair(4,4));
         setTilePairs(cottage, new Pair(22, 10));
         setTilePairs(greenHouse, new Pair(16, 18));
         setTilePairs(quarry, new Pair(2, 16));
         lake.getTilePairList().addAll(List.of(new Pair(16, 15), new Pair(16, 14)));
-        structures.addAll(List.of(cottage, quarry, greenHouse, lake,shippingBin));
+        structures.addAll(List.of(cottage, quarry, greenHouse, lake));
     }
 }

@@ -1,10 +1,10 @@
-package model.structure.farmInitialElements;
+package model.shelter;
 
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import model.Salable;
-import model.shelter.FarmBuildingType;
+import model.structure.farmInitialElements.HardCodeFarmElements;
 
 import java.util.ArrayList;
 import java.util.List;

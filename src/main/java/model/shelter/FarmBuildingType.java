@@ -2,6 +2,7 @@ package model.shelter;
 
 import lombok.Getter;
 import lombok.Setter;
+import model.structure.farmInitialElements.Cottage;
 
 @Getter
 public enum FarmBuildingType {
@@ -12,7 +13,12 @@ public enum FarmBuildingType {
     BIG_COOP(8, 6, 3),
     DELUXE_COOP(12, 6, 3),
     WELL(10,3,3),
-    SHIPPING_BIN(20,1,1);
+    SHIPPING_BIN(20,1,1),
+    Cottage(-1,6,6),
+    GreenHouse(-1,8,7),
+    Lake(-1,-1,-1),
+    Quarry(-1,10,10);
+    
     private final Integer capacity;
     private final Integer height;
     private final Integer width;
