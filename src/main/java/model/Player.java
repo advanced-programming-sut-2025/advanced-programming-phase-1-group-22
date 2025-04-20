@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import model.abilitiy.Ability;
+import model.shelter.ShippingBin;
 import model.tools.BackPack;
 
 import java.util.List;
@@ -21,8 +22,8 @@ public class Player extends Actor {
     private BackPack inventory;
     private Buff buff;
     private Map<Ability, Integer> abilities;
-    private List<ShippingBin> shippingBinList;
-    private Account account;
+    private ShippingBin shippingBin;
+    private Account account = new Account();
     private List<Marry> marriage;
     private Player couple;
     private List<Trade> gootenTradeList;
@@ -49,7 +50,9 @@ public class Player extends Actor {
             isFainted = false;
         }
         else {
-            energy = maxEnergy;
+            if (!energyIsInfinite){
+                energy = maxEnergy;
+            }
         }
     }
 

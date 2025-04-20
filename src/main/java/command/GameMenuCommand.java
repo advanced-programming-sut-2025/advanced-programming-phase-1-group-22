@@ -8,7 +8,7 @@ public enum GameMenuCommand implements Command{
 	ENERGY_SET("set\\+energy\\s+-v\\s+(\\d+)"),
 	SET_ENERGY_UNLIMITED("energy\\s+unlimited"),
 	SHOW_INVENTORY("inventory\\s+show"),
-	REMOVE_FROM_INVENTORY("inventory\\s+trash\\s+-i\\s+(.+)\\s+(\\d+)"),
+	REMOVE_FROM_INVENTORY("inventory\\s+trash\\s+-i\\s+([a-zA-Z ]+)\\s*(\\d+)?"),
 	;
 	private final String pattern;
 
