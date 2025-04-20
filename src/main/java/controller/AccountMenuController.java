@@ -1,6 +1,5 @@
 package controller;
 
-import model.dto.QuestionDto;
 import model.dto.UserDto;
 import model.records.Response;
 import service.AccountService;
@@ -11,7 +10,8 @@ public class AccountMenuController extends MenuController {
     public Response loginUser(String... params) {
         String username = params[0];
         String password = params[1];
-        return accountService.loginUser(username, password);
+        String stayedLoggedIn = params[2];
+        return accountService.loginUser(username, password, stayedLoggedIn);
 
     }
 
@@ -24,6 +24,15 @@ public class AccountMenuController extends MenuController {
         String gender = params[5];
         UserDto dto = new UserDto(username, password, passwordConfirm, nickName, email, gender);
         return accountService.registerUser(dto);
+    }
+
+    public Response registerUserRandomPass(String... params) {
+        String username = params[0];
+        String nickName = params[1];
+        String email = params[2];
+        String gender = params[3];
+        UserDto user = UserDto.builder().username(username).nickName(nickName).email(email).gender(gender).build();
+        return accountService.registerUserWithRandomPass(user);
     }
 
     public Response changeUserName(String... params) {
@@ -51,23 +60,13 @@ public class AccountMenuController extends MenuController {
         return accountService.getUserInfo();
     }
 
-    public Response pickQuestion(String... params) {
-        String questionNumber = params[0];
-        String answer = params[1];
-        String answerConfirm = params[2];
-        QuestionDto questionDto = new QuestionDto(questionNumber, answer, answerConfirm);
-        return accountService.pickQuestion(questionDto);
-    }
-
-    public Response forgetPassword(String... params) {
-        String username = params[0];
-        return accountService.getPasswordByUsername(username);
-    }
-
-    public Response answerQuestion(String... params) {
-        String answer = params[0];
-        return accountService.confirmQuestion(answer);
-    }
+//    public Response pickQuestion(String... params) {
+//        String questionNumber = params[0];
+//        String answer = params[1];
+//        String answerConfirm = params[2];
+//        QuestionDto questionDto = new QuestionDto(questionNumber, answer, answerConfirm);
+//        return accountService.pickQuestion(questionDto);
+////    }
 
     public Response switchMenu(String... params) {
         String menu = params[0];
@@ -80,5 +79,10 @@ public class AccountMenuController extends MenuController {
 
     public Response showCurrentMenu(String... params) {
         return accountService.showCurrentMenu();
+    }
+
+    public Response forgetPassword(String... params) {
+        String username = params[0];
+        return accountService.forgetPassword(username);
     }
 }

@@ -27,10 +27,9 @@ public class LoginMenu implements CommandProcessor {
 
     private final Map<CommandClass, Function<String[], Response>> commandsFunctionMap = Map.of(
             LOGIN_COMMANDS, controller::loginUser,
-            FORGET_PASSWORD, controller::forgetPassword,
-            ANSWER, controller::answerQuestion,
             REGISTER_COMMANDS, controller::registerUser,
-            PICK_QUESTION, controller::pickQuestion,
+            REGISTER_COMMANDS_RANDOM_PASSWORD, controller::registerUserRandomPass,
+            FORGET_PASSWORD,controller::forgetPassword,
             ENTER_MENU, controller::switchMenu,
             EXIT, controller::exit,
             SHOW_CURRENT_MENU, controller::showCurrentMenu
