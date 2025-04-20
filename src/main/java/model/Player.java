@@ -30,6 +30,12 @@ public class Player extends Actor {
     private Integer maxEnergy;
     private Integer energyPerTurn;
     private Boolean energyIsInfinite;
+    private final Integer id;
+    private final User user;
+    private Integer energy = 200;
+    private Integer maxEnergy = 200;
+    private Integer energyPerTurn = 50;
+    private Boolean energyIsInfinite = false;
     private BackPack inventory;
     private Buff buff;
     private Map<Ability, Integer> abilities = new HashMap<>();
@@ -52,6 +58,13 @@ public class Player extends Actor {
         abilities.put(Ability.FISHING,0);
         abilities.put(Ability.MINING,0);
         addBasicTools();
+    }
+
+
+    public Player(Integer id, User user) {
+        this.id = id;
+        this.user = user;
+        //TODO initializing other fields
     }
 
     public void faint(){
