@@ -9,17 +9,19 @@ public interface UserRepository<T extends User> {
 
     Optional<T> findById(int id);
 
-    Optional<T> findByEmail(String email);
-
     Optional<T> findByUsername(String username);
 
-    Optional<T> deleteByUsername(int id);
+    Optional<T> deleteById(int id);
 
-    Optional<T> changePassword(String newPassword);
+    Optional<T> changePassword(String username, String newPassword);
 
-    Optional<T> changeEmail(String newEmail);
+    Optional<T> changeEmail(String username, String newEmail);
 
-    Optional<T> changeUsername(String newUsername);
+    Optional<T> changeUsername(String username, String newUsername);
 
-    Optional<T> changeNickname(String newNickname);
+    Optional<T> changeNickname(String username, String newNickname);
+
+    Optional<Integer> getHIghestEarnedMoney(String username);
+
+    Optional<Integer> getPlayedGamse(String username);
 }

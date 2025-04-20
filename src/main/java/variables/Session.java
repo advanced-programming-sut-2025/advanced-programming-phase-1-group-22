@@ -10,6 +10,8 @@ public class Session {
     private static User currentUser;
     @Getter
     private static Menu currentMenu = Menu.LOGIN;
+    @Getter
+    private static boolean stayedLoggedIn = false;
 
     public Session() {
     }
@@ -20,5 +22,9 @@ public class Session {
 
     public static void setCurrentMenu(Menu currentMenu) {
         Session.currentMenu = currentMenu;
+    }
+
+    public static void setStayedLoggedIn(boolean stayedLoggedIn) {
+        Session.stayedLoggedIn = stayedLoggedIn;
     }
 }
