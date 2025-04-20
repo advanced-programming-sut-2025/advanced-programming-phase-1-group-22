@@ -13,6 +13,7 @@ public class User {
     private String password;
     private String email;
     private String nickname;
+    private boolean isPlaying;
 
     public User(String username, String password, String email, String nickname) {
         this.username = username;
@@ -20,4 +21,5 @@ public class User {
         this.email = email;
         this.nickname = nickname;
     }
+
 }

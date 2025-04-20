@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -11,10 +12,10 @@ import java.util.List;
 @ToString
 public class Game {
     private Village village;
-    private List<Player> players;
+    private final List<Player> players = new ArrayList<>();
     private Player currentPlayer;
-    private List<NPCType> npcs;
-    private List<Friendship> friendships;
+    private final List<NPCType> npcs = new ArrayList<>();
+    private final List<Friendship> friendships = new ArrayList<>();
     private TimeAndDate timeAndDate;
     private final Integer length = 160;
     private final Integer width = 120;
@@ -26,5 +27,9 @@ public class Game {
                 tiles[i][i1] = new Tile(i, i1);
             }
         }
+    }
+
+    public void addPlayer(Player player) {
+        players.add(player);
     }
 }

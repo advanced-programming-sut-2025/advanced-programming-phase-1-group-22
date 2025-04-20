@@ -12,12 +12,12 @@ import java.util.Map;
 @Setter
 @ToString
 public class Player extends Actor {
-    private Integer id;
-    public User user;
-    private Integer energy;
-    private Integer maxEnergy;
-    private Integer energyPerTurn;
-    private Boolean energyIsInfinite;
+    private final Integer id;
+    private final User user;
+    private Integer energy = 200;
+    private Integer maxEnergy = 200;
+    private Integer energyPerTurn = 50;
+    private Boolean energyIsInfinite = false;
     private BackPack inventory;
     private Buff buff;
     private Map<Ability, Integer> abilities;
@@ -27,6 +27,13 @@ public class Player extends Actor {
     private Player couple;
     private List<Trade> gootenTradeList;
     private Boolean isFainted;
+
+    public Player(Integer id, User user) {
+        this.id = id;
+        this.user = user;
+        //TODO initializing other fields
+    }
+
     public void faint(){
 
     }

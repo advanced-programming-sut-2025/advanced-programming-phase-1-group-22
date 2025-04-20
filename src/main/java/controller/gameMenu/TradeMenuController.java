@@ -17,5 +17,6 @@ public class TradeMenuController extends MenuController {
     }
 
     public void trade(Matcher matcher) {
+
     }
 }
