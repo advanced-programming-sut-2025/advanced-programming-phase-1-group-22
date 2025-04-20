@@ -3,8 +3,10 @@ package utils;
 import model.*;
 import model.structure.Structure;
 
+import java.util.ArrayList;
+
 public class InitialGame {
-    public void initial() {
+    public void initial(ArrayList<User> users) {
         Game game = new Game();
         App app = App.getInstance();
         app.setCurrentGame(game);
@@ -14,11 +16,16 @@ public class InitialGame {
         for (NPCType npc : NPCType.values()) {
             npc.setMissions();
         }
+        for (int i = 0; i < users.size(); i++) {
+            game.addPlayer(new Player(i, users.get(i)));
+        }
         for (int i = 0; i < 4; i++) {
-            Farm farm = new Farm(new Player(new User("","","","")), FarmType.values()[i + 1]);
+            Player player = game.getPlayers().size() <= i ? null : game.getPlayers().get(i);
+            Farm farm = new Farm(player, FarmType.values()[i + 1]);
             village.getFarms().add(farm);
         }
         village.fillFarms();
+        App.getInstance().setCurrentMenu(Menus.MapSelection);
         printMap(game);
     }
 
