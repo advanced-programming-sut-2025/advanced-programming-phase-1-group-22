@@ -15,8 +15,8 @@ import java.lang.module.ResolutionException;
 import java.util.Map;
 
 public class GameMenuController extends MenuController {
-	public int showPlayerEnergy(){
-		return getCurrentPlayer().getEnergy();
+	public Result showPlayerEnergy(){
+		return new Result(true,"player energy : " + getCurrentPlayer().getEnergy());
 	}
 
 	public void setPlayerEnergy(int energy){
@@ -27,8 +27,8 @@ public class GameMenuController extends MenuController {
 		getCurrentPlayer().setEnergyIsInfinite(true);
 	}
 
-	public String showPlayerInventory(){
-		return getCurrentPlayer().getInventory().showInventory();
+	public Result showPlayerInventory(){
+		return new Result(true,getCurrentPlayer().getInventory().showInventory());
 	}
 
 	public void removeFromPlayerInventory(String itemName,boolean haveItemNumber, int... itemNumbers){
