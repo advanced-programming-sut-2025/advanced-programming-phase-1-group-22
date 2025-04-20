@@ -32,6 +32,7 @@ public class App {
     private final List<User> users = new ArrayList<>();
     private final List<Game> games = new ArrayList<>();
     private Game currentGame;
+    private User currentUser;
     private Menus currentMenu = Menus.Login;
 
     public User findUserByUsername(String username) {

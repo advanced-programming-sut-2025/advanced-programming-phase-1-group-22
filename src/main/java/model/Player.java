@@ -27,6 +27,8 @@ public class Player extends Actor {
     private Player couple;
     private List<Trade> gootenTradeList;
     private Boolean isFainted;
+    private Pair position;
+    private FarmType farmType;
 
     public Player(Integer id, User user) {
         this.id = id;
