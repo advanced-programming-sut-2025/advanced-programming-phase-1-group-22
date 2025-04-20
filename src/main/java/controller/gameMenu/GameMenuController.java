@@ -1,17 +1,49 @@
 package controller.gameMenu;
 
 import controller.MenuController;
+import model.Game;
+import model.Menus;
+import model.Player;
+import model.exception.InvalidInputException;
+import utils.App;
+import view.mainMenu.MainMenu;
 
 public class GameMenuController extends MenuController {
     public void exitGame() {
+        if (App.getInstance().getCurrentGame().getCurrentPlayer().getUser() != App.getInstance().getCurrentUser()) {
+            throw new InvalidInputException("You are not allowed to exit; the player who has started the game can" +
+                    " end it");
+        }
+        //TODO save game not mine to do
+        App.getInstance().setCurrentMenu(Menus.MainMenu);
+    }
 
+    public void undoTermination() {
+        Game game = App.getInstance().getCurrentGame();
+        game.setPlayersInFavorTermination(0);
+        System.out.println("Termination unsuccessful!");
     }
 
     public void terminateGame() {
+        Game game = App.getInstance().getCurrentGame();
+        game.addTermination();
+        if (game.getPlayersInFavorTermination() == game.getPlayers().size()) {
+            App.getInstance().getGames().remove(game);
+            System.out.println("The game is terminated");
+            App.getInstance().setCurrentMenu(Menus.MainMenu);
+            for (Player player : game.getPlayers()) {
+                player.getUser().setPlaying(false);
+            }
+
+            //TODO remove game from databases
+        } else {
+            System.out.println("Do you agree on Termination? Either Enter \"no\" or \"terminate game\"");
+        }
     }
 
     public void nextTurn() {
-
+        App.getInstance().getCurrentGame().nextPlayer();
+        //TODO Reset energy, forward the clock
     }
 
     public void time() {
