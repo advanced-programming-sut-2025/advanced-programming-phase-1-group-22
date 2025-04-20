@@ -27,4 +27,16 @@ public class Game {
             }
         }
     }
+
+    public void startNewDay(){
+        for (Player player : players) {
+            player.resetEnergy();
+            addGoldToPlayerForShippingBin(player.getShippingBin().CalculatePriceOfShippingBinProducts(),player);
+        }
+    }
+
+    public void addGoldToPlayerForShippingBin(int price, Player player){
+       int oldGold =  player.getAccount().getGolds();
+       player.getAccount().setGolds(oldGold + price);
+    }
 }
