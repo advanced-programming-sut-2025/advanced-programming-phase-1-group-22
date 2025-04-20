@@ -6,6 +6,7 @@ import model.products.TreesAndFruitsAndSeeds.Tree;
 import model.products.TreesAndFruitsAndSeeds.TreeType;
 import model.source.*;
 import model.structure.*;
+import model.structure.farmInitialElements.Cottage;
 import model.structure.farmInitialElements.HardCodeFarmElements;
 import utils.App;
 
@@ -283,6 +284,13 @@ public class Farm {
             }
             tiles2.clear();
         }
+    }
+
+    public Cottage getCottage() {
+        for (Structure structure : structures) {
+            if (structure instanceof Cottage) return (Cottage)structure;
+        }
+        return null;
     }
 }
 
