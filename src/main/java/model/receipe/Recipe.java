@@ -33,4 +33,9 @@ public class Recipe implements Salable {
     public String getName() {
         return this.name.toLowerCase();
     }
+
+    @Override
+    public int getSellPrice() {
+        return price;
+    }
 }

@@ -28,4 +28,9 @@ public class MilkPail implements Tool {
     public String getName() {
         return "milkpail";
     }
+
+    @Override
+    public int getSellPrice() {
+        return 0;
+    }
 }

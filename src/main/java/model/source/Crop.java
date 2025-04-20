@@ -26,4 +26,9 @@ public class Crop extends HarvestAbleProduct implements Source {
     public String getName(){
         return this.cropType.getName();
     }
+
+    @Override
+    public int getSellPrice() {
+        return cropType.getSellPrice();
+    }
 }

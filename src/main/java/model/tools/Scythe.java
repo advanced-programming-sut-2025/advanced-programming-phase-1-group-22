@@ -19,4 +19,9 @@ public class Scythe implements Tool {
     public String getName() {
         return "scythe";
     }
+
+    @Override
+    public int getSellPrice() {
+        return 0;
+    }
 }

@@ -14,4 +14,9 @@ public class MadeProduct implements Salable {
     public String getName() {
         return this.madeProducts.getName().toLowerCase();
     }
+
+    @Override
+    public int getSellPrice() {
+        return madeProducts.getSellPrice();
+    }
 }

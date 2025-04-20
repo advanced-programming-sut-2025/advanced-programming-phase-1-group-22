@@ -69,4 +69,9 @@ public enum SeedType implements Source {
     public String getName(){
         return this.name.toLowerCase();
     }
+
+    @Override
+    public int getSellPrice() {
+        return 0;
+    }
 }

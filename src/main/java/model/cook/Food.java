@@ -13,4 +13,9 @@ public class Food implements Salable {
     public String getName() {
         return this.foodType.getName();
     }
+
+    @Override
+    public int getSellPrice() {
+        return foodType.getSellPrice();
+    }
 }

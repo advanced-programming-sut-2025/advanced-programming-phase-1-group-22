@@ -18,4 +18,9 @@ public class Seed extends Structure implements Salable {
     public String getName() {
         return this.seedType.getName();
     }
+
+    @Override
+    public int getSellPrice() {
+        return seedType.getSellPrice();
+    }
 }

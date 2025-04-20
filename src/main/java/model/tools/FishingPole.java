@@ -35,4 +35,9 @@ public enum FishingPole implements Tool {
     public String getName() {
         return this.name.toLowerCase();
     }
+
+    @Override
+    public int getSellPrice() {
+        return price;
+    }
 }

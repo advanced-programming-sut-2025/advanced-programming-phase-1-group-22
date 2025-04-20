@@ -10,4 +10,9 @@ public class Hay implements Salable {
     public String getName() {
         return "hay";
     }
+
+    @Override
+    public int getSellPrice() {
+        return price;
+    }
 }
