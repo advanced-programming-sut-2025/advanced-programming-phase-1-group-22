@@ -66,8 +66,57 @@ public abstract class GameMenu extends Menu {
     private final String printMap = "^\\s*print\\s+map\\s+-l\\s+(?<X>\\d+)\\s*,\\s*(?<Y>\\d+)\\s+" +
             "-s\\s+(?<size>\\d+)\\s*$";
     private final String helpReadingMap = "^\\s*help\\s+reading\\s+map\\s*$";
-
-
+    private final String energyShow = "^\\s*energy\\s+show\\s*$";
+    private final String C_EnergySet = "^\\s*energy\\s+set\\s+-v\\s+(?<value>\\d+)\\s*$";
+    private final String C_EnergyUnlimited = "^\\s*energy\\s+unlimited\\s*$";
+    private final String inventoryShow = "^\\s*inventory\\s+show\\s*$";
+    private final String inventoryTrash = "^\\s*inventory\\s+trash\\s+-i\\s+(?<name>\\S+)\\s+-n\\s+" +
+            "(?<amount>\\d+)\\s*$";
+    private final String toolsEquip = "^\\s*tools\\s+equip\\s+(?<toolName>.+)\\s*$";
+    private final String toolsShowCurrent = "^\\s*tools\\s+show\\s+current\\s*$";
+    private final String toolsShowCAvailable = "^\\s*tools\\s+show\\s+available\\s*$";
+    private final String toolsUpgrade = "^\\s*tools\\s+upgrade\\s+(?<toolName>.+)\\s*$";
+    private final String toolsUse = "^\\s*tools\\s+use\\s+-d\\s+(?<direction>\\d+)\\s*$";
+    private final String craftInfo = "^\\s*craft\\s+info\\s+-n\\s+(?<craftName>.+)\\s*$";
+    private final String plantSeed = "^\\s*plant\\s+seed\\s+-s\\s+(?<seed>.+)\\s+-d\\s+(?<direction>\\d+)\\s*$";
+    private final String showplant = "^\\s*showplant\\s+-l\\s+(?<X>\\d+)\\s*,\\s*(?<Y>\\d+)\\s*$";
+    private final String fertilize = "^\\s*fertilize\\s+-f\\s+(?<fertilizer>.+)\\s+-d\\s+(?<direction>\\d+)\\s*$";
+    private final String howMuchWater = "^\\s*howmuch\\s+water\\s*$";
+    private final String placeItem = "^\\s*place\\s+item\\s+-n\\s+(?<itemName>.+)\\s+-d\\s+(?<direction>\\d+)\\s*$";
+    private final String C_AddItem = "^\\s*cheat\\s+add\\s+item\\s+-n\\s+(?<name>\\S+)\\s+-c\\s+" +
+            "(?<count>\\d+)\\s*$";
+    private final String pet = "^\\s*pet\\s+-n\\s+(?<name>\\S+)\\s*$";
+    private final String feedHay = "^\\s*feed\\s+hay\\s+-n\\s+(?<name>\\S+)\\s*$";
+    private final String collectProduce = "^\\s*collect\\s+produce\\s+-n\\s+(?<name>\\S+)\\s*$";
+    private final String sellAnimal = "^\\s*sell\\s+animal\\s+-n\\s+(?<name>\\S+)\\s*$";
+    private final String shepherdAnimals = "^\\s*shepherd\\s+animals\\s+-n\\s+(?<name>\\S+)\\s+-l\\s+(?<X>\\d+)\\s*" +
+            ",\\s*(?<Y>\\d+)\\s*$";
+    private final String animals = "^\\s*animals\\s*$";
+    private final String produces = "^\\s*produces\\s*$";
+    private final String C_SetFriendship = "^\\s*cheat\\s+set\\s+friendship\\s+-n\\s+(?<name>\\S+)\\s+-c\\s+" +
+            "(?<count>\\d+)\\s*$";
+    private final String artisanUse = "^\\s*artisan\\s+use\\s+(?<name>\\S+)\\s+(?<item1>\\S+)\\s*(?<item2>\\S*)\\s*$"; //TODO Might be incorrect
+    private final String artisanGet = "^\\s*artisan\\s+get\\s+(?<name>.+)\\s*$";
+    private final String C_AddDollars = "^\\s*cheat\\s+add\\s+(?<count>\\d+)\\s+dollars\\s*$";
+    private final String sell = "^\\s*sell\\s+(?<name>.+)\\s+-n\\s+(?<count>\\d+)\\s*$";
+    private final String friendship = "^\\s*friendship\\s*$";
+    private final String talk = "^\\s*talk\\s+-u\\s+(?<username>.+)\\s+-m\\s+(?<message>.+)\\s*$";
+    private final String talkHistory = "^\\s*talk\\s+history\\s+-u\\s+(?<username>.+)\\s*$";
+    private final String gift = "^\\s*gift\\s+-u\\s+(?<username>.+)\\s+-i\\s+(?<item>.+)\\s+-a\\s+(?<amount>\\d+)\\s*$";
+    private final String giftList = "^\\s*gift\\s+list\\s*$";
+    private final String giftRate = "^\\s*gift\\s+rate\\s+-i\\s+(?<giftNumber>.+)\\s+-r\\s+(?<rate>\\d+)\\s*$";
+    private final String giftHistory = "^\\s*gift\\s+history\\s+-u\\s+(?<username>.+)\\s*$";
+    private final String hug = "^\\s*hug\\s+-u\\s+(?<username>.+)\\s*$";
+    private final String flower = "^\\s*flower\\s+-u\\s+(?<username>.+)\\s*$";
+    private final String askMarriage = "^\\s*ask\\s+marriage\\s+-u\\s+(?<username>.+)\\s+-r\\s+(?<ring>.+)\\s*$";
+    private final String respond = "^\\s*respond\\s+(?<respond>\\b" + "accept|reject)\\s+-u\\s+(?<username>.+)\\s*$";
+    private final String startTrade = "^\\s*start\\s+trade\\s*$";
+    private final String meetNPC = "^\\s*meet\\s+NPC\\s+(?<npcName>.+)\\s*$";
+    private final String giftNPC = "^\\s*gift\\s+NPC\\s+(?<npcName>.+)\\s+-i\\s+(?<item>.+)\\s*$";
+    private final String friendshipNPCList = "^\\s*friendship\\s+NPC\\s+list\\s*$";
+    private final String questsList = "^\\s*quests\\s+list\\s*$";
+    private final String questsFinish = "^\\s*quests\\s+finish\\s+-i\\s+(?<index>\\d+)\\s*$";
+    private final String eat = "^\\s*eat\\s+(?<foodName>)\\s*$";
 
 
     private final GameMenuController controller = new GameMenuController();
@@ -110,9 +159,104 @@ public abstract class GameMenu extends Menu {
             controller.C_AdvanceTime(matcher.group("X"));
         } else if ((matcher = isMatched(input, C_AdvanceDate)) != null) {
             controller.C_AdvanceDate(matcher.group("X"));
+        } else if (isMatched(input, energyShow) != null) {
+            controller.energyShow();
+        } else if (isMatched(input, C_EnergyUnlimited) != null) {
+            controller.C_EnergyLimited();
+        } else if (isMatched(input, inventoryShow) != null) {
+            controller.inventoryShow();
+        } else if (isMatched(input, toolsShowCurrent) != null) {
+            controller.toolsShowCurrent();
+        } else if (isMatched(input, toolsShowCAvailable) != null) {
+            controller.toolsShowAvailable();
+        } else if ((matcher = isMatched(input, C_EnergySet)) != null) {
+            controller.C_EnergySet(matcher.group("value"));
+        } else if ((matcher = isMatched(input, inventoryTrash)) != null) {
+            controller.inventoryTrash(matcher.group("name"), matcher.group("amount"));
+        } else if ((matcher = isMatched(input, toolsEquip)) != null) {
+            controller.toolsEquip(matcher.group("toolName"));
+        } else if ((matcher = isMatched(input, toolsUpgrade)) != null) {
+            controller.toolsUpgrade(matcher.group("toolName"));
+        } else if ((matcher = isMatched(input, toolsUse)) != null) {
+            controller.toolsUse(matcher.group("direction"));
+        } else if ((matcher = isMatched(input, craftInfo)) != null) {
+            controller.craftInfo(matcher.group("craftName"));
+        } else if ((matcher = isMatched(input, plantSeed)) != null) {
+            controller.plantSeed(matcher.group("seed"), matcher.group("direction"));
+        } else if ((matcher = isMatched(input, showplant)) != null) {
+            controller.showPlant(matcher.group("X"), matcher.group("Y"));
+        } else if ((matcher = isMatched(input, fertilize)) != null) {
+            controller.fertilize(matcher.group("fertilizer"));
+        } else if (isMatched(input, howMuchWater) != null) {
+            controller.howmuchWater();
+        } else if ((matcher = isMatched(input, placeItem)) != null) {
+            controller.placeItem(matcher.group("itemName"), matcher.group("direction"));
+        } else if ((matcher = isMatched(input, C_AddItem)) != null) {
+            controller.C_AddItem(matcher.group("name"), matcher.group("count"));
+        } else if ((matcher = isMatched(input, pet)) != null) {
+            controller.pet(matcher.group("name"));
+        } else if ((matcher = isMatched(input, feedHay)) != null) {
+            controller.feedHay(matcher.group("name"));
+        } else if ((matcher = isMatched(input, collectProduce)) != null) {
+            controller.collectProduce(matcher.group("name"));
+        } else if ((matcher = isMatched(input, sellAnimal)) != null) {
+            controller.sellAnimal(matcher.group("name"));
+        } else if ((matcher = isMatched(input, shepherdAnimals)) != null) {
+            controller.shepherAnimal(matcher.group("name"), matcher.group("X"), matcher.group("Y"));
+        } else if (isMatched(input, animals) != null) {
+            controller.animals();
+        } else if (isMatched(input, produces) != null) {
+            controller.produces();
+        } else if ((matcher = isMatched(input, C_SetFriendship)) != null) {
+            controller.C_SetFriendship(matcher.group("name"), matcher.group("count"));
+        } else if ((matcher = isMatched(input, artisanUse)) != null) {
+            controller.artisanUse(matcher.group("name"), matcher.group("item1"), matcher.group("item2"));
+        } else if ((matcher = isMatched(input, artisanGet)) != null) {
+            controller.artisanGet(matcher.group("name"));
+        } else if ((matcher = isMatched(input, C_AddDollars)) != null) {
+            controller.C_AddDollars(matcher.group("count"));
+        } else if ((matcher = isMatched(input, sell)) != null) {
+            controller.sell(matcher.group("name"), matcher.group("count"));
+        } else if (isMatched(input, friendship) != null) {
+            controller.friendship();
+        } else if ((matcher = isMatched(input, talk)) != null) {
+            controller.talk(matcher.group("username"), matcher.group("message"));
+        } else if ((matcher = isMatched(input, talkHistory)) != null) {
+            controller.talkHistory(matcher.group("username"));
+        } else if ((matcher = isMatched(input, gift)) != null) {
+            controller.gift(matcher.group("username"), matcher.group("item"), matcher.group("amount"));
+        } else if (isMatched(input, giftList) != null) {
+            controller.giftList();
+        } else if ((matcher = isMatched(input, giftRate)) != null) {
+            controller.giftRate(matcher.group("giftNumber"), matcher.group("rate"));
+        } else if ((matcher = isMatched(input, giftHistory)) != null) {
+            controller.giftHistory(matcher.group("username"));
+        } else if ((matcher = isMatched(input, hug)) != null) {
+            controller.hug(matcher.group("username"));
+        } else if ((matcher = isMatched(input, flower)) != null) {
+            controller.flower(matcher.group("username"));
+        } else if ((matcher = isMatched(input, askMarriage)) != null) {
+            controller.askMarriage(matcher.group("username"), matcher.group("ring"));
+        } else if ((matcher = isMatched(input, respond)) != null) {
+            controller.respond(matcher.group("respond"), matcher.group("username"));
+        } else if (isMatched(input, startTrade) != null) {
+            controller.startTrade();
+        } else if ((matcher = isMatched(input, meetNPC)) != null) {
+            controller.meetNPC(matcher.group("npcName"));
+        } else if ((matcher = isMatched(input, giftNPC)) != null) {
+            controller.giftNPC(matcher.group("npcName"));
+        } else if ((matcher = isMatched(input, questsFinish)) != null) {
+            controller.questsFinish(matcher.group("index"));
+        } else if ((matcher = isMatched(input, eat)) != null) {
+            controller.eat(matcher.group("foodName"));
+        } else if (isMatched(input, questsList) != null) {
+            controller.questsList();
+        } else if (isMatched(input, friendshipNPCList) != null) {
+            controller.friendshipNPCList();
         } else {
             return false;
         }
         return true;
     }
+
 }
