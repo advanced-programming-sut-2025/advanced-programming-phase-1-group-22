@@ -9,4 +9,13 @@ public class MainMenuController extends MenuController {
     public Response logout(String... params) {
         return accountService.logout();
     }
+
+    public Response switchMenu(String... params) {
+        String menu = params[0];
+        return accountService.switchMenu(menu);
+    }
+
+    public Response showCurrentMenu(String... params) {
+        return accountService.showCurrentMenu();
+    }
 }

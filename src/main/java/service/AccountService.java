@@ -45,9 +45,10 @@ public class AccountService {
         }
         Session.setCurrentUser(user.get());
         response = new Response("Logged in successfully");
-        if (stayedLoggedIn.contains("stay-logged-in")) {
+        if (stayedLoggedIn != null && stayedLoggedIn.contains("stay-logged-in")) {
             Session.setStayedLoggedIn(true);
         }
+        Session.setCurrentMenu(Menu.MAIN);
         return response;
     }
 
@@ -71,16 +72,16 @@ public class AccountService {
         if (!USERNAME.matches(username)) {
             return new Response("invalid username");
         }
-        if (!UserCommands.password.matches(password)) {
+        if (!UserCommands.PASSWORD.matches(password)) {
             return new Response("invalid password");
         }
-        if (password.length() < 8) {
+        if (!UserCommands.STRONG_PASSWORD.matches(password)) {
             return new Response("weak password");
         }
         if (!password.equals(passwordRepeat)) {
             showResponse(new Response("enter password again or be back in register menu", true));
             Response response1 = getResponse();
-            if (!UserCommands.password.matches(response1.message())) {
+            if (!UserCommands.PASSWORD.matches(response1.message())) {
                 return Response.empty();
             }
         }
@@ -93,6 +94,7 @@ public class AccountService {
             response = new Response("success");
             Session.setCurrentUser(user.get());
             Session.getCurrentUser().setId(user.get().getId());
+            Session.setCurrentMenu(Menu.MAIN);
         }
         return response;
     }
@@ -120,7 +122,7 @@ public class AccountService {
         if (!Session.getCurrentUser().getPassword().equals(oldPassword)) {
             return new Response("your current password is not this: " + oldPassword);
         }
-        if (!UserCommands.password.matches(newPassword)) {
+        if (!UserCommands.STRONG_PASSWORD.matches(newPassword)) {
             return new Response("invalid new password");
         }
         if (newPassword.equals(oldPassword)) {
@@ -191,12 +193,12 @@ public class AccountService {
 //    }
 
     public Response forgetPassword(String username) {
-        if (Session.getCurrentUser() == null) {
-            return new Response("you are not logged in");
-        }
-        if (!Session.getCurrentUser().getUsername().equals(username)) {
-            return new Response("invalid username");
-        }
+//        if (Session.getCurrentUser() == null) {
+//            return new Response("you are not logged in");
+//        }
+//        if (!Session.getCurrentUser().getUsername().equals(username)) {
+//            return new Response("invalid username");
+//        }
         Random random = new Random();
         int randQuestion = random.nextInt(GenerateQuestion.values().length);
         GenerateQuestion question = GenerateQuestion.values()[randQuestion];
@@ -205,18 +207,20 @@ public class AccountService {
         if (!response.message().equals(question.getAnswer())) {
             return new Response("answer is not correct");
         }
-        showResponse(new Response("Dou you want to enter new password or see the current password? (1):(2)", true));
+        showResponse(new Response("Dou you want to enter new password or we generate a password? (1):(2)", true));
         Response response1 = getResponse();
         if (response1.message().equals("1")) {
             showResponse(new Response("enter new password", true));
             response1 = getResponse();
-            changePassword(response1.message(), Session.getCurrentUser().getPassword());
+            User user = (User) userRepository.findByUsername(username).get();
+            Session.setCurrentUser(user);
+            return changePassword(response1.message(), Session.getCurrentUser().getPassword());
         } else if (response1.message().equals("2")) {
             String newPassword = GeneratePassword.generatePassword();
             showResponse(new Response("your password is : " + newPassword, true));
-            userRepository.changePassword(Session.getCurrentUser().getUsername(), newPassword);
-            Session.getCurrentUser().setPassword(newPassword);
-            return new Response("password changed successfully");
+            User user = (User) userRepository.findByUsername(username).get();
+            Session.setCurrentUser(user);
+            return changePassword(newPassword, Session.getCurrentUser().getPassword());
         }
         return new Response("invalid input!");
     }
@@ -225,7 +229,7 @@ public class AccountService {
         if (Session.getCurrentUser() == null) {
             return new Response("you are not logged in");
         }
-        if (!Session.getCurrentMenu().equals(Menu.MAIN_MENU)) {
+        if (!Session.getCurrentMenu().equals(Menu.MAIN)) {
             return new Response("switching menu is impossible!");
         }
         Session.setCurrentMenu(Menu.valueOf(menu));
@@ -263,7 +267,7 @@ public class AccountService {
             return new Response("answer is not correct");
         }
         String password = GeneratePassword.generatePassword();
-        showResponse(new Response("Do you want to set %s as your password? (yes):(no)" + password, true));
+        showResponse(new Response("Do you want to set {%s} as your password? (yes):(no)".formatted(password), true));
         Response response1 = getResponse();
         if (response1.message().equals("no")) {
             return Response.empty();

@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum GenerateQuestion {
-    Q1("2+8", "10"), Q2("opposite of left?", "right"), Q3("12-8", "4");
+    Q1("2+8=?", "10"), Q2("opposite of left?", "right"), Q3("12-7=?", "5");
     private String question;
     private String answer;
 

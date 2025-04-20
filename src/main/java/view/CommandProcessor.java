@@ -23,7 +23,7 @@ public interface CommandProcessor {
                 return;
             }
         }
-        System.out.println("invalid command");
+        System.out.println("invalid command!");
     }
 
     Map<CommandClass, Function<String[], Response>> getFunctionsMap();

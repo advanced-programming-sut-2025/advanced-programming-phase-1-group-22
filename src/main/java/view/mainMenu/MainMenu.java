@@ -8,7 +8,7 @@ import view.CommandProcessor;
 import java.util.Map;
 import java.util.function.Function;
 
-import static command.AccountCommands.USER_LOGOUT;
+import static command.AccountCommands.*;
 
 public class MainMenu implements CommandProcessor {
     private static MainMenu menu;
@@ -26,7 +26,10 @@ public class MainMenu implements CommandProcessor {
     private final MainMenuController controller = new MainMenuController();
 
     private final Map<CommandClass, Function<String[], Response>> commandsFunctionMap = Map.of(
-            USER_LOGOUT, controller::logout
+            USER_LOGOUT, controller::logout,
+            ENTER_MENU, controller::switchMenu,
+            SHOW_CURRENT_MENU, controller::showCurrentMenu
+
     );
 
 

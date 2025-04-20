@@ -11,7 +11,7 @@ public enum Menu {
     LOGIN(LoginMenu.getInstance()),
     PROFILE(ProfileMenu.getInstance()),
     EXIT(ExitMenu.getInstance()),
-    MAIN_MENU(MainMenu.getInstance());
+    MAIN(MainMenu.getInstance());
     private final CommandProcessor commandProcessor;
 
     Menu(CommandProcessor commandProcessor) {

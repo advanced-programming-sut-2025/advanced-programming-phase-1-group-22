@@ -11,7 +11,7 @@ import java.util.function.Function;
 
 import static command.AccountCommands.*;
 
-public class ProfileMenu implements CommandProcessor {
+public class ProfileMenu  implements CommandProcessor {
     private static ProfileMenu instance;
 
     private ProfileMenu() {
@@ -31,8 +31,10 @@ public class ProfileMenu implements CommandProcessor {
             CHANGE_PASSWORD, controller::changePassword,
             CHANGE_NICKNAME, controller::changeNickName,
             CHANGE_EMAIL, controller::changeEmail,
-            USER_INFO,controller::userInfo
-            );
+            USER_INFO,controller::userInfo,
+            SHOW_CURRENT_MENU, controller::showCurrentMenu
+
+    );
 
 
     @Override
