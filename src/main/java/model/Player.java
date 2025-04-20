@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import model.abilitiy.Ability;
+import model.exception.InvalidInputException;
 import model.shelter.ShippingBin;
 import model.tools.BackPack;
 
@@ -61,5 +62,15 @@ public class Player extends Actor {
             energy = Math.min(energy,maxEnergy);
         }
         this.energyIsInfinite = energyIsInfinite;
+    }
+
+    public int getAbilityLevel(Ability ability){
+        for (Map.Entry<Ability, Integer> abilityIntegerEntry : abilities.entrySet()) {
+            if (abilityIntegerEntry.getKey().equals(ability)){
+                int level = (abilityIntegerEntry.getValue() - 50) / 100;
+				return Math.min(4,Math.max(level, 0));
+			}
+        }
+        throw new InvalidInputException("abilityType is invalid");
     }
 }
