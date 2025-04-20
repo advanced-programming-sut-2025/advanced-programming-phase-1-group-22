@@ -24,4 +24,9 @@ public class Animal extends Structure implements Salable {
     public String getName() {
         return this.animalType.getName();
     }
+
+    @Override
+    public int getSellPrice() {
+        return 0;
+    }
 }

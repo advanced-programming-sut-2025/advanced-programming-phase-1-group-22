@@ -31,4 +31,9 @@ public enum WateringCan implements Tool {
     public String getName() {
         return this.name.toLowerCase();
     }
+
+    @Override
+    public int getSellPrice() {
+        return 0;
+    }
 }

@@ -18,4 +18,9 @@ public class MixedSeeds extends Structure implements Salable {
     public String getName() {
         return this.mixedSeedsType.getName();
     }
+
+    @Override
+    public int getSellPrice() {
+        return mixedSeedsType.getSellPrice();
+    }
 }

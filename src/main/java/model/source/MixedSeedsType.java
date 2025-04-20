@@ -69,4 +69,8 @@ public enum MixedSeedsType implements Source{
     public String getName(){
         return this.name.toLowerCase();
     }
+
+    public int getSellPrice(){
+        return 0;
+    }
 }

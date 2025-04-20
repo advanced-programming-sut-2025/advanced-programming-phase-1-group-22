@@ -23,4 +23,8 @@ public class Fruit extends HarvestAbleProduct {
         this.fruitType = fruitType1;
     }
 
+    @Override
+    public int getSellPrice() {
+        return fruitType.getSellPrice();
+    }
 }

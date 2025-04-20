@@ -17,4 +17,9 @@ public class Craft extends Structure implements Salable {
     public String getName() {
         return this.craftType.getName();
     }
+
+    @Override
+    public int getSellPrice() {
+        return craftType.getSellPrice();
+    }
 }

@@ -17,4 +17,9 @@ public class AnimalProduct implements Salable {
     public String getName() {
         return this.animalProductType.getName();
     }
+
+    @Override
+    public int getSellPrice() {
+        return animalProductType.getSellPrice();
+    }
 }

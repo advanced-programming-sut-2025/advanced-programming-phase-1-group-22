@@ -14,4 +14,9 @@ public class Mineral extends Structure implements Salable {
     public String getName() {
         return this.foragingMineralType.getName();
     }
+
+    @Override
+    public int getSellPrice() {
+        return foragingMineralType.getSellPrice();
+    }
 }

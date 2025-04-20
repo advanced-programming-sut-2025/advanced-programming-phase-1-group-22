@@ -51,4 +51,9 @@ public enum TreeType implements Source {
         this.harvestStages = harvestStages;
         this.harvestCycle = harvestCycle;
     }
+
+    @Override
+    public int getSellPrice() {
+        return 0;
+    }
 }
