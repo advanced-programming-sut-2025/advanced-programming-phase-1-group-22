@@ -3,6 +3,7 @@ package view.gameMenu;
 import command.GameMenuCommand;
 import controller.GameMenuController;
 import controller.gameMenu.GameMenuController;
+import utils.App;
 import view.Menu;
 
 import java.util.Scanner;
@@ -123,7 +124,16 @@ public abstract class GameMenu extends Menu {
 
     public boolean check(String input) {
         Matcher matcher = null;
-        if (isMatched(input, exitGame) != null) {
+
+        if (App.getInstance().getCurrentGame().getPlayersInFavorTermination() != 0) {
+            if (isMatched(input, terminateGame) != null) {
+                controller.terminateGame();
+            } else if (isMatched(input, "^\\s*no\\s*$") != null) {
+                controller.undoTermination();
+            } else {
+                System.out.println("Do you agree on Termination? Either Enter \"no\" or \"terminate game\"");
+            }
+        } else if (isMatched(input, exitGame) != null) {
             controller.exitGame();
         } else if (isMatched(input, terminateGame) != null) {
             controller.terminateGame();

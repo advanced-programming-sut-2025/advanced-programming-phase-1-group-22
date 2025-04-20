@@ -20,6 +20,7 @@ public class Game {
     private TimeAndDate timeAndDate;
     private final Integer length = 160;
     private final Integer width = 120;
+    private int playersInFavorTermination = 0;
     public Tile[][] tiles = new Tile[length][width];
 
     public void start() {
@@ -47,6 +48,10 @@ public class Game {
 
     public void addPlayer(Player player) {
         players.add(player);
+    }
+
+    public void addTermination() {
+        playersInFavorTermination++;
     }
 
     public void nextPlayer() {
