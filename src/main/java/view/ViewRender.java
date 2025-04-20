@@ -15,7 +15,7 @@ public class ViewRender {
     }
 
     public static void showResponse(Response response) {
-        System.out.println(response);
+        System.out.println(response.message());
     }
 
     public void run() {

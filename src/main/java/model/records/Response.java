@@ -11,6 +11,6 @@ public record Response(String message, boolean shouldBeBack) {
     }
 
     public static Response empty() {
-        return new Response("",false);
+        return new Response("", false);
     }
 }

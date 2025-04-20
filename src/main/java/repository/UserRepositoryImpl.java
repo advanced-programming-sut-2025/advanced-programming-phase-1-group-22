@@ -1,8 +1,6 @@
 package repository;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.TypedQuery;
+import jakarta.persistence.*;
 import model.User;
 import utils.HibernateUtil;
 
@@ -14,18 +12,21 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public Optional<User> save(User user) {
+        EntityManager entityManager = emf.createEntityManager();
+        EntityTransaction transaction = null;
         try {
-            entityManager.getTransaction().begin();
+            transaction = entityManager.getTransaction();
+            transaction.begin();
             entityManager.persist(user);
-            entityManager.getTransaction().commit();
+            transaction.commit();
+            return Optional.of(user);
         } catch (Exception e) {
-            if (entityManager.getTransaction().isActive()) {
-                entityManager.getTransaction().rollback();
+            if (transaction != null && transaction.isActive()) {
+                transaction.rollback();
             }
-            System.err.println("something went wrong in addUser in UserRepositoryImpl: " + e.getMessage());
+            System.err.println("something went wrong in saveUser in UserRepositoryImpl: " + e.getMessage());
+            return Optional.empty();
         }
-        User user1 = entityManager.find(User.class, user.getUsername());
-        return Optional.ofNullable(user1);
     }
 
     @Override
@@ -48,19 +49,17 @@ public class UserRepositoryImpl implements UserRepository {
     public Optional<User> findByUsername(String username) {
         EntityManager entityManager = emf.createEntityManager();
         try {
-            entityManager.getTransaction().begin();
-            TypedQuery<User> userTypedQuery = entityManager.createQuery("from User s where s.username = ?1", User.class);
-            userTypedQuery.setParameter(1, username);
-            User singleResult = userTypedQuery.getSingleResult();
-            entityManager.getTransaction().commit();
-            return Optional.of(singleResult);
-        } catch (Exception e) {
-            if (entityManager.getTransaction().isActive()) {
-                entityManager.getTransaction().rollback();
-            }
-            System.err.println("something went wrong in findUserByUsername in UserRepositoryImpl:" + e.getMessage());
+            TypedQuery<User> query = entityManager.createQuery(
+                    "SELECT u FROM User u WHERE u.username = ?1", User.class);
+            query.setParameter(1, username);
+
+            User user = query.getSingleResult();
+            return Optional.of(user);
+        } catch (NoResultException e) {
+            return Optional.empty();
+        } catch (NonUniqueResultException e) {
+            throw new IllegalStateException("Multiple users with same username: " + username);
         }
-        return Optional.empty();
     }
 
     @Override
@@ -90,6 +89,7 @@ public class UserRepositoryImpl implements UserRepository {
             if (byUsername.isPresent()) {
                 User foundUser = byUsername.get();
                 foundUser.setPassword(newPassword);
+                entityManager.merge(foundUser);
                 entityManager.getTransaction().commit();
                 return Optional.of(foundUser);
             }
@@ -111,6 +111,7 @@ public class UserRepositoryImpl implements UserRepository {
             if (byUsername.isPresent()) {
                 User foundUser = byUsername.get();
                 foundUser.setEmail(newEmail);
+                entityManager.merge(foundUser);
                 entityManager.getTransaction().commit();
                 return Optional.of(foundUser);
             }
@@ -132,6 +133,7 @@ public class UserRepositoryImpl implements UserRepository {
             if (byUsername.isPresent()) {
                 User foundUser = byUsername.get();
                 foundUser.setUsername(newUsername);
+                entityManager.merge(foundUser);
                 entityManager.getTransaction().commit();
                 return Optional.of(foundUser);
             }
@@ -153,6 +155,7 @@ public class UserRepositoryImpl implements UserRepository {
             if (byUsername.isPresent()) {
                 User foundUser = byUsername.get();
                 foundUser.setNickname(newNickname);
+                entityManager.merge(foundUser);
                 entityManager.getTransaction().commit();
                 return Optional.of(foundUser);
             }

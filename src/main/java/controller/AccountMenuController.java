@@ -10,9 +10,8 @@ public class AccountMenuController extends MenuController {
     public Response loginUser(String... params) {
         String username = params[0];
         String password = params[1];
-        String stayedLoggedIn = params[2];
+        String stayedLoggedIn = params.length > 2 ? params[2] : null;
         return accountService.loginUser(username, password, stayedLoggedIn);
-
     }
 
     public Response registerUser(String... params) {
@@ -68,10 +67,6 @@ public class AccountMenuController extends MenuController {
 //        return accountService.pickQuestion(questionDto);
 ////    }
 
-    public Response switchMenu(String... params) {
-        String menu = params[0];
-        return accountService.switchMenu(menu);
-    }
 
     public Response exit(String... strings) {
         return accountService.exit();

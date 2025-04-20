@@ -10,7 +10,7 @@ public class GeneratePassword {
         String lowercase = "abcdefghijklmnopqrstuvwxyz";
         String uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         String digits = "0123456789";
-        String symbols = "!@#$%^&*()_+-=[]{}|;:,.<>?`~";
+        String symbols = "?><,\"';;:\\/|[]}{+=)(*&^%$#!";
 
         String allChars = lowercase + uppercase + digits + symbols;
 
@@ -22,7 +22,8 @@ public class GeneratePassword {
         passwordChars.add(digits.charAt(random.nextInt(digits.length())));
         passwordChars.add(symbols.charAt(random.nextInt(symbols.length())));
 
-        for (int i = 0; i < 6; i++) {
+        int remainingLength = 4 + random.nextInt(5);
+        for (int i = 0; i < remainingLength; i++) {
             passwordChars.add(allChars.charAt(random.nextInt(allChars.length())));
         }
 
