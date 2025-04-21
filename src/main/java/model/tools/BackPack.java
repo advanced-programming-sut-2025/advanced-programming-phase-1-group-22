@@ -49,7 +49,7 @@ public class BackPack {
         products.put(product,itemNumber + oldValue);
     }
 
-    public Salable getProductFromBackPack(String name) {
+    public Salable getProductFromBackPack(String name) throws InvalidInputException{
         for (Map.Entry<Salable, Integer> salableIntegerEntry : products.entrySet()) {
             if (salableIntegerEntry.getKey().getName().equals(name)){
                 return salableIntegerEntry.getKey();

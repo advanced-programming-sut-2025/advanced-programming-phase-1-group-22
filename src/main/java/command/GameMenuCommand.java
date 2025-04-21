@@ -3,7 +3,7 @@ package command;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public enum GameMenuCommand implements Command{
+public enum GameMenuCommand implements Command {
 	SHOW_ENERGY("show\\s+energy"),
 	ENERGY_SET("set\\+energy\\s+-v\\s+(\\d+)"),
 	SET_ENERGY_UNLIMITED("energy\\s+unlimited"),
@@ -13,8 +13,9 @@ public enum GameMenuCommand implements Command{
 	SHOW_CURRENT_TOOL("tools\\s+show\\s+current"),
 	SHOW_AVAILABLE_TOOLS("tools\\s+show\\s+available"),
 	UPGRADE_TOOL("tools\\s+upgrade\\s+([a-zA-Z ]+)"),
-	USE_TOOL("tool\\s+use\\s+-d\\s+(north|south|west|east|northwest|northeast|southeast|southwest)")
-	;
+	USE_TOOL("tool\\s+use\\s+-d\\s+(north|south|west|east|northwest|northeast|southeast|southwest)"),
+	PICK_PRODUCT("pick");
+
 	private final String pattern;
 
 	GameMenuCommand(String pattern) {

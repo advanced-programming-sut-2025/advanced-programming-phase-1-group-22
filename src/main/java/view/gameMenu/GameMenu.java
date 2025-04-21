@@ -39,6 +39,8 @@ public class GameMenu extends Menu {
 			System.out.println(gameMenuController.upgradeTool(matcher.group(1)));
 		} else if ((matcher = GameMenuCommand.USE_TOOL.getMatcher(input.trim()))!=null) {
 			System.out.println(gameMenuController.useTool(matcher.group(1)));
+		} else if ((matcher = GameMenuCommand.PICK_PRODUCT.getMatcher(input.trim()))!=null) {
+			System.out.println(gameMenuController.pickFromFloor());
 		}
 	}
 }

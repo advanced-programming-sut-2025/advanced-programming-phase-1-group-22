@@ -14,6 +14,7 @@ import utils.App;
 
 import javax.security.auth.callback.TextOutputCallback;
 import java.lang.module.ResolutionException;
+import java.util.List;
 import java.util.Map;
 
 public class GameMenuController extends MenuController {
@@ -120,6 +121,19 @@ public class GameMenuController extends MenuController {
 		return new Result(true,currentTool.useTool(currentPlayer,currentTile));
 	}
 
+	public Result pickFromFloor(){
+		Player currentPlayer = getCurrentPlayer();
+		Tile currentTile = currentPlayer.getTiles().getFirst();
+		Structure currentStructure = App.getInstance().getCurrentGame().getVillage().getStructureInTile(currentTile);
+		if (currentStructure == null){
+			return new Result(false,"there is nothing to pick on the floor");
+		}
+		else if (!currentStructure.getIsPickable()){
+			return new Result(false,"there is nothing to pick on the floor");
+		}
+		return new Result(true,tryToPickUp(currentPlayer,currentStructure,currentTile));
+	}
+
 	private Player getCurrentPlayer(){
 		return App.getInstance().getCurrentGame().getCurrentPlayer();
 	}
@@ -222,5 +236,15 @@ public class GameMenuController extends MenuController {
 			}
 		}
 		return null;
+	}
+
+	private String tryToPickUp(Player player,Structure structure,Tile tile){
+		if (player.getInventory().isInventoryHaveCapacity((Salable) structure)){
+			player.getInventory().addProductToBackPack((Salable) structure,1);
+			tile.setIsFilled(false);
+			App.getInstance().getCurrentGame().getVillage().removeStructure(structure);
+			return "you picked up a " + ((Salable) structure).getName();
+		}
+		return "your backpack is full";
 	}
 }
