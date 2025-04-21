@@ -31,4 +31,8 @@ public class Crop extends HarvestAbleProduct implements Source {
     public int getSellPrice() {
         return cropType.getSellPrice();
     }
+
+    public void burn() {
+        //TODO
+    }
 }

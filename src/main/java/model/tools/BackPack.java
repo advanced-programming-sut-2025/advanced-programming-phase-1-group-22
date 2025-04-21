@@ -70,5 +70,8 @@ public class BackPack {
             }
         }
         return null;
+    public boolean checkProductAvailabilityInBackPack(Product product, int count) {
+        if (!products.containsKey(product)) return false;
+        return products.get(product) >= count;
     }
 }

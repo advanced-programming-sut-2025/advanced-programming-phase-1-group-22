@@ -63,5 +63,6 @@ public class Game {
         i = (i == players.size() - 1) ? 0 : i+1;
 //        if (players.get(i).getIsFainted()) nextPlayer();
         currentPlayer = players.get(i);
+        timeAndDate.moveTimeForward();
     }
 }

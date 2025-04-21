@@ -11,4 +11,8 @@ import java.io.Serializable;
 public class Account  {
     private Integer id;
     private Integer golds;
+
+    public void removeGolds(int count) {
+        golds -= count;
+    }
 }
