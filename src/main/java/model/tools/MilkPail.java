@@ -47,7 +47,7 @@ public class MilkPail implements Tool {
 
     @Override
     public Tool getToolByLevel(int level) {
-        throw new InvalidInputException("this tool does not have level");
+        return null;
     }
 
     @Override

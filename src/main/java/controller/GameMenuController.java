@@ -33,23 +33,30 @@ public class GameMenuController extends MenuController {
 		return new Result(true,getCurrentPlayer().getInventory().showInventory());
 	}
 
-	public void removeFromPlayerInventory(String itemName,boolean haveItemNumber, int... itemNumbers){
+	public Result removeFromPlayerInventory(String itemName,boolean haveItemNumber, int... itemNumbers){
 		Player currentPlayer = getCurrentPlayer();
 		Salable currentProduct = getProductFromInventory(currentPlayer,itemName.trim());
+		if (currentProduct == null){
+			return new Result(false,"the inventory does not contain this item");
+		}
 		if (!haveItemNumber){
 			currentPlayer.getInventory().deleteProductFromBackPack(currentProduct,currentPlayer,
 					currentPlayer.getInventory().getProducts().get(currentProduct));
+			return new Result(true,"you delete " + itemName + " completely");
 		}
-		else {
-			int itemNumber = Math.min(itemNumbers[0],currentPlayer.getInventory().getProducts().get(currentProduct));
-			currentPlayer.getInventory().deleteProductFromBackPack(currentProduct,currentPlayer,itemNumber);
-		}
+		int itemNumber = Math.min(itemNumbers[0],currentPlayer.getInventory().getProducts().get(currentProduct));
+		currentPlayer.getInventory().deleteProductFromBackPack(currentProduct,currentPlayer,itemNumber);
+		return new Result(true,itemName + " of " + itemName + "removed");
 	}
 
-	public void toolEquip(String name){
+	public Result toolEquip(String name){
 		Player currentPlayer = getCurrentPlayer();
 		Tool currentTool = getToolFromPlayerInventory(name.trim(),currentPlayer);
+		if (currentTool == null){
+			return new Result(false,"there is not a tool with this name in inventory");
+		}
 		currentPlayer.setCurrentCarrying(currentTool);
+		return new Result(true,"you carrying " + name + " now");
 	}
 
 	public Result showCurrentTool(){
@@ -68,7 +75,15 @@ public class GameMenuController extends MenuController {
 	public Result upgradeTool(String toolName){
 		Player currentPlayer = getCurrentPlayer();
 		Tool currentTool = getToolFromPlayerInventory(toolName.trim(),currentPlayer);
+		if (currentTool == null){
+			return new Result(false,"there is not a tool with this name in inventory");
+		}
+
 		Tool upgradeTool = currentTool.getToolByLevel(currentTool.getLevel() + 1);
+
+		if (upgradeTool == null){
+			return new Result(false,"upgrade is not available");
+		}
 
 		if (!isPlayerInBlackSmith(currentPlayer)){
 			return new Result(false,"you have to be in blackSmith store to upgrade tools");
@@ -77,7 +92,7 @@ public class GameMenuController extends MenuController {
 		BlackSmithUpgrade blackSmithUpgrade = BlackSmithUpgrade.getUpgradeByTool(upgradeTool);
 
 		if (blackSmithUpgrade == null){
-			return new Result(false,"this tool do not have any upgrade");
+			return new Result(false,"this tool do not have any upgrade in  blackSmith");
 		}
 
 		if (!playerHaveEnoughResourceToUpgrade(currentPlayer,blackSmithUpgrade)){
@@ -106,11 +121,7 @@ public class GameMenuController extends MenuController {
 	}
 
 	private Player getCurrentPlayer(){
-		Player currentPlayer = App.getInstance().getCurrentGame().getCurrentPlayer();
-		if (currentPlayer == null){
-			throw new InvalidInputException("there is no player");
-		}
-		return currentPlayer;
+		return App.getInstance().getCurrentGame().getCurrentPlayer();
 	}
 
 	private Salable getProductFromInventory(Player currentPlayer, String itemName){
@@ -120,22 +131,19 @@ public class GameMenuController extends MenuController {
 				currentProduct = salableIntegerEntry.getKey();
 			}
 		}
-		if (currentProduct == null){
-			throw new InvalidInputException("the inventory does not contain this item");
-		}
+
 		return currentProduct;
 	}
 
 	private Tool getToolFromPlayerInventory(String name, Player player){
 		Tool currentTool = null;
 		for (Map.Entry<Salable, Integer> salableIntegerEntry : player.getInventory().getProducts().entrySet()) {
-			if (salableIntegerEntry.getKey().getName().equals(name) && salableIntegerEntry.getKey() instanceof Tool){
+			if (salableIntegerEntry.getKey().getName().equals(name) &&
+					salableIntegerEntry.getKey() instanceof Tool){
 				currentTool = (Tool) salableIntegerEntry.getKey();
 			}
 		}
-		if (currentTool == null){
-			throw new InvalidInputException("there is not a tool with this name in inventory");
-		}
+
 		return currentTool;
 	}
 
