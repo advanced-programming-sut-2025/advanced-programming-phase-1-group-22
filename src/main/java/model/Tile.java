@@ -34,8 +34,7 @@ public class Tile {
     private boolean checkDoor() {
         Game currentGame = app.getCurrentGame();
         for (Farm farm : currentGame.getVillage().getFarms()) {
-            if (Math.abs(farm.getXCenter() - x) <= (farm.getFarmType().getLength() / 2) &&
-                    Math.abs(farm.getYCenter() - y) <= (farm.getFarmType().getWidth() / 2)) {
+            if (farm.isPairInFarm(new Pair(x, y))) {
                 return currentGame.getPlayers().contains(currentGame.getCurrentPlayer());
             }
 
