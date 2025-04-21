@@ -51,7 +51,7 @@ public enum TrashCan implements Tool {
                 return value;
             }
         }
-        throw new InvalidInputException("there is no tool with this level");
+        return null;
     }
 
     @Override

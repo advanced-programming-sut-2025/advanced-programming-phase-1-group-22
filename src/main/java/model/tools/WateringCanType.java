@@ -47,7 +47,12 @@ public enum WateringCanType implements Tool {
 
     @Override
     public Tool getToolByLevel(int level) {
-        throw new InvalidInputException("this tool does not have level");
+        for (WateringCanType value : WateringCanType.values()) {
+            if (value.level == level){
+                return value;
+            }
+        }
+        return null;
     }
 
     @Override

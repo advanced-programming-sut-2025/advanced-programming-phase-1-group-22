@@ -24,12 +24,13 @@ public class GameMenu extends Menu {
 			System.out.println(gameMenuController.showPlayerInventory());
 		} else if ((matcher = GameMenuCommand.REMOVE_FROM_INVENTORY.getMatcher(input.trim()))!=null) {
 			if (matcher.groupCount()==2) {
-				gameMenuController.removeFromPlayerInventory(matcher.group(1), true, Integer.parseInt(matcher.group(2)));
+				System.out.println(gameMenuController.removeFromPlayerInventory(matcher.group(1),
+						true, Integer.parseInt(matcher.group(2))));
 			} else {
-				gameMenuController.removeFromPlayerInventory(matcher.group(1), false);
+				System.out.println(gameMenuController.removeFromPlayerInventory(matcher.group(1), false));
 			}
 		} else if ((matcher = GameMenuCommand.TOOL_EQUIP.getMatcher(input.trim()))!=null) {
-			gameMenuController.toolEquip(matcher.group(1));
+			System.out.println(gameMenuController.toolEquip(matcher.group(1)));
 		} else if ((matcher = GameMenuCommand.SHOW_CURRENT_TOOL.getMatcher(input.trim()))!=null) {
 			System.out.println(gameMenuController.showCurrentTool());
 		} else if ((matcher = GameMenuCommand.SHOW_AVAILABLE_TOOLS.getMatcher(input.trim()))!=null) {
@@ -37,7 +38,7 @@ public class GameMenu extends Menu {
 		} else if ((matcher = GameMenuCommand.UPGRADE_TOOL.getMatcher(input.trim()))!=null) {
 			System.out.println(gameMenuController.upgradeTool(matcher.group(1)));
 		} else if ((matcher = GameMenuCommand.USE_TOOL.getMatcher(input.trim()))!=null) {
-
+			System.out.println(gameMenuController.useTool(matcher.group(1)));
 		}
 	}
 }
