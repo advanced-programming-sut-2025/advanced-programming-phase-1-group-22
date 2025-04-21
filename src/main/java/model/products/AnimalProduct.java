@@ -3,10 +3,11 @@ package model.products;
 import lombok.Getter;
 import lombok.Setter;
 import model.Salable;
+import model.structure.Structure;
 
 @Getter
 @Setter
-public class AnimalProduct implements Salable {
+public class AnimalProduct extends Structure implements Salable {
     private AnimalProductType animalProductType;
 
     public AnimalProduct(AnimalProductType animalProductType) {

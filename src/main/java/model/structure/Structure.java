@@ -10,5 +10,5 @@ import java.util.List;
 @Setter
 public abstract class Structure {
     List<Tile> tiles = new ArrayList<Tile>();
-
+    Boolean isDropped;
 }

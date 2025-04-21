@@ -9,6 +9,11 @@ public enum GameMenuCommand implements Command{
 	SET_ENERGY_UNLIMITED("energy\\s+unlimited"),
 	SHOW_INVENTORY("inventory\\s+show"),
 	REMOVE_FROM_INVENTORY("inventory\\s+trash\\s+-i\\s+([a-zA-Z ]+)\\s*(\\d+)?"),
+	TOOL_EQUIP("tool\\s+equip\\s+()"),
+	SHOW_CURRENT_TOOL("tools\\s+show\\s+current"),
+	SHOW_AVAILABLE_TOOLS("tools\\s+show\\s+available"),
+	UPGRADE_TOOL("tools\\s+upgrade\\s+([a-zA-Z ]+)"),
+	USE_TOOL("tool\\s+use\\s+-d\\s+(north|south|west|east|northwest|northeast|southeast|southwest)")
 	;
 	private final String pattern;
 

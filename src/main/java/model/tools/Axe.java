@@ -1,6 +1,19 @@
 package model.tools;
 
 import lombok.Getter;
+import model.Player;
+import model.Tile;
+import model.abilitiy.Ability;
+import model.exception.InvalidInputException;
+import model.products.TreesAndFruitsAndSeeds.Tree;
+import model.source.Mineral;
+import model.source.MineralType;
+import model.structure.Structure;
+import model.structure.Trunk;
+import model.structure.TrunkType;
+import utils.App;
+
+import java.util.List;
 
 @Getter
 public enum Axe implements Tool{
@@ -26,6 +39,16 @@ public enum Axe implements Tool{
     }
 
     @Override
+    public Tool getToolByLevel(int level) {
+        for (Axe value : Axe.values()) {
+            if (value.level == level){
+                return value;
+            }
+        }
+        throw new InvalidInputException("there is no tool with this level");
+    }
+
+    @Override
     public String getName() {
         return this.name.toLowerCase();
     }
@@ -33,5 +56,56 @@ public enum Axe implements Tool{
     @Override
     public int getSellPrice() {
         return 0;
+    }
+
+    @Override
+    public int getLevel() {
+        return level;
+    }
+
+    @Override
+    public int getEnergy(Player player) {
+        if (player.getAbilityLevel(Ability.FORAGING) == 4){
+            return energyCost - 1;
+        }
+        return energyCost;
+    }
+
+    @Override
+    public String useTool(Player player, Tile tile) {
+        boolean success = false;
+        Structure structure = App.getInstance().getCurrentGame().getVillage().getStructureInTile(tile);
+        if (structure != null){
+            if (structure instanceof Trunk){
+                if (((Trunk)structure).getTrunkType().equals(TrunkType.SMALL_TRUNK)){
+                    afterUseTool(new Mineral(MineralType.WOOD),player,tile,structure);
+                    success = true;
+                }
+            }
+            if (structure instanceof Tree){
+                afterUseTool(new Mineral(MineralType.WOOD),player,tile,structure);
+                //Fruit of tree
+                success = true;
+            }
+        }
+        if (success){
+            player.changeEnergy(-this.getEnergy(player));
+            return "you successfully use this tool";
+        }
+        player.changeEnergy(-Math.max(0,this.getEnergy(player) - 1));
+        return "you use this tool in a wrong way";
+    }
+
+    private void afterUseTool(Mineral mineral, Player player, Tile tile,Structure structure){
+        if (player.getInventory().isInventoryHaveCapacity(mineral)){
+            player.getInventory().addProductToBackPack(mineral,1);
+            tile.setIsFilled(false);
+        }
+        else {
+            mineral.setTiles(List.of(tile));
+            mineral.setIsDropped(true);
+            App.getInstance().getCurrentGame().getVillage().addStructureToPlayerFarmByPlayerTile(player,mineral);
+        }
+        App.getInstance().getCurrentGame().getVillage().removeStructure(structure);
     }
 }

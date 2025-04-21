@@ -10,6 +10,10 @@ import model.structure.Structure;
 public class Mineral extends Structure implements Salable {
     private MineralType foragingMineralType;
 
+    public Mineral(MineralType foragingMineralType) {
+        this.foragingMineralType = foragingMineralType;
+    }
+
     @Override
     public String getName() {
         return this.foragingMineralType.getName();

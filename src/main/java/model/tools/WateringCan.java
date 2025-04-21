@@ -1,39 +1,56 @@
 package model.tools;
 
 import lombok.Getter;
+import lombok.Setter;
+import model.Player;
+import model.Tile;
 
 @Getter
+@Setter
+public class WateringCan implements Tool{
+	private WateringCanType wateringCanType;
+	private Boolean isFullOfWater;
 
-public enum WateringCan implements Tool {
-    NORMAL("normal wateringCan",0,40,5),
-    CUPPER("cupper wateringCan",1,55,4),
-    IRON("iron wateringCan",2,70,3),
-    GOLD("gold wateringCan",3,85,2),
-    IRIDIUM("iridium wateringCan",4,100,1);
+	public WateringCan(WateringCanType wateringCanType) {
+		this.wateringCanType = wateringCanType;
+	}
 
-    private final String name;
-    private final Integer level;
-    private final Integer capacity;
-    private final Integer energyUse;
-     WateringCan(String name,Integer level, Integer capacity, Integer energyUse) {
-        this.name = name;
-         this.level = level;
-        this.capacity = capacity;
-        this.energyUse = energyUse;
-    }
+	@Override
+	public void addToolEfficiency(double efficiency) {
 
-    @Override
-    public void addToolEfficiency(double efficiency) {
+	}
 
-    }
+	@Override
+	public Tool getToolByLevel(int level) {
+		return wateringCanType.getToolByLevel(level);
+	}
 
-    @Override
-    public String getName() {
-        return this.name.toLowerCase();
-    }
+	@Override
+	public int getLevel() {
+		return wateringCanType.getLevel();
+	}
 
-    @Override
-    public int getSellPrice() {
-        return 0;
-    }
+	@Override
+	public int getEnergy(Player player) {
+		return wateringCanType.getEnergy(player);
+	}
+
+	@Override
+	public String useTool(Player player, Tile tile) {
+		String message = wateringCanType.useTool(player,tile);
+		isFullOfWater = wateringCanType.getIsFullOfWater();
+		return message;
+	}
+
+	@Override
+	public String getName() {
+		return wateringCanType.getName();
+	}
+
+	@Override
+	public int getSellPrice() {
+		return wateringCanType.getSellPrice();
+	}
+
+
 }

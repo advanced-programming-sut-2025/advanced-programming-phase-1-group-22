@@ -165,4 +165,35 @@ public class Village {
             }
         }
     }
+
+    public Structure getStructureInTile(Tile tile){
+        for (Structure structure : this.getStructures()) {
+            if (structure.getTiles().contains(tile)){
+                return structure;
+            }
+        }
+        for (Farm farm : this.getFarms()) {
+            for (Structure structure : farm.getStructures()) {
+                if (structure.getTiles().contains(tile)){
+                    return structure;
+                }
+            }
+        }
+        return null;
+    }
+
+    public void removeStructure(Structure structure){
+		this.getStructures().remove(structure);
+        for (Farm farm : this.getFarms()) {
+			farm.getStructures().remove(structure);
+        }
+    }
+
+    public void addStructureToPlayerFarmByPlayerTile(Player player, Structure structure){
+        for (Farm farm : this.getFarms()) {
+            if (farm.getTiles().contains(player.getTiles().getFirst())){
+                farm.getStructures().add(structure);
+            }
+        }
+    }
 }
