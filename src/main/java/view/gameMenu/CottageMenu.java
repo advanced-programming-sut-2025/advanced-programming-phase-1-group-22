@@ -22,7 +22,7 @@ public class CottageMenu extends GameMenu {
 
         Matcher matcher;
 
-        if (super.check(input)) {
+        if (super.check(input, scanner)) {
             return;
         } else if (isMatched(input, craftingShowRecipes) != null) {
             controller.craftingShowRecipes();

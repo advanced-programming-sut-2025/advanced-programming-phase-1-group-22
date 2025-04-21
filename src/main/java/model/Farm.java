@@ -299,6 +299,11 @@ public class Farm {
         }
         return null;
     }
+
+    public boolean isPairInFarm(Pair pair) {
+        return Math.abs(xCenter - pair.getX()) <= (farmType.getLength() / 2) &&
+               Math.abs(yCenter - pair.getY()) <= (farmType.getWidth() / 2);
+    }
 }
 
 

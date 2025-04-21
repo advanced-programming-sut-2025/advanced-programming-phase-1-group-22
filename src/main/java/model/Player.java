@@ -1,5 +1,6 @@
 package model;
 
+import controller.gameMenu.GameMenuController;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
