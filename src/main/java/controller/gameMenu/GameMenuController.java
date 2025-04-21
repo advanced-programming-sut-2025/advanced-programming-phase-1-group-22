@@ -141,6 +141,17 @@ public class GameMenuController extends MenuController {
     }
 
     public void walk(String x, String y) {
+        int x1 = Integer.parseInt(x);
+        int y1 = Integer.parseInt(y);
+        if (x1 < 0 || y1 < 0 || x1 >= game.getLength() || y1 >= game.getWidth()) {
+            throw new InvalidInputException("Position out of bound");
+        }
+        WalkingStrategy walkingStrategy = new WalkingStrategy();
+        Player player = game.getCurrentPlayer();
+        int energy = walkingStrategy.calculateEnergy(
+                new Pair(player.getTiles().getFirst().getX(),player.getTiles().getFirst().getX()) , new Pair(x1, y1));
+        if (energy == -1) throw  new InvalidInputException("No path available");
+        player.removeEnergy(energy);
     }
 
     public void helpReadingMap() {
