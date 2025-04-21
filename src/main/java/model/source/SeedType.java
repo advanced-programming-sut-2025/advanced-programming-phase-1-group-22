@@ -2,6 +2,8 @@ package model.source;
 
 import lombok.Getter;
 import model.enums.Season;
+import model.exception.InvalidInputException;
+
 @Getter
 public enum SeedType implements Source {
     JAZZ_SEEDS("Jazz Seeds", Season.SPRING, true),
@@ -53,7 +55,13 @@ public enum SeedType implements Source {
     ORANGE_SAPLING("Orange Sapling",null,false),
     Peach_SAPLING("Peach Sapling",null,false),
     APPLE_SAPLING("Apple Sapling",null,false),
-    POMEGRANATE_SAPLING("Pomegranate Sapling",null,false);
+    POMEGRANATE_SAPLING("Pomegranate Sapling",null,false),
+    ACORNS("Acorns", Season.SPECIAL, false),
+    MAPLE_SEEDS("Maple Seeds", Season.SPECIAL, false),
+    PINE_CONES("Pine cones", Season.SPECIAL, false),
+    MAHOGANY_SEEDS("Mahogany Seeds", Season.SPECIAL, false),
+    MUSHROOM_TREE_SEEDS("Mushroom Tree Seeds", Season.SPECIAL, false),
+    MYSTIC_TREE_SEEDS("Mystic Tree Seeds", Season.SPECIAL, false);
 
     private final String name;
     private final Season season;
@@ -73,5 +81,14 @@ public enum SeedType implements Source {
     @Override
     public int getSellPrice() {
         return 0;
+    }
+
+    public static SeedType getFromName(String name){
+        for (SeedType value : SeedType.values()) {
+            if (value.name.equals(name)){
+                return value;
+            }
+        }
+        throw new InvalidInputException("there is no seed with this name");
     }
 }

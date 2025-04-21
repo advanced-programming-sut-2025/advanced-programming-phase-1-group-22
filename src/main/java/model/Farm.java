@@ -9,6 +9,7 @@ import model.structure.*;
 import model.structure.farmInitialElements.HardCodeFarmElements;
 import utils.App;
 
+import javax.swing.plaf.synth.SynthTreeUI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -175,8 +176,9 @@ public class Farm {
             Seed seed = new Seed(SeedType.values()[foragingRandSeed]);
             seed.setIsPickable(true);
             setStructurePlace(seed, 1, 1);
-            int cropRand = random.nextInt(0, 21);
+            int cropRand = random.nextInt(41, 62);
             Crop crop = new Crop(CropType.values()[cropRand]);
+            crop.setIsPickable(true);
             setStructurePlace(crop, 1, 1);
         }
         for (int i = 0; i < foragingRand2; i++) {
@@ -219,7 +221,68 @@ public class Farm {
             }
             tiles2.clear();
         }
+    }
 
+    public void generateRandomForaging(){
+        Random random = new Random();
+        int foragingRand = random.nextInt(14, 18);
+        int foragingRand2 = random.nextInt(12, 16);
+        int foragingRand3 = random.nextInt(10,12);
+        for (int i = 0; i < foragingRand; i++) {
+            int foragingRandSeed = random.nextInt(0, 41);
+            Seed seed = new Seed(SeedType.values()[foragingRandSeed]);
+            if (seed.getSeedType().getSeason().equals(App.getInstance().getCurrentGame().getTimeAndDate().getSeason())){
+                seed.setIsPickable(true);
+                setForagingPlace(seed, 1, 1);
+            }
+        }
+        for (int i = 0; i < foragingRand2; i++){
+            int cropRand = random.nextInt(41, 62);
+            Crop crop = new Crop(CropType.values()[cropRand]);
+            if (crop.getCropType().getSeasons().contains(App.getInstance().getCurrentGame().getTimeAndDate().getSeason())){
+                crop.setIsPickable(true);
+                setForagingPlace(crop, 1, 1);
+            }
+        }
+        for (int i = 0; i < foragingRand3; i++) {
+            int mineralRand = random.nextInt(0,21);
+            Mineral mineral = new Mineral(MineralType.values()[mineralRand]);
+            mineral.setIsPickable(true);
+            setStructurePlace(mineral,1,1);
+        }
+    }
+
+    private void setForagingPlace(Structure structure,int length, int width){
+        Tile[][] tiles1 = app.getCurrentGame().tiles;
+        List<Tile> tiles2 = new ArrayList<>();
+        boolean flag = true;
+        Random random = new Random();
+        int randX = -1;
+        int randY = -1;
+        for (int i = 0; i < this.tiles.size(); i++) {
+            randX = random.nextInt(farmXStart, farmXEnd);
+            randY = random.nextInt(farmYStart, farmYEnd);
+            for (int j = randX; j < randX + length; j++) {
+                for (int k = randY; k < randY + width; k++) {
+                    if (tiles1[j][k].getIsFilled() ||
+                            !tiles1[j][k].getTileType().equals(TileType.PLOWED)) {
+                        flag = false;
+                    } else {
+                        int rand = random.nextInt(1,100);
+                        if (rand == 1){
+                            tiles1[j][k].setIsFilled(true);
+                            tiles2.add(tiles1[j][k]);
+                        }
+                    }
+                }
+            }
+            if (flag) {
+                structure.getTiles().addAll(tiles2);
+                this.getStructures().add(structure);
+                return;
+            }
+            tiles2.clear();
+        }
     }
 }
 

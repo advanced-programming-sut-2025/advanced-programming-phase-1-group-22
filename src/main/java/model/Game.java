@@ -3,6 +3,7 @@ package model;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import utils.App;
 
 import java.util.List;
 
@@ -33,10 +34,13 @@ public class Game {
             player.resetEnergy();
             addGoldToPlayerForShippingBin(player.getShippingBin().CalculatePriceOfShippingBinProducts(),player);
         }
+        for (Farm farm : App.getInstance().getCurrentGame().getVillage().getFarms()) {
+            farm.generateRandomForaging();
+        }
     }
 
     public void addGoldToPlayerForShippingBin(int price, Player player){
-       int oldGold =  player.getAccount().getGolds();
+       int oldGold = player.getAccount().getGolds();
        player.getAccount().setGolds(oldGold + price);
     }
 }

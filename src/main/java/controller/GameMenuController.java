@@ -1,6 +1,7 @@
 package controller;
 
 import model.*;
+import model.abilitiy.Ability;
 import model.exception.InvalidInputException;
 import model.products.Product;
 import model.receipe.Recipe;
@@ -243,6 +244,7 @@ public class GameMenuController extends MenuController {
 			player.getInventory().addProductToBackPack((Salable) structure,1);
 			tile.setIsFilled(false);
 			App.getInstance().getCurrentGame().getVillage().removeStructure(structure);
+			player.upgradeAbility(Ability.FORAGING);
 			return "you picked up a " + ((Salable) structure).getName();
 		}
 		return "your backpack is full";

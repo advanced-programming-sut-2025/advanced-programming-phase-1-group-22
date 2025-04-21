@@ -2,11 +2,11 @@ package model.tools;
 
 import lombok.Getter;
 import model.Player;
+import model.Salable;
 import model.Tile;
 import model.abilitiy.Ability;
 import model.products.TreesAndFruitsAndSeeds.Tree;
-import model.source.Mineral;
-import model.source.MineralType;
+import model.source.*;
 import model.structure.Structure;
 import model.structure.Trunk;
 import model.structure.TrunkType;
@@ -77,17 +77,21 @@ public enum Axe implements Tool{
         if (structure != null){
             if (structure instanceof Trunk){
                 if (((Trunk)structure).getTrunkType().equals(TrunkType.SMALL_TRUNK)){
-                    afterUseTool(new Mineral(MineralType.WOOD),player,tile,structure);
+                    afterUseToolForMineralOrTree(new Mineral(MineralType.WOOD),player,tile,structure);
                     success = true;
                 }
             }
             if (structure instanceof Tree){
-                afterUseTool(new Mineral(MineralType.WOOD),player,tile,structure);
-                //Fruit of tree
-                success = true;
+                if (((Tree)structure).getTreeType().getIsForaging()){
+                    afterUseToolForMineralOrTree(new Seed(SeedType.getFromName(((Tree)structure).getTreeType().getName())),
+                            player,tile,structure);
+                    afterUseToolForMineralOrTree(new Mineral(MineralType.WOOD),player,tile,structure);
+                    success = true;
+                }
             }
         }
         if (success){
+            player.upgradeAbility(Ability.FORAGING);
             player.changeEnergy(-this.getEnergy(player));
             return "you successfully use this tool";
         }
@@ -95,15 +99,15 @@ public enum Axe implements Tool{
         return "you use this tool in a wrong way";
     }
 
-    private void afterUseTool(Mineral mineral, Player player, Tile tile,Structure structure){
-        if (player.getInventory().isInventoryHaveCapacity(mineral)){
-            player.getInventory().addProductToBackPack(mineral,1);
+    private void afterUseToolForMineralOrTree(Structure mineralOrSeed, Player player, Tile tile, Structure structure){
+        if (player.getInventory().isInventoryHaveCapacity((Salable) mineralOrSeed)){
+            player.getInventory().addProductToBackPack((Salable) mineralOrSeed,1);
             tile.setIsFilled(false);
         }
         else {
-            mineral.setTiles(List.of(tile));
-            mineral.setIsPickable(true);
-            App.getInstance().getCurrentGame().getVillage().addStructureToPlayerFarmByPlayerTile(player,mineral);
+            mineralOrSeed.setTiles(List.of(tile));
+            mineralOrSeed.setIsPickable(true);
+            App.getInstance().getCurrentGame().getVillage().addStructureToPlayerFarmByPlayerTile(player, mineralOrSeed);
         }
         App.getInstance().getCurrentGame().getVillage().removeStructure(structure);
     }

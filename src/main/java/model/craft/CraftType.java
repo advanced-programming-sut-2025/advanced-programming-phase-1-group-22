@@ -1,19 +1,14 @@
 package model.craft;
 
 import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
 import model.Salable;
 import model.abilitiy.Ability;
-import model.products.AnimalProduct;
-import model.products.AnimalProductType;
 import model.products.Product;
 import model.products.TreesAndFruitsAndSeeds.MadeProductType;
 import model.products.TreesAndFruitsAndSeeds.TreeType;
-import model.source.CropType;
 import model.source.MineralType;
 import model.source.SeedType;
-import model.source.Source;
 import model.structure.stores.StoreType;
 
 import java.util.Map;
@@ -39,7 +34,7 @@ public enum CraftType implements Product{
     PRESERVES_JAR("preserves jar","سبزیجات را به ترشی و میوه ها را به مربا تبدیل میکند",Map.of(MineralType.WOOD,50,MineralType.STONE,40,MineralType.COAL,8),0,Map.of(Ability.FARMING,2)),
     DEHYDRATOR("dehydrator","میوه یا قارچ را خشک میکند",Map.of(MineralType.WOOD,30,MineralType.STONE,20,MineralType.FIBER,30),0,StoreType.PIERRE_SHOP),
     FISH_SMOKER("fish smoker","هر ماهی را با یک ذغال با حفظ کیفیتش تبدیل به ماهی دودی میکند",Map.of(MineralType.WOOD,50,MineralType.COAL,10,MadeProductType.IRON_BAR,3),0,StoreType.FISH_SHOP),
-    MYSTIC_TREE_SEED("mystic tree seed","میتواند کاشته شود تا mystic tree رشد کند",Map.of(TreeType.PINE_CONES,5,TreeType.MAHOGANY_SEEDS,5,TreeType.ACORNS,5,TreeType.MAPLE_SEEDS,5),100,Map.of(Ability.MINING,4));
+    MYSTIC_TREE_SEEDS("mystic tree seed","میتواند کاشته شود تا mystic tree رشد کند",Map.of(SeedType.PINE_CONES,5,SeedType.MAHOGANY_SEEDS,5,SeedType.ACORNS,5, SeedType.MAPLE_SEEDS,5),100,Map.of(Ability.MINING,4));
 
     CraftType(String name,String description, Map<Salable, Integer> products, Integer sellPrice, Map<Ability, Integer> abilities) {
         this.name = name;
