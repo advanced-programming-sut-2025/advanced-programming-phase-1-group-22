@@ -2,12 +2,8 @@ package model.source;
 
 import lombok.Getter;
 import lombok.Setter;
-import model.enums.Season;
 import model.products.HarvestAbleProduct;
-import model.products.TreesAndFruitsAndSeeds.FruitType;
-import model.structure.Structure;
 
-import java.util.List;
 
 @Getter
 @Setter
