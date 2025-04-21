@@ -10,6 +10,7 @@ import model.source.Seed;
 import model.source.SeedType;
 import model.structure.*;
 import model.structure.farmInitialElements.Cottage;
+import model.structure.farmInitialElements.GreenHouse;
 import model.structure.farmInitialElements.HardCodeFarmElements;
 import utils.App;
 
@@ -220,6 +221,12 @@ public class Farm {
     public Cottage getCottage() {
         for (Structure structure : structures) {
             if (structure instanceof Cottage) return (Cottage)structure;
+        }
+        return null;
+    }
+    public GreenHouse getGreenHouse() {
+        for (Structure structure : structures) {
+            if (structure instanceof GreenHouse) return (GreenHouse) structure;
         }
         return null;
     }

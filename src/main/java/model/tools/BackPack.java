@@ -19,13 +19,13 @@ public class BackPack {
 
     }
 
-    public void deleteProductFromBackPack(Product product) {
-
+    public void deleteProductFromBackPack(Product product, int count) {
+        if (!products.containsKey(product)) return;
+        products.put(product, products.get(product) - count);
     }
 
-    public boolean checkProductAvailabilityInBackPack(Product product) {
-
-
-        return false;
+    public boolean checkProductAvailabilityInBackPack(Product product, int count) {
+        if (!products.containsKey(product)) return false;
+        return products.get(product) >= count;
     }
 }

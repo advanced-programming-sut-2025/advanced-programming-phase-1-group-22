@@ -13,4 +13,8 @@ public class Tree extends Structure {
     public Tree(TreeType treeType) {
         this.treeType = treeType;
     }
+
+    public void burn() {
+        //TODO
+    }
 }

@@ -13,4 +13,7 @@ public class Seed extends Structure {
         this.seedType = seedType;
     }
 
+    public void burn() {
+        //TODO
+    }
 }
