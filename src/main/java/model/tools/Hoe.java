@@ -1,6 +1,11 @@
 package model.tools;
 
 import lombok.Getter;
+import model.Player;
+import model.Tile;
+import model.TileType;
+import model.abilitiy.Ability;
+import model.exception.InvalidInputException;
 
 @Getter
 public enum Hoe implements Tool {
@@ -33,5 +38,47 @@ public enum Hoe implements Tool {
     @Override
     public int getSellPrice() {
         return 0;
+    }
+
+    @Override
+    public Tool getToolByLevel(int level) {
+        for (Hoe value : Hoe.values()) {
+            if (value.level == level){
+                return value;
+            }
+        }
+        throw new InvalidInputException("there is no tool with this level");
+    }
+
+    @Override
+    public int getLevel(){
+        return 0;
+    }
+
+    @Override
+    public int getEnergy(Player player) {
+        if (player.getAbilityLevel(Ability.FARMING) == 4){
+            return energyCost - 1;
+        }
+        return energyCost;
+    }
+
+    @Override
+    public String useTool(Player player, Tile tile) {
+        if (tile.getTileType().equals(TileType.PATH) ||
+                tile.getTileType().equals(TileType.FENCE) ||
+                tile.getTileType().equals(TileType.DOOR)){
+            return "you can not hoe this kind of tile";
+        }
+        boolean success = false;
+        if (!tile.getIsFilled()){
+            tile.setTileType(TileType.PLOWED);
+            success = true;
+        }
+        player.changeEnergy(-this.getEnergy(player));
+        if (success){
+            return "you successfully use this tool";
+        }
+        return "you use this tool in a wrong way";
     }
 }

@@ -6,8 +6,9 @@ import lombok.ToString;
 import model.abilitiy.Ability;
 import model.exception.InvalidInputException;
 import model.shelter.ShippingBin;
-import model.tools.BackPack;
+import model.tools.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 @Getter
@@ -15,20 +16,34 @@ import java.util.Map;
 @ToString
 public class Player extends Actor {
     private Integer id;
-    public User user;
+    private User user;
     private Integer energy;
     private Integer maxEnergy;
     private Integer energyPerTurn;
     private Boolean energyIsInfinite;
     private BackPack inventory;
     private Buff buff;
-    private Map<Ability, Integer> abilities;
+    private Map<Ability, Integer> abilities = new HashMap<>();
     private ShippingBin shippingBin;
     private Account account = new Account();
     private List<Marry> marriage;
     private Player couple;
     private List<Trade> gootenTradeList;
     private Boolean isFainted;
+    private Salable currentCarrying = null;
+
+    public Player(User user) {
+        this.user = user;
+        this.energy = 200;
+        this.maxEnergy = 200;
+        this.energyPerTurn = 50;
+        this.inventory = new BackPack(BackPackType.NORMAL_BACKPACK);
+        abilities.put(Ability.FARMING,0);
+        abilities.put(Ability.FORAGING,0);
+        abilities.put(Ability.FISHING,0);
+        abilities.put(Ability.MINING,0);
+        addBasicTools();
+    }
 
     public void faint(){
         isFainted = true;
@@ -37,10 +52,10 @@ public class Player extends Actor {
 
     public void changeEnergy(int currentEnergy){
         if (energyIsInfinite){
-            energy += currentEnergy;
+            energy = Math.max(0,energy + currentEnergy);
         }
         else {
-            energy = Math.min(energy + currentEnergy,maxEnergy);
+            energy = Math.min(Math.max(0,energy + currentEnergy),maxEnergy);
         }
     }
 
@@ -72,5 +87,13 @@ public class Player extends Actor {
 			}
         }
         throw new InvalidInputException("abilityType is invalid");
+    }
+
+    private void addBasicTools(){
+        inventory.getProducts().put(Hoe.NORMAL,1);
+        inventory.getProducts().put(Pickaxe.NORMAL,1);
+        inventory.getProducts().put(Axe.NORMAL,1);
+        inventory.getProducts().put(new WateringCan(WateringCanType.NORMAL),1);
+        inventory.getProducts().put(TrashCan.NORMAL,1);
     }
 }

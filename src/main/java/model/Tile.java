@@ -24,6 +24,7 @@ public class Tile {
             case SNOW -> true;
             case GRASS -> true;
             case FLOWER -> true;
+            case PLOWED -> true;
             case DOOR -> checkDoor();
         };
 

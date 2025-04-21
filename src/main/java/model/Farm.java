@@ -4,10 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import model.products.TreesAndFruitsAndSeeds.Tree;
 import model.products.TreesAndFruitsAndSeeds.TreeType;
-import model.source.Crop;
-import model.source.CropType;
-import model.source.Seed;
-import model.source.SeedType;
+import model.source.*;
 import model.structure.*;
 import model.structure.farmInitialElements.HardCodeFarmElements;
 import utils.App;
@@ -140,6 +137,7 @@ public class Farm {
         int stoneRand = random.nextInt(12, 15);
         int foragingRand = random.nextInt(14, 18);
         int foragingRand2 = random.nextInt(12, 16);
+        int foragingRand3 = random.nextInt(10,12);
         for (int i = 0; i < trunkRand; i++) {
             Trunk trunk = null;
             switch (trunkRand % 3) {
@@ -185,6 +183,11 @@ public class Farm {
             Tree tree = new Tree(TreeType.values()[foragingRandTree]);
             setStructurePlace(tree, 1, 1);
         }
+        for (int i = 0; i < foragingRand3; i++) {
+            int mineralRand = random.nextInt(0,21);
+            Mineral mineral = new Mineral(MineralType.values()[mineralRand]);
+            setStructurePlace(mineral,1,1);
+        }
     }
 
     public void setStructurePlace(Structure structure, int length, int width) {
@@ -202,6 +205,7 @@ public class Farm {
                     if (tiles1[j][k].getIsFilled()) {
                         flag = false;
                     } else {
+                        tiles1[j][k].setIsFilled(true);
                         tiles2.add(tiles1[j][k]);
                     }
                 }

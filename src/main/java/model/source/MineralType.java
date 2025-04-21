@@ -26,9 +26,9 @@ public enum MineralType implements Product{
     IRON_ORE("iron ore","A fairly common ore that can be smelted into bars.", 150 / 2),
     GOLD_ORE("gold ore","A precious ore that can be smelted into bars.", 400 / 2),
     IRIDIUM_ORE("iridium ore","",0),
+    FIBER("fiber","",0),
     WOOD("wood","",0),
     STONE("stone","",0),
-    FIBER("fiber","",0),
     HARD_WOOD("hard wood","",0);
 
     private final String name;

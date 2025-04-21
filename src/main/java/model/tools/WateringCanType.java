@@ -4,27 +4,30 @@ import lombok.Getter;
 import model.Player;
 import model.Tile;
 import model.abilitiy.Ability;
-import model.animal.Animal;
-import model.animal.AnimalType;
 import model.exception.InvalidInputException;
-import model.products.AnimalProduct;
 import model.structure.Structure;
+import model.structure.farmInitialElements.Lake;
 import utils.App;
 
-import java.util.List;
-
 @Getter
-public enum Shear implements Tool {
-    SHEAR("shear",4, 1000);
+
+public enum WateringCanType implements Tool {
+    NORMAL("normal wateringCan",0,40,5),
+    CUPPER("cupper wateringCan",1,55,4),
+    IRON("iron wateringCan",2,70,3),
+    GOLD("gold wateringCan",3,85,2),
+    IRIDIUM("iridium wateringCan",4,100,1);
 
     private final String name;
+    private final Integer level;
+    private final Integer capacity;
     private final Integer energyCost;
-    private final Integer price;
-
-    Shear(String name,Integer energyCost, Integer price) {
+    private Boolean isFullOfWater;
+     WateringCanType(String name, Integer level, Integer capacity, Integer energyCost) {
         this.name = name;
+         this.level = level;
+        this.capacity = capacity;
         this.energyCost = energyCost;
-        this.price = price;
     }
 
     @Override
@@ -39,17 +42,12 @@ public enum Shear implements Tool {
 
     @Override
     public int getSellPrice() {
-        return price;
+        return 0;
     }
 
     @Override
     public Tool getToolByLevel(int level) {
         throw new InvalidInputException("this tool does not have level");
-    }
-
-    @Override
-    public int getLevel() {
-        return 0;
     }
 
     @Override
@@ -61,33 +59,25 @@ public enum Shear implements Tool {
     }
 
     @Override
+    public int getLevel(){
+         return level;
+    }
+
+    @Override
     public String useTool(Player player, Tile tile) {
         Structure structure = App.getInstance().getCurrentGame().getVillage().getStructureInTile(tile);
         boolean success = false;
         if (structure != null){
-            if (structure instanceof Animal currentAnimal){
-				if (currentAnimal.getAnimalType().equals(AnimalType.SHEEP)){
-                    currentAnimal.setShaving(true);
-                    afterUseTool(currentAnimal.getAnimalProduct(),player,tile);
-                    success = true;
-                }
+            if (structure instanceof Lake){ // or GreenHouse
+                isFullOfWater = true;
+                success = true;
             }
         }
+        // آب دادن به محصولات
         player.changeEnergy(-this.getEnergy(player));
         if (success){
             return "you successfully use this tool";
         }
         return "you use this tool in a wrong way";
-    }
-
-    private void afterUseTool(AnimalProduct animalProduct, Player player, Tile tile){
-        if (player.getInventory().isInventoryHaveCapacity(animalProduct)){
-            player.getInventory().addProductToBackPack(animalProduct,1);
-        }
-        else {
-            animalProduct.setTiles(List.of(tile));
-            animalProduct.setIsDropped(true);
-            App.getInstance().getCurrentGame().getVillage().addStructureToPlayerFarmByPlayerTile(player,animalProduct);
-        }
     }
 }

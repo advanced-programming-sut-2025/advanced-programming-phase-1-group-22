@@ -15,7 +15,7 @@ public class InitialGame {
             npc.setMissions();
         }
         for (int i = 0; i < 4; i++) {
-            Farm farm = new Farm(new Player(), FarmType.values()[i + 1]);
+            Farm farm = new Farm(new Player(new User("","","","")), FarmType.values()[i + 1]);
             village.getFarms().add(farm);
         }
         village.fillFarms();

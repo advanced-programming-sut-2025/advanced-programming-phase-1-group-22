@@ -1,6 +1,10 @@
 package model.tools;
 
 import lombok.Getter;
+import model.Player;
+import model.Tile;
+import model.abilitiy.Ability;
+import model.exception.InvalidInputException;
 
 @Getter
 public enum FishingPole implements Tool {
@@ -39,5 +43,28 @@ public enum FishingPole implements Tool {
     @Override
     public int getSellPrice() {
         return price;
+    }
+
+    @Override
+    public Tool getToolByLevel(int level) {
+        throw new InvalidInputException("this tool does not have level");
+    }
+
+    @Override
+    public int getLevel() {
+        return 0;
+    }
+
+    @Override
+    public int getEnergy(Player player) {
+        if (player.getAbilityLevel(Ability.FISHING) == 4){
+            return energyCost - 1;
+        }
+        return energyCost;
+    }
+
+    @Override
+    public String useTool(Player player, Tile tile) {
+        return "";
     }
 }

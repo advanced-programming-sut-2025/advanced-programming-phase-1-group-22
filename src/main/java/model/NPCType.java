@@ -12,7 +12,7 @@ import model.receipe.Recipe;
 import model.source.CropType;
 import model.source.MineralType;
 import model.structure.NPCHouse;
-import model.tools.WateringCan;
+import model.tools.WateringCanType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,7 +79,7 @@ public enum NPCType {
                             Map.of(MineralType.GOLD, 500), 1),
                     new Mission(NPCType.valueOf("EBIGIL"),
                             Map.of(CropType.WHEAT, 50),
-                            Map.of(WateringCan.IRIDIUM, 1), Season.WINTER)));
+                            Map.of(WateringCanType.IRIDIUM, 1), Season.WINTER)));
             case HARVEY -> missions.addAll(List.of(new Mission(NPCType.valueOf("HARVEY"),
                             Map.of(MineralType.GOLD, 12),//TODO
                             Map.of(MineralType.GOLD, 750), 0),

@@ -5,6 +5,8 @@ import lombok.Setter;
 import model.Player;
 import model.Salable;
 import model.TimeAndDate;
+import model.products.AnimalProduct;
+import model.products.AnimalProductType;
 import model.structure.Structure;
 
 @Getter
@@ -28,5 +30,11 @@ public class Animal extends Structure implements Salable {
     @Override
     public int getSellPrice() {
         return 0;
+    }
+
+    public AnimalProduct getAnimalProduct(){
+        //TODO
+        //it is just a sample
+        return new AnimalProduct(animalType.getProductList().get(0));
     }
 }

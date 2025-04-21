@@ -28,6 +28,16 @@ public class GameMenu extends Menu {
 			} else {
 				gameMenuController.removeFromPlayerInventory(matcher.group(1), false);
 			}
+		} else if ((matcher = GameMenuCommand.TOOL_EQUIP.getMatcher(input.trim()))!=null) {
+			gameMenuController.toolEquip(matcher.group(1));
+		} else if ((matcher = GameMenuCommand.SHOW_CURRENT_TOOL.getMatcher(input.trim()))!=null) {
+			System.out.println(gameMenuController.showCurrentTool());
+		} else if ((matcher = GameMenuCommand.SHOW_AVAILABLE_TOOLS.getMatcher(input.trim()))!=null) {
+			System.out.println(gameMenuController.showAvailableTools());
+		} else if ((matcher = GameMenuCommand.UPGRADE_TOOL.getMatcher(input.trim()))!=null) {
+			System.out.println(gameMenuController.upgradeTool(matcher.group(1)));
+		} else if ((matcher = GameMenuCommand.USE_TOOL.getMatcher(input.trim()))!=null) {
+
 		}
 	}
 }
