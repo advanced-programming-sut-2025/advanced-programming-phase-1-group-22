@@ -188,8 +188,16 @@ public class Village {
     }
 
     public ArrayList<Structure> findStructuresByTile(Tile tile) {
-        //TODO
-        return null;
+        ArrayList<Structure> structures = new ArrayList<>();
+        for (Structure structure : this.structures) {
+            if (structure.getTiles().contains(tile)) structures.add(structure);
+        }
+        for (Farm farm : farms) {
+            for (Structure structure : farm.getStructures()) {
+                if (structure.getTiles().contains(tile)) structures.add(structure);
+            }
+        }
+        return structures;
     }
 }
 

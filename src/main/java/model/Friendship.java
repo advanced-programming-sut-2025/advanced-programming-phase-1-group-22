@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -18,6 +20,16 @@ public class Friendship {
     private Integer friendShipLevel;
     private Integer xp;
     private Map<String, Actor> dialogs;
+
+    public Friendship(Integer id, Actor firstPlayer, Actor secondPlayer) {
+        this.id = id;
+        this.firstPlayer = firstPlayer;
+        this.secondPlayer = secondPlayer;
+        this.gifts = new ArrayList<>();
+        this.friendShipLevel = 0;
+        this.xp = 0;
+        this.dialogs = new HashMap<>();
+    }
 
     public void talkToNPC() {
 

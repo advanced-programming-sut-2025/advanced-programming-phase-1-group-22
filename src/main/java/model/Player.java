@@ -15,6 +15,8 @@ import model.structure.Trunk;
 import model.structure.TrunkType;
 import model.tools.*;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,6 +45,10 @@ public class Player extends Actor {
     private ShippingBin shippingBin;
     private Account account = new Account();
     private List<Marry> marriage;
+    private Map<Ability, Integer> abilities = new HashMap<>();
+    private List<ShippingBin> shippingBinList = new ArrayList<>();
+    private Account account;
+    private List<Marry> marriage = new ArrayList<>();
     private Player couple;
     private List<Trade> gootenTradeList;
     private Boolean isFainted;
@@ -67,7 +73,11 @@ public class Player extends Actor {
     public Player(Integer id, User user) {
         this.id = id;
         this.user = user;
-        //TODO initializing other fields
+        inventory = new BackPack();
+        for (Ability ability : Ability.values()) {
+            abilities.put(ability, 0);
+        }
+        account = new Account();
     }
 
     public void removeEnergy(int amount) {
