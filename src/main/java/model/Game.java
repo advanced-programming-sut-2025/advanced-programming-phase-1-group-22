@@ -15,7 +15,7 @@ public class Game {
     private Village village;
     private final List<Player> players = new ArrayList<>();
     private Player currentPlayer;
-    private final List<NPCType> npcs = new ArrayList<>();
+    private final List<NPC> npcs = new ArrayList<>();
     private final List<Friendship> friendships = new ArrayList<>();
     private TimeAndDate timeAndDate;
     private final Integer length = 160;
@@ -48,7 +48,16 @@ public class Game {
     }
 
     public void addPlayer(Player player) {
+        for (int i = 0; i < players.size(); i++) {
+            friendships.add(new Friendship(players.size() * (players.size() - 1) / 2 + i + 1, players.get(i), player));
+        }
+        for (int i = 0; i < npcs.size(); i++) {
+            friendships.add(new Friendship( 20 + 10*players.size() + i, player, npcs.get(i)));
+        }
         players.add(player);
+    }
+    public void addNPC(NPC npc) {
+        npcs.add(npc);
     }
 
     public void addTermination() {
