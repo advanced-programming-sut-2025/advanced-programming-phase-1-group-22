@@ -6,7 +6,6 @@ import model.Tile;
 import model.abilitiy.Ability;
 import model.animal.Animal;
 import model.animal.AnimalType;
-import model.exception.InvalidInputException;
 import model.products.AnimalProduct;
 import model.structure.Structure;
 import utils.App;
@@ -90,7 +89,7 @@ public class MilkPail implements Tool {
         }
         else {
             animalProduct.setTiles(List.of(tile));
-            animalProduct.setIsDropped(true);
+            animalProduct.setIsPickable(true);
             App.getInstance().getCurrentGame().getVillage().addStructureToPlayerFarmByPlayerTile(player,animalProduct);
         }
     }

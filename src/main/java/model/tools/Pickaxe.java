@@ -5,7 +5,6 @@ import model.Player;
 import model.Tile;
 import model.TileType;
 import model.abilitiy.Ability;
-import model.exception.InvalidInputException;
 import model.source.Mineral;
 import model.source.MineralType;
 import model.structure.Stone;
@@ -86,7 +85,7 @@ public enum Pickaxe implements Tool {
                     success = true;
                 }
             }
-            else if (structure instanceof Mineral && !structure.getIsDropped()){
+            else if (structure instanceof Mineral && !structure.getIsPickable()){
                 if (((Mineral)structure).getForagingMineralType().equals(MineralType.COPPER_ORE)){
                    afterUseTool(new Mineral(MineralType.COPPER_ORE),player,tile,structure);
                    success = true;
@@ -110,7 +109,7 @@ public enum Pickaxe implements Tool {
                     }
                 }
             }
-            else if (structure.getIsDropped()){
+            else if (structure.getIsPickable()){
                 App.getInstance().getCurrentGame().getVillage().removeStructure(structure);
             }
         }
@@ -131,7 +130,7 @@ public enum Pickaxe implements Tool {
         }
         else {
             mineral.setTiles(List.of(tile));
-            mineral.setIsDropped(true);
+            mineral.setIsPickable(true);
             App.getInstance().getCurrentGame().getVillage().addStructureToPlayerFarmByPlayerTile(player,mineral);
         }
         App.getInstance().getCurrentGame().getVillage().removeStructure(structure);

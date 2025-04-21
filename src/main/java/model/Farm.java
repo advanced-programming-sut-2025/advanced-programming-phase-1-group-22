@@ -173,6 +173,7 @@ public class Farm {
         for (int i = 0; i < foragingRand; i++) {
             int foragingRandSeed = random.nextInt(0, 41);
             Seed seed = new Seed(SeedType.values()[foragingRandSeed]);
+            seed.setIsPickable(true);
             setStructurePlace(seed, 1, 1);
             int cropRand = random.nextInt(0, 21);
             Crop crop = new Crop(CropType.values()[cropRand]);
@@ -186,6 +187,7 @@ public class Farm {
         for (int i = 0; i < foragingRand3; i++) {
             int mineralRand = random.nextInt(0,21);
             Mineral mineral = new Mineral(MineralType.values()[mineralRand]);
+            mineral.setIsPickable(true);
             setStructurePlace(mineral,1,1);
         }
     }

@@ -4,7 +4,6 @@ import lombok.Getter;
 import model.Player;
 import model.Tile;
 import model.abilitiy.Ability;
-import model.exception.InvalidInputException;
 import model.products.TreesAndFruitsAndSeeds.Tree;
 import model.source.Mineral;
 import model.source.MineralType;
@@ -103,7 +102,7 @@ public enum Axe implements Tool{
         }
         else {
             mineral.setTiles(List.of(tile));
-            mineral.setIsDropped(true);
+            mineral.setIsPickable(true);
             App.getInstance().getCurrentGame().getVillage().addStructureToPlayerFarmByPlayerTile(player,mineral);
         }
         App.getInstance().getCurrentGame().getVillage().removeStructure(structure);
