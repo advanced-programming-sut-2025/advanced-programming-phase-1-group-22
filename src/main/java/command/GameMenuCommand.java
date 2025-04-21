@@ -14,7 +14,7 @@ public enum GameMenuCommand implements Command {
 	SHOW_AVAILABLE_TOOLS("tools\\s+show\\s+available"),
 	UPGRADE_TOOL("tools\\s+upgrade\\s+([a-zA-Z ]+)"),
 	USE_TOOL("tool\\s+use\\s+-d\\s+(north|south|west|east|northwest|northeast|southeast|southwest)"),
-	PICK_PRODUCT("pick");
+	PICK_PRODUCT("pick\\s+up");
 
 	private final String pattern;
 

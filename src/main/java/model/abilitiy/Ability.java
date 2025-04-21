@@ -1,7 +1,17 @@
 package model.abilitiy;
 
-import model.source.Source;
+import lombok.Getter;
 
+@Getter
 public enum Ability{
-    FARMING(),FISHING(),FORAGING(),MINING();
+    FARMING(5),
+    FISHING(5),
+    FORAGING(10),
+    MINING(10);
+
+    private final Integer upgradeAbility;
+
+    Ability(Integer upgradeAbility) {
+        this.upgradeAbility = upgradeAbility;
+    }
 }

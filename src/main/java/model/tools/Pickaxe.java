@@ -114,6 +114,8 @@ public enum Pickaxe implements Tool {
             }
         }
         if (success){
+            player.upgradeAbility(Ability.MINING);
+            player.upgradeAbility(Ability.FORAGING);
             player.changeEnergy(-this.getEnergy(player));
             return "you successfully use this tool";
         }

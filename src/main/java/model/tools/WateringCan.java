@@ -37,6 +37,7 @@ public class WateringCan implements Tool{
 
 	@Override
 	public String useTool(Player player, Tile tile) {
+		//Green house //TODO
 		String message = wateringCanType.useTool(player,tile);
 		isFullOfWater = wateringCanType.getIsFullOfWater();
 		return message;

@@ -10,7 +10,7 @@ import java.util.List;
 
 @Getter
 @ToString
-public enum TreeType implements Source {
+public enum TreeType{
     ACORNS(null, Season.SPECIAL, "Acorns", null, true, null, 0),
     MAPLE_SEEDS(null, Season.SPECIAL, "Maple Seeds", null, true, null, 0),
     PINE_CONES(null, Season.SPECIAL, "Pine cones", null, true, null, 0),
@@ -25,16 +25,16 @@ public enum TreeType implements Source {
     PEACH_TREE((FruitType.PEACH), Season.SUMMER, "Peach Tree", SeedType.Peach_SAPLING, false, List.of(7, 7, 7, 7), 1),
     APPLE_TREE((FruitType.APPLE), Season.FALL, "Apple Tree", SeedType.APPLE_SAPLING, false, List.of(7, 7, 7, 7), 1),
     POMEGRANATE_TREE((FruitType.POMEGRANATE), Season.FALL, "Pomegranate Tree", SeedType.POMEGRANATE_SAPLING, false, List.of(7, 7, 7, 7), 1),
-    OAK_TREE((FruitType.OAK_RESIN), Season.SPECIAL, "Oak Tree", TreeType.ACORNS, false, List.of(7, 7, 7, 7), 7),
-    MAPLE_TREE((FruitType.MAPLE_SYRUP), Season.SPECIAL, "Maple Tree", TreeType.MAPLE_SEEDS, false, List.of(7, 7, 7, 7), 9),
-    PINE_TREE((FruitType.PINE_TAR), Season.SPECIAL, "Pine Tree", TreeType.PINE_CONES, false, List.of(7, 7, 7, 7), 5),
-    MAHOGANY_TREE((FruitType.SAP), Season.SPECIAL, "Mahogany Tree", TreeType.MAHOGANY_SEEDS, false, List.of(7, 7, 7, 7), 1),
-    MUSHROOM_TREE((FruitType.COMMON_MUSHROOM), Season.SPECIAL, "Mushroom Tree", TreeType.MUSHROOM_TREE_SEEDS, false, List.of(7, 7, 7, 7), 1),
-    MYSTIC_TREE((FruitType.MYSTIC_SYRUP), Season.SPECIAL, "Mystic Tree", TreeType.MYSTIC_TREE_SEEDS, false, List.of(7, 7, 7, 7), 7);
+    OAK_TREE((FruitType.OAK_RESIN), Season.SPECIAL, "Oak Tree", SeedType.ACORNS, false, List.of(7, 7, 7, 7), 7),
+    MAPLE_TREE((FruitType.MAPLE_SYRUP), Season.SPECIAL, "Maple Tree", SeedType.MAPLE_SEEDS, false, List.of(7, 7, 7, 7), 9),
+    PINE_TREE((FruitType.PINE_TAR), Season.SPECIAL, "Pine Tree", SeedType.PINE_CONES, false, List.of(7, 7, 7, 7), 5),
+    MAHOGANY_TREE((FruitType.SAP), Season.SPECIAL, "Mahogany Tree", SeedType.MAHOGANY_SEEDS, false, List.of(7, 7, 7, 7), 1),
+    MUSHROOM_TREE((FruitType.COMMON_MUSHROOM), Season.SPECIAL, "Mushroom Tree", SeedType.MUSHROOM_TREE_SEEDS, false, List.of(7, 7, 7, 7), 1),
+    MYSTIC_TREE((FruitType.MYSTIC_SYRUP), Season.SPECIAL, "Mystic Tree", SeedType.MYSTIC_TREE_SEEDS, false, List.of(7, 7, 7, 7), 7);
 
 
     private final Boolean IsForaging;
-    private List<Integer> harvestStages;
+    private final List<Integer> harvestStages;
 
     private final FruitType fruit;
     private final Season season;
@@ -50,10 +50,5 @@ public enum TreeType implements Source {
         this.IsForaging = IsForaging;
         this.harvestStages = harvestStages;
         this.harvestCycle = harvestCycle;
-    }
-
-    @Override
-    public int getSellPrice() {
-        return 0;
     }
 }

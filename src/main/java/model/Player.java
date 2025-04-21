@@ -5,12 +5,21 @@ import lombok.Setter;
 import lombok.ToString;
 import model.abilitiy.Ability;
 import model.exception.InvalidInputException;
+import model.products.TreesAndFruitsAndSeeds.Tree;
+import model.products.TreesAndFruitsAndSeeds.TreeType;
 import model.shelter.ShippingBin;
+import model.source.*;
+import model.structure.Stone;
+import model.structure.StoneType;
+import model.structure.Trunk;
+import model.structure.TrunkType;
 import model.tools.*;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
+
 @Getter
 @Setter
 @ToString
@@ -89,11 +98,39 @@ public class Player extends Actor {
         throw new InvalidInputException("abilityType is invalid");
     }
 
+    public void upgradeAbility(Ability ability){
+        int oldValue = this.getAbilities().get(ability);
+        this.getAbilities().put(ability,oldValue + ability.getUpgradeAbility());
+        if (ability.equals(Ability.MINING) && this.getAbilities().get(Ability.MINING) >= 2){
+            this.getInventory().addProductToBackPack(generateRandomElement(),1);
+        }
+    }
+
     private void addBasicTools(){
         inventory.getProducts().put(Hoe.NORMAL,1);
         inventory.getProducts().put(Pickaxe.NORMAL,1);
         inventory.getProducts().put(Axe.NORMAL,1);
         inventory.getProducts().put(new WateringCan(WateringCanType.NORMAL),1);
         inventory.getProducts().put(TrashCan.NORMAL,1);
+    }
+
+    private Salable generateRandomElement(){
+        Random random = new Random();
+        int witchType = random.nextInt(1,3);
+
+        switch (witchType){
+            case 1 ->{
+                int foragingRandSeed = random.nextInt(0, 41);
+				return new Seed(SeedType.values()[foragingRandSeed]);
+            }
+            case 2 ->{
+                int cropRand = random.nextInt(0, 21);
+				return new Crop(CropType.values()[cropRand]);
+            }
+            default ->{
+                int mineralRand = random.nextInt(0,21);
+				return new Mineral(MineralType.values()[mineralRand]);
+            }
+        }
     }
 }

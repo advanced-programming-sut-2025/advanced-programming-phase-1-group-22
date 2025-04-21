@@ -52,7 +52,10 @@ public class Scythe implements Tool {
             success = true;
         }
 
-        //برداشت محصولات
+        //برداشت محصولات //TODO
+        player.upgradeAbility(Ability.FARMING);
+
+
         player.changeEnergy(-this.getEnergy(player));
         if (success){
             return "you successfully use this tool";

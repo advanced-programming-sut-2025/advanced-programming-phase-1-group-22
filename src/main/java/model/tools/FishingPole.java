@@ -65,6 +65,15 @@ public enum FishingPole implements Tool {
 
     @Override
     public String useTool(Player player, Tile tile) {
-        return "";
+        boolean success = false;
+
+
+
+        if (success){
+            player.upgradeAbility(Ability.FISHING);
+            return "you successfully use this tool";
+        }
+        player.changeEnergy(-this.getEnergy(player));
+        return "you use this tool in a wrong way";
     }
 }
