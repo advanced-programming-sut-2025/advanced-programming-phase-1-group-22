@@ -6,12 +6,13 @@ import model.enums.Weather;
 import model.exception.InvalidInputException;
 import model.structure.farmInitialElements.GreenHouse;
 import utils.App;
-import view.mainMenu.MainMenu;
-
-import java.sql.Time;
 
 public class GameMenuController extends MenuController {
-    Game game = App.getInstance().getCurrentGame();
+    Game game;
+
+    public GameMenuController() {
+        game = App.getInstance().getCurrentGame();
+    }
     public void exitGame() {
         if (game.getCurrentPlayer().getUser() != App.getInstance().getCurrentUser()) {
             throw new InvalidInputException("You are not allowed to exit; the player who has started the game can" +
@@ -59,7 +60,7 @@ public class GameMenuController extends MenuController {
 
     public void date() {
         System.out.println(game.getTimeAndDate().getSeason().ordinal()*28 +
-                + game.getTimeAndDate().getDay());
+                game.getTimeAndDate().getDay());
     }
 
     public void dateTime() {
@@ -89,7 +90,7 @@ public class GameMenuController extends MenuController {
     }
 
     public void C_WeatherSet(String type) {
-        Weather weather = game.getVillage().getWeather();
+        Weather weather;
         try {
             weather = Weather.valueOf(type.toUpperCase());
         } catch (IllegalArgumentException e) {

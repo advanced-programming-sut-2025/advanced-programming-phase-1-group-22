@@ -2,7 +2,6 @@ package utils;
 
 import model.*;
 import model.structure.Structure;
-import model.structure.farmInitialElements.Cottage;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -24,25 +23,6 @@ public class InitialGame {
         }
         App.getInstance().setCurrentMenu(Menus.MapSelection);
 //        printMap(game);
-    }
-
-    public void completeMap() {
-        Game game = App.getInstance().getCurrentGame();
-        Village village = game.getVillage();
-        for (int i = 0; i < 4; i++) {
-            Player player = game.getPlayers().size() <= i ? null : game.getPlayers().get(i);
-            Farm farm;
-            if (player != null) {
-                farm = new Farm(player, player.getFarmType());
-                Tile tile = farm.getCottage().getTiles().getFirst();
-                player.getTiles().add(tile);
-            } else {
-                Random random = new Random();
-                farm = new Farm(null, FarmType.values()[random.nextInt(0,4)]);
-            }
-            village.getFarms().add(farm);
-        }
-        village.fillFarms();
     }
 
     private void printMap(Game game) {

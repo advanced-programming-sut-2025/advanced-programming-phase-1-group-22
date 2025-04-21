@@ -7,9 +7,9 @@ import java.util.Map;
 import java.util.Objects;
 
 public class WalkingStrategy {
-    private Map<Pair, Integer> distances = new HashMap<>();
+    private final Map<Pair, Integer> distances = new HashMap<>();
     private int distance = 0;
-    private App app = App.getInstance();
+    private final App app = App.getInstance();
     public int calculateEnergy(Pair origin, Pair dest) {
         if (!calculateTile(origin, dest, 0)) {
             return -1;

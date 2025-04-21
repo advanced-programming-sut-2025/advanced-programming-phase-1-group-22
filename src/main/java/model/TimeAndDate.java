@@ -2,11 +2,8 @@ package model;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 import model.enums.Season;
 import utils.App;
-
-import java.util.concurrent.atomic.AtomicStampedReference;
 
 @Getter
 @Setter

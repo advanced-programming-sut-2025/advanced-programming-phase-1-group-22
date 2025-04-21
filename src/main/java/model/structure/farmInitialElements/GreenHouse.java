@@ -6,7 +6,6 @@ import model.Player;
 import model.shelter.FarmBuilding;
 import model.shelter.FarmBuildingType;
 import model.source.MineralType;
-import model.structure.Structure;
 
 @Getter
 @Setter
