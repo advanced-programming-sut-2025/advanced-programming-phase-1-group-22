@@ -23,4 +23,7 @@ public class Seed extends Structure implements Salable {
     public int getSellPrice() {
         return seedType.getSellPrice();
     }
+    public void burn() {
+        //TODO
+    }
 }

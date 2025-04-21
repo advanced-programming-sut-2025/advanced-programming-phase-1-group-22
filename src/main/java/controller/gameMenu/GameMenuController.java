@@ -1,19 +1,19 @@
 package controller.gameMenu;
 
 import controller.MenuController;
-import model.Game;
-import model.Menus;
-import model.Player;
-import model.TimeAndDate;
+import model.*;
+import model.enums.Weather;
 import model.exception.InvalidInputException;
+import model.structure.farmInitialElements.GreenHouse;
 import utils.App;
 import view.mainMenu.MainMenu;
 
 import java.sql.Time;
 
 public class GameMenuController extends MenuController {
+    Game game = App.getInstance().getCurrentGame();
     public void exitGame() {
-        if (App.getInstance().getCurrentGame().getCurrentPlayer().getUser() != App.getInstance().getCurrentUser()) {
+        if (game.getCurrentPlayer().getUser() != App.getInstance().getCurrentUser()) {
             throw new InvalidInputException("You are not allowed to exit; the player who has started the game can" +
                     " end it");
         }
@@ -22,13 +22,11 @@ public class GameMenuController extends MenuController {
     }
 
     public void undoTermination() {
-        Game game = App.getInstance().getCurrentGame();
         game.setPlayersInFavorTermination(0);
         System.out.println("Termination unsuccessful!");
     }
 
     public void terminateGame() {
-        Game game = App.getInstance().getCurrentGame();
         game.addTermination();
         if (game.getPlayersInFavorTermination() == game.getPlayers().size()) {
             App.getInstance().getGames().remove(game);
@@ -45,35 +43,98 @@ public class GameMenuController extends MenuController {
     }
 
     public void nextTurn() {
-        Player player = App.getInstance().getCurrentGame().getCurrentPlayer();
+        Player player = game.getCurrentPlayer();
         player.setEnergyPerTurn(player.getMaxEnergyPerTurn());
-        App.getInstance().getCurrentGame().nextPlayer();
+        game.nextPlayer();
         TimeAndDate time = new TimeAndDate(0, 8);
-        if (App.getInstance().getCurrentGame().getTimeAndDate().compareTime(time) <= 0) {
+        if (game.getTimeAndDate().compareTime(time) <= 0) {
             player.setEnergy(player.getMaxEnergy()); //TODO implementing the faint
         }
     }
 
     public void time() {
+        System.out.println(game.getTimeAndDate().getHour() + ":"
+                + game.getTimeAndDate().getHour());
     }
 
     public void date() {
+        System.out.println(game.getTimeAndDate().getSeason().ordinal()*28 +
+                + game.getTimeAndDate().getDay());
     }
 
     public void dateTime() {
+        System.out.println((game.getTimeAndDate()));
     }
 
     public void dayOfTheWeek() {
+        System.out.println(game.getTimeAndDate().getDayOfTheWeek());
     }
 
     public void C_AdvanceTime(String x) {
+        int hours = Integer.parseInt(x);
+        for (int i = 0; i < hours * 4; i++) {
+            nextTurn();
+        }
     }
 
     public void C_AdvanceDate(String x) {
+        int days = Integer.parseInt(x);
+        for (int i = 0; i < days * 4 * 13; i++) {
+            nextTurn();
+        }
     }
 
     public void season() {
+        System.out.println(game.getTimeAndDate().getSeason());
+    }
 
+    public void C_WeatherSet(String type) {
+        Weather weather = game.getVillage().getWeather();
+        try {
+            weather = Weather.valueOf(type.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new InvalidInputException("Weather not found!");
+        }
+        game.getVillage().setWeather(weather);
+        System.out.println("Weather set to " + type + " successfully.");
+    }
+
+    public void C_Thor(String x, String y) {
+        int x1 = Integer.parseInt(x);
+        int y1 = Integer.parseInt(y);
+        if (x1 < 0 || y1 < 0 || x1 >= game.getLength() || y1 >= game.getWidth()) {
+            throw new InvalidInputException("Position out of bound");
+        }
+        game.getVillage().getWeather().thunderBolt(x1, y1);
+    }
+
+    public void greenhouseBuild() {
+        Farm farm = null;
+        for (int i = 0; i < game.getVillage().getFarms().size(); i++) {
+            farm = game.getVillage().getFarms().get(i);
+            if (farm.getPlayers() == game.getCurrentPlayer()) {
+                break;
+            }
+        }
+        if (farm == null) return;
+        GreenHouse greenHouse = farm.getGreenHouse();
+        if (greenHouse.isBuilt()) {
+            throw new InvalidInputException("Greenhouse already built.");
+        }
+        switch (greenHouse.areIngredientsAvailable(game.getCurrentPlayer())) {
+            case 1-> throw new InvalidInputException("You need 1000 golds to build it");
+            case 2-> throw new InvalidInputException("You need 500 golds to build it");
+        }
+        System.out.println("The greenhouse is built");
+        //TODO greenhouse initialization
+    }
+
+    public void weatherForecast() {
+        System.out.println(game.getVillage().getTomorrowWeather());
+    }
+
+    public void weather() {
+        System.out.println(game.getVillage().getWeather());
     }
 
     public void printMap(String x, String y, String size) {
@@ -82,22 +143,7 @@ public class GameMenuController extends MenuController {
     public void walk(String x, String y) {
     }
 
-    public void C_WeatherSet(String type) {
-    }
-
-    public void C_Thor(String x, String y) {
-    }
-
     public void helpReadingMap() {
-    }
-
-    public void greenhouseBuild() {
-    }
-
-    public void weatherForecast() {
-    }
-
-    public void weather() {
     }
 
     public void energyShow() {

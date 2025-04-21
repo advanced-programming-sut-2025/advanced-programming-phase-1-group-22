@@ -9,4 +9,8 @@ public class Trunk extends Structure {
     public Trunk(TrunkType trunkType) {
         this.trunkType = trunkType;
     }
+
+    public void burn() {
+        //TODO
+    }
 }

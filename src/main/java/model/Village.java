@@ -3,11 +3,13 @@ package model;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import model.enums.Weather;
 import model.structure.Structure;
 import model.structure.stores.Store;
 import model.structure.stores.StoreType;
 import utils.App;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -19,6 +21,8 @@ public class Village {
     private List<Tile> tiles;
     private List<Farm> farms = new ArrayList<>();
     private List<Structure> structures = new ArrayList<>();
+    private Weather weather = Weather.SUNNY;
+    private Weather tomorrowWeather = Weather.SUNNY;
     private App app = App.getInstance();
 
     public Village() {
@@ -166,21 +170,28 @@ public class Village {
         }
     }
 
-    public Structure getStructureInTile(Tile tile){
-        for (Structure structure : this.getStructures()) {
-            if (structure.getTiles().contains(tile)){
-                return structure;
-            }
-        }
-        for (Farm farm : this.getFarms()) {
-            for (Structure structure : farm.getStructures()) {
-                if (structure.getTiles().contains(tile)){
-                    return structure;
+    public void startDay() {
+        TimeAndDate timeAndDate = app.getCurrentGame().getTimeAndDate();
+        weather = tomorrowWeather;
+        do {
+            tomorrowWeather = Weather.values()[getRandomNumber(0, 3)];
+        } while (tomorrowWeather.getSeasons().contains(timeAndDate.getSeason()));
+        if (weather == Weather.STORMY) {
+            for (Farm farm : farms) {
+                for (int i = 0; i < 3; i++) {
+                    int randX = getRandomNumber(farm.getFarmXStart(), farm.getFarmXEnd());
+                    int randY = getRandomNumber(farm.getFarmYStart(), farm.getFarmYEnd());
+                    weather.thunderBolt(randX, randY);
                 }
             }
         }
+    }
+
+    public ArrayList<Structure> findStructuresByTile(Tile tile) {
+        //TODO
         return null;
     }
+}
 
     public void removeStructure(Structure structure){
 		this.getStructures().remove(structure);
