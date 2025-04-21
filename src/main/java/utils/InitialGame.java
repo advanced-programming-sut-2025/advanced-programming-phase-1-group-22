@@ -17,6 +17,7 @@ public class InitialGame {
         game.setVillage(village);
         for (NPCType npc : NPCType.values()) {
             npc.setMissions();
+            game.addNPC(new NPC(npc));
         }
         for (int i = 0; i < users.size(); i++) {
             game.addPlayer(new Player(i, users.get(i)));

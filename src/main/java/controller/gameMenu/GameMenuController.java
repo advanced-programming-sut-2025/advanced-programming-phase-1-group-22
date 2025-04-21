@@ -152,6 +152,8 @@ public class GameMenuController extends MenuController {
                 new Pair(player.getTiles().getFirst().getX(),player.getTiles().getFirst().getX()) , new Pair(x1, y1));
         if (energy == -1) throw  new InvalidInputException("No path available");
         player.removeEnergy(energy);
+        player.getTiles().clear();
+        player.getTiles().add(game.tiles[x1][y1]);
     }
 
     public void helpReadingMap() {

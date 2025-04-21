@@ -4,12 +4,13 @@ import lombok.Getter;
 import lombok.Setter;
 import model.products.Product;
 
+import java.util.HashMap;
 import java.util.Map;
 @Getter
 @Setter
 public class BackPack {
-    private BackPackType backPackType;
-    private Map<Product, Integer> products;
+    private BackPackType backPackType = BackPackType.NORMAL_BAKCPACK;
+    private Map<Product, Integer> products = new HashMap<>();
 
     public void addProductToBackPack(Product product) {
 

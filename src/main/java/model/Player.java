@@ -6,6 +6,8 @@ import lombok.ToString;
 import model.abilitiy.Ability;
 import model.tools.BackPack;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 @Getter
@@ -21,20 +23,23 @@ public class Player extends Actor {
     private Boolean energyIsInfinite = false;
     private BackPack inventory;
     private Buff buff;
-    private Map<Ability, Integer> abilities;
-    private List<ShippingBin> shippingBinList;
+    private Map<Ability, Integer> abilities = new HashMap<>();
+    private List<ShippingBin> shippingBinList = new ArrayList<>();
     private Account account;
-    private List<Marry> marriage;
+    private List<Marry> marriage = new ArrayList<>();
     private Player couple;
-    private List<Trade> gootenTradeList;
-    private Boolean isFainted;
-    private Pair position;
+    private List<Trade> gootenTradeList = new ArrayList<>();
+    private Boolean isFainted = false;
     private FarmType farmType;
 
     public Player(Integer id, User user) {
         this.id = id;
         this.user = user;
-        //TODO initializing other fields
+        inventory = new BackPack();
+        for (Ability ability : Ability.values()) {
+            abilities.put(ability, 0);
+        }
+        account = new Account();
     }
 
     public void removeEnergy(int amount) {
