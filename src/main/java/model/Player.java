@@ -1,5 +1,6 @@
 package model;
 
+import controller.gameMenu.GameMenuController;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -48,7 +49,10 @@ public class Player extends Actor {
     }
 
     public void faint(){
-
+        GameMenuController controller = new GameMenuController();
+        energy = 0;
+        energyPerTurn = 0;
+        controller.nextTurn();
     }
     public void changeEnergy(int currentEnergy){
 

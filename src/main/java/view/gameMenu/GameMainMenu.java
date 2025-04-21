@@ -13,7 +13,7 @@ public class GameMainMenu extends GameMenu {
     public void checkCommand(Scanner scanner) {
         String input = scanner.nextLine();
         Matcher matcher;
-        if (super.check(input)) {
+        if (super.check(input, scanner)) {
             return;
         } else {
             throw new InvalidInputException("Command Not Found!");

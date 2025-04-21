@@ -4,6 +4,7 @@ import controller.gameMenu.GameMenuController;
 import utils.App;
 import view.Menu;
 
+import java.util.Scanner;
 import java.util.regex.Matcher;
 
 public abstract class GameMenu extends Menu {
@@ -81,7 +82,7 @@ public abstract class GameMenu extends Menu {
 
     private final GameMenuController controller = new GameMenuController();
 
-    public boolean check(String input) {
+    public boolean check(String input, Scanner scanner) {
         Matcher matcher = null;
 
         if (App.getInstance().getCurrentGame().getPlayersInFavorTermination() != 0) {
@@ -121,7 +122,7 @@ public abstract class GameMenu extends Menu {
         } else if ((matcher = isMatched(input, C_WeatherSet)) != null) {
             controller.C_WeatherSet(matcher.group("Type"));
         } else if ((matcher = isMatched(input, walk)) != null) {
-            controller.walk(matcher.group("X"), matcher.group("Y"));
+            controller.walk(scanner, matcher.group("X"), matcher.group("Y"));
         } else if ((matcher = isMatched(input, printMap)) != null) {
             controller.printMap(matcher.group("X"), matcher.group("Y"), matcher.group("size"));
         } else if ((matcher = isMatched(input, C_AdvanceTime)) != null) {
