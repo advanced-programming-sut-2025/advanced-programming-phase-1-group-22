@@ -7,6 +7,8 @@ import model.exception.InvalidInputException;
 import model.structure.farmInitialElements.GreenHouse;
 import utils.App;
 
+import java.util.Scanner;
+
 public class GameMenuController extends MenuController {
     Game game;
 
@@ -139,25 +141,51 @@ public class GameMenuController extends MenuController {
     }
 
     public void printMap(String x, String y, String size) {
-    }
-
-    public void walk(String x, String y) {
         int x1 = Integer.parseInt(x);
         int y1 = Integer.parseInt(y);
         if (x1 < 0 || y1 < 0 || x1 >= game.getLength() || y1 >= game.getWidth()) {
             throw new InvalidInputException("Position out of bound");
         }
+        game.getVillage().printMap(x1, y1, Integer.parseInt(size));
+    }
+
+    public void walk(Scanner scanner, String x, String y) {
+        int x1 = Integer.parseInt(x);
+        int y1 = Integer.parseInt(y);
+        if (x1 < 0 || y1 < 0 || x1 >= game.getLength() || y1 >= game.getWidth()) {
+            throw new InvalidInputException("Position out of bound");
+        }
+        for (Farm farm : game.getVillage().getFarms()) {
+            if (farm.isPairInFarm(new Pair(x1, y1))) {
+                if (farm.getPlayers().contains(game.getCurrentPlayer())) break;
+                throw new InvalidInputException("You are not allowed to enter this farm");
+            }
+        }
         WalkingStrategy walkingStrategy = new WalkingStrategy();
         Player player = game.getCurrentPlayer();
         int energy = walkingStrategy.calculateEnergy(
-                new Pair(player.getTiles().getFirst().getX(),player.getTiles().getFirst().getX()) , new Pair(x1, y1));
+                new Pair(player.getTiles().getFirst().getX(),player.getTiles().getFirst().getX()) , new Pair(x1, y1)
+        );
         if (energy == -1) throw  new InvalidInputException("No path available");
+        String confirmation;
+        while (true) {
+            System.out.println("Energy needed: " + energy + "\nY/n");
+            confirmation = scanner.next();
+            if (confirmation.equals("Y")) break;
+            if (confirmation.equals("n")) return;
+        }
+        if (player.getEnergy() < energy) {
+            player.faint();
+            throw new InvalidInputException("Not enough energy; you fainted");
+        }
         player.removeEnergy(energy);
         player.getTiles().clear();
         player.getTiles().add(game.tiles[x1][y1]);
+        if (player.getEnergyPerTurn() <= 0) nextTurn();
     }
 
     public void helpReadingMap() {
+        //TODO
     }
 
     public void energyShow() {

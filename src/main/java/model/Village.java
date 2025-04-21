@@ -4,7 +4,15 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import model.enums.Weather;
+import model.products.TreesAndFruitsAndSeeds.Tree;
+import model.structure.NPCHouse;
+import model.structure.Stone;
 import model.structure.Structure;
+import model.structure.Trunk;
+import model.structure.farmInitialElements.Cottage;
+import model.structure.farmInitialElements.GreenHouse;
+import model.structure.farmInitialElements.Lake;
+import model.structure.farmInitialElements.Quarry;
 import model.structure.stores.Store;
 import model.structure.stores.StoreType;
 import utils.App;
@@ -198,6 +206,67 @@ public class Village {
         }
         return structures;
     }
+
+    public void printMap(int x, int y, int size) {
+        Game game = app.getCurrentGame();
+        Character[][] str = new Character[160][120];
+        Tile[][] tiles = game.tiles;
+        for (int i = 0; i < 160; i++) {
+            for (int i1 = 0; i1 < 120; i1++) {
+                str[i][i1] = tiles[i][i1].getTileType().StringToCharacter();
+            }
+        }
+
+        for (Structure structure : structures) {
+            char symbol = ' ';
+            if (structure instanceof Store) symbol = 's';
+            else if (structure instanceof NPCHouse) symbol = 'N';
+            else if (structure instanceof Fountain) symbol = 'f';
+
+            for (Tile tile : structure.getTiles()) {
+                str[tile.getX()][tile.getY()] = symbol;
+            }
+        }
+        for (Farm farm : farms) {
+            for (Structure structure : farm.getStructures()) {
+                char symbol = ' ';
+                if (structure instanceof Cottage) symbol = 'C';
+                else if (structure instanceof Lake) symbol = 'L';
+                else if (structure instanceof Quarry) symbol = 'Q';
+                else if (structure instanceof GreenHouse) {
+                    if (((GreenHouse) structure).isBuilt()) symbol = 'G';
+                    else symbol = 'g';
+                }
+                else if (structure instanceof Trunk) symbol = 't';
+                else if (structure instanceof Tree) symbol = 'T';
+                else if (structure instanceof Stone) symbol = '*';
+
+                for (Tile tile : structure.getTiles()) {
+                    str[tile.getX()][tile.getY()] = symbol;
+                }
+            }
+        }
+        for (Player player : game.getPlayers()) {
+            str[player.getTiles().getFirst().getX()][player.getTiles().getFirst().getY()] = '@';
+        }
+        int xStart = x - size/2;
+        int xEnd = x + size/2;
+        int yStart = y - size/2;
+        int yEnd = y + size/2;
+        if (xStart < 0) xStart = 0;
+        if (yStart < 0) yStart = 0;
+        if (xEnd >= 160) xEnd = 160;
+        if (yEnd >= 120) yEnd = 120;
+
+
+        for (int i = yStart; i < yEnd; i++) {
+            for (int j1 = xStart; j1 < xEnd; j1++) {
+                System.out.print(str[j1][yEnd - 1 - i]);
+            }
+            System.out.println();
+        }
+    }
+
 }
 
     public void removeStructure(Structure structure){
