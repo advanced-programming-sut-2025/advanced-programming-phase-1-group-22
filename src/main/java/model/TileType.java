@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum TileType {
-    GRASS('G'), FLOWER('F'), SNOW('S'), MUD('M'), FLAT('.'), PATH('+'), FENCE('C'), DOOR('D');
+    GRASS('1'), FLOWER('2'), SNOW('3'), MUD('4'), FLAT('.'), PATH('#'), FENCE('-'), DOOR('+');
     private final Character name;
 
     TileType(Character name) {
