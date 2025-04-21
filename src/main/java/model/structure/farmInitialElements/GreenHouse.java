@@ -3,9 +3,7 @@ package model.structure.farmInitialElements;
 import lombok.Getter;
 import lombok.Setter;
 import model.Player;
-import model.shelter.FarmBuilding;
 import model.source.MineralType;
-import model.structure.Structure;
 
 @Getter
 @Setter

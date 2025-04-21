@@ -2,7 +2,6 @@ package model.enums;
 
 import lombok.Getter;
 import model.Game;
-import model.Tile;
 import model.products.TreesAndFruitsAndSeeds.Tree;
 import model.source.Crop;
 import model.source.Seed;
