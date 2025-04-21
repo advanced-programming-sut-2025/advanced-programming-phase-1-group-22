@@ -34,7 +34,7 @@ public class InitialGame {
             if (player != null) {
                 farm = new Farm(player, player.getFarmType());
                 Tile tile = farm.getCottage().getTiles().getFirst();
-                player.setPosition(new Pair(tile.getX(), tile.getY()));
+                player.getTiles().add(tile);
             } else {
                 Random random = new Random();
                 farm = new Farm(null, FarmType.values()[random.nextInt(0,4)]);

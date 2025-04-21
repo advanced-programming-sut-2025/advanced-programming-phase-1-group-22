@@ -37,6 +37,11 @@ public class Player extends Actor {
         //TODO initializing other fields
     }
 
+    public void removeEnergy(int amount) {
+        energyPerTurn -= amount;
+        energy -= amount;
+    }
+
     public void faint(){
 
     }
