@@ -7,7 +7,7 @@ import view.Menu;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 
-public class GameMenu extends Menu {
+public class GameMenu {
 	private final GameMenuController gameMenuController = new GameMenuController();
 
 	Matcher matcher;
