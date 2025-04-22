@@ -1,9 +1,10 @@
 package view;
 
-import view.mainMenu.ExitMenu;
-import view.mainMenu.LoginMenu;
-import view.mainMenu.MainMenu;
-import view.mainMenu.ProfileMenu;
+import view.gameMenu.CottageMenu;
+import view.gameMenu.GameMainMenu;
+import view.gameMenu.StoreMenu;
+import view.gameMenu.TradeMenu;
+import view.mainMenu.*;
 
 import java.util.Scanner;
 
@@ -11,7 +12,12 @@ public enum Menu {
     LOGIN(LoginMenu.getInstance()),
     PROFILE(ProfileMenu.getInstance()),
     EXIT(ExitMenu.getInstance()),
-    MAIN(MainMenu.getInstance());
+    MAIN(MainMenu.getInstance()),
+    MAP_SELECTION(MapSelectionMenu.getInstance()),
+    COTTAGE(CottageMenu.getInstance()),
+    GAME_MAIN_MENU(GameMainMenu.getInstance()),
+    STORE_MENU(StoreMenu.getInstance()),
+    TRADE_MENU(TradeMenu.getInstance());
     private final CommandProcessor commandProcessor;
 
     Menu(CommandProcessor commandProcessor) {
@@ -20,23 +26,6 @@ public enum Menu {
 
     public void checkCommand(Scanner scanner) {
         this.commandProcessor.processCommand(scanner.nextLine().trim());
-    }
-import java.util.Scanner;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-public abstract class Menu {
-    protected Matcher isMatched(String input, String pattern) {
-        Matcher matcher = Pattern.compile(pattern).matcher(input);
-
-        if (matcher.matches()) {
-            return matcher;
-        }
-        return null;
-    }
-
-    public void checkCommand(Scanner scanner) {
-
     }
 
 }

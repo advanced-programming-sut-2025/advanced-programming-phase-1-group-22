@@ -1,25 +1,36 @@
 package view.mainMenu;
 
-import controller.mainMenu.MapSelectionMenuController;
-import model.exception.InvalidInputException;
-import view.Menu;
+import command.CommandClass;
+import controller.mainMenu.MainMenuController;
+import model.records.Response;
+import view.CommandProcessor;
 
-import java.util.Scanner;
-import java.util.regex.Matcher;
+import java.util.Map;
+import java.util.function.Function;
 
-public class MapSelectionMenu extends Menu {
-    private final String gameMap = "^\\s*game\\s+map\\s+(?<mapNumber>\\d+)\\s*$";
+import static command.GameInitCommands.gameMap;
 
-    private final MapSelectionMenuController controller = new MapSelectionMenuController();
+public class MapSelectionMenu implements CommandProcessor {
+    private static MapSelectionMenu instance;
+
+    private MapSelectionMenu() {
+    }
+
+    public static MapSelectionMenu getInstance() {
+        if (instance == null) {
+            instance = new MapSelectionMenu();
+        }
+        return instance;
+    }
+
+    private final MainMenuController controller = new MainMenuController();
+    private final Map<CommandClass, Function<String[], Response>> commandsFunctionMap = Map.of(
+            gameMap, controller::gameMap
+    );
+
 
     @Override
-    public void checkCommand(Scanner scanner) {
-        String input = scanner.nextLine();
-        Matcher matcher;
-        if ((matcher = isMatched(input, gameMap)) != null) {
-            controller.gameMap(matcher.group("mapNumber"));
-        } else {
-            throw new InvalidInputException("Please Select Your Maps!");
-        }
+    public Map<CommandClass, Function<String[], Response>> getFunctionsMap() {
+        return commandsFunctionMap;
     }
 }

@@ -6,6 +6,7 @@ import model.Player;
 import model.shelter.FarmBuilding;
 import model.shelter.FarmBuildingType;
 import model.source.MineralType;
+import variables.Session;
 
 @Getter
 @Setter
@@ -26,7 +27,7 @@ public class GreenHouse extends HardCodeFarmElements {
         if (player.getAccount().getGolds() < 1000) return 1;
         if (player.getInventory().checkProductAvailabilityInBackPack(MineralType.WOOD, 500)) return 2;
         player.getAccount().removeGolds(1000);
-        player.getInventory().deleteProductFromBackPack(MineralType.WOOD, 500);
+        player.getInventory().deleteProductFromBackPack(MineralType.WOOD, player,500);
         isBuilt = true;
         return 0;
     }

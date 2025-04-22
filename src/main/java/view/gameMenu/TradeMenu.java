@@ -1,39 +1,39 @@
 package view.gameMenu;
 
-import controller.gameMenu.StoreMenuController;
-import controller.gameMenu.TradeMenuController;
-import model.exception.InvalidInputException;
+import command.CommandClass;
+import controller.gameMenu.GameMenuController;
+import model.records.Response;
 
-import java.util.Scanner;
-import java.util.regex.Matcher;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Function;
 
-public class TradeMenu extends GameMenu{
-    private final String trade = "^\\s*trade\\s+-u\\s+(?<username>.+)\\s+-t\\s+(?<type>\\boffer|request)\\s+-i\\s+" +
-            "(?<item>.+)\\s+-a\\s+(?<amount>\\d+)(\\s+-p\\s+(?<price>\\d+))?(\\s+-ti\\s+(?<targetItem>.+)\\s+-ta\\" +
-            "s+(?<targetAmount>\\d+))?\\s*$"; //TODO the possibility to offer target item first and price next
-    private final String tradeList = "^\\s*trade\\s+list\\s*$";
-    private final String tradeResponse = "^\\s*trade\\s+respond\\s+(?<respond>\\baccept|reject)\\s+-i\\s+(?<id>\\d+)\\s*$";
-    private final String tradeHistory = "^\\s*trade\\s+history\\s*$";
-    private final TradeMenuController controller = new TradeMenuController();
+import static command.GameCommands.*;
+
+public class TradeMenu extends GameMenu {
+
+    private static TradeMenu instance;
+    private final GameMenuController controller = new GameMenuController();
+    private final Map<CommandClass, Function<String[], Response>> commandsFunctionMap = new HashMap<>();
+
+    private TradeMenu() {
+        commandsFunctionMap.putAll(super.getFunctionsMap());
+        commandsFunctionMap.put(trade, controller::trade);
+        commandsFunctionMap.put(tradeList, controller::tradeList);
+        commandsFunctionMap.put(tradeResponse, controller::tradeResponse);
+        commandsFunctionMap.put(tradeHistory, controller::tradeHistory);
+    }
+
+    public static TradeMenu getInstance() {
+        if (instance == null) {
+            instance = new TradeMenu();
+        }
+        return instance;
+    }
 
     @Override
-    public void checkCommand(Scanner scanner) {
-        String input = scanner.nextLine();
-
-        Matcher matcher;
-
-        if (super.check(input, scanner)) {
-            return;
-        } else if (isMatched(input, tradeList) != null) {
-            controller.tradeList();
-        } else if (isMatched(input, tradeHistory) != null) {
-            controller.tradeHistory();
-        } else if ((matcher = isMatched(input, tradeResponse)) != null) {
-            controller.tradeResponse(matcher.group("respond"), matcher.group("id"));
-        } else if ((matcher = isMatched(input, trade)) != null) {
-            controller.trade(matcher);
-        } else {
-            throw new InvalidInputException("Invalid Command");
-        }
+    public Map<CommandClass, Function<String[], Response>> getFunctionsMap() {
+        return commandsFunctionMap;
     }
 }
+

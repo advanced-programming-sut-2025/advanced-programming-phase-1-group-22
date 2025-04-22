@@ -1,43 +1,45 @@
 package view.gameMenu;
 
+import command.CommandClass;
+import controller.gameMenu.GameMenuController;
 import controller.gameMenu.StoreMenuController;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 
 import controller.gameMenu.StoreMenuController;
 import model.exception.InvalidInputException;
+import model.records.Response;
 
-public class StoreMenu  extends  GameMenu{
-    private final String build = "^\\s*build\\s+-a\\s+(?<buildingName>.+)\\s+-l\\s+(?<X>\\d+)\\s*" +
-            ",\\s*(?<Y>\\d+)\\s*$";
-    private final String buyAnimal = "^\\s*buy\\s+animal\\s+-a\\s+(?<animal>.+)\\s+-n\\s+(?<name>.+)\\s*$";
-    private final String showAllProducts = "^\\s*show\\s+all\\s+products\\s*$";
-    private final String purchase = "^\\s*purchase\\s+(?<name>.+)\\s+-n\\s+(?<count>\\d+)\\s*$";
-    private final String purchase1 = "^\\s*purchase\\s+(?<name>.+)\\s*$";
+import static command.GameCommands.*;
+import static command.GameCommands.cookingPrepare;
 
-    private final StoreMenuController controller = new StoreMenuController();
+public class StoreMenu  extends  GameMenu {
+    private static StoreMenu instance;
+    private final GameMenuController controller = new GameMenuController();
+    private final Map<CommandClass, Function<String[], Response>> commandsFunctionMap = new HashMap<>();
 
-    @Override
-    public void checkCommand(Scanner scanner) {
-        String input = scanner.nextLine();
-
-        Matcher matcher;
-
-        if (super.check(input, scanner)) {
-            return;
-        } else if (isMatched(input, showAllProducts) != null) {
-            controller.showAllProducts();
-        } else if ((matcher = isMatched(input, purchase)) != null) {
-            controller.purchase(matcher.group("name"), matcher.group("count"));
-        } else if ((matcher = isMatched(input, purchase1)) != null) {
-            controller.purchase(matcher.group("name"), "1");
-        } else if ((matcher = isMatched(input, build)) != null) {
-            controller.build(matcher.group("buildingName"), matcher.group("X"), matcher.group("Y"));
-        } else if ((matcher = isMatched(input, buyAnimal)) != null) {
-            controller.buy(matcher.group("animal"), matcher.group("name"));
-        } else {
-            throw new InvalidInputException("Invalid Command");
-        }
+    private StoreMenu() {
+        commandsFunctionMap.putAll(super.getFunctionsMap());
+        commandsFunctionMap.put(build, controller::build);
+        commandsFunctionMap.put(buyAnimal, controller::buyAnimal);
+        commandsFunctionMap.put(showAllProducts, controller::showAllProducts);
+        commandsFunctionMap.put(purchase, controller::purchase);
+        commandsFunctionMap.put(purchase1, controller::purchase1);
     }
+
+    public static StoreMenu getInstance() {
+        if (instance == null) {
+            instance = new StoreMenu();
+        }
+        return instance;
+    }
+    @Override
+    public Map<CommandClass, Function<String[], Response>> getFunctionsMap() {
+        return commandsFunctionMap;
+    }
+
 }

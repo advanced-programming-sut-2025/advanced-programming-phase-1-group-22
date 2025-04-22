@@ -4,329 +4,333 @@ import controller.MenuController;
 import model.*;
 import model.enums.Weather;
 import model.exception.InvalidInputException;
+import model.records.Response;
 import model.structure.farmInitialElements.GreenHouse;
+import service.GameService;
 import utils.App;
 
 import java.util.Scanner;
 
 public class GameMenuController extends MenuController {
-    Game game;
+    private final GameService gameService = GameService.getInstance();
 
-    public GameMenuController() {
-        game = App.getInstance().getCurrentGame();
+    public Response exitGame(String[] params) {
+        return gameService.exitGame();
     }
-    public void exitGame() {
-        if (game.getCurrentPlayer().getUser() != App.getInstance().getCurrentUser()) {
-            throw new InvalidInputException("You are not allowed to exit; the player who has started the game can" +
-                    " end it");
-        }
-        //TODO save game not mine to do
-        App.getInstance().setCurrentMenu(Menus.MainMenu);
+
+    public Response terminateGame(String[] params) {
+        return gameService.terminateGame();
+    }
+
+    public Response nextTurn(String[] params) {
+        return gameService.nextTurn();
+    }
+
+    public Response time(String[] params) {
+        return gameService.time();
+    }
+
+    public Response date(String[] params) {
+        return gameService.date();
+    }
+
+    public Response dateTime(String[] params) {
+        return gameService.dateTime();
+    }
+
+    public Response dayOfTheWeek(String[] params) {
+        return gameService.dayOfTheWeek();
+    }
+
+    public Response season(String[] params) {
+        return gameService.season();
+    }
+
+    public Response weather(String[] params) {
+        return gameService.weather();
+    }
+
+    public Response weatherForecast(String[] params) {
+        return gameService.weatherForecast();
+    }
+
+    public Response greenhouseBuild(String[] params) {
+        return gameService.greenhouseBuild();
+    }
+
+    public Response helpReadingMap(String[] params) {
+        return gameService.helpReadingMap();
+    }
+
+    public Response walk(String[] params) {
+        return gameService.walk(params[0], params[1]); //TODO Scanner not passed
+    }
+
+    public Response C_Thor(String[] params) {
+        return gameService.C_Thor(params[0], params[1]);
+    }
+
+    public Response C_WeatherSet(String[] params) {
+        return gameService.C_WeatherSet(params[0]);
+    }
+
+    public Response printMap(String[] params) {
+        return gameService.printMap(params[0], params[1], params[2]);
+    }
+
+    public Response C_AdvnaceTime(String[] params) {
+        return gameService.C_AdvanceTime(params[0]);
+    }
+
+    public Response C_AdvanceDate(String[] params) {
+        return gameService.C_AdvanceDate(params[0]);
+    }
+
+    public Response energyShow(String[] params) {
+        return null;
     }
 
-    public void undoTermination() {
-        game.setPlayersInFavorTermination(0);
-        System.out.println("Termination unsuccessful!");
-    }
-
-    public void terminateGame() {
-        game.addTermination();
-        if (game.getPlayersInFavorTermination() == game.getPlayers().size()) {
-            App.getInstance().getGames().remove(game);
-            System.out.println("The game is terminated");
-            App.getInstance().setCurrentMenu(Menus.MainMenu);
-            for (Player player : game.getPlayers()) {
-                player.getUser().setPlaying(false);
-            }
+    public Response C_EnergyUnlimited(String[] params) {
+        return null;
+    }
+
+    public Response inventoryShow(String[] params) {
+        return null;
+    }
 
-            //TODO remove game from databases
-        } else {
-            System.out.println("Do you agree on Termination? Either Enter \"no\" or \"terminate game\"");
-        }
+    public Response toolsShowCurrent(String[] params) {
+        return null;
     }
 
-    public void nextTurn() {
-        Player player = game.getCurrentPlayer();
-        player.setEnergyPerTurn(player.getMaxEnergyPerTurn());
-        game.nextPlayer();
-        TimeAndDate time = new TimeAndDate(0, 8);
-        if (game.getTimeAndDate().compareTime(time) <= 0) {
-            player.setEnergy(player.getMaxEnergy()); //TODO implementing the faint
-        }
+    public Response toolsShowCAvailable(String[] params) {
+        return null;
     }
 
-    public void time() {
-        System.out.println(game.getTimeAndDate().getHour() + ":"
-                + game.getTimeAndDate().getHour());
+    public Response C_EnergySet(String[] params) {
+        return null;
     }
-
-    public void date() {
-        System.out.println(game.getTimeAndDate().getSeason().ordinal()*28 +
-                game.getTimeAndDate().getDay());
-    }
-
-    public void dateTime() {
-        System.out.println((game.getTimeAndDate()));
-    }
-
-    public void dayOfTheWeek() {
-        System.out.println(game.getTimeAndDate().getDayOfTheWeek());
-    }
-
-    public void C_AdvanceTime(String x) {
-        int hours = Integer.parseInt(x);
-        for (int i = 0; i < hours * 4; i++) {
-            nextTurn();
-        }
-    }
-
-    public void C_AdvanceDate(String x) {
-        int days = Integer.parseInt(x);
-        for (int i = 0; i < days * 4 * 13; i++) {
-            nextTurn();
-        }
-    }
-
-    public void season() {
-        System.out.println(game.getTimeAndDate().getSeason());
-    }
-
-    public void C_WeatherSet(String type) {
-        Weather weather;
-        try {
-            weather = Weather.valueOf(type.toUpperCase());
-        } catch (IllegalArgumentException e) {
-            throw new InvalidInputException("Weather not found!");
-        }
-        game.getVillage().setWeather(weather);
-        System.out.println("Weather set to " + type + " successfully.");
+
+    public Response inventoryTrash(String[] params) {
+        return null;
     }
 
-    public void C_Thor(String x, String y) {
-        int x1 = Integer.parseInt(x);
-        int y1 = Integer.parseInt(y);
-        if (x1 < 0 || y1 < 0 || x1 >= game.getLength() || y1 >= game.getWidth()) {
-            throw new InvalidInputException("Position out of bound");
-        }
-        game.getVillage().getWeather().thunderBolt(x1, y1);
+    public Response toolsEquip(String[] params) {
+        return null;
     }
 
-    public void greenhouseBuild() {
-        Farm farm = null;
-        for (int i = 0; i < game.getVillage().getFarms().size(); i++) {
-            farm = game.getVillage().getFarms().get(i);
-            if (farm.getPlayers() == game.getCurrentPlayer()) {
-                break;
-            }
-        }
-        if (farm == null) return;
-        GreenHouse greenHouse = farm.getGreenHouse();
-        if (greenHouse.isBuilt()) {
-            throw new InvalidInputException("Greenhouse already built.");
-        }
-        switch (greenHouse.areIngredientsAvailable(game.getCurrentPlayer())) {
-            case 1-> throw new InvalidInputException("You need 1000 golds to build it");
-            case 2-> throw new InvalidInputException("You need 500 golds to build it");
-        }
-        System.out.println("The greenhouse is built");
-        //TODO greenhouse initialization
+    public Response toolsUpgrade(String[] params) {
+        return null;
     }
 
-    public void weatherForecast() {
-        System.out.println(game.getVillage().getTomorrowWeather());
+    public Response toolsUse(String[] params) {
+        return null;
     }
 
-    public void weather() {
-        System.out.println(game.getVillage().getWeather());
+    public Response craftInfo(String[] params) {
+        return null;
     }
 
-    public void printMap(String x, String y, String size) {
-        int x1 = Integer.parseInt(x);
-        int y1 = Integer.parseInt(y);
-        if (x1 < 0 || y1 < 0 || x1 >= game.getLength() || y1 >= game.getWidth()) {
-            throw new InvalidInputException("Position out of bound");
-        }
-        game.getVillage().printMap(x1, y1, Integer.parseInt(size));
+    public Response plantSeed(String[] params) {
+        return null;
     }
 
-    public void walk(Scanner scanner, String x, String y) {
-        int x1 = Integer.parseInt(x);
-        int y1 = Integer.parseInt(y);
-        if (x1 < 0 || y1 < 0 || x1 >= game.getLength() || y1 >= game.getWidth()) {
-            throw new InvalidInputException("Position out of bound");
-        }
-        for (Farm farm : game.getVillage().getFarms()) {
-            if (farm.isPairInFarm(new Pair(x1, y1))) {
-                if (farm.getPlayers().contains(game.getCurrentPlayer())) break;
-                throw new InvalidInputException("You are not allowed to enter this farm");
-            }
-        }
-        WalkingStrategy walkingStrategy = new WalkingStrategy();
-        Player player = game.getCurrentPlayer();
-        int energy = walkingStrategy.calculateEnergy(
-                new Pair(player.getTiles().getFirst().getX(),player.getTiles().getFirst().getX()) , new Pair(x1, y1)
-        );
-        if (energy == -1) throw  new InvalidInputException("No path available");
-        String confirmation;
-        while (true) {
-            System.out.println("Energy needed: " + energy + "\nY/n");
-            confirmation = scanner.next();
-            if (confirmation.equals("Y")) break;
-            if (confirmation.equals("n")) return;
-        }
-        if (player.getEnergy() < energy) {
-            player.faint();
-            throw new InvalidInputException("Not enough energy; you fainted");
-        }
-        player.removeEnergy(energy);
-        player.getTiles().clear();
-        player.getTiles().add(game.tiles[x1][y1]);
-        if (player.getEnergyPerTurn() <= 0) nextTurn();
+    public Response showplant(String[] params) {
+        return null;
     }
 
-    public void helpReadingMap() {
-        //TODO
+    public Response fertilize(String[] params) {
+        return null;
     }
 
-    public void energyShow() {
+    public Response howMuchWater(String[] params) {
+        return null;
     }
 
-    public void C_EnergyLimited() {
+    public Response placeItem(String[] params) {
+        return null;
     }
 
-    public void inventoryShow() {
+    public Response C_AddItem(String[] params) {
+        return null;
     }
 
-    public void toolsShowCurrent() {
+    public Response pet(String[] params) {
+        return null;
     }
 
-    public void toolsShowAvailable() {
+    public Response feedHay(String[] params) {
+        return null;
     }
 
-    public void C_EnergySet(String value) {
+    public Response collectProduce(String[] params) {
+        return null;
     }
 
-    public void inventoryTrash(String name, String amount) {
+    public Response sellAnimal(String[] params) {
+        return null;
     }
 
-    public void toolsEquip(String toolName) {
+    public Response shepherdAnimals(String[] params) {
+        return null;
     }
 
-    public void toolsUpgrade(String toolName) {
+    public Response animals(String[] params) {
+        return null;
     }
 
-    public void toolsUse(String direction) {
+    public Response produces(String[] params) {
+        return null;
     }
 
-    public void craftInfo(String craftName) {
+    public Response C_SetFriendship(String[] params) {
+        return null;
     }
 
-    public void plantSeed(String seed, String direction) {
+    public Response artisanUse(String[] params) {
+        return null;
     }
 
-    public void showPlant(String x, String y) {
+    public Response artisanGet(String[] params) {
+        return null;
     }
 
-    public void fertilize(String fertilizer) {
+    public Response C_AddDollars(String[] params) {
+        return null;
     }
 
-    public void howmuchWater() {
+    public Response sell(String[] params) {
+        return null;
     }
 
-    public void placeItem(String itemName, String direction) {
+    public Response friendship(String[] params) {
+        return null;
     }
 
-    public void C_AddItem(String name, String count) {
+    public Response talk(String[] params) {
+        return null;
     }
 
-    public void pet(String name) {
+    public Response talkHistory(String[] params) {
+        return null;
     }
 
-    public void feedHay(String name) {
+    public Response gift(String[] params) {
+        return null;
     }
 
-    public void collectProduce(String name) {
+    public Response giftList(String[] params) {
+        return null;
     }
 
-    public void sellAnimal(String name) {
+    public Response giftRate(String[] params) {
+        return null;
     }
 
-    public void shepherAnimal(String name, String x, String y) {
+    public Response giftHistory(String[] params) {
+        return null;
     }
 
-    public void animals() {
+    public Response hug(String[] params) {
+        return null;
     }
 
-    public void produces() {
+    public Response flower(String[] params) {
+        return null;
     }
 
-    public void C_SetFriendship(String name, String count) {
+    public Response askMarriage(String[] params) {
+        return null;
     }
 
-    public void artisanUse(String name, String item1, String item2) {
+    public Response respond(String[] params) {
+        return null;
     }
 
-    public void artisanGet(String name) {
+    public Response startTrade(String[] params) {
+        return null;
     }
 
-    public void C_AddDollars(String count) {
+    public Response meetNPC(String[] params) {
+        return null;
     }
 
-    public void sell(String name, String count) {
+    public Response giftNPC(String[] params) {
+        return null;
     }
 
-    public void friendship() {
+    public Response questsFinish(String[] params) {
+        return null;
     }
 
-    public void talk(String username, String message) {
+    public Response eat(String[] params) {
+        return null;
     }
 
-    public void talkHistory(String username) {
+    public Response questsList(String[] params) {
+        return null;
     }
 
-    public void gift(String username, String item, String amount) {
+    public Response friendshipNPCList(String[] params) {
+        return null;
     }
 
-    public void giftList() {
+    public Response craftingShowRecipes(String[] strings) {
+        return null;
     }
 
-    public void giftRate(String giftNumber, String rate) {
+    public Response cookingShowRecipes(String[] strings) {
+        return null;
     }
 
-    public void giftHistory(String username) {
+    public Response cookingRefrigeratorPick(String[] strings) {
+        return null;
     }
 
-    public void hug(String username) {
+    public Response craftingCraft(String[] strings) {
+        return null;
     }
 
-    public void flower(String username) {
+    public Response cookingRefrigeratorPut(String[] strings) {
+        return null;
     }
 
-    public void askMarriage(String username, String ring) {
+    public Response cookingPrepare(String[] strings) {
+        return null;
     }
 
-    public void respond(String respond, String username) {
+    public Response build(String[] strings) {
+        return null;
     }
 
-    public void startTrade() {
+    public Response buyAnimal(String[] strings) {
+        return null;
     }
 
-    public void meetNPC(String npcName) {
+    public Response showAllProducts(String[] strings) {
+        return null;
     }
 
-    public void giftNPC(String npcName) {
+    public Response purchase(String[] strings) {
+        return null;
     }
 
-    public void questsFinish(String index) {
+    public Response purchase1(String[] strings) {
+        return null;
     }
 
-    public void questsList() {
+    public Response trade(String[] strings) {
+        return null;
     }
 
-    public void friendshipNPCList() {
+    public Response tradeList(String[] strings) {
+        return null;
     }
 
-    public void eat(String foodName) {
+    public Response tradeResponse(String[] strings) {
+        return null;
+    }
 
+    public Response tradeHistory(String[] strings) {
+        return null;
     }
 }
