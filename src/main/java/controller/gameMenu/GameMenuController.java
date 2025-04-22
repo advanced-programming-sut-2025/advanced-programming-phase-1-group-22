@@ -9,6 +9,7 @@ import model.structure.farmInitialElements.GreenHouse;
 import service.GameService;
 import utils.App;
 
+import javax.swing.plaf.SpinnerUI;
 import java.util.Scanner;
 
 public class GameMenuController extends MenuController {
@@ -86,44 +87,55 @@ public class GameMenuController extends MenuController {
         return gameService.C_AdvanceDate(params[0]);
     }
 
-    public Response energyShow(String[] params) {
-        return null;
+    public Response showPlayerEnergy(String... params) {
+        return gameService.showPlayerEnergy();
     }
 
-    public Response C_EnergyUnlimited(String[] params) {
-        return null;
+    public Response setPlayerEnergy(String[] params) {
+        int energy = Integer.parseInt(params[0]);
+        return gameService.setPlayerEnergy(energy);
     }
 
-    public Response inventoryShow(String[] params) {
-        return null;
+    public Response setPlayerUnlimitedEnergy(String[] params) {
+        return gameService.setPlayerUnlimitedEnergy();
     }
 
-    public Response toolsShowCurrent(String[] params) {
-        return null;
+    public Response showPlayerInventory(String... params) {
+        return gameService.showPlayerInventory();
     }
 
-    public Response toolsShowCAvailable(String[] params) {
-        return null;
+    public Response removeFromPlayerInventory(String[] params) {
+        String itemName = params[0];
+        boolean haveItemNumber = params.length == 2;
+        if (haveItemNumber) {
+            int itemNumber = Integer.parseInt(params[1]);
+            return gameService.removeFromPlayerInventory(itemName, true, itemNumber);
+        }
+        return gameService.removeFromPlayerInventory(itemName,false);
     }
 
-    public Response C_EnergySet(String[] params) {
-        return null;
+    public Response toolEquip(String[] params) {
+        return gameService.toolEquip(params[0]);
     }
 
-    public Response inventoryTrash(String[] params) {
-        return null;
+    public Response showCurrentTool(String[] params) {
+        return gameService.showCurrentTool();
     }
 
-    public Response toolsEquip(String[] params) {
-        return null;
+    public Response showAvailableTools(String[] params) {
+        return gameService.showAvailableTools();
     }
 
-    public Response toolsUpgrade(String[] params) {
-        return null;
+    public Response upgradeTool(String[] params) {
+        return gameService.upgradeTool(params[0]);
     }
 
-    public Response toolsUse(String[] params) {
-        return null;
+    public Response useTool(String[] params) {
+        return gameService.useTool(params[0]);
+    }
+
+    public Response pickFromFloor(String[] params) {
+        return gameService.pickFromFloor();
     }
 
     public Response craftInfo(String[] params) {

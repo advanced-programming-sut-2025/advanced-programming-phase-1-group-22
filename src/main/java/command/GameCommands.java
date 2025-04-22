@@ -93,6 +93,18 @@ public class GameCommands extends CommandClass {
     public static final GameCommands tradeResponse = new GameCommands("^\\s*trade\\s+respond\\s+(?<respond>\\baccept|reject)\\s+-i\\s+(?<id>\\d+)\\s*$");
     public static final GameCommands tradeHistory = new GameCommands("^\\s*trade\\s+history\\s*$");
 
+    public static final GameCommands SHOW_ENERGY = new GameCommands("show\\s+energy");
+    public static final GameCommands ENERGY_SET = new GameCommands("set\\+energy\\s+-v\\s+(\\d+)");
+    public static final GameCommands SET_ENERGY_UNLIMITED = new GameCommands("energy\\s+unlimited");
+    public static final GameCommands SHOW_INVENTORY = new GameCommands("inventory\\s+show");
+    public static final GameCommands REMOVE_FROM_INVENTORY = new GameCommands("inventory\\s+trash\\s+-i\\s+([a-zA-Z ]+)\\s*(\\d+)?");
+    public static final GameCommands TOOL_EQUIP = new GameCommands("tool\\s+equip\\s+()");
+    public static final GameCommands SHOW_CURRENT_TOOL = new GameCommands("tools\\s+show\\s+current");
+    public static final GameCommands SHOW_AVAILABLE_TOOLS = new GameCommands("tools\\s+show\\s+available");
+    public static final GameCommands UPGRADE_TOOL = new GameCommands("tools\\s+upgrade\\s+([a-zA-Z ]+)");
+    public static final GameCommands USE_TOOL = new GameCommands("tool\\s+use\\s+-d\\s+(north|south|west|east|northwest|northeast|southeast|southwest)");
+    public static final GameCommands PICK_PRODUCT = new GameCommands("pick\\s+up");
+
     GameCommands(String regex) {
         super(regex);
     }
