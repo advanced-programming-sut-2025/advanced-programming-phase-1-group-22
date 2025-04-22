@@ -4,22 +4,22 @@ import command.CommandClass;
 import controller.AccountMenuController;
 import model.records.Response;
 import view.CommandProcessor;
-import view.Menu;
 
 import java.util.Map;
 import java.util.function.Function;
 
 import static command.AccountCommands.*;
 
-public class ProfileMenu  implements CommandProcessor {
-    private static ProfileMenu instance;
+public class LoginMenu implements CommandProcessor {
+    private static LoginMenu instance;
 
-    private ProfileMenu() {
+    private LoginMenu() {
+        super();
     }
 
-    public static ProfileMenu getInstance() {
+    public static LoginMenu getInstance() {
         if (instance == null) {
-            instance = new ProfileMenu();
+            instance = new LoginMenu();
         }
         return instance;
     }
@@ -27,11 +27,11 @@ public class ProfileMenu  implements CommandProcessor {
     private final AccountMenuController controller = new AccountMenuController();
 
     private final Map<CommandClass, Function<String[], Response>> commandsFunctionMap = Map.of(
-            CHANGE_USERNAME, controller::changeUserName,
-            CHANGE_PASSWORD, controller::changePassword,
-            CHANGE_NICKNAME, controller::changeNickName,
-            CHANGE_EMAIL, controller::changeEmail,
-            USER_INFO,controller::userInfo,
+            LOGIN_COMMANDS, controller::loginUser,
+            REGISTER_COMMANDS, controller::registerUser,
+            REGISTER_COMMANDS_RANDOM_PASSWORD, controller::registerUserRandomPass,
+            FORGET_PASSWORD,controller::forgetPassword,
+            EXIT, controller::exit,
             SHOW_CURRENT_MENU, controller::showCurrentMenu
 
     );
