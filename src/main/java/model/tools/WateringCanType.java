@@ -9,6 +9,8 @@ import model.structure.Structure;
 import model.structure.farmInitialElements.Lake;
 import utils.App;
 
+import java.util.List;
+
 @Getter
 
 public enum WateringCanType implements Tool {
@@ -70,15 +72,19 @@ public enum WateringCanType implements Tool {
 
     @Override
     public String useTool(Player player, Tile tile) {
-        Structure structure = App.getInstance().getCurrentGame().getVillage().getStructureInTile(tile);
         boolean success = false;
-        if (structure != null){
-            if (structure instanceof Lake){ // or GreenHouse
-                isFullOfWater = true;
-                success = true;
+        List<Structure> structures = App.getInstance().getCurrentGame().getVillage().findStructuresByTile(tile);
+        for (Structure structure : structures) {
+            if (structure != null){
+                if (structure instanceof Lake){ // or GreenHouse
+                    isFullOfWater = true;
+                    success = true;
+                    break;
+                }
             }
+            // آب دادن به محصولات
         }
-        // آب دادن به محصولات
+
         player.changeEnergy(-this.getEnergy(player));
         if (success){
             return "you successfully use this tool";

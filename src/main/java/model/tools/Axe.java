@@ -73,23 +73,28 @@ public enum Axe implements Tool{
     @Override
     public String useTool(Player player, Tile tile) {
         boolean success = false;
-        Structure structure = App.getInstance().getCurrentGame().getVillage().getStructureInTile(tile);
-        if (structure != null){
-            if (structure instanceof Trunk){
-                if (((Trunk)structure).getTrunkType().equals(TrunkType.SMALL_TRUNK)){
-                    afterUseToolForMineralOrTree(new Mineral(MineralType.WOOD),player,tile,structure);
-                    success = true;
+        List<Structure> structures = App.getInstance().getCurrentGame().getVillage().findStructuresByTile(tile);
+        for (Structure structure : structures) {
+            if (structure != null){
+                if (structure instanceof Trunk){
+                    if (((Trunk)structure).getTrunkType().equals(TrunkType.SMALL_TRUNK)){
+                        afterUseToolForMineralOrTree(new Mineral(MineralType.WOOD),player,tile,structure);
+                        success = true;
+                        break;
+                    }
                 }
-            }
-            if (structure instanceof Tree){
-                if (((Tree)structure).getTreeType().getIsForaging()){
-                    afterUseToolForMineralOrTree(new Seed(SeedType.getFromName(((Tree)structure).getTreeType().getName())),
-                            player,tile,structure);
-                    afterUseToolForMineralOrTree(new Mineral(MineralType.WOOD),player,tile,structure);
-                    success = true;
+                if (structure instanceof Tree){
+                    if (((Tree)structure).getTreeType().getIsForaging()){
+                        afterUseToolForMineralOrTree(new Seed(SeedType.getFromName(((Tree)structure).getTreeType().getName())),
+                                player,tile,structure);
+                        afterUseToolForMineralOrTree(new Mineral(MineralType.WOOD),player,tile,structure);
+                        success = true;
+                        break;
+                    }
                 }
             }
         }
+
         if (success){
             player.upgradeAbility(Ability.FORAGING);
             player.changeEnergy(-this.getEnergy(player));

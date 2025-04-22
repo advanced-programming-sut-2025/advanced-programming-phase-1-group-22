@@ -33,22 +33,13 @@ public class Player extends Actor {
     private Integer maxEnergy;
     private Integer energyPerTurn;
     private Boolean energyIsInfinite;
-    private final Integer id;
-    private final User user;
-    private Integer energy = 200;
-    private Integer maxEnergy = 200;
-    private Integer energyPerTurn = 50;
-    private Integer maxEnergyPerTurn = 50;
-    private Boolean energyIsInfinite = false;
+    private Integer maxEnergyPerTurn;
     private BackPack inventory;
     private Buff buff;
     private Map<Ability, Integer> abilities = new HashMap<>();
     private ShippingBin shippingBin;
     private Account account = new Account();
-    private List<Marry> marriage;
-    private Map<Ability, Integer> abilities = new HashMap<>();
     private List<ShippingBin> shippingBinList = new ArrayList<>();
-    private Account account;
     private List<Marry> marriage = new ArrayList<>();
     private Player couple;
     private List<Trade> gootenTradeList;
@@ -60,26 +51,16 @@ public class Player extends Actor {
         this.energy = 200;
         this.maxEnergy = 200;
         this.energyPerTurn = 50;
+        this.maxEnergyPerTurn = 50;
         this.inventory = new BackPack(BackPackType.NORMAL_BACKPACK);
-        abilities.put(Ability.FARMING,0);
-        abilities.put(Ability.FORAGING,0);
-        abilities.put(Ability.FISHING,0);
-        abilities.put(Ability.MINING,0);
+        for (Ability ability : Ability.values()) {
+            abilities.put(ability, 0);
+        }
         addBasicTools();
     }
 
     private Pair position;
     private FarmType farmType;
-
-    public Player(Integer id, User user) {
-        this.id = id;
-        this.user = user;
-        inventory = new BackPack();
-        for (Ability ability : Ability.values()) {
-            abilities.put(ability, 0);
-        }
-        account = new Account();
-    }
 
     public void removeEnergy(int amount) {
         energyPerTurn -= amount;
