@@ -112,6 +112,7 @@ public class Player extends Actor {
         inventory.getProducts().put(Axe.NORMAL,1);
         inventory.getProducts().put(new WateringCan(WateringCanType.NORMAL),1);
         inventory.getProducts().put(TrashCan.NORMAL,1);
+        inventory.getProducts().put(new Scythe(),1);
     }
 
     private Salable generateRandomElement(){
