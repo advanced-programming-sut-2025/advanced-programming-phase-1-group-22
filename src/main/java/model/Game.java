@@ -3,9 +3,12 @@ package model;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import model.enums.Weather;
+import utils.App;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @Getter
 @Setter
@@ -31,19 +34,36 @@ public class Game {
         }
     }
 
-    public void startNewDay(){
+    public void startDay() {
+        TimeAndDate timeAndDate = this.getTimeAndDate();
+        Weather tomorrowWeather = this.getVillage().getTomorrowWeather();
+        Weather weather = this.getVillage().getWeather();
+        this.getVillage().setWeather(tomorrowWeather);
+        Random random = new Random();
+        do {
+            tomorrowWeather = Weather.values()[random.nextInt(0, 3)];
+        } while (tomorrowWeather.getSeasons().contains(timeAndDate.getSeason()));
+        if (weather == Weather.STORMY) {
+            for (Farm farm : this.village.getFarms()) {
+                for (int i = 0; i < 3; i++) {
+                    int randX = random.nextInt(farm.getFarmXStart(), farm.getFarmXEnd());
+                    int randY = random.nextInt(farm.getFarmYStart(), farm.getFarmYEnd());
+                    weather.thunderBolt(randX, randY);
+                }
+            }
+        }
         for (Player player : players) {
             player.resetEnergy();
-            addGoldToPlayerForShippingBin(player.getShippingBin().CalculatePriceOfShippingBinProducts(),player);
+            addGoldToPlayerForShippingBin(player.getShippingBin().CalculatePriceOfShippingBinProducts(), player);
         }
         for (Farm farm : App.getInstance().getCurrentGame().getVillage().getFarms()) {
             farm.generateRandomForaging();
         }
     }
 
-    public void addGoldToPlayerForShippingBin(int price, Player player){
-       int oldGold = player.getAccount().getGolds();
-       player.getAccount().setGolds(oldGold + price);
+    public void addGoldToPlayerForShippingBin(int price, Player player) {
+        int oldGold = player.getAccount().getGolds();
+        player.getAccount().setGolds(oldGold + price);
     }
 
     public void addPlayer(Player player) {
@@ -51,10 +71,11 @@ public class Game {
             friendships.add(new Friendship(players.size() * (players.size() - 1) / 2 + i + 1, players.get(i), player));
         }
         for (int i = 0; i < npcs.size(); i++) {
-            friendships.add(new Friendship( 20 + 10*players.size() + i, player, npcs.get(i)));
+            friendships.add(new Friendship(20 + 10 * players.size() + i, player, npcs.get(i)));
         }
         players.add(player);
     }
+
     public void addNPC(NPC npc) {
         npcs.add(npc);
     }
@@ -68,8 +89,7 @@ public class Game {
         for (i = 0; i < players.size(); i++) {
             if (currentPlayer == players.get(i)) break;
         }
-        i = (i == players.size() - 1) ? 0 : i+1;
-//        if (players.get(i).getIsFainted()) nextPlayer();
+        i = (i == players.size() - 1) ? 0 : i + 1;
         currentPlayer = players.get(i);
         timeAndDate.moveTimeForward();
     }

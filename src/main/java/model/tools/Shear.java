@@ -61,17 +61,21 @@ public enum Shear implements Tool {
 
     @Override
     public String useTool(Player player, Tile tile) {
-        Structure structure = App.getInstance().getCurrentGame().getVillage().getStructureInTile(tile);
         boolean success = false;
-        if (structure != null){
-            if (structure instanceof Animal currentAnimal){
-				if (currentAnimal.getAnimalType().equals(AnimalType.SHEEP)){
-                    currentAnimal.setShaving(true);
-                    afterUseTool(currentAnimal.getAnimalProduct(),player,tile);
-                    success = true;
+        List<Structure> structures = App.getInstance().getCurrentGame().getVillage().findStructuresByTile(tile);
+        for (Structure structure : structures) {
+            if (structure != null){
+                if (structure instanceof Animal currentAnimal){
+                    if (currentAnimal.getAnimalType().equals(AnimalType.SHEEP)){
+                        currentAnimal.setShaving(true);
+                        afterUseTool(currentAnimal.getAnimalProduct(),player,tile);
+                        success = true;
+                        break;
+                    }
                 }
             }
         }
+
         player.changeEnergy(-this.getEnergy(player));
         if (success){
             return "you successfully use this tool";

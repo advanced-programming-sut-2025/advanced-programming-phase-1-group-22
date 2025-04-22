@@ -177,23 +177,6 @@ public class Village {
         }
     }
 
-    public void startDay() {
-        TimeAndDate timeAndDate = app.getCurrentGame().getTimeAndDate();
-        weather = tomorrowWeather;
-        do {
-            tomorrowWeather = Weather.values()[getRandomNumber(0, 3)];
-        } while (tomorrowWeather.getSeasons().contains(timeAndDate.getSeason()));
-        if (weather == Weather.STORMY) {
-            for (Farm farm : farms) {
-                for (int i = 0; i < 3; i++) {
-                    int randX = getRandomNumber(farm.getFarmXStart(), farm.getFarmXEnd());
-                    int randY = getRandomNumber(farm.getFarmYStart(), farm.getFarmYEnd());
-                    weather.thunderBolt(randX, randY);
-                }
-            }
-        }
-    }
-
     public ArrayList<Structure> findStructuresByTile(Tile tile) {
         ArrayList<Structure> structures = new ArrayList<>();
         for (Structure structure : this.structures) {
@@ -266,13 +249,10 @@ public class Village {
             System.out.println();
         }
     }
-
-}
-
     public void removeStructure(Structure structure){
-		this.getStructures().remove(structure);
+        this.getStructures().remove(structure);
         for (Farm farm : this.getFarms()) {
-			farm.getStructures().remove(structure);
+            farm.getStructures().remove(structure);
         }
     }
 

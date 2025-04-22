@@ -3,7 +3,6 @@ package model.tools;
 import lombok.Getter;
 import lombok.Setter;
 import model.Player;
-import model.Result;
 import model.Salable;
 import model.exception.InvalidInputException;
 import model.products.Product;
@@ -63,14 +62,16 @@ public class BackPack {
 				products.containsKey(product);
 	}
 
-    private TrashCan getPlayerTrashCan(Player player){
+    private TrashCan getPlayerTrashCan(Player player) {
         for (Map.Entry<Salable, Integer> salableIntegerEntry : player.getInventory().getProducts().entrySet()) {
-            if (salableIntegerEntry.getKey() instanceof TrashCan){
+            if (salableIntegerEntry.getKey() instanceof TrashCan) {
                 return (TrashCan) salableIntegerEntry.getKey();
             }
         }
         return null;
-    public boolean checkProductAvailabilityInBackPack(Product product, int count) {
+    }
+
+    public boolean checkProductAvailabilityInBackPack(Salable product, int count) {
         if (!products.containsKey(product)) return false;
         return products.get(product) >= count;
     }

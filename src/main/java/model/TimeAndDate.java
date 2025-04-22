@@ -46,7 +46,7 @@ public class TimeAndDate {
             season = Season.SPRING;
         }
         if (nextDay) {
-            App.getInstance().getCurrentGame().getVillage().startDay();
+            App.getInstance().getCurrentGame().startDay();
             //TODO: reset Energy sets and randomizing the day
         }
     }

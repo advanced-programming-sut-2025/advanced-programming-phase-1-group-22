@@ -77,42 +77,50 @@ public enum Pickaxe implements Tool {
             tile.setTileType(TileType.FLAT);
             success = true;
         }
-        Structure structure = App.getInstance().getCurrentGame().getVillage().getStructureInTile(tile);
-        if (structure != null) {
-            if (structure instanceof Stone){
-                if (((Stone)structure).getStoneType().equals(StoneType.SMALL_STONE)){
-                    afterUseTool(new Mineral(MineralType.STONE),player,tile,structure);
-                    success = true;
-                }
-            }
-            else if (structure instanceof Mineral && !structure.getIsPickable()){
-                if (((Mineral)structure).getForagingMineralType().equals(MineralType.COPPER_ORE)){
-                   afterUseTool(new Mineral(MineralType.COPPER_ORE),player,tile,structure);
-                   success = true;
-                }
-                else if (((Mineral)structure).getForagingMineralType().equals(MineralType.IRON_ORE)){
-                    if (this.level >= 1){
-                        afterUseTool(new Mineral(MineralType.IRIDIUM_ORE),player,tile,structure);
+        List<Structure> structures = App.getInstance().getCurrentGame().getVillage().findStructuresByTile(tile);
+        for (Structure structure : structures) {
+            if (structure != null) {
+                if (structure instanceof Stone){
+                    if (((Stone)structure).getStoneType().equals(StoneType.SMALL_STONE)){
+                        afterUseTool(new Mineral(MineralType.STONE),player,tile,structure);
                         success = true;
+                        break;
                     }
                 }
-                else if (((Mineral)structure).getForagingMineralType().equals(MineralType.IRIDIUM_ORE)){
-                    if (this.level >= 3){
-                        afterUseTool(new Mineral(MineralType.IRIDIUM_ORE),player,tile,structure);
+                else if (structure instanceof Mineral && !structure.getIsPickable()){
+                    if (((Mineral)structure).getForagingMineralType().equals(MineralType.COPPER_ORE)){
+                        afterUseTool(new Mineral(MineralType.COPPER_ORE),player,tile,structure);
                         success = true;
+                        break;
+                    }
+                    else if (((Mineral)structure).getForagingMineralType().equals(MineralType.IRON_ORE)){
+                        if (this.level >= 1){
+                            afterUseTool(new Mineral(MineralType.IRIDIUM_ORE),player,tile,structure);
+                            success = true;
+                            break;
+                        }
+                    }
+                    else if (((Mineral)structure).getForagingMineralType().equals(MineralType.IRIDIUM_ORE)){
+                        if (this.level >= 3){
+                            afterUseTool(new Mineral(MineralType.IRIDIUM_ORE),player,tile,structure);
+                            success = true;
+                            break;
+                        }
+                    }
+                    else if (((Mineral)structure).getForagingMineralType().equals(MineralType.GOLD_ORE)){
+                        if (this.level >= 2){
+                            afterUseTool(new Mineral(MineralType.GOLD_ORE),player,tile,structure);
+                            success = true;
+                            break;
+                        }
                     }
                 }
-                else if (((Mineral)structure).getForagingMineralType().equals(MineralType.GOLD_ORE)){
-                    if (this.level >= 2){
-                        afterUseTool(new Mineral(MineralType.GOLD_ORE),player,tile,structure);
-                        success = true;
-                    }
+                else if (structure.getIsPickable()){
+                    App.getInstance().getCurrentGame().getVillage().removeStructure(structure);
                 }
-            }
-            else if (structure.getIsPickable()){
-                App.getInstance().getCurrentGame().getVillage().removeStructure(structure);
             }
         }
+
         if (success){
             player.upgradeAbility(Ability.MINING);
             player.upgradeAbility(Ability.FORAGING);
