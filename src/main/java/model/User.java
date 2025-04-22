@@ -27,7 +27,7 @@ public class User {
     private Gender gender;
     private Integer highestMoneyEarned;
     private Integer numberOfPlayedGames;
-    private boolean isPlaying;
+    private Boolean isPlaying;
 
     public User(String username, String password, String email, String nickname, Gender gender) {
         this.username = username;
