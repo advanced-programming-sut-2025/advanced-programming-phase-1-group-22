@@ -86,13 +86,6 @@ public class GameCommands extends CommandClass {
     public static final GameCommands purchase = new GameCommands("^\\s*purchase\\s+(?<name>.+)\\s+-n\\s+(?<count>\\d+)\\s*$");
     public static final GameCommands purchase1 = new GameCommands("^\\s*purchase\\s+(?<name>.+)\\s*$");
 
-    public static final GameCommands trade = new GameCommands("^\\s*trade\\s+-u\\s+(?<username>.+)\\s+-t\\s+(?<type>\\boffer|request)\\s+-i\\s+" +
-            "(?<item>.+)\\s+-a\\s+(?<amount>\\d+)(\\s+-p\\s+(?<price>\\d+))?(\\s+-ti\\s+(?<targetItem>.+)\\s+-ta\\" +
-            "s+(?<targetAmount>\\d+))?\\s*$"); //TODO the possibility to offer target item first and price next
-    public static final GameCommands tradeList = new GameCommands("^\\s*trade\\s+list\\s*$");
-    public static final GameCommands tradeResponse = new GameCommands("^\\s*trade\\s+respond\\s+(?<respond>\\baccept|reject)\\s+-i\\s+(?<id>\\d+)\\s*$");
-    public static final GameCommands tradeHistory = new GameCommands("^\\s*trade\\s+history\\s*$");
-
     public static final GameCommands SHOW_ENERGY = new GameCommands("show\\s+energy");
     public static final GameCommands ENERGY_SET = new GameCommands("set\\+energy\\s+-v\\s+(\\d+)");
     public static final GameCommands SET_ENERGY_UNLIMITED = new GameCommands("energy\\s+unlimited");
