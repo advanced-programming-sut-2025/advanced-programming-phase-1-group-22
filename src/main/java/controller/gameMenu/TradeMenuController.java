@@ -50,7 +50,9 @@ public class TradeMenuController extends MenuController {
     }
 
     public Response tradeResponse(String... params) {
-        return null;
+        boolean accept = params[0].equals("accept");
+        int tradeId = Integer.parseInt(params[1]);
+        return tradeService.tradeResponse(accept,tradeId);
     }
 
 

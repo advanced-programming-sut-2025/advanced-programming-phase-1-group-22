@@ -143,6 +143,15 @@ public class Player extends Actor {
 
     }
 
+    public Map.Entry<Salable, Integer> getItemFromInventory(String name) {
+        for (Map.Entry<Salable, Integer> salableIntegerEntry : this.getInventory().getProducts().entrySet()) {
+            if (salableIntegerEntry.getKey().getName().equals(name)) {
+                return salableIntegerEntry;
+            }
+        }
+        return null;
+    }
+
     @Override
     public String toString() {
         return user.toString();
