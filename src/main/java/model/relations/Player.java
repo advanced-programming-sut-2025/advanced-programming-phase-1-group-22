@@ -1,23 +1,17 @@
-package model;
+package model.relations;
 
-import controller.gameMenu.GameMenuController;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import model.*;
 import model.abilitiy.Ability;
 import model.exception.InvalidInputException;
-import model.products.TreesAndFruitsAndSeeds.Tree;
-import model.products.TreesAndFruitsAndSeeds.TreeType;
+import model.records.Response;
 import model.shelter.ShippingBin;
 import model.source.*;
-import model.structure.Stone;
-import model.structure.StoneType;
-import model.structure.Trunk;
-import model.structure.TrunkType;
 import model.tools.*;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -147,4 +141,8 @@ public class Player extends Actor {
             }
         }
     }
+    public void notify(Response response){
+
+    }
+
 }

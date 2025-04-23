@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import model.products.TreesAndFruitsAndSeeds.Tree;
 import model.products.TreesAndFruitsAndSeeds.TreeType;
+import model.relations.Player;
 import model.source.*;
 import model.structure.*;
 import model.structure.farmInitialElements.Cottage;
@@ -11,7 +12,6 @@ import model.structure.farmInitialElements.GreenHouse;
 import model.structure.farmInitialElements.HardCodeFarmElements;
 import utils.App;
 
-import javax.swing.plaf.synth.SynthTreeUI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

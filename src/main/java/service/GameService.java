@@ -3,9 +3,9 @@ package service;
 import model.*;
 import model.abilitiy.Ability;
 import model.enums.Weather;
-import model.exception.InvalidInputException;
 import model.products.Product;
 import model.records.Response;
+import model.relations.Player;
 import model.structure.Structure;
 import model.structure.farmInitialElements.GreenHouse;
 import model.structure.stores.BlackSmithUpgrade;
@@ -13,14 +13,11 @@ import model.structure.stores.Store;
 import model.structure.stores.StoreType;
 import model.tools.Tool;
 import utils.App;
-import utils.InitialGame;
 import variables.Session;
 import view.Menu;
 import view.ViewRender;
 
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class GameService {
     private static GameService instance;

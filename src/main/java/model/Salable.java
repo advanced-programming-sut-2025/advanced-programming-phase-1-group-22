@@ -1,6 +1,6 @@
 package model;
 
 public interface Salable {
-	String getName();
+ 	String getName();
 	int getSellPrice();
 }

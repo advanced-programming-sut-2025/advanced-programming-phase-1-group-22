@@ -2,11 +2,9 @@ package model.structure.farmInitialElements;
 
 import lombok.Getter;
 import lombok.Setter;
-import model.Player;
-import model.shelter.FarmBuilding;
+import model.relations.Player;
 import model.shelter.FarmBuildingType;
 import model.source.MineralType;
-import variables.Session;
 
 @Getter
 @Setter

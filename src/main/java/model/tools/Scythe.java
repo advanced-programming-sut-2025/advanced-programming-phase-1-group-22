@@ -1,11 +1,10 @@
 package model.tools;
 
 import lombok.Getter;
-import model.Player;
+import model.relations.Player;
 import model.Tile;
 import model.TileType;
 import model.abilitiy.Ability;
-import model.exception.InvalidInputException;
 
 @Getter
 public class Scythe implements Tool {

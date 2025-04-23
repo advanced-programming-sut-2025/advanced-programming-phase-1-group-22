@@ -2,7 +2,7 @@ package model.tools;
 
 import lombok.Getter;
 import lombok.Setter;
-import model.Player;
+import model.relations.Player;
 import model.Tile;
 
 @Getter

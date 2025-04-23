@@ -4,6 +4,9 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import model.enums.Weather;
+import model.relations.Friendship;
+import model.relations.NPC;
+import model.relations.Player;
 import utils.App;
 
 import java.util.ArrayList;
@@ -77,6 +80,7 @@ public class Game {
     }
 
     public void addNPC(NPC npc) {
+
         npcs.add(npc);
     }
 

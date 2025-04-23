@@ -1,8 +1,8 @@
-package model;
+package model.relations;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
+import model.Actor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,7 +11,6 @@ import java.util.Map;
 
 @Getter
 @Setter
-@ToString
 public class Friendship {
     private Integer id;
     private Actor firstPlayer;
@@ -37,5 +36,18 @@ public class Friendship {
 
     public void talkToPlayer() {
 
+    }
+
+    public Integer getFriendShipLevel() {
+        return friendShipLevel + xp / 100;
+    }
+
+    @Override
+    public String toString() {
+        return "Friendship{" +
+                ", friend=" + secondPlayer +
+                ", friendShipLevel=" + friendShipLevel +
+                ", xp=" + xp +
+                '}';
     }
 }

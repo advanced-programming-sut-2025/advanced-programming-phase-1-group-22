@@ -1,4 +1,6 @@
-package model;
+package model.relations;
+
+import model.Actor;
 
 public class NPC extends Actor {
     private NPCType type;
