@@ -22,11 +22,11 @@ import java.util.Map;
 @Getter
 @ToString
 public enum NPCType {
-    SEBASTIAN("sebastian", "", List.of(AnimalProductType.SHEEP_WOOL, FoodType.PUMPKIN_PIE, FoodType.PIZZA)),
-    EBIGIL("ebigel", "", List.of(MineralType.IRON_ORE, MineralType.STONE, MadeProductType.COFFE)),
-    HARVEY("harvey", "", List.of(MadeProductType.PICKLES, MadeProductType.WINE, MadeProductType.COFFE)),
-    LIA("lia", "", List.of(MadeProductType.WINE, CropType.GRAPE, FoodType.SALAD)),
-    RABIN("rabin", "", List.of(FoodType.SPAGHETTI, MineralType.WOOD, MadeProductType.IRON_BAR));
+    SEBASTIAN("sebastian", "", List.of(AnimalProductType.SHEEP_WOOL, FoodType.PUMPKIN_PIE, FoodType.PIZZA), 1),
+    EBIGIL("ebigel", "", List.of(MineralType.IRON_ORE, MineralType.STONE, MadeProductType.COFFE), 2),
+    HARVEY("harvey", "", List.of(MadeProductType.PICKLES, MadeProductType.WINE, MadeProductType.COFFE), 3),
+    LIA("lia", "", List.of(MadeProductType.WINE, CropType.GRAPE, FoodType.SALAD), 4),
+    RABIN("rabin", "", List.of(FoodType.SPAGHETTI, MineralType.WOOD, MadeProductType.IRON_BAR), 5);
 
 
     private Integer id;
@@ -36,11 +36,13 @@ public enum NPCType {
     private String personality;
     private NPCHouse NPCHouse;
     private List<Mission> missions = new ArrayList<>();
+    private int missionSeasonDis;
 
-    NPCType(String name, String job, List<Salable> favorites) {
+    NPCType(String name, String job, List<Salable> favorites, int missionSeasonDis) {
         this.name = name;
         this.job = job;
         this.favorites = favorites;
+        this.missionSeasonDis = missionSeasonDis;
     }
 
     public void setMissions() {
@@ -59,7 +61,7 @@ public enum NPCType {
                             Map.of(MineralType.GOLD, 500), 0),
                     new Mission(NPCType.valueOf("LIA"),
                             Map.of(FishType.SALMON, 1),
-                            Map.of(new Recipe("salmon dinner recipe","A receipe to make Salmon Dinner", 0), 1), 1),
+                            Map.of(new Recipe("salmon dinner recipe", "A receipe to make Salmon Dinner", 0), 1), 1),
                     new Mission(NPCType.valueOf("LIA"),
                             Map.of(MineralType.WOOD, 200),
                             Map.of(CraftType.DELUXE_SCARECROW, 3), Season.SUMMER)));

@@ -15,6 +15,9 @@ public class RelationShipCommands extends CommandClass {
     public static final RelationShipCommands MEET_NPC = new RelationShipCommands("meet\\s+npc\\s+(.*)");
     public static final RelationShipCommands NPC_GIFT = new RelationShipCommands("gift\\s+NPC\\s+(.*)\\s+-i\\s+(.*)");
     public static final RelationShipCommands NPC_FRIENDSHIP = new RelationShipCommands("friendship\\s+NPC\\s+list");
+    public static final RelationShipCommands QUESTS_LIST = new RelationShipCommands("quests\\s+list");
+    public static final RelationShipCommands DO_MISSION = new RelationShipCommands("quests\\s+finish\\s+-i\\s+(\\d+)");
+
     RelationShipCommands(String regex) {
         super(regex);
     }

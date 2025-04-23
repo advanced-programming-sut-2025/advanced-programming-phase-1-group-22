@@ -35,6 +35,8 @@ public class RelationShipMenu extends GameMenu {
         commandsFunctionMap.put(MEET_NPC,controller::meetNpc);
         commandsFunctionMap.put(NPC_GIFT,controller::giftNpc);
         commandsFunctionMap.put(NPC_FRIENDSHIP,controller::showNpcFriendship);
+        commandsFunctionMap.put(QUESTS_LIST,controller::questsList);
+        commandsFunctionMap.put(DO_MISSION,controller::doMission);
     }
 
 

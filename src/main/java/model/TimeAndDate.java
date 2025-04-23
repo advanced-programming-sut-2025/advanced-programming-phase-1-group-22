@@ -37,6 +37,7 @@ public class TimeAndDate {
                 }
             }
         }
+        giveRewardToLevelThreeFriends();
         boolean nextDay = false;
         minute += 15;
         if (minute >= 60) {
@@ -60,6 +61,10 @@ public class TimeAndDate {
             App.getInstance().getCurrentGame().startDay();
             //TODO: reset Energy sets and randomizing the day
         }
+    }
+
+    private void giveRewardToLevelThreeFriends() {
+
     }
 
     public int compareTime(TimeAndDate timeAndDate) {

@@ -21,6 +21,7 @@ public class Friendship {
     private Integer xp;
     private Map<String, Actor> dialogs;
     private TimeAndDate lastSeen;
+    private TimeAndDate timeFromGettingFirstLevel;
 
     public Friendship(Integer id, Actor firstPlayer, Actor secondPlayer) {
         this.id = id;
