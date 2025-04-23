@@ -28,13 +28,13 @@ public class Player extends Actor {
     private Integer energyPerTurn;
     private Boolean energyIsInfinite;
     private Integer maxEnergyPerTurn;
+    private Integer daysOfSadness = 0;
     private BackPack inventory;
     private Buff buff;
     private Map<Ability, Integer> abilities = new HashMap<>();
     private ShippingBin shippingBin;
     private Account account = new Account();
     private List<ShippingBin> shippingBinList = new ArrayList<>();
-    private List<Marry> marriage = new ArrayList<>();
     private Player couple;
     private List<Trade> gootenTradeList;
     private Boolean isFainted;
@@ -61,87 +61,86 @@ public class Player extends Actor {
         energy -= amount;
     }
 
-    public void faint(){
+    public void faint() {
         isFainted = true;
         energy = 0;
     }
 
-    public void changeEnergy(int currentEnergy){
-        if (energyIsInfinite){
-            energy = Math.max(0,energy + currentEnergy);
-        }
-        else {
-            energy = Math.min(Math.max(0,energy + currentEnergy),maxEnergy);
+    public void changeEnergy(int currentEnergy) {
+        if (energyIsInfinite) {
+            energy = Math.max(0, energy + currentEnergy);
+        } else {
+            energy = Math.min(Math.max(0, energy + currentEnergy), maxEnergy);
         }
     }
 
-    public void resetEnergy(){
+    public void resetEnergy() {
         maxEnergy = 200;
-        if (isFainted){
+        if (isFainted) {
             energy = (int) (maxEnergy * 0.75);
             isFainted = false;
-        }
-        else {
-            if (!energyIsInfinite){
+        } else {
+            if (!energyIsInfinite) {
                 energy = maxEnergy;
             }
         }
     }
 
     public void setEnergyIsInfinite(Boolean energyIsInfinite) {
-        if (!energyIsInfinite){
-            energy = Math.min(energy,maxEnergy);
+        if (!energyIsInfinite) {
+            energy = Math.min(energy, maxEnergy);
         }
         this.energyIsInfinite = energyIsInfinite;
     }
 
-    public int getAbilityLevel(Ability ability){
+    public int getAbilityLevel(Ability ability) {
         for (Map.Entry<Ability, Integer> abilityIntegerEntry : abilities.entrySet()) {
-            if (abilityIntegerEntry.getKey().equals(ability)){
+            if (abilityIntegerEntry.getKey().equals(ability)) {
                 int level = (abilityIntegerEntry.getValue() - 50) / 100;
-				return Math.min(4,Math.max(level, 0));
-			}
+                return Math.min(4, Math.max(level, 0));
+            }
         }
         throw new InvalidInputException("abilityType is invalid");
     }
 
-    public void upgradeAbility(Ability ability){
+    public void upgradeAbility(Ability ability) {
         int oldValue = this.getAbilities().get(ability);
-        this.getAbilities().put(ability,oldValue + ability.getUpgradeAbility());
-        if (ability.equals(Ability.MINING) && this.getAbilities().get(Ability.MINING) >= 2){
-            this.getInventory().addProductToBackPack(generateRandomElement(),1);
+        this.getAbilities().put(ability, oldValue + ability.getUpgradeAbility());
+        if (ability.equals(Ability.MINING) && this.getAbilities().get(Ability.MINING) >= 2) {
+            this.getInventory().addProductToBackPack(generateRandomElement(), 1);
         }
     }
 
-    private void addBasicTools(){
-        inventory.getProducts().put(Hoe.NORMAL,1);
-        inventory.getProducts().put(Pickaxe.NORMAL,1);
-        inventory.getProducts().put(Axe.NORMAL,1);
-        inventory.getProducts().put(new WateringCan(WateringCanType.NORMAL),1);
-        inventory.getProducts().put(TrashCan.NORMAL,1);
-        inventory.getProducts().put(new Scythe(),1);
+    private void addBasicTools() {
+        inventory.getProducts().put(Hoe.NORMAL, 1);
+        inventory.getProducts().put(Pickaxe.NORMAL, 1);
+        inventory.getProducts().put(Axe.NORMAL, 1);
+        inventory.getProducts().put(new WateringCan(WateringCanType.NORMAL), 1);
+        inventory.getProducts().put(TrashCan.NORMAL, 1);
+        inventory.getProducts().put(new Scythe(), 1);
     }
 
-    private Salable generateRandomElement(){
+    private Salable generateRandomElement() {
         Random random = new Random();
-        int witchType = random.nextInt(1,3);
+        int witchType = random.nextInt(1, 3);
 
-        switch (witchType){
-            case 1 ->{
+        switch (witchType) {
+            case 1 -> {
                 int foragingRandSeed = random.nextInt(0, 41);
-				return new Seed(SeedType.values()[foragingRandSeed]);
+                return new Seed(SeedType.values()[foragingRandSeed]);
             }
-            case 2 ->{
+            case 2 -> {
                 int cropRand = random.nextInt(0, 21);
-				return new Crop(CropType.values()[cropRand]);
+                return new Crop(CropType.values()[cropRand]);
             }
-            default ->{
-                int mineralRand = random.nextInt(0,21);
-				return new Mineral(MineralType.values()[mineralRand]);
+            default -> {
+                int mineralRand = random.nextInt(0, 21);
+                return new Mineral(MineralType.values()[mineralRand]);
             }
         }
     }
-    public void notify(Response response){
+
+    public void notify(Response response) {
 
     }
 

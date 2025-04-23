@@ -1,14 +1,13 @@
 package service;
 
-import model.Flower;
-import model.Game;
-import model.Salable;
-import model.Tile;
+import model.*;
 import model.enums.Gender;
 import model.records.Response;
+import model.relations.Account;
 import model.relations.Friendship;
 import model.relations.Gift;
 import model.relations.Player;
+import model.structure.stores.PierreShop;
 import utils.App;
 
 import java.util.Map;
@@ -47,16 +46,13 @@ public class RelationService {
         if (!twoActorsAreNeighbors(currentPlayer, anotherPlayer)) {
             return new Response("You can't talk to the other player");
         }
-
-        for (Friendship friendship : game.getFriendships()) {
-            if ((friendship.getFirstPlayer().equals(currentPlayer) &&
-                    friendship.getSecondPlayer().equals(anotherPlayer)) || (friendship.getSecondPlayer().equals(game.getCurrentPlayer()) &&
-                    friendship.getFirstPlayer().equals(anotherPlayer))) {
-                friendship.getDialogs().put(message, currentPlayer);
-                friendship.setXp(friendship.getXp() + 20);
-                anotherPlayer.notify(new Response("%s called you!".formatted(currentPlayer.getUser().getUsername())));
-            }
+        Friendship friendship = getFriendShipBetweenTwoActors(anotherPlayer);
+        friendship.getDialogs().put(message, currentPlayer);
+        if (currentPlayer.getCouple().equals(anotherPlayer)) {
+            friendship.setXp(friendship.getXp() + 50);
         }
+        friendship.setXp(friendship.getXp() + 20);
+        anotherPlayer.notify(new Response("%s called you!".formatted(currentPlayer.getUser().getUsername())));
         return new Response("message sent successfully");
     }
 
@@ -231,7 +227,36 @@ public class RelationService {
     }
 
     public Response Respond(boolean accept, String username) {
-
-            return null;
+        Player player = getPlayer(username);
+        Friendship friendShipBetweenTwoActors = getFriendShipBetweenTwoActors(player);
+        if (!accept) {
+            friendShipBetweenTwoActors.setFriendShipLevel(0);
+            player.setDaysOfSadness(7);
+            return Response.empty();
+        }
+        Salable wRing = null;
+        for (Map.Entry<Salable, Integer> salableIntegerEntry : player.getInventory().getProducts().entrySet()) {
+            if (salableIntegerEntry.getKey().getName().equals(PierreShop.WEDDING_RING.getName())) {
+                wRing = salableIntegerEntry.getKey();
+                player.getInventory().getProducts().remove(wRing);
+                currentPlayer.getInventory().addProductToBackPack(wRing, 1);
+            }
+        }
+        friendShipBetweenTwoActors.setFriendShipLevel(4);
+        player.setCouple(currentPlayer);
+        currentPlayer.setCouple(player);
+        for (Farm farm : game.getVillage().getFarms()) {
+            if (farm.getPlayers().contains(player)) {
+                farm.getPlayers().add(currentPlayer);
+            }
+            if (farm.getPlayers().contains(currentPlayer)) {
+                farm.getPlayers().add(player);
+            }
+        }
+        Account wifeAccount = currentPlayer.getAccount();
+        Account husbandAccount = player.getAccount();
+        husbandAccount.setGolds(husbandAccount.getGolds() + wifeAccount.getGolds());
+        wifeAccount = husbandAccount;
+        return null;
     }
 }
