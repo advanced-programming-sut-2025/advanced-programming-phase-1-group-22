@@ -1,4 +1,4 @@
-package model;
+package model.relations;
 
 import lombok.Getter;
 import lombok.Setter;

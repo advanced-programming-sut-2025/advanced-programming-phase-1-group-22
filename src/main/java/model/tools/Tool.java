@@ -1,6 +1,6 @@
 package model.tools;
 
-import model.Player;
+import model.relations.Player;
 import model.Salable;
 import model.Tile;
 

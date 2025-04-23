@@ -1,7 +1,8 @@
-package model;
+package model.relations;
 
 import lombok.Getter;
 import lombok.ToString;
+import model.Salable;
 import model.animal.FishType;
 import model.cook.FoodType;
 import model.craft.CraftType;

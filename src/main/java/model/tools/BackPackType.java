@@ -1,9 +1,8 @@
 package model.tools;
 
 import lombok.Getter;
-import model.Player;
+import model.relations.Player;
 import model.Tile;
-import model.exception.InvalidInputException;
 
 @Getter
 public enum BackPackType implements Tool {

@@ -1,12 +1,13 @@
 package utils;
 
 import model.*;
-import model.structure.Structure;
+import model.relations.NPC;
+import model.relations.NPCType;
+import model.relations.Player;
 import variables.Session;
 import view.Menu;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 public class InitialGame {
     public void initial(ArrayList<User> users) {

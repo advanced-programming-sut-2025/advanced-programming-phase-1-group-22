@@ -1,8 +1,10 @@
-package model;
+package model.relations;
 
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import model.Actor;
+import model.Salable;
 import model.enums.Season;
 
 import java.util.Map;

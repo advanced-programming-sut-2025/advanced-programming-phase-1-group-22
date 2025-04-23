@@ -1,8 +1,9 @@
-package model;
+package model.relations;
 
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import model.Salable;
 
 @Getter
 @Setter

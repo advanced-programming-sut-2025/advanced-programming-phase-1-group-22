@@ -2,14 +2,11 @@ package model.tools;
 
 import lombok.Getter;
 import lombok.Setter;
-import model.Player;
+import model.relations.Player;
 import model.Salable;
 import model.exception.InvalidInputException;
-import model.products.Product;
-import model.shelter.ShippingBin;
 
 import java.util.HashMap;
-import java.util.InputMismatchException;
 import java.util.Map;
 @Getter
 @Setter

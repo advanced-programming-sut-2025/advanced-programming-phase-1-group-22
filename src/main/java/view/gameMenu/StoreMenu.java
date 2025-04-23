@@ -17,7 +17,7 @@ import model.records.Response;
 import static command.GameCommands.*;
 import static command.GameCommands.cookingPrepare;
 
-public class StoreMenu  extends  GameMenu {
+public class StoreMenu extends GameMenu {
     private static StoreMenu instance;
     private final GameMenuController controller = new GameMenuController();
     private final Map<CommandClass, Function<String[], Response>> commandsFunctionMap = new HashMap<>();
@@ -37,6 +37,7 @@ public class StoreMenu  extends  GameMenu {
         }
         return instance;
     }
+
     @Override
     public Map<CommandClass, Function<String[], Response>> getFunctionsMap() {
         return commandsFunctionMap;

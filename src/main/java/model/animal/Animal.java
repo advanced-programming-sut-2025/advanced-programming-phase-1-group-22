@@ -2,11 +2,10 @@ package model.animal;
 
 import lombok.Getter;
 import lombok.Setter;
-import model.Player;
+import model.relations.Player;
 import model.Salable;
 import model.TimeAndDate;
 import model.products.AnimalProduct;
-import model.products.AnimalProductType;
 import model.structure.Structure;
 
 @Getter

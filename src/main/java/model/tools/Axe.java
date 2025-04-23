@@ -1,7 +1,7 @@
 package model.tools;
 
 import lombok.Getter;
-import model.Player;
+import model.relations.Player;
 import model.Salable;
 import model.Tile;
 import model.abilitiy.Ability;
