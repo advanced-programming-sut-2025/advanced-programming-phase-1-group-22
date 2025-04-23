@@ -2,6 +2,7 @@ package view.gameMenu;
 
 import command.CommandClass;
 import controller.gameMenu.GameMenuController;
+import controller.gameMenu.TradeMenuController;
 import model.records.Response;
 
 import java.util.HashMap;
@@ -9,19 +10,21 @@ import java.util.Map;
 import java.util.function.Function;
 
 import static command.GameCommands.*;
+import static command.TradeCommands.*;
 
 public class TradeMenu extends GameMenu {
 
     private static TradeMenu instance;
-    private final GameMenuController controller = new GameMenuController();
+    private final TradeMenuController controller = new TradeMenuController();
     private final Map<CommandClass, Function<String[], Response>> commandsFunctionMap = new HashMap<>();
 
     private TradeMenu() {
         commandsFunctionMap.putAll(super.getFunctionsMap());
-        commandsFunctionMap.put(trade, controller::trade);
-        commandsFunctionMap.put(tradeList, controller::tradeList);
-        commandsFunctionMap.put(tradeResponse, controller::tradeResponse);
-        commandsFunctionMap.put(tradeHistory, controller::tradeHistory);
+        commandsFunctionMap.put(START_TRADE, controller::startTrade);
+        commandsFunctionMap.put(TRADE, controller::trade);
+        commandsFunctionMap.put(TRADE_LIST, controller::tradeList);
+        commandsFunctionMap.put(TRADE_RESPONSE, controller::tradeResponse);
+        commandsFunctionMap.put(TRADE_HISTORY, controller::tradeHistory);
     }
 
     public static TradeMenu getInstance() {

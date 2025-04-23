@@ -19,7 +19,6 @@ import java.util.Random;
 
 @Getter
 @Setter
-@ToString
 public class Player extends Actor {
     private Integer id;
     private User user;
@@ -144,4 +143,8 @@ public class Player extends Actor {
 
     }
 
+    @Override
+    public String toString() {
+        return user.toString();
+    }
 }

@@ -70,7 +70,7 @@ public class RelationService {
         return new Response(stringBuilder.toString());
     }
 
-    private Friendship getFriendShipBetweenTwoActors(Player anotherPlayer) {
+     Friendship getFriendShipBetweenTwoActors(Player anotherPlayer) {
         for (Friendship friendship : game.getFriendships()) {
             if ((friendship.getFirstPlayer().equals(currentPlayer) &&
                     friendship.getSecondPlayer().equals(anotherPlayer)) || (friendship.getSecondPlayer().equals(currentPlayer) &&
@@ -81,14 +81,14 @@ public class RelationService {
         return null;
     }
 
-    private boolean twoActorsAreNeighbors(Player currentPlayer, Player anotherPlayer) {
+     boolean twoActorsAreNeighbors(Player currentPlayer, Player anotherPlayer) {
         Tile tile = currentPlayer.getTiles().get(0);
         Tile anotherTile = anotherPlayer.getTiles().get(0);
         return (((tile.getX() == anotherTile.getX() + 1 || tile.getX() == anotherTile.getX() - 1)
                 && (tile.getY() == anotherTile.getY() + 1 || tile.getY() == anotherTile.getY() - 1)));
     }
 
-    private Player getPlayer(String username) {
+     Player getPlayer(String username) {
         Player anotherPlayer = null;
         for (Player player : game.getPlayers()) {
             if (player.getUser().equals(username)) {
