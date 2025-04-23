@@ -22,6 +22,7 @@ public enum Weather {
     private final List<Season> seasons;
 
     Weather(List<Season> seasons) {
+
         this.seasons = seasons;
     }
 

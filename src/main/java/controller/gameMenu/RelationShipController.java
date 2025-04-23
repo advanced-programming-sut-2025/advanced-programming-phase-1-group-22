@@ -73,4 +73,19 @@ public class RelationShipController {
         String username = params[1];
         return relationService.Respond(accept, username);
     }
+
+    public Response meetNpc(String... params) {
+        String npcName = params[0];
+        return relationService.meetNpc(npcName);
+    }
+
+    public Response giftNpc(String... params) {
+        String npcName = params[0];
+        String item = params[1];
+        return relationService.giftNPC(npcName,item);
+    }
+
+    public Response showNpcFriendship(String... params) {
+        return relationService.showNpcFriendship();
+    }
 }
