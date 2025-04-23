@@ -1,6 +1,7 @@
 package controller.gameMenu;
 
 import model.records.Response;
+import model.relations.NPC;
 import service.RelationService;
 
 
@@ -82,10 +83,19 @@ public class RelationShipController {
     public Response giftNpc(String... params) {
         String npcName = params[0];
         String item = params[1];
-        return relationService.giftNPC(npcName,item);
+        return relationService.giftNPC(npcName, item);
     }
 
     public Response showNpcFriendship(String... params) {
         return relationService.showNpcFriendship();
+    }
+
+    public Response questsList(String... params) {
+        return relationService.questsList();
+    }
+
+    public Response doMission(String... params) {
+        int missionId = Integer.parseInt(params[0]);
+        return relationService.doMission(missionId);
     }
 }

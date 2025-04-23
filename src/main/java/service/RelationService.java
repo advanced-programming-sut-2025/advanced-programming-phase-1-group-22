@@ -11,6 +11,7 @@ import utils.App;
 import java.util.Map;
 
 public class RelationService {
+    private NPC lastTalkedNPC = null;
     private static RelationService instance;
 
     private RelationService() {
@@ -271,6 +272,7 @@ public class RelationService {
         if (npc1 == null) {
             return new Response("npc not found");
         }
+        lastTalkedNPC = npc1;
         boolean areNeighbors = twoActorsAreNeighbors(currentPlayer, npc1, 2);
         if (!areNeighbors) {
             return new Response("the other player is not next You");
@@ -282,8 +284,6 @@ public class RelationService {
     }
 
     public void changeFriendShipLevelUp(Friendship friendShipBetweenTwoActors, int x) {
-
-
         if (!friendShipBetweenTwoActors.getLastSeen().getDay().equals(game.getTimeAndDate().getDay())) {
             friendShipBetweenTwoActors.setLastSeen(game.getTimeAndDate());
             friendShipBetweenTwoActors.setXp(friendShipBetweenTwoActors.getXp() + x);
@@ -292,7 +292,9 @@ public class RelationService {
                 friendShipBetweenTwoActors.setFriendShipLevel(friendShipBetweenTwoActors.getFriendShipLevel() + 1);
             }
         }
-
+        if (friendShipBetweenTwoActors.getFriendShipLevel() == 1) {
+            friendShipBetweenTwoActors.setTimeFromGettingFirstLevel(game.getTimeAndDate());
+        }
         if (friendShipBetweenTwoActors.getFriendShipLevel() == 3 && (friendShipBetweenTwoActors.getFirstPlayer() instanceof NPC || friendShipBetweenTwoActors.getSecondPlayer() instanceof NPC)) {
             friendShipBetweenTwoActors.setXp(Math.min(friendShipBetweenTwoActors.getXp(), 199));
             return;
@@ -361,5 +363,72 @@ public class RelationService {
             }
         }
         return new Response(stringBuilder.toString());
+    }
+
+    public Response questsList() {
+        StringBuilder stringBuilder = new StringBuilder();
+        Friendship friendShipBetweenTwoActors = getFriendShipBetweenTwoActors(lastTalkedNPC);
+        int level = friendShipBetweenTwoActors.getFriendShipLevel();
+        if (level < 1) {
+            stringBuilder.append(lastTalkedNPC.getType().getMissions().get(0));
+        }
+        if (level < 2) {
+            stringBuilder.append(lastTalkedNPC.getType().getMissions().get(1));
+            if (game.getTimeAndDate().getSeason().ordinal() - friendShipBetweenTwoActors.getTimeFromGettingFirstLevel().getSeason().ordinal() >= lastTalkedNPC.getType().getMissionSeasonDis()) {
+                stringBuilder.append(lastTalkedNPC.getType().getMissions().get(2));
+            }
+        }
+        if (level >= 2) {
+            stringBuilder.append(lastTalkedNPC.getType().getMissions());
+        }
+        return new Response(stringBuilder.toString());
+    }
+
+    public Response doMission(int missionId) {
+        if (missionId < 1 || missionId > 3) {
+            return new Response("missionId invalid");
+        }
+        Mission mission = lastTalkedNPC.getType().getMissions().get(missionId - 1);
+        if (mission.getDoer() != null) {
+            return new Response("mission is already done");
+        }
+        boolean areNeighbors = twoActorsAreNeighbors(currentPlayer, lastTalkedNPC, 2);
+        if (!areNeighbors) {
+            return new Response("the other player is not next You");
+        }
+
+        boolean canPrepare = true;
+        Map<Salable, Integer> request = mission.getRequest();
+        Map<Salable, Integer> reward = mission.getReward();
+        for (Map.Entry<Salable, Integer> salableIntegerEntry : request.entrySet()) {
+            if (!currentPlayer.getInventory().getProducts().containsKey(salableIntegerEntry.getKey())) {
+                canPrepare = false;
+                break;
+            }
+            if (currentPlayer.getInventory().getProducts().get(salableIntegerEntry.getValue()) < salableIntegerEntry.getValue()) {
+                canPrepare = false;
+                break;
+            }
+        }
+        if (!canPrepare) {
+            return new Response("you don't have all required items");
+        }
+        for (Map.Entry<Salable, Integer> salableIntegerEntry : request.entrySet()) {
+            int value = salableIntegerEntry.getValue();
+            Salable salable = salableIntegerEntry.getKey();
+            int amount = currentPlayer.getInventory().getProducts().get(salable);
+            currentPlayer.getInventory().getProducts().replace(salable, amount - value);
+        }
+        Friendship friendShipBetweenTwoActors = getFriendShipBetweenTwoActors(lastTalkedNPC);
+        int mult = 1;
+        mult = friendShipBetweenTwoActors.getFriendShipLevel() == 2 ? 2 : 1;
+        for (Map.Entry<Salable, Integer> salableIntegerEntry : reward.entrySet()) {
+            int value = salableIntegerEntry.getValue();
+            Salable salable = salableIntegerEntry.getKey();
+            int amount = currentPlayer.getInventory().getProducts().getOrDefault(salable, 0);
+            currentPlayer.getInventory().getProducts().replace(salable, amount + mult * value);
+        }
+        mission.setDoer(currentPlayer);
+        return new Response("mission completed");
     }
 }
