@@ -4,6 +4,9 @@ import lombok.Getter;
 import lombok.Setter;
 import model.enums.Season;
 import model.relations.Friendship;
+import model.relations.Mission;
+import model.relations.NPC;
+import model.relations.Player;
 import utils.App;
 
 @Getter
@@ -64,7 +67,28 @@ public class TimeAndDate {
     }
 
     private void giveRewardToLevelThreeFriends() {
-
+        for (Friendship friendship : currentGame.getFriendships()) {
+            if ((friendship.getFirstPlayer() instanceof NPC && friendship.getSecondPlayer() instanceof Player)) {
+                if (friendship.getFriendShipLevel() == 3) {
+                    NPC npc = (NPC) friendship.getFirstPlayer();
+                    Mission mission = npc.getType().getMissions().get(npc.getType().getMissions().size() % 3);
+                    int size = mission.getReward().entrySet().size();
+                    Salable[] array = (Salable[]) mission.getReward().keySet().toArray();
+                    Salable gift = array[size % 4];
+                    ((Player) friendship.getSecondPlayer()).getInventory().addProductToBackPack(gift, 1);
+                }
+            }
+            if ((friendship.getSecondPlayer() instanceof NPC && friendship.getFirstPlayer() instanceof Player)) {
+                if (friendship.getFriendShipLevel() == 3) {
+                    NPC npc = (NPC) friendship.getSecondPlayer();
+                    Mission mission = npc.getType().getMissions().get(npc.getType().getMissions().size() % 3);
+                    int size = mission.getReward().entrySet().size();
+                    Salable[] array = (Salable[]) mission.getReward().keySet().toArray();
+                    Salable gift = array[size % 4];
+                    ((Player) friendship.getFirstPlayer()).getInventory().addProductToBackPack(gift, 1);
+                }
+            }
+        }
     }
 
     public int compareTime(TimeAndDate timeAndDate) {
