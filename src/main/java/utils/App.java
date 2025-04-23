@@ -26,6 +26,6 @@ public class App {
 
     private final List<User> users = new ArrayList<>();
     private final List<Game> games = new ArrayList<>();
-    private Game currentGame;
+    private Game currentGame=new Game();
 
 }
