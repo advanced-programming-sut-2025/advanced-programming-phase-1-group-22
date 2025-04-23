@@ -3,6 +3,7 @@ package model.relations;
 import lombok.Getter;
 import lombok.Setter;
 import model.Actor;
+import model.TimeAndDate;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,6 +20,7 @@ public class Friendship {
     private Integer friendShipLevel;
     private Integer xp;
     private Map<String, Actor> dialogs;
+    private TimeAndDate lastSeen;
 
     public Friendship(Integer id, Actor firstPlayer, Actor secondPlayer) {
         this.id = id;
@@ -39,6 +41,9 @@ public class Friendship {
     }
 
     public Integer getFriendShipLevel() {
+        if (secondPlayer instanceof NPC || firstPlayer instanceof Player) {
+            return friendShipLevel + xp / 200;
+        }
         return friendShipLevel + xp / 100;
     }
 

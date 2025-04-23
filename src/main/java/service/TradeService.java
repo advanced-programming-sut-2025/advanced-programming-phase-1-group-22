@@ -192,6 +192,13 @@ public class TradeService {
         if (!accept) {
             trade1.setIsAnswered(true);
             trade1.setIsSuccessfulled(false);
+            if(trade1.getCustomer().equals(currentPlayer)) {
+                relationService.changeFriendShipLevelDown(relationService.getFriendShipBetweenTwoActors(trade1.getTrader()), 30);
+            }
+            else{
+                relationService.changeFriendShipLevelDown(relationService.getFriendShipBetweenTwoActors(trade1.getCustomer()), 30);
+
+            }
         }
         if (trade1.getCustomer().equals(currentPlayer)) {
             Map.Entry<Salable, Integer> itemFromInventory = trade1.getTrader().getItemFromInventory(trade1.getSalable());
@@ -204,12 +211,14 @@ public class TradeService {
                 currentPlayer.getInventory().addProductToBackPack(itemFromInventory.getKey(), trade1.getQuantity());
                 trade1.getTrader().getInventory().getProducts().replace(itemFromInventory.getKey(), itemFromInventory.getValue() - trade1.getQuantity());
                 trade1.setIsAnswered(true);
+                relationService.changeFriendShipLevelUp(relationService.getFriendShipBetweenTwoActors(trade1.getTrader()), 50);
                 trade1.setIsSuccessfulled(true);
             } else {
                 Map.Entry<Salable, Integer> itemFromInventory1 = currentPlayer.getItemFromInventory(trade1.getRequiredItem());
                 if (itemFromInventory1 == null || itemFromInventory1.getValue() < trade1.getQuantityRequired()) {
                     trade1.setIsAnswered(true);
                     trade1.setIsSuccessfulled(false);
+                    relationService.changeFriendShipLevelDown(relationService.getFriendShipBetweenTwoActors(trade1.getTrader()),30);
                     return new Response("RequiredItem not found");
                 }
                 trade1.getTrader().getInventory().addProductToBackPack(itemFromInventory1.getKey(), trade1.getQuantity());
@@ -218,6 +227,7 @@ public class TradeService {
                 trade1.getTrader().getInventory().getProducts().replace(itemFromInventory.getKey(), itemFromInventory.getValue() - trade1.getQuantity());
                 trade1.setIsAnswered(true);
                 trade1.setIsSuccessfulled(true);
+                relationService.changeFriendShipLevelUp(relationService.getFriendShipBetweenTwoActors(trade1.getTrader()), 50);
             }
 
         } else {
@@ -225,6 +235,7 @@ public class TradeService {
             if (itemFromInventory == null || itemFromInventory.getValue() < trade1.getQuantity()) {
                 trade1.setIsAnswered(true);
                 trade1.setIsSuccessfulled(false);
+                relationService.changeFriendShipLevelDown(relationService.getFriendShipBetweenTwoActors(trade1.getCustomer()),30);
                 return new Response("you don't have enough Item to sell");
             }
             if (trade1.getPrice() != null) {
@@ -234,6 +245,7 @@ public class TradeService {
                 currentPlayer.getInventory().getProducts().replace(itemFromInventory.getKey(), itemFromInventory.getValue() - trade1.getQuantity());
                 trade1.setIsAnswered(true);
                 trade1.setIsSuccessfulled(true);
+                relationService.changeFriendShipLevelUp(relationService.getFriendShipBetweenTwoActors(trade1.getCustomer()), 50);
             } else {
                 Map.Entry<Salable, Integer> itemFromInventory1 = trade1.getTrader().getItemFromInventory(trade1.getRequiredItem());
 
@@ -243,6 +255,7 @@ public class TradeService {
                 currentPlayer.getInventory().getProducts().replace(itemFromInventory.getKey(), itemFromInventory.getValue() - trade1.getQuantity());
                 trade1.setIsAnswered(true);
                 trade1.setIsSuccessfulled(true);
+                relationService.changeFriendShipLevelUp(relationService.getFriendShipBetweenTwoActors(trade1.getCustomer()), 50);
             }
         }
         return Response.empty();

@@ -3,19 +3,21 @@ package model;
 import lombok.Getter;
 import lombok.Setter;
 import model.enums.Season;
+import model.relations.Friendship;
 import utils.App;
 
 @Getter
 @Setter
 public class TimeAndDate {
-
+    private Game currentGame = App.getInstance().getCurrentGame();
     private Integer hour = 9;
     private Integer minute = 0;
     private Season season = Season.SPRING;
     private Integer day = 1;
     private Integer year = 0;
 
-    public TimeAndDate() {}
+    public TimeAndDate() {
+    }
 
     public TimeAndDate(int day, int hour) {
         this.hour = hour;
@@ -26,10 +28,19 @@ public class TimeAndDate {
 //    }
 
     public void moveTimeForward() {
+        for (Friendship friendship : currentGame.getFriendships()) {
+            if (friendship.getLastSeen().getDay().equals(day)) {
+                friendship.setXp(friendship.getXp() + -10);
+                if (friendship.getXp() <= 0) {
+                    friendship.setXp(90);
+                    friendship.setFriendShipLevel(friendship.getFriendShipLevel() - 1);
+                }
+            }
+        }
         boolean nextDay = false;
         minute += 15;
         if (minute >= 60) {
-            hour ++;
+            hour++;
             minute = 0;
         }
         if (hour >= 21) {
@@ -42,7 +53,7 @@ public class TimeAndDate {
             season = Season.values()[season.ordinal() + 1];
         }
         if (season.ordinal() == 4) {
-            year ++;
+            year++;
             season = Season.SPRING;
         }
         if (nextDay) {
@@ -72,7 +83,7 @@ public class TimeAndDate {
 
     @Override
     public String toString() {
-        String res = "Year: " + year + "\nDay: " + (season.ordinal()*28 + day);
+        String res = "Year: " + year + "\nDay: " + (season.ordinal() * 28 + day);
         res += "Time: " + hour + ":" + minute + "'";
         return res;
     }

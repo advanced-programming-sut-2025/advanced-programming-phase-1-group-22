@@ -31,6 +31,7 @@ public class Village {
     private List<Tile> tiles;
     private List<Farm> farms = new ArrayList<>();
     private List<Structure> structures = new ArrayList<>();
+    private List<NPC> npcs = new ArrayList<>();
     private Weather weather = Weather.SUNNY;
     private Weather tomorrowWeather = Weather.SUNNY;
     private App app = App.getInstance();
@@ -154,7 +155,8 @@ public class Village {
         } else {
             setTileOfNPC(npc, xStart, yStart, xStart + 6, yStart + 4);
         }
-        structures.add(npc);
+        npcs.add(npc);
+//        structures.add(npc);
     }
 
     public int getRandomNumber(int start, int end) {
@@ -222,8 +224,7 @@ public class Village {
                 else if (structure instanceof GreenHouse) {
                     if (((GreenHouse) structure).isBuilt()) symbol = 'G';
                     else symbol = 'g';
-                }
-                else if (structure instanceof Trunk) symbol = 't';
+                } else if (structure instanceof Trunk) symbol = 't';
                 else if (structure instanceof Tree) symbol = 'T';
                 else if (structure instanceof Stone) symbol = '*';
 
@@ -235,10 +236,10 @@ public class Village {
         for (Player player : game.getPlayers()) {
             str[player.getTiles().getFirst().getX()][player.getTiles().getFirst().getY()] = '@';
         }
-        int xStart = x - size/2;
-        int xEnd = x + size/2;
-        int yStart = y - size/2;
-        int yEnd = y + size/2;
+        int xStart = x - size / 2;
+        int xEnd = x + size / 2;
+        int yStart = y - size / 2;
+        int yEnd = y + size / 2;
         if (xStart < 0) xStart = 0;
         if (yStart < 0) yStart = 0;
         if (xEnd >= 160) xEnd = 160;
@@ -252,16 +253,17 @@ public class Village {
             System.out.println();
         }
     }
-    public void removeStructure(Structure structure){
+
+    public void removeStructure(Structure structure) {
         this.getStructures().remove(structure);
         for (Farm farm : this.getFarms()) {
             farm.getStructures().remove(structure);
         }
     }
 
-    public void addStructureToPlayerFarmByPlayerTile(Player player, Structure structure){
+    public void addStructureToPlayerFarmByPlayerTile(Player player, Structure structure) {
         for (Farm farm : this.getFarms()) {
-            if (farm.getTiles().contains(player.getTiles().getFirst())){
+            if (farm.getTiles().contains(player.getTiles().getFirst())) {
                 farm.getStructures().add(structure);
             }
         }

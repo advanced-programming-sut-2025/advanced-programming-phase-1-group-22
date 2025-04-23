@@ -12,7 +12,9 @@ public class RelationShipCommands extends CommandClass {
     public static final RelationShipCommands GIVE_FLOWER = new RelationShipCommands("flower -u (.*)");
     public static final RelationShipCommands MARRY = new RelationShipCommands("ask marriage -u (.*) -r (.*)");
     public static final RelationShipCommands RESPOND = new RelationShipCommands("respond (accept|reject) -u (.*)$");
-
+    public static final RelationShipCommands MEET_NPC = new RelationShipCommands("meet\\s+npc\\s+(.*)");
+    public static final RelationShipCommands NPC_GIFT = new RelationShipCommands("gift\\s+NPC\\s+(.*)\\s+-i\\s+(.*)");
+    public static final RelationShipCommands NPC_FRIENDSHIP = new RelationShipCommands("friendship\\s+NPC\\s+list");
     RelationShipCommands(String regex) {
         super(regex);
     }
