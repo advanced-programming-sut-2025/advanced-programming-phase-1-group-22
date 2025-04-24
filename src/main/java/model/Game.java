@@ -97,4 +97,14 @@ public class Game {
         currentPlayer = players.get(i);
         timeAndDate.moveTimeForward();
     }
+
+    public Farm findFarm() {
+        Tile tile = currentPlayer.getTiles().getFirst();
+        for (Farm farm : getVillage().getFarms()) {
+            if (farm.isPairInFarm(new Pair(tile.getX(), tile.getY()))) {
+                return farm;
+            }
+        }
+        return null;
+    }
 }

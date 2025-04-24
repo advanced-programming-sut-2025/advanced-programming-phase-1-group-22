@@ -7,9 +7,12 @@ import model.abilitiy.Ability;
 import model.products.Product;
 import model.products.TreesAndFruitsAndSeeds.MadeProductType;
 import model.products.TreesAndFruitsAndSeeds.TreeType;
+import model.records.Response;
+import model.relations.Player;
 import model.source.MineralType;
 import model.source.SeedType;
 import model.structure.stores.StoreType;
+import model.tools.BackPack;
 
 import java.util.Map;
 @Getter
@@ -66,5 +69,33 @@ public enum CraftType implements Product{
     @Override
     public String getName() {
         return this.name.toLowerCase();
+    }
+
+    public String getProductsString() {
+        String res = "";
+        for (Salable salable : products.keySet()) {
+            res += salable.getName();
+            if (products.get(salable) != 1) res += " *" + products.get(salable);
+            res += ", ";
+        }
+        return res + "\n";
+    }
+
+    public Response isCraftingPossible(Player player) {
+        BackPack inventory = player.getInventory();
+        for (Salable salable : products.keySet()) {
+            if (!inventory.checkProductAvailabilityInBackPack(salable, products.get(salable))) {
+                return new Response("You lack " + (products.get(salable) - inventory.countProductFromBackPack(salable))
+                    + " of " + salable.getName() + " in order to craft this item.");
+            }
+        }
+        return new Response("You can craft this item.", true);
+    }
+
+    public void removeIngredients(Player player) {
+        BackPack inventory = player.getInventory();
+        for (Salable salable : products.keySet()) {
+            inventory.deleteProductFromBackPack(salable, player, products.get(salable));
+        }
     }
 }

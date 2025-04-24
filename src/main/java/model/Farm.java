@@ -33,6 +33,7 @@ public class Farm {
     private Integer farmXEnd;
     private Integer farmYEnd;
     private Integer farmIndex = 0;
+    private Fridge fridge = new Fridge();
 
     public Farm(Player player, FarmType farmType) {
         this.players.add(player);
