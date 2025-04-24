@@ -210,7 +210,7 @@ public class GameMenuController extends MenuController {
     }
 
     public Response C_AddDollars(String[] params) {
-        return null;
+        return gameService.C_AddDollars(params[0]);
     }
 
     public Response sell(String[] params) {
@@ -322,15 +322,18 @@ public class GameMenuController extends MenuController {
     }
 
     public Response showAllProducts(String[] strings) {
-        return null;
+        return gameService.showAllProducts();
+    }
+    public Response showAllAvailableProducts(String[] strings) {
+        return gameService.showAllAvailableProducts();
     }
 
     public Response purchase(String[] strings) {
-        return null;
+        return gameService.purchase(strings[0], strings[1]);
     }
 
     public Response purchase1(String[] strings) {
-        return null;
+        return gameService.purchase(strings[0], "1");
     }
 
     public Response trade(String[] strings) {

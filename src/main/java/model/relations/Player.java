@@ -13,6 +13,7 @@ import model.receipe.CraftingRecipe;
 import model.records.Response;
 import model.shelter.ShippingBin;
 import model.source.*;
+import model.structure.stores.StoreType;
 import model.tools.*;
 
 import java.util.ArrayList;
@@ -45,6 +46,7 @@ public class Player extends Actor {
     private List<CookingRecipe> cookingRecipes = new ArrayList<>();
     private List<Craft> crafts = new ArrayList<>();
     private List<CraftingRecipe> craftingRecipes = new ArrayList<>();
+    private StoreType storeType;
 
     public Player(User user) {
         this.user = user;

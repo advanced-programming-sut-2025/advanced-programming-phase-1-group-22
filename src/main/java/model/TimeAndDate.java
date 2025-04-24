@@ -97,10 +97,19 @@ public class TimeAndDate {
         }
     }
 
-    public int compareTime(TimeAndDate timeAndDate) {
+    public int compareDailyTime(TimeAndDate timeAndDate) {
         if (timeAndDate.getHour() > hour) return 1;
         if (timeAndDate.getHour() < hour) return -1;
         return timeAndDate.getMinute().compareTo(minute);
+    }
+
+    public int compareTime(TimeAndDate timeAndDate) {
+        int ms = (((timeAndDate.getYear() * 4 + timeAndDate.getSeason().ordinal()) * 28 + timeAndDate.getDay()) * 24 +
+                timeAndDate.getHour());
+        int now = (((year * 4 + season.ordinal()) * 28 + day) * 24 + hour);
+
+        if (ms == now) return 0;
+        return ms < now ? -1 : 1;
     }
 
     public String getDayOfTheWeek() {

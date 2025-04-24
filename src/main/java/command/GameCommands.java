@@ -83,6 +83,7 @@ public class GameCommands extends CommandClass {
             ",\\s*(?<Y>\\d+)\\s*$");
     public static final GameCommands buyAnimal = new GameCommands("^\\s*buy\\s+animal\\s+-a\\s+(?<animal>.+)\\s+-n\\s+(?<name>.+)\\s*$");
     public static final GameCommands showAllProducts = new GameCommands("^\\s*show\\s+all\\s+products\\s*$");
+    public static final GameCommands showAllAvailableProducts = new GameCommands("^\\s*show\\s+all\\s+available\\s+products\\s*$");
     public static final GameCommands purchase = new GameCommands("^\\s*purchase\\s+(?<name>.+)\\s+-n\\s+(?<count>\\d+)\\s*$");
     public static final GameCommands purchase1 = new GameCommands("^\\s*purchase\\s+(?<name>.+)\\s*$");
 

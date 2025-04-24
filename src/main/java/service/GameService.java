@@ -87,7 +87,7 @@ public class GameService {
         player.setEnergyPerTurn(player.getMaxEnergyPerTurn());
         app.getCurrentGame().nextPlayer();
         TimeAndDate time = new TimeAndDate(0, 8);
-        if (app.getCurrentGame().getTimeAndDate().compareTime(time) <= 0) {
+        if (app.getCurrentGame().getTimeAndDate().compareDailyTime(time) <= 0) {
             player.setEnergy(player.getMaxEnergy()); //TODO implementing the faint
         }
         return new Response("It's next player's turn", true);
@@ -661,7 +661,7 @@ public class GameService {
         if (!player.getInventory().isInventoryHaveCapacity(craft)) {
             return new Response("Backpack is full.");
         }
-        if (craft.getETA().compareTime(app.getCurrentGame().getTimeAndDate()) > 1) {
+        if (craft.getETA().compareTime(app.getCurrentGame().getTimeAndDate()) > 0) {
             return new Response("Still not ready!");
         }
         player.getInventory().addProductToBackPack(craft, 1);
@@ -670,7 +670,8 @@ public class GameService {
     }
 
     public Response C_AddDollars(String count) {
-        return null;
+        app.getCurrentGame().getCurrentPlayer().getAccount().removeGolds(-Integer.valueOf(count));
+        return new Response(count + "$ added to your account.", true);
     }
 
     public Response sell(String name, String count) {
@@ -839,5 +840,34 @@ public class GameService {
         recipe.getFoodType().removeIngredients(fridge);
         player.getInventory().addProductToBackPack(recipe.getFoodType(), 1);
         return new Response(recipe.getFoodType().getName() + " cooked successfully.");
+    }
+
+    private Response isStoreOpen() {
+        StoreType storeType = app.getCurrentGame().getCurrentPlayer().getStoreType();
+        if(new TimeAndDate(0,storeType.getOpenDoorTime()).compareDailyTime(app.getCurrentGame().getTimeAndDate()) > 0 &&
+               new TimeAndDate(0,storeType.getCloseDoorTime()).compareDailyTime(app.getCurrentGame().getTimeAndDate()) < 0) {
+            return new Response("Store closed.");
+        } return new Response("", true);
+    }
+
+    public Response showAllProducts() {
+        Response response = isStoreOpen();
+        if (!response.shouldBeBack()) return response;
+        Player player = app.getCurrentGame().getCurrentPlayer();
+        return player.getStoreType().showAllProducts();
+    }
+
+    public Response showAllAvailableProducts() {
+        Response response = isStoreOpen();
+        if (!response.shouldBeBack()) return response;
+        Player player = app.getCurrentGame().getCurrentPlayer();
+        return player.getStoreType().showAvailableProducts();
+    }
+
+    public Response purchase(String name, String count) {
+        Response response = isStoreOpen();
+        if (!response.shouldBeBack()) return response;
+        Player player = app.getCurrentGame().getCurrentPlayer();
+        return player.getStoreType().purchase(name, Integer.parseInt(count));
     }
 }
