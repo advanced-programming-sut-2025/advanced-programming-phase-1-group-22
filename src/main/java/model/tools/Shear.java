@@ -67,9 +67,15 @@ public enum Shear implements Tool {
             if (structure != null){
                 if (structure instanceof Animal currentAnimal){
                     if (currentAnimal.getAnimalType().equals(AnimalType.SHEEP)){
-                        currentAnimal.setShaving(true);
-                        afterUseTool(currentAnimal.getAnimalProduct(),player,tile);
+                        if (currentAnimal.getTodayProduct() == null){
+                            player.changeEnergy(-this.getEnergy(player));
+                            return "this animal does not have product";
+                        }
+                        afterUseTool(currentAnimal.getTodayProduct(),player,tile);
                         success = true;
+                        currentAnimal.setTodayProduct(null);
+                        int oldFriendShip = currentAnimal.getRelationShipQuality();
+                        currentAnimal.setRelationShipQuality(oldFriendShip + 5);
                         break;
                     }
                 }

@@ -5,6 +5,7 @@ import lombok.Setter;
 import lombok.ToString;
 import model.*;
 import model.abilitiy.Ability;
+import model.animal.Animal;
 import model.exception.InvalidInputException;
 import model.records.Response;
 import model.shelter.ShippingBin;
@@ -39,6 +40,7 @@ public class Player extends Actor {
     private List<Trade> gootenTradeList;
     private Boolean isFainted;
     private Salable currentCarrying = null;
+    private List<Animal> animals = new ArrayList<>();
 
     public Player(User user) {
         this.user = user;

@@ -4,8 +4,8 @@ import view.ViewRender;
 
 public class Main {
     public static void main(String[] args) {
-        EntityManagerFactory entityManagerFactory = HibernateUtil.getEntityManagerFactory();
-        entityManagerFactory.createEntityManager();
+//        EntityManagerFactory entityManagerFactory = HibernateUtil.getEntityManagerFactory();
+//        entityManagerFactory.createEntityManager();
         new ViewRender().run();
     }
 }
