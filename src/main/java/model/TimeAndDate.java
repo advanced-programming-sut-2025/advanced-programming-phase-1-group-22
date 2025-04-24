@@ -26,6 +26,12 @@ public class TimeAndDate {
         this.hour = hour;
         this.day = day;
     }
+    public TimeAndDate(int day, int hour, Season season, int year) {
+        this.hour = hour;
+        this.day = day;
+        this.season = season;
+        this.year = year;
+    }
 
 //    public void moveTimeForward(TimeAndDate timeAndDate)) {
 //    }
@@ -115,5 +121,70 @@ public class TimeAndDate {
         String res = "Year: " + year + "\nDay: " + (season.ordinal() * 28 + day);
         res += "Time: " + hour + ":" + minute + "'";
         return res;
+    }
+
+    public TimeAndDate getNextMorning() {
+        int day = this.day + 1;
+        int year = this.year;
+        Season season = this.season;
+        if (day >= 29) {
+            day = 1;
+            season = Season.values()[season.ordinal() + 1];
+        }
+        if (season.ordinal() == 4) {
+            year++;
+            season = Season.SPRING;
+        }
+        return new TimeAndDate(day, 9, season, year);
+    }
+
+    private TimeAndDate getNextHour() {
+        int hour = this.hour + 1;
+        int day = this.day;
+        int year = this.year;
+        Season season = this.season;
+        if (hour >= 21) {
+            day++;
+            hour = 9;
+        }
+        if (day >= 29) {
+            day = 1;
+            season = Season.values()[season.ordinal() + 1];
+        }
+        if (season.ordinal() == 4) {
+            year++;
+            season = Season.SPRING;
+        }
+        return new TimeAndDate(day, hour, season, year);
+    }
+
+    public TimeAndDate getNextXHour(int x) {
+        TimeAndDate timeAndDate = this;
+        for (int i = 0; i < x; i++) {
+            timeAndDate = timeAndDate.getNextHour();
+        }
+        return timeAndDate;
+    }
+
+    private TimeAndDate getNextDay() {
+        int day = this.day + 1;
+        int year = this.year;
+        Season season = this.season;
+        if (day >= 29) {
+            day = 1;
+            season = Season.values()[season.ordinal() + 1];
+        }
+        if (season.ordinal() == 4) {
+            year++;
+            season = Season.SPRING;
+        }
+        return new TimeAndDate(day, this.hour, season, year);
+    }
+    public TimeAndDate getNextXDay(int x) {
+        TimeAndDate timeAndDate = this;
+        for (int i = 0; i < x; i++) {
+            timeAndDate = timeAndDate.getNextDay();
+        }
+        return timeAndDate;
     }
 }

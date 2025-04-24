@@ -6,7 +6,6 @@ import model.Salable;
 import model.abilitiy.Ability;
 import model.products.Product;
 import model.products.TreesAndFruitsAndSeeds.MadeProductType;
-import model.products.TreesAndFruitsAndSeeds.TreeType;
 import model.records.Response;
 import model.relations.Player;
 import model.source.MineralType;
@@ -18,26 +17,26 @@ import java.util.Map;
 @Getter
 @ToString
 public enum CraftType implements Product{
-    CHERRY_BOMB("cherry bomb","هرچیز در شعاع ۳ تایلی را نابود میکند",Map.of(MineralType.COPPER_ORE,4,MineralType.COAL,1),50,Map.of(Ability.MINING,1)),
+    CHERRY_BOMB("cherry_bomb","هرچیز در شعاع ۳ تایلی را نابود میکند",Map.of(MineralType.COPPER_ORE,4,MineralType.COAL,1),50,Map.of(Ability.MINING,1)),
     BOMB("bomb","هرچیز در شعاع  ۵ تایلی را نابود میکند",Map.of(MineralType.IRON_ORE,4,MineralType.COAL,1),50,Map.of(Ability.MINING,2)),
-    MEGA_BOMB("mega bomb","هرچیز در شعاع ۷ تایلی را نابود میکند",Map.of(MineralType.GOLD_ORE,4,MineralType.COAL,1),50,Map.of(Ability.MINING,3)),
+    MEGA_BOMB("mega_bomb","هرچیز در شعاع ۷ تایلی را نابود میکند",Map.of(MineralType.GOLD_ORE,4,MineralType.COAL,1),50,Map.of(Ability.MINING,3)),
     SPRINKLER("sprinklers","به ۴ تایل مجاور آب میدهد",Map.of(MadeProductType.IRON_BAR,1,MadeProductType.COPPER_BAR,1),0,Map.of(Ability.FARMING,1)),
-    QUALITY_SPRINKLER("quality sprinklers","به ۸ تایل مجاور آب میدهد",Map.of(MadeProductType.IRON_BAR,1,MadeProductType.GOLD_BAR,1),0,Map.of(Ability.FARMING,2)),
-    IRIDIUM_SPRINKLER("iridium sprinklers","به ۲۴ تایل مجاور آب میدهد",Map.of(MadeProductType.IRIDIUM_BAR,1,MadeProductType.GOLD_BAR,1),0,Map.of(Ability.FARMING,3)),
-    CHARCOAL_KLIN("charcoal klin","۱۰ چوب را تبدیل به ۱ ذغال میکند",Map.of(MineralType.WOOD,20,MadeProductType.COPPER_BAR,2),0,Map.of(Ability.FORAGING,1)),
-    FORNACE("fornace","کانی ها و ذغال را تبدیل به شمش میکند",Map.of(MineralType.COPPER_ORE,20,MineralType.STONE,25),0,Map.of()),
-    SCARE_CROW("scare crow","از حمله کلاغ ها تا شعاع ۸ تایلی جلوگیری میکند",Map.of(MineralType.COAL,1,MineralType.WOOD,50,MineralType.FIBER,20),0,Map.of()),
-    DELUXE_SCARECROW("deluxe scarecrow","از حمله کلاغ ها تا شعاع 12 تایلی جلوگیری میکند",Map.of(MineralType.WOOD,50,MineralType.COAL,1,MineralType.FIBER,20,MineralType.IRIDIUM_ORE,1),0,Map.of(Ability.FARMING,2)),
-    BEE_HOUSE("be house","اگر در مزرعه گذاشته شود عسل تولید میکند",Map.of(MineralType.WOOD,40,MineralType.COAL,8,MadeProductType.IRON_BAR,1),0,Map.of(Ability.FARMING,1)),
-    CHEESE_PRERSS("cheese prerss","شیر را به پنیر تبدیل میکند",Map.of(MineralType.WOOD,45,MineralType.STONE,45,MadeProductType.COPPER_BAR,1),0,Map.of(Ability.FARMING,2)),
+    QUALITY_SPRINKLER("quality_sprinklers","به ۸ تایل مجاور آب میدهد",Map.of(MadeProductType.IRON_BAR,1,MadeProductType.GOLD_BAR,1),0,Map.of(Ability.FARMING,2)),
+    IRIDIUM_SPRINKLER("iridium_sprinklers","به ۲۴ تایل مجاور آب میدهد",Map.of(MadeProductType.IRIDIUM_BAR,1,MadeProductType.GOLD_BAR,1),0,Map.of(Ability.FARMING,3)),
+    CHARCOAL_KLIN("charcoal_klin","۱۰ چوب را تبدیل به ۱ ذغال میکند",Map.of(MineralType.WOOD,20,MadeProductType.COPPER_BAR,2),0,Map.of(Ability.FORAGING,1)),
+    FURNACE("furnace","کانی ها و ذغال را تبدیل به شمش میکند",Map.of(MineralType.COPPER_ORE,20,MineralType.STONE,25),0,Map.of()),
+    SCARE_CROW("scare_crow","از حمله کلاغ ها تا شعاع ۸ تایلی جلوگیری میکند",Map.of(MineralType.COAL,1,MineralType.WOOD,50,MineralType.FIBER,20),0,Map.of()),
+    DELUXE_SCARECROW("deluxe_scarecrow","از حمله کلاغ ها تا شعاع 12 تایلی جلوگیری میکند",Map.of(MineralType.WOOD,50,MineralType.COAL,1,MineralType.FIBER,20,MineralType.IRIDIUM_ORE,1),0,Map.of(Ability.FARMING,2)),
+    BEE_HOUSE("bee_house","اگر در مزرعه گذاشته شود عسل تولید میکند",Map.of(MineralType.WOOD,40,MineralType.COAL,8,MadeProductType.IRON_BAR,1),0,Map.of(Ability.FARMING,1)),
+    CHEESE_PRESS("cheese_press","شیر را به پنیر تبدیل میکند",Map.of(MineralType.WOOD,45,MineralType.STONE,45,MadeProductType.COPPER_BAR,1),0,Map.of(Ability.FARMING,2)),
     KEG("keg","میوه و سبزیجات را به نوشیدنی تبدیل میکند",Map.of(MineralType.WOOD,30,MadeProductType.COPPER_BAR,1,MadeProductType.IRON_BAR,1),0,Map.of(Ability.FARMING,3)),
     LOOM("loom","پشم را به پارچه تبدیل میکند",Map.of(MineralType.WOOD,60,MineralType.FIBER,30),0,Map.of(Ability.FARMING,3)),
     MAYONNAISE_MACHINE("mayonnaise machine","تخم مرغ را به سس مایونز تبدیل میکند",Map.of(MineralType.WOOD,15,MineralType.STONE,15,MadeProductType.COPPER_BAR,1),0,Map.of()),
-    OIL_MAKER("oil maker","truffle را به روغن تبدیل میکند",Map.of(MineralType.WOOD,100,MadeProductType.IRON_BAR,1,MadeProductType.GOLD_BAR,1),0,Map.of(Ability.FARMING,3)),
-    PRESERVES_JAR("preserves jar","سبزیجات را به ترشی و میوه ها را به مربا تبدیل میکند",Map.of(MineralType.WOOD,50,MineralType.STONE,40,MineralType.COAL,8),0,Map.of(Ability.FARMING,2)),
+    OIL_MAKER("oil_maker","truffle را به روغن تبدیل میکند",Map.of(MineralType.WOOD,100,MadeProductType.IRON_BAR,1,MadeProductType.GOLD_BAR,1),0,Map.of(Ability.FARMING,3)),
+    PRESERVES_JAR("preserves_jar","سبزیجات را به ترشی و میوه ها را به مربا تبدیل میکند",Map.of(MineralType.WOOD,50,MineralType.STONE,40,MineralType.COAL,8),0,Map.of(Ability.FARMING,2)),
     DEHYDRATOR("dehydrator","میوه یا قارچ را خشک میکند",Map.of(MineralType.WOOD,30,MineralType.STONE,20,MineralType.FIBER,30),0,StoreType.PIERRE_SHOP),
-    FISH_SMOKER("fish smoker","هر ماهی را با یک ذغال با حفظ کیفیتش تبدیل به ماهی دودی میکند",Map.of(MineralType.WOOD,50,MineralType.COAL,10,MadeProductType.IRON_BAR,3),0,StoreType.FISH_SHOP),
-    MYSTIC_TREE_SEEDS("mystic tree seed","میتواند کاشته شود تا mystic tree رشد کند",Map.of(SeedType.PINE_CONES,5,SeedType.MAHOGANY_SEEDS,5,SeedType.ACORNS,5, SeedType.MAPLE_SEEDS,5),100,Map.of(Ability.MINING,4));
+    FISH_SMOKER("fish_smoker","هر ماهی را با یک ذغال با حفظ کیفیتش تبدیل به ماهی دودی میکند",Map.of(MineralType.WOOD,50,MineralType.COAL,10,MadeProductType.IRON_BAR,3),0,StoreType.FISH_SHOP),
+    MYSTIC_TREE_SEEDS("mystic_tree_seed","میتواند کاشته شود تا mystic tree رشد کند",Map.of(SeedType.PINE_CONES,5,SeedType.MAHOGANY_SEEDS,5,SeedType.ACORNS,5, SeedType.MAPLE_SEEDS,5),100,Map.of(Ability.MINING,4));
 
     CraftType(String name,String description, Map<Salable, Integer> products, Integer sellPrice, Map<Ability, Integer> abilities) {
         this.name = name;
@@ -98,4 +97,7 @@ public enum CraftType implements Product{
             inventory.deleteProductFromBackPack(salable, player, products.get(salable));
         }
     }
+
+    @Override
+    public int getEnergy() {return 0;}
 }

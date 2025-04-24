@@ -5,6 +5,8 @@ import lombok.Setter;
 import lombok.ToString;
 import model.*;
 import model.abilitiy.Ability;
+import model.craft.Craft;
+import model.craft.CraftType;
 import model.exception.InvalidInputException;
 import model.receipe.CookingRecipe;
 import model.receipe.CraftingRecipe;
@@ -41,6 +43,7 @@ public class Player extends Actor {
     private Boolean isFainted;
     private Salable currentCarrying = null;
     private List<CookingRecipe> cookingRecipes = new ArrayList<>();
+    private List<Craft> crafts = new ArrayList<>();
     private List<CraftingRecipe> craftingRecipes = new ArrayList<>();
 
     public Player(User user) {
@@ -172,5 +175,15 @@ public class Player extends Actor {
             if  (cookingRecipe.getName().equals(string)) return cookingRecipe;
         }
         return null;
+    }
+
+    public void addCraft(Craft craft) {
+        crafts.add(craft);
+    }
+
+    public Craft findCraft(Salable craftType) {
+        for (Craft craft : crafts) {
+            if (craft.getCraftType().equals(craftType)) return craft;
+        } return null;
     }
 }
