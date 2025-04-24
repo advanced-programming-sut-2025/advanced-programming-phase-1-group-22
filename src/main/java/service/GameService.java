@@ -19,6 +19,7 @@ import model.receipe.CookingRecipe;
 import model.receipe.CraftingRecipe;
 import model.records.Response;
 import model.relations.Player;
+import model.shelter.ShippingBin;
 import model.source.CropType;
 import model.source.MineralType;
 import model.source.MixedSeedsType;
@@ -670,12 +671,60 @@ public class GameService {
     }
 
     public Response C_AddDollars(String count) {
-        app.getCurrentGame().getCurrentPlayer().getAccount().removeGolds(-Integer.valueOf(count));
+        app.getCurrentGame().getCurrentPlayer().getAccount().removeGolds(-Integer.parseInt(count));
         return new Response(count + "$ added to your account.", true);
     }
 
     public Response sell(String name, String count) {
-        return null;
+        Player player = app.getCurrentGame().getCurrentPlayer();
+        ShippingBin shippingBin = null;
+        for (ShippingBin bin : player.getShippingBinList()) {
+            for (Tile tile : bin.getTiles()) {
+                if (Math.abs(tile.getX() - player.getTiles().getFirst().getX()) < 2 &&
+                        Math.abs(tile.getY() - player.getTiles().getFirst().getY()) < 2) {
+                    shippingBin = bin;
+                    break;
+                }
+            }
+            if (shippingBin != null) break;
+        }
+        if (shippingBin == null) {
+            return new Response("You are not next to any shipping bins");
+        }
+        Salable salable = player.getInventory().findProductInBackPackByNAme(name);
+        if (salable == null) return new Response("Item not found in your backpack");
+        if (player.getInventory().countProductFromBackPack(salable) < Integer.parseInt(count)) {
+            return new Response("Not enough in your backpack");
+        }
+        if (false) return new Response("Item not salable"); //TODO checking not salable
+        player.getInventory().deleteProductFromBackPack(salable, player, Integer.parseInt(count));
+        shippingBin.add(salable, Integer.parseInt(count));
+        return new Response("Item(s) is(are) put in the bin");
+    }
+
+    public Response sellAll(String name) {
+        Player player = app.getCurrentGame().getCurrentPlayer();
+        ShippingBin shippingBin = null;
+        for (ShippingBin bin : player.getShippingBinList()) {
+            for (Tile tile : bin.getTiles()) {
+                if (Math.abs(tile.getX() - player.getTiles().getFirst().getX()) < 2 &&
+                        Math.abs(tile.getY() - player.getTiles().getFirst().getY()) < 2) {
+                    shippingBin = bin;
+                    break;
+                }
+            }
+            if (shippingBin != null) break;
+        }
+        if (shippingBin == null) {
+            return new Response("You are not next to any shipping bins");
+        }
+        Salable salable = player.getInventory().findProductInBackPackByNAme(name);
+        int count = player.getInventory().countProductFromBackPack(salable);
+        if (salable == null) return new Response("Item not found in your backpack");
+        if (false) return new Response("Item not salable"); //TODO checking not salable
+        player.getInventory().deleteProductFromBackPack(salable, player, count);
+        shippingBin.add(salable, count);
+        return new Response("Item(s) is(are) put in the bin"); //TODO resetting bins at the start day
     }
 
     public Response friendship() {
