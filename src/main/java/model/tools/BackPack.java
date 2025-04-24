@@ -54,8 +54,13 @@ public class BackPack {
         throw new InvalidInputException("there is no item name " + name);
     }
 
+    public Integer countProductFromBackPack(Salable salable) {
+        if (!products.containsKey(salable)) return 0;
+        return products.get(salable);
+    }
+
     public Boolean isInventoryHaveCapacity(Salable product){
-		return backPackType.getCapacity() < products.size() ||
+		return backPackType.getIsInfinite() || backPackType.getCapacity() < products.size() ||
 				products.containsKey(product);
 	}
 
@@ -71,5 +76,14 @@ public class BackPack {
     public boolean checkProductAvailabilityInBackPack(Salable product, int count) {
         if (!products.containsKey(product)) return false;
         return products.get(product) >= count;
+    }
+    public Salable findProductInBackPackByNAme(String product) {
+        for (Salable salable : products.keySet()) {
+            if (salable.getName().equals(product)) {
+                return salable;
+            }
+        }
+        return null;
+
     }
 }

@@ -4,12 +4,15 @@ import controller.MenuController;
 import model.*;
 import model.enums.Weather;
 import model.exception.InvalidInputException;
+import model.receipe.CraftingRecipe;
 import model.records.Response;
+import model.relations.Player;
 import model.structure.farmInitialElements.GreenHouse;
 import service.GameService;
 import utils.App;
 
 import javax.swing.plaf.SpinnerUI;
+import java.util.List;
 import java.util.Scanner;
 
 public class GameMenuController extends MenuController {
@@ -159,11 +162,11 @@ public class GameMenuController extends MenuController {
     }
 
     public Response placeItem(String[] params) {
-        return null;
+        return gameService.placeItem(params[0], params[1]);
     }
 
     public Response C_AddItem(String[] params) {
-        return null;
+        return gameService.C_AddItem(params[0], params[1]);
     }
 
     public Response pet(String[] params) {
@@ -275,7 +278,7 @@ public class GameMenuController extends MenuController {
     }
 
     public Response eat(String[] params) {
-        return null;
+        return gameService.eat(params[0]);
     }
 
     public Response questsList(String[] params) {
@@ -287,27 +290,27 @@ public class GameMenuController extends MenuController {
     }
 
     public Response craftingShowRecipes(String[] strings) {
-        return null;
+        return gameService.craftingShowRecipes();
     }
 
     public Response cookingShowRecipes(String[] strings) {
-        return null;
+        return gameService.cookingShowRecipes();
     }
 
     public Response cookingRefrigeratorPick(String[] strings) {
-        return null;
+        return gameService.cookingRefrigeratorPick(strings[0]);
     }
 
     public Response craftingCraft(String[] strings) {
-        return null;
+        return gameService.craftingCraft(strings[0]);
     }
 
     public Response cookingRefrigeratorPut(String[] strings) {
-        return null;
+        return gameService.cookingRefrigeratorPut(strings[0]);
     }
 
     public Response cookingPrepare(String[] strings) {
-        return null;
+        return gameService.cookingPrepare(strings[0]);
     }
 
     public Response build(String[] strings) {

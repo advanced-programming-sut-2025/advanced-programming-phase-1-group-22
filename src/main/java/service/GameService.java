@@ -2,15 +2,31 @@ package service;
 
 import model.*;
 import model.abilitiy.Ability;
+import model.animal.AnimalType;
+import model.animal.FishType;
+import model.cook.Food;
+import model.cook.FoodType;
+import model.craft.CraftType;
 import model.enums.Weather;
+import model.products.AnimalProductType;
+import model.products.Hay;
 import model.products.Product;
+import model.products.TreesAndFruitsAndSeeds.FruitType;
+import model.products.TreesAndFruitsAndSeeds.MadeProductType;
+import model.receipe.CookingRecipe;
+import model.receipe.CraftingRecipe;
 import model.records.Response;
 import model.relations.Player;
+import model.source.CropType;
+import model.source.MineralType;
+import model.source.MixedSeedsType;
+import model.source.SeedType;
 import model.structure.Structure;
 import model.structure.farmInitialElements.GreenHouse;
 import model.structure.stores.BlackSmithUpgrade;
 import model.structure.stores.Store;
 import model.structure.stores.StoreType;
+import model.tools.BackPack;
 import model.tools.Tool;
 import utils.App;
 import variables.Session;
@@ -478,11 +494,92 @@ public class GameService {
     }
 
     public Response placeItem(String itemName, String direction) {
-        return null;
+        Player player = app.getCurrentGame().getCurrentPlayer();
+        Salable product = player.getInventory().findProductInBackPackByNAme(itemName);
+        if (product == null) return new Response(itemName + " not found in your backpack.");
+        Direction dir = Direction.getByName(direction);
+        if (dir == null) return new Response(direction + " not recognized as a direction.");
+        Tile tile = app.getCurrentGame().tiles[player.getTiles().getFirst().getX() + dir.getXTransmit()]
+                                              [player.getTiles().getFirst().getY() + dir.getYTransmit()];
+        if (tile.getIsFilled()) return new Response("The tile you're trying to put the item on, is filled");
+        if (!(product instanceof Structure)) return  new Response(itemName + " Cannot be put on ground"); //TODO Some objects are not structure but must be put on ground
+        player.getInventory().deleteProductFromBackPack(product, player, 1);
+        ((Structure)product).getTiles().add(tile);
+        tile.setIsFilled(true); //TODO not always is filled;
+        return new Response(itemName + " is put on the ground.", true);
     }
 
-    public Response C_AddItem(String name, String count) {
-        return null;
+    public Response C_AddItem(String name, String count) { //TODO conflict of product and productType
+        BackPack inventory = app.getCurrentGame().getCurrentPlayer().getInventory();
+        Salable salable = null;
+        for (FishType value : FishType.values()) {
+            if (name.equals(value.getName())) salable = value;
+        }
+        if (salable == null) {
+            for (FoodType value : FoodType.values()) {
+                if (name.equals(value.getName())) salable = value;
+            }
+        }
+
+        if (salable == null) {
+            for (CraftType value : CraftType.values()) {
+                if (name.equals(value.getName())) salable = value;
+            }
+        }
+
+        if (salable == null) {
+            for (FruitType value : FruitType.values()) {
+                if (name.equals(value.getName())) salable = value;
+            }
+        }
+
+        if (salable == null) {
+            for (MadeProductType value : MadeProductType.values()) {
+                if (name.equals(value.getName())) salable = value;
+            }
+        }
+
+        if (salable == null) {
+            for (AnimalProductType value : AnimalProductType.values()) {
+                if (name.equals(value.getName())) salable = value;
+            }
+        }
+
+        if (salable == null) {
+            for (CropType value : CropType.values()) {
+                if (name.equals(value.getName())) salable = value;
+            }
+        }
+
+        if (salable == null) {
+            for (MineralType value : MineralType.values()) {
+                if (name.equals(value.getName())) salable = value;
+            }
+        }
+
+        if (salable == null) {
+            for (MixedSeedsType value : MixedSeedsType.values()) {
+                if (name.equals(value.getName())) salable = value;
+            }
+        }
+
+        if (salable == null) {
+            for (SeedType value : SeedType.values()) {
+                if (name.equals(value.getName())) salable = value;
+            }
+        }
+
+        if (salable == null) {
+            if (name.equals("hay")) salable = new Hay();
+        }
+        if (salable == null) {
+            if (name.equals("flower")) salable = new Flower();
+        }
+
+        if (salable == null) return new Response(name + " cannot be added to the backpack");
+        if (inventory.isInventoryHaveCapacity(salable)) return new Response("Backpack hasn't enough space");
+        inventory.addProductToBackPack(salable, Integer.parseInt(count));
+        return new Response(name + " *" + count + " added to backpack.", true);
     }
 
     public Response pet(String name) {
@@ -602,7 +699,98 @@ public class GameService {
     }
 
     public Response eat(String foodName) {
+        Player player = app.getCurrentGame().getCurrentPlayer();
+        Salable food = player.getInventory().findProductInBackPackByNAme(foodName);
+        if (food == null) return new Response(foodName + " not found in your backpack.");
+        if (((Product)food).getEnergy() == 0) return new Response(foodName + " is not edible");
+        player.getInventory().deleteProductFromBackPack(food, player, 1);
+        player.changeEnergy(((Product)food).getEnergy());
+        if (food instanceof FoodType) player.setBuff((Buff)((FoodType)food).getBuff().clone());
+        return new Response(foodName + " is eaten now");
+    }
 
-        return null;
+    public Response craftingShowRecipes() {
+        Player player = app.getCurrentGame().getCurrentPlayer();
+        List<CraftingRecipe> craftingRecipeList = player.getCraftingRecipes();
+        if (craftingRecipeList.isEmpty()) return new Response("No recipe found you loser.");
+        StringBuilder response = new StringBuilder("Crafting recipes you've learnt so far: \n");
+        for (CraftingRecipe craftingRecipe : craftingRecipeList) {
+            response.append(craftingRecipe.toString()).append("\n");
+        }
+        return new Response(response.append("\n").toString(), true);
+    }
+
+    public Response cookingShowRecipes() {
+        Player player = app.getCurrentGame().getCurrentPlayer();
+        List<CookingRecipe> cookingRecipeList = player.getCookingRecipes();
+        if (cookingRecipeList.isEmpty()) return new Response("No recipe found you loser.");
+        StringBuilder response = new StringBuilder("Cooking recipes you've learnt so far: \n");
+        for (CookingRecipe cookingRecipe : cookingRecipeList) {
+            response.append(cookingRecipe.toString()).append("\n");
+        }
+        return new Response(response.append("\n").toString(), true);
+    }
+
+    public Response craftingCraft(String name) {
+        Player player = app.getCurrentGame().getCurrentPlayer();
+        CraftingRecipe recipe = player.findCraftingRecipe(name);
+        if (recipe == null) return new Response("You've not learnt to craft " + name);
+        Response isPossible = recipe.getCraftType().isCraftingPossible(player);
+        if (!isPossible.shouldBeBack()) return isPossible;
+        if (!player.getInventory().isInventoryHaveCapacity(recipe.getCraftType())) {
+            return new Response("You don't have enough space in your backpack");
+        }
+        player.removeEnergy(2);
+        recipe.getCraftType().removeIngredients(player);
+        player.getInventory().addProductToBackPack(recipe.getCraftType(), 1);
+        return new Response(recipe.getCraftType().getName() + " crafted successfully.");
+    }
+
+    public Response cookingRefrigeratorPick(String name) {
+        Player player = app.getCurrentGame().getCurrentPlayer();
+        Fridge fridge = app.getCurrentGame().findFarm().getFridge();
+        Salable product = fridge.findProduct(name);
+        if (product == null) {
+            return new Response(name + " not found in the fridge");
+        }
+        if (!player.getInventory().isInventoryHaveCapacity(product)) {
+            return new Response("Not enough space in backpack.");
+        }
+        player.getInventory().addProductToBackPack(product, fridge.countProduct(product));
+        fridge.deleteProduct(product, fridge.countProduct(product));
+        return new Response("Picked up.");
+    }
+
+
+    public Response cookingRefrigeratorPut(String name) {
+        Player player = app.getCurrentGame().getCurrentPlayer();
+        Fridge fridge = app.getCurrentGame().findFarm().getFridge();
+        Salable product = player.getInventory().getProductFromBackPack(name);
+        if (product == null) {
+            return new Response(name + " not found in the backpack");
+        }
+        if (((Product)product).getEnergy() == 0) { //TODO check for being edible
+            return new Response("Can't put the inedible items in the refrigerator.");
+        }
+        fridge.addProduct(product, player.getInventory().countProductFromBackPack(product));
+        player.getInventory().deleteProductFromBackPack(product, player,
+                player.getInventory().countProductFromBackPack(product));
+        return new Response("Put down.");
+    }
+
+    public Response cookingPrepare(String name) {
+        Player player = app.getCurrentGame().getCurrentPlayer();
+        Fridge fridge = app.getCurrentGame().findFarm().getFridge();
+        CookingRecipe recipe = player.findCookingRecipe(name);
+        if (recipe == null) return new Response("You've not learnt to cook " + name);
+        boolean isPossible = recipe.getFoodType().isValidIngredient(fridge);
+        if (!isPossible) return new Response("Ingrediens not found in the refrigerator.");
+        if (!player.getInventory().isInventoryHaveCapacity(recipe.getFoodType())) {
+            return new Response("You don't have enough space in your backpack");
+        }
+        player.removeEnergy(3);
+        recipe.getFoodType().removeIngredients(fridge);
+        player.getInventory().addProductToBackPack(recipe.getFoodType(), 1);
+        return new Response(recipe.getFoodType().getName() + " cooked successfully.");
     }
 }
