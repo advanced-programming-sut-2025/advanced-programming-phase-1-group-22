@@ -3,10 +3,13 @@ package model.structure.stores;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import model.Pair;
+import model.Tile;
 import model.source.Source;
 import model.structure.Structure;
 
 import java.util.List;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -17,4 +20,5 @@ public class Store extends Structure{
    public Store(StoreType storeType) {
       this.storeType = storeType;
    }
+
 }
