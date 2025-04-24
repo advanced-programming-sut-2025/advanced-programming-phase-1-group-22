@@ -1,9 +1,17 @@
 package model.tools;
 
 import lombok.Getter;
+import model.animal.Fish;
+import model.animal.FishType;
+import model.products.AnimalProduct;
+import model.products.ProductQuality;
 import model.relations.Player;
 import model.Tile;
 import model.abilitiy.Ability;
+import utils.App;
+
+import java.util.List;
+import java.util.Random;
 
 @Getter
 public enum FishingPole implements Tool {
@@ -64,15 +72,56 @@ public enum FishingPole implements Tool {
 
     @Override
     public String useTool(Player player, Tile tile) {
-        boolean success = false;
-
-
-
-        if (success){
-            player.upgradeAbility(Ability.FISHING);
-            return "you successfully use this tool";
-        }
+        int numberOfFish = generateNumberOfFish(player);
+        Double quality = generateQuality(player);
+        FishType fishType = generateFishType(player);
+        Fish fish = new Fish(fishType);
+        fish.setProductQuality(ProductQuality.getQualityByDouble(quality));
+        afterUseTool(fish,player,numberOfFish);
         player.changeEnergy(-this.getEnergy(player));
-        return "you use this tool in a wrong way";
+        return "you got " + numberOfFish + " of " + fishType.getName() +
+                " with quality " + quality +
+                " (" + ProductQuality.getQualityByDouble(quality).toString().toLowerCase() + ")";
+    }
+
+    private void afterUseTool(Fish fish, Player player,int itemNumber){
+        if (player.getInventory().isInventoryHaveCapacity(fish)){
+            player.getInventory().addProductToBackPack(fish,itemNumber);
+        }
+        else {
+            Tile tile = player.getTiles().getFirst();
+            fish.setTiles(List.of(tile));
+            fish.setIsPickable(true);
+            App.getInstance().getCurrentGame().getVillage().addStructureToPlayerFarmByPlayerTile(player,fish);
+        }
+    }
+
+    private int generateNumberOfFish(Player player){
+        Random random = new Random();
+        double R = random.nextDouble(0,1);
+        int skill = player.getAbilityLevel(Ability.FISHING);
+        Double M = App.getInstance().getCurrentGame().getVillage().getWeather().getFishingCoefficient();
+        return (int) Math.ceil(R * M * (skill + 2));
+    }
+
+    private Double generateQuality(Player player){
+        Random random = new Random();
+        double R = random.nextDouble(0,1);
+        int skill = player.getAbilityLevel(Ability.FISHING);
+        Double M = App.getInstance().getCurrentGame().getVillage().getWeather().getFishingCoefficient();
+		return (R * (skill + 2) * this.qualityPercent) / (7 - M);
+    }
+
+    private FishType generateFishType(Player player){
+        Random random = new Random();
+        int bound = FishType.values().length - 1;
+        if (player.getAbilityLevel(Ability.FISHING) < 4){
+            bound = 13;
+        }
+        FishType fishType = FishType.values()[random.nextInt(0,bound)];
+        while (!fishType.getSeason().equals(App.getInstance().getCurrentGame().getTimeAndDate().getSeason())){
+            fishType = FishType.values()[random.nextInt(0,bound)];
+        }
+        return fishType;
     }
 }

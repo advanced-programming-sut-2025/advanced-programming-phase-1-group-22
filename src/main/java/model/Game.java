@@ -3,10 +3,12 @@ package model;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import model.animal.Animal;
 import model.enums.Weather;
 import model.relations.Friendship;
 import model.relations.NPC;
 import model.relations.Player;
+import model.structure.Structure;
 import utils.App;
 
 import java.util.ArrayList;
@@ -62,6 +64,14 @@ public class Game {
         for (Farm farm : App.getInstance().getCurrentGame().getVillage().getFarms()) {
             farm.generateRandomForaging();
         }
+        for (Farm farm : App.getInstance().getCurrentGame().getVillage().getFarms()) {
+            for (Structure structure : farm.getStructures()) {
+                if (structure instanceof Animal){
+                    ((Animal)structure).produceAnimalProduct();
+                    calculateAnimalFriendShip((Animal) structure);
+                }
+            }
+        }
     }
 
     public void addGoldToPlayerForShippingBin(int price, Player player) {
@@ -96,5 +106,24 @@ public class Game {
         i = (i == players.size() - 1) ? 0 : i + 1;
         currentPlayer = players.get(i);
         timeAndDate.moveTimeForward();
+    }
+
+    private void calculateAnimalFriendShip(Animal animal){
+        if (!animal.getIsFeed()){
+            changeFriendShip(animal,-20);
+        }
+        if (animal.getIsAnimalStayOutAllNight()){
+            changeFriendShip(animal,-20);
+        }
+        if (!animal.getPet()){
+            changeFriendShip(animal,-10);
+        }
+        animal.setIsFeed(false);
+        animal.setPet(false);
+    }
+
+    private void changeFriendShip(Animal animal,int value){
+        int oldValue = animal.getRelationShipQuality();
+        animal.setRelationShipQuality(oldValue + value);
     }
 }

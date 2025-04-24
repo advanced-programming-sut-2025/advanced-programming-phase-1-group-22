@@ -71,8 +71,14 @@ public class MilkPail implements Tool {
                 if (structure instanceof Animal currentAnimal){
                     if (currentAnimal.getAnimalType().equals(AnimalType.COW) ||
                             currentAnimal.getAnimalType().equals(AnimalType.GOAT)){
-                        currentAnimal.setMilk(true);
-                        afterUseTool(currentAnimal.getAnimalProduct(),player,tile);
+                        if (currentAnimal.getTodayProduct() == null){
+                            player.changeEnergy(-this.getEnergy(player));
+                            return "this animal do not have product";
+                        }
+                        afterUseTool(currentAnimal.getTodayProduct(),player,tile);
+                        currentAnimal.setTodayProduct(null);
+                        int oldFriendShip = currentAnimal.getRelationShipQuality();
+                        currentAnimal.setRelationShipQuality(oldFriendShip + 5);
                         success = true;
                         break;
                     }
