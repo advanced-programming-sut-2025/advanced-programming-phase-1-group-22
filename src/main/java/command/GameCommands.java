@@ -53,6 +53,7 @@ public class GameCommands extends CommandClass {
     public static final GameCommands artisanGet = new GameCommands("^\\s*artisan\\s+get\\s+(?<name>.+)\\s*$");
     public static final GameCommands C_AddDollars = new GameCommands("^\\s*cheat\\s+add\\s+(?<count>\\d+)\\s+dollars\\s*$");
     public static final GameCommands sell = new GameCommands("^\\s*sell\\s+(?<name>.+)\\s+-n\\s+(?<count>\\d+)\\s*$");
+    public static final GameCommands sellAll = new GameCommands("^\\s*sell\\s+(?<name>.+)\\s*$");
     public static final GameCommands friendship = new GameCommands("^\\s*friendship\\s*$");
     public static final GameCommands talk = new GameCommands("^\\s*talk\\s+-u\\s+(?<username>.+)\\s+-m\\s+(?<message>.+)\\s*$");
     public static final GameCommands talkHistory = new GameCommands("^\\s*talk\\s+history\\s+-u\\s+(?<username>.+)\\s*$");

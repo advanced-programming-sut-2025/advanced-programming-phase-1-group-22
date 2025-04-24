@@ -71,6 +71,7 @@ public abstract class GameMenu implements CommandProcessor {
         commandsFunctionMap.put(artisanGet, controller::artisanGet);
         commandsFunctionMap.put(C_AddDollars, controller::C_AddDollars);
         commandsFunctionMap.put(sell, controller::sell);
+        commandsFunctionMap.put(sellAll, controller::sellAll);
         commandsFunctionMap.put(friendship, controller::friendship);
         commandsFunctionMap.put(talk, controller::talk);
         commandsFunctionMap.put(talkHistory, controller::talkHistory);

@@ -214,7 +214,11 @@ public class GameMenuController extends MenuController {
     }
 
     public Response sell(String[] params) {
-        return null;
+        return gameService.sell(params[0], params[1]);
+    }
+
+    public Response sellAll(String[] params) {
+        return gameService.sellAll(params[0]);
     }
 
     public Response friendship(String[] params) {
