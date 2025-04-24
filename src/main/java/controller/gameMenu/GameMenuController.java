@@ -202,11 +202,11 @@ public class GameMenuController extends MenuController {
     }
 
     public Response artisanUse(String[] params) {
-        return null;
+        return gameService.artisanUse(params[0], params[1], params[2]);
     }
 
     public Response artisanGet(String[] params) {
-        return null;
+        return gameService.artisanGet(params[0]);
     }
 
     public Response C_AddDollars(String[] params) {

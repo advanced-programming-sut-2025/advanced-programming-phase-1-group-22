@@ -6,12 +6,14 @@ import model.animal.AnimalType;
 import model.animal.FishType;
 import model.cook.Food;
 import model.cook.FoodType;
+import model.craft.Craft;
 import model.craft.CraftType;
 import model.enums.Weather;
 import model.products.AnimalProductType;
 import model.products.Hay;
 import model.products.Product;
 import model.products.TreesAndFruitsAndSeeds.FruitType;
+import model.products.TreesAndFruitsAndSeeds.MadeProduct;
 import model.products.TreesAndFruitsAndSeeds.MadeProductType;
 import model.receipe.CookingRecipe;
 import model.receipe.CraftingRecipe;
@@ -615,11 +617,56 @@ public class GameService {
     }
 
     public Response artisanUse(String name, String item1, String item2) {
-        return null;
+        Player player = app.getCurrentGame().getCurrentPlayer();
+        Salable craft = player.getInventory().findProductInBackPackByNAme(name);
+        if (!(craft instanceof CraftType)) {
+            return new Response("No artisan called " + name + " found in your backpack.");
+        }
+        Salable product1 = null, product2 = null;
+        for (Salable value : player.getInventory().getProducts().keySet()) {
+            if (item1.equals(value.getName())) {
+                product1 = value;
+                break;
+            }
+        }
+        if (product1 == null) return new Response(item1 + " not found in your backpack.");
+        if (item2 != null && !item2.isEmpty()) {
+            for (Salable value : player.getInventory().getProducts().keySet()) {
+                if (item2.equals(value.getName())) {
+                    product2 = value;
+                    break;
+                }
+            }
+            if (product2 == null) return new Response(item2 + " not found in your backpack.");
+        }
+        MadeProductType madeProductType = MadeProductType.findByCraft((CraftType) craft);
+        if (madeProductType == null) return new Response(name + "is not a valid artisan.");
+        Response isArtisanValid = madeProductType.isIngredientsValid((Product)product1, player.getInventory().countProductFromBackPack(product1),
+                product2 != null);
+        if (!isArtisanValid.shouldBeBack()) return isArtisanValid;
+        player.getInventory().deleteProductFromBackPack(product1, player, madeProductType.countIngredient());
+        if (product2 != null) player.getInventory().deleteProductFromBackPack(MadeProductType.COAL, player, 1);
+        player.addCraft(new Craft(madeProductType.getCraftType(), new MadeProduct(madeProductType, product1), madeProductType.calcETA(product1)));
+        return new Response("The item will be ready in due time.");
     }
 
     public Response artisanGet(String name) {
-        return null;
+        Player player = app.getCurrentGame().getCurrentPlayer();
+        Salable craftType = player.getInventory().findProductInBackPackByNAme(name);
+        if (!(craftType instanceof CraftType)) {
+            return new Response("No artisan called " + name + " found in your backpack.");
+        }
+        Craft craft = player.findCraft(craftType);
+        if (craft == null) return new Response("You have not started an artisan of type " + name);
+        if (!player.getInventory().isInventoryHaveCapacity(craft)) {
+            return new Response("Backpack is full.");
+        }
+        if (craft.getETA().compareTime(app.getCurrentGame().getTimeAndDate()) > 1) {
+            return new Response("Still not ready!");
+        }
+        player.getInventory().addProductToBackPack(craft, 1);
+        player.getCrafts().remove(craft);
+        return new Response("The artisan collected", true);
     }
 
     public Response C_AddDollars(String count) {
@@ -784,7 +831,7 @@ public class GameService {
         CookingRecipe recipe = player.findCookingRecipe(name);
         if (recipe == null) return new Response("You've not learnt to cook " + name);
         boolean isPossible = recipe.getFoodType().isValidIngredient(fridge);
-        if (!isPossible) return new Response("Ingrediens not found in the refrigerator.");
+        if (!isPossible) return new Response("Ingredients not found in the refrigerator.");
         if (!player.getInventory().isInventoryHaveCapacity(recipe.getFoodType())) {
             return new Response("You don't have enough space in your backpack");
         }
