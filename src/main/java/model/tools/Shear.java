@@ -54,49 +54,35 @@ public enum Shear implements Tool {
     @Override
     public int getEnergy(Player player) {
         if (player.getAbilityLevel(Ability.FARMING) == 4){
-            return energyCost - 1;
+            return (int) (App.getInstance().getCurrentGame().getWeatherCoefficient() * energyCost - 1);
         }
-        return energyCost;
+        return (int) (App.getInstance().getCurrentGame().getWeatherCoefficient() * energyCost);
     }
 
     @Override
     public String useTool(Player player, Tile tile) {
-        boolean success = false;
+        player.changeEnergy(-this.getEnergy(player));
         List<Structure> structures = App.getInstance().getCurrentGame().getVillage().findStructuresByTile(tile);
         for (Structure structure : structures) {
             if (structure != null){
                 if (structure instanceof Animal currentAnimal){
                     if (currentAnimal.getAnimalType().equals(AnimalType.SHEEP)){
                         if (currentAnimal.getTodayProduct() == null){
-                            player.changeEnergy(-this.getEnergy(player));
                             return "this animal does not have product";
                         }
-                        afterUseTool(currentAnimal.getTodayProduct(),player,tile);
-                        success = true;
-                        currentAnimal.setTodayProduct(null);
-                        int oldFriendShip = currentAnimal.getRelationShipQuality();
-                        currentAnimal.setRelationShipQuality(oldFriendShip + 5);
-                        break;
+                        AnimalProduct animalProduct = currentAnimal.getTodayProduct();
+                        if (player.getInventory().isInventoryHaveCapacity(animalProduct)){
+                            player.getInventory().addProductToBackPack(animalProduct,1);
+                            currentAnimal.setTodayProduct(null);
+                            int oldFriendShip = currentAnimal.getRelationShipQuality();
+                            currentAnimal.setRelationShipQuality(oldFriendShip + 5);
+                            return "you got a " + animalProduct.getName() + " with quality " + animalProduct.getProductQuality();
+                        }
+                        return "your inventory is full so you can not milk animal";
                     }
                 }
             }
         }
-
-        player.changeEnergy(-this.getEnergy(player));
-        if (success){
-            return "you successfully use this tool";
-        }
         return "you use this tool in a wrong way";
-    }
-
-    private void afterUseTool(AnimalProduct animalProduct, Player player, Tile tile){
-        if (player.getInventory().isInventoryHaveCapacity(animalProduct)){
-            player.getInventory().addProductToBackPack(animalProduct,1);
-        }
-        else {
-            animalProduct.setTiles(List.of(tile));
-            animalProduct.setIsPickable(true);
-            App.getInstance().getCurrentGame().getVillage().addStructureToPlayerFarmByPlayerTile(player,animalProduct);
-        }
     }
 }

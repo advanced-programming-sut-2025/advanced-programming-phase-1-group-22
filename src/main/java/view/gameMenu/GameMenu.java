@@ -3,16 +3,11 @@ package view.gameMenu;
 import command.CommandClass;
 import controller.gameMenu.GameMenuController;
 import model.records.Response;
-import utils.App;
 import view.CommandProcessor;
-import view.Menu;
-import view.mainMenu.MapSelectionMenu;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Scanner;
 import java.util.function.Function;
-import java.util.regex.Matcher;
 
 import static command.GameCommands.*;
 
@@ -53,11 +48,11 @@ public abstract class GameMenu implements CommandProcessor {
         commandsFunctionMap.put(USE_TOOL, controller::useTool);
         commandsFunctionMap.put(PICK_PRODUCT,controller::pickFromFloor);
         commandsFunctionMap.put(FISHING,controller::fishing);
-        commandsFunctionMap.put(craftInfo, controller::craftInfo);
-        commandsFunctionMap.put(plantSeed, controller::plantSeed);
-        commandsFunctionMap.put(showplant, controller::showplant);
-        commandsFunctionMap.put(fertilize, controller::fertilize);
-        commandsFunctionMap.put(howMuchWater, controller::howMuchWater);
+        commandsFunctionMap.put(CRAFT_INFO, controller::craftInfo);
+        commandsFunctionMap.put(PLANT_SEED, controller::plantSeed);
+        commandsFunctionMap.put(SHOW_PLANT, controller::showPlant);
+        commandsFunctionMap.put(FERTILIZE, controller::fertilize);
+        commandsFunctionMap.put(HOW_MUCH_WATER, controller::howMuchWater);
         commandsFunctionMap.put(placeItem, controller::placeItem);
         commandsFunctionMap.put(C_AddItem, controller::C_AddItem);
         commandsFunctionMap.put(PET, controller::pet);

@@ -3,28 +3,94 @@ package model.products.TreesAndFruitsAndSeeds;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import model.enums.Season;
+import model.Salable;
+import model.TimeAndDate;
 import model.products.HarvestAbleProduct;
-import model.source.Seed;
-import model.source.Source;
-
-import java.util.List;
+import model.products.Harvestable;
+import model.structure.Structure;
 
 @Getter
 @Setter
 @ToString
-public class Fruit extends HarvestAbleProduct {
+public class Fruit extends HarvestAbleProduct{
     FruitType fruitType;
 
-    public Fruit(FruitType fruitType1) {
-        super(fruitType1.getName(), fruitType1.getTreeType().getSource(), !fruitType1.getTreeType().getIsForaging(),
-                fruitType1.getTreeType().getHarvestStages(), true, fruitType1.getTreeType().getHarvestCycle(), fruitType1.getSellPrice(), fruitType1.getIsEdible(),
-                fruitType1.getFruitEnergy(), List.of(fruitType1.getSeason()), false);
-        this.fruitType = fruitType1;
+    public Fruit(FruitType fruitType) {
+        this.fruitType = fruitType;
+    }
+
+    @Override
+    public String getName() {
+        return fruitType.getName();
     }
 
     @Override
     public int getSellPrice() {
         return fruitType.getSellPrice();
+    }
+
+    @Override
+    public int getContainingEnergy() {
+        return fruitType.getFruitEnergy();
+    }
+
+    @Override
+    public void setStartPlanting(TimeAndDate startPlanting) {
+
+    }
+
+    @Override
+    public int calculateRegrowthLevel() {
+        return 0;
+    }
+
+    @Override
+    public int remainDaysUntilCanHarvest() {
+        return 0;
+    }
+
+    @Override
+    public boolean getIsWaterToday() {
+        return false;
+    }
+
+    @Override
+    public void setWaterToday(Boolean waterToday) {
+
+    }
+
+    @Override
+    public boolean getIsFertilized() {
+        return false;
+    }
+
+    @Override
+    public boolean canHarvest() {
+        return false;
+    }
+
+    @Override
+    public boolean getIsOneTime() {
+        return false;
+    }
+
+    @Override
+    public void setLastHarvest(TimeAndDate lastHarvest) {
+
+    }
+
+    @Override
+    public void setFertilized(Boolean fertilized) {
+
+    }
+
+    @Override
+    public void setNumberOfWithoutWaterDays(Integer numberOfWithoutWaterDays) {
+
+    }
+
+    @Override
+    public int getNumberOfWithoutWaterDays() {
+        return 0;
     }
 }

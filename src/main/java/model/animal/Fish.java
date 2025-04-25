@@ -18,7 +18,7 @@ public class Fish extends Structure implements Salable {
 	private ProductQuality productQuality;
 
 	public int getSellPrice() {
-		return this.fishType.getSellPrice();
+		return (int) (this.fishType.getSellPrice() * productQuality.getPriceCoefficient());
 	}
 
 	public Fish(FishType fishType) {

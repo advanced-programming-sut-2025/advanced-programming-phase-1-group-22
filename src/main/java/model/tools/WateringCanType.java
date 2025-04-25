@@ -23,7 +23,6 @@ public enum WateringCanType implements Tool {
     private final Integer level;
     private final Integer capacity;
     private final Integer energyCost;
-    private Boolean isFullOfWater;
      WateringCanType(String name, Integer level, Integer capacity, Integer energyCost) {
         this.name = name;
          this.level = level;
@@ -59,9 +58,9 @@ public enum WateringCanType implements Tool {
     @Override
     public int getEnergy(Player player) {
         if (player.getAbilityLevel(Ability.FARMING) == 4){
-            return energyCost - 1;
+            return (int) (App.getInstance().getCurrentGame().getWeatherCoefficient() * energyCost - 1);
         }
-        return energyCost;
+        return (int) (App.getInstance().getCurrentGame().getWeatherCoefficient() * energyCost);
     }
 
     @Override
@@ -71,23 +70,6 @@ public enum WateringCanType implements Tool {
 
     @Override
     public String useTool(Player player, Tile tile) {
-        boolean success = false;
-        List<Structure> structures = App.getInstance().getCurrentGame().getVillage().findStructuresByTile(tile);
-        for (Structure structure : structures) {
-            if (structure != null){
-                if (structure instanceof Lake){ // or GreenHouse
-                    isFullOfWater = true;
-                    success = true;
-                    break;
-                }
-            }
-            // آب دادن به محصولات
-        }
-
-        player.changeEnergy(-this.getEnergy(player));
-        if (success){
-            return "you successfully use this tool";
-        }
-        return "you use this tool in a wrong way";
+        return "";
     }
 }
