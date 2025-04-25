@@ -80,7 +80,8 @@ public class MilkPail implements Tool {
                             currentAnimal.setTodayProduct(null);
                             int oldFriendShip = currentAnimal.getRelationShipQuality();
                             currentAnimal.setRelationShipQuality(oldFriendShip + 5);
-                            return "you get a " + animalProduct.getName() +" with quality " + animalProduct.getProductQuality();
+                            return "you collect produce of " + currentAnimal.getName() + ": " + animalProduct.getName() +
+                                    " with quality: " + animalProduct.getProductQuality();
                         }
                         return "your inventory is full so you can not milk animal";
                     }

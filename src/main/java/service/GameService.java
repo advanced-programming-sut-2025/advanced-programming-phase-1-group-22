@@ -1002,9 +1002,13 @@ public class GameService {
 			if (!isAnimalInBarnOrCage(animal,getPlayerFarms(player))){
 				if (animal.getTodayProduct() != null){
 					AnimalProduct animalProduct = animal.getTodayProduct();
-					afterProduce(animalProduct,player,player.getTiles().getFirst());
-					animal.setTodayProduct(null);
-					return "you collect produce of " + animal.getName() + ": " + animalProduct.getName();
+					if (player.getInventory().isInventoryHaveCapacity(animalProduct)){
+						player.getInventory().addProductToBackPack(animalProduct,1);
+						animal.setTodayProduct(null);
+						return "you collect produce of " + animal.getName() + ": " + animalProduct.getName() +
+								" with quality: " + animalProduct.getProductQuality();
+					}
+					return "your inventory is full so you can not produce";
 				}
 				return "this animal do not have produce today";
 			}
@@ -1012,22 +1016,15 @@ public class GameService {
 		}
 		if (animal.getTodayProduct() != null){
 			AnimalProduct animalProduct = animal.getTodayProduct();
-			afterProduce(animalProduct,player,player.getTiles().getFirst());
-			animal.setTodayProduct(null);
-			return "you collect produce of " + animal.getName() + ": " + animalProduct.getName();
+			if (player.getInventory().isInventoryHaveCapacity(animalProduct)){
+				player.getInventory().addProductToBackPack(animalProduct,1);
+				animal.setTodayProduct(null);
+				return "you collect produce of " + animal.getName() + ": " + animalProduct.getName() +
+						" with quality: " + animalProduct.getProductQuality();
+			}
+			return "your inventory is full so you can not produce";
 		}
 		return "this animal do not have produce today";
-	}
-
-	private void afterProduce(AnimalProduct animalProduct, Player player, Tile tile){
-		if (player.getInventory().isInventoryHaveCapacity(animalProduct)){
-			player.getInventory().addProductToBackPack(animalProduct,1);
-		}
-		else {
-			animalProduct.setTiles(List.of(tile));
-			animalProduct.setIsPickable(true);
-			App.getInstance().getCurrentGame().getVillage().addStructureToPlayerFarmByPlayerTile(player,animalProduct);
-		}
 	}
 
 	private Harvestable getHarvestableType(String name){
