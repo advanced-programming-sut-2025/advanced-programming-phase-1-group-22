@@ -15,10 +15,7 @@ import model.products.TreesAndFruitsAndSeeds.TreeType;
 import model.records.Response;
 import model.relations.Player;
 import model.shelter.FarmBuilding;
-import model.source.Crop;
-import model.source.CropType;
-import model.source.Seed;
-import model.source.SeedType;
+import model.source.*;
 import model.structure.Structure;
 import model.structure.farmInitialElements.GreenHouse;
 import model.structure.farmInitialElements.Lake;
@@ -541,7 +538,13 @@ public class GameService {
 
 	public Response plantSeed(String name, String direction){
 		Player currentPlayer = getCurrentPlayer();
-		Seed seed = (Seed) getProductFromInventory(currentPlayer,name);
+		MixedSeeds mixedSeeds = (MixedSeeds) getProductFromInventory(currentPlayer,name);
+		Seed seed;
+		if (mixedSeeds != null){
+			if (!mixedSeeds.getMixedSeedsType().getSeason().equals(App.getInstance().getCurrentGame().getTimeAndDate().getSeason())){
+				return new Response("you should use this seed in " + mixedSeeds.getMixedSeedsType().getSeason());
+			}
+		}
 		if (seed == null){
 			return new Response("you do not have this seed in your inventory");
 		}
