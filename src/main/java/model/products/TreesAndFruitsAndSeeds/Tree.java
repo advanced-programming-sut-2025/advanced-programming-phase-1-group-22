@@ -133,4 +133,19 @@ public class Tree extends HarvestAbleProduct {
     public int getContainingEnergy() {
         return treeType.getFruit().getFruitEnergy();
     }
+
+    @Override
+    public int getNumberOfWithoutWaterDays() {
+        return this.numberOfWithoutWaterDays;
+    }
+
+    @Override
+    public boolean getIsFertilized(){
+        return this.isFertilized;
+    }
+
+    @Override
+    public boolean getIsWaterToday(){
+        return this.isWaterToday;
+    }
 }
