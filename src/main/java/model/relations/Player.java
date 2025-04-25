@@ -15,6 +15,7 @@ import model.shelter.ShippingBin;
 import model.source.*;
 import model.structure.stores.StoreType;
 import model.tools.*;
+import view.Menu;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -47,6 +48,7 @@ public class Player extends Actor {
     private List<Craft> crafts = new ArrayList<>();
     private List<CraftingRecipe> craftingRecipes = new ArrayList<>();
     private StoreType storeType;
+    private Menu currentMenu = Menu.GAME_MAIN_MENU;
 
     public Player(User user) {
         this.user = user;
