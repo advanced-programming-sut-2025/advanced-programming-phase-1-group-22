@@ -141,4 +141,19 @@ public class Crop extends HarvestAbleProduct implements Source {
     public void setStartPlanting(TimeAndDate startPlanting) {
         this.startPlanting = startPlanting;
     }
+
+    @Override
+    public int getNumberOfWithoutWaterDays() {
+        return this.numberOfWithoutWaterDays;
+    }
+
+    @Override
+    public boolean getIsFertilized(){
+        return this.isFertilized;
+    }
+
+    @Override
+    public boolean getIsWaterToday(){
+        return this.isWaterToday;
+    }
 }
