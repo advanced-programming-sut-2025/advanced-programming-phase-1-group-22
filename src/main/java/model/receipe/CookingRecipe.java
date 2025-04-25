@@ -10,7 +10,6 @@ import utils.App;
 
 @Getter
 @Setter
-@ToString
 public class CookingRecipe implements Recipe {
 
     private String name;

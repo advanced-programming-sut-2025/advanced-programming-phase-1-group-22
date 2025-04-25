@@ -42,6 +42,11 @@ public enum AnimalType implements Product {
     }
 
     @Override
+    public int getEnergy() {
+        return 0;
+    }
+
+    @Override
     public String getName() {
         return this.name.toLowerCase();
     }
