@@ -13,10 +13,12 @@ public class Tile {
     private Integer x;
     private Integer y;
     private Boolean isFilled = false;
+    private Boolean isPassable = true;
     private TileType tileType = TileType.FLAT;
     private App app = App.getInstance();
 
-    public Boolean isPassible() {
+    public Boolean isPassable() {
+        if (!isPassable) return false;
         boolean flag = switch (tileType) {
             case MUD, FENCE -> false;
             case FLAT -> true;
@@ -46,6 +48,4 @@ public class Tile {
         this.x = x;
         this.y = y;
     }
-
-
 }

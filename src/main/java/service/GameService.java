@@ -2,9 +2,7 @@ package service;
 
 import model.*;
 import model.abilitiy.Ability;
-import model.animal.AnimalType;
 import model.animal.FishType;
-import model.cook.Food;
 import model.cook.FoodType;
 import model.craft.Craft;
 import model.craft.CraftType;
@@ -25,6 +23,7 @@ import model.source.MineralType;
 import model.source.MixedSeedsType;
 import model.source.SeedType;
 import model.structure.Structure;
+import model.structure.farmInitialElements.Cottage;
 import model.structure.farmInitialElements.GreenHouse;
 import model.structure.stores.BlackSmithUpgrade;
 import model.structure.stores.Store;
@@ -36,6 +35,7 @@ import variables.Session;
 import view.Menu;
 import view.ViewRender;
 
+import javax.tools.JavaCompiler;
 import java.util.*;
 
 public class GameService {
@@ -89,8 +89,11 @@ public class GameService {
         app.getCurrentGame().nextPlayer();
         TimeAndDate time = new TimeAndDate(0, 8);
         if (app.getCurrentGame().getTimeAndDate().compareDailyTime(time) <= 0) {
-            player.setEnergy(player.getMaxEnergy()); //TODO implementing the faint
+            return new Response("It's next player's turn", true);
+//            player.setEnergy(player.getMaxEnergy()); //TODO implementing the faint
         }
+        if (app.getCurrentGame().getCurrentPlayer().getIsFainted()) return nextTurn();
+        Session.setCurrentMenu(app.getCurrentGame().getCurrentPlayer().getCurrentMenu());
         return new Response("It's next player's turn", true);
     }
 
@@ -204,8 +207,10 @@ public class GameService {
         if (x1 < 0 || y1 < 0 || x1 >= app.getCurrentGame().getLength() || y1 >= app.getCurrentGame().getWidth()) {
             return new Response("Position out of bound");
         }
+        Farm destFarm = null;
         for (Farm farm : app.getCurrentGame().getVillage().getFarms()) {
             if (farm.isPairInFarm(new Pair(x1, y1))) {
+                destFarm = farm;
                 if (farm.getPlayers().contains(app.getCurrentGame().getCurrentPlayer())) break;
                 return new Response("You are not allowed to enter this farm");
             }
@@ -228,8 +233,11 @@ public class GameService {
             return new Response("Not enough energy; you fainted");
         }
         player.removeEnergy(energy);
+        player.getTiles().getFirst().setIsPassable(true);
         player.getTiles().clear();
         player.getTiles().add(app.getCurrentGame().tiles[x1][y1]);
+        player.getTiles().getFirst().setIsPassable(false);
+        setMenu(player, destFarm);
         if (player.getEnergyPerTurn() <= 0) nextTurn();
         return new Response("Moved to the tile.", true);
     }
@@ -374,6 +382,36 @@ public class GameService {
         }
 
         return currentProduct;
+    }
+
+    private void setMenu(Player player, Farm farm) {
+        if (farm == null) {
+            Village village = app.getCurrentGame().getVillage();
+            for (Structure structure : village.getStructures()) {
+                if (structure instanceof Store) {
+                    for (Tile tile : structure.getTiles()) {
+                        if (player.getTiles().getFirst() == tile) {
+                            player.setStoreType(((Store) structure).getStoreType());
+                            player.setCurrentMenu(Menu.STORE_MENU);
+                            Session.setCurrentMenu(Menu.STORE_MENU);
+                            return;
+                        }
+                    }
+                }
+            }
+            return;
+        }
+        Cottage cottage = farm.getCottage();
+        for (Tile tile : cottage.getTiles()) {
+            if (player.getTiles().getFirst() == tile) {
+                player.setCurrentMenu(Menu.COTTAGE);
+                Session.setCurrentMenu(Menu.COTTAGE);
+                return;
+            }
+        }
+        player.setCurrentMenu(Menu.GAME_MAIN_MENU);
+        Session.setCurrentMenu(Menu.GAME_MAIN_MENU);
+
     }
 
     private Tool getToolFromPlayerInventory(String name, Player player){
