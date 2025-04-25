@@ -9,7 +9,6 @@ import model.Tile;
 import model.TileType;
 import model.abilitiy.Ability;
 import model.source.Crop;
-import model.source.Mineral;
 import model.structure.Structure;
 import utils.App;
 
@@ -63,6 +62,9 @@ public class Scythe implements Tool {
         List<Structure> structures = App.getInstance().getCurrentGame().getVillage().findStructuresByTile(tile);
         for (Structure structure : structures) {
             if (structure instanceof HarvestAbleProduct){
+                if (((HarvestAbleProduct)structure).getBurn()){
+                    return "this harvest is burned with thunder! use axe to get its coal";
+                }
                 if (!((HarvestAbleProduct)structure).canHarvest()){
                     return "you have to wait until complete harvest";
                 }

@@ -15,6 +15,7 @@ public class Crop extends HarvestAbleProduct implements Source {
     private TimeAndDate lastHarvest;
     private Boolean isWaterToday;
     private Boolean isFertilized;
+    private Boolean isBurn;
     private Integer numberOfWithoutWaterDays;
     private int numberOfStages;
 
@@ -44,7 +45,7 @@ public class Crop extends HarvestAbleProduct implements Source {
     }
 
     public void burn() {
-        //TODO
+        this.isBurn = true;
     }
 
     public int calculateRegrowthLevel(){
@@ -155,5 +156,10 @@ public class Crop extends HarvestAbleProduct implements Source {
     @Override
     public boolean getIsWaterToday(){
         return this.isWaterToday;
+    }
+
+    @Override
+    public boolean getBurn() {
+        return isBurn;
     }
 }

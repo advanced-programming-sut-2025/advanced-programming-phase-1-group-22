@@ -24,4 +24,5 @@ public abstract class HarvestAbleProduct extends Structure implements Salable {
     public abstract void setFertilized(Boolean fertilized);
     public abstract void setNumberOfWithoutWaterDays(Integer numberOfWithoutWaterDays);
     public abstract int getNumberOfWithoutWaterDays();
+    public abstract boolean getBurn();
 }
