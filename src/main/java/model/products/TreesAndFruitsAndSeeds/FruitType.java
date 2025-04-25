@@ -39,6 +39,10 @@ public enum FruitType implements Product {
         this.treeType = treeType;
     }
 
+    @Override
+    public int getEnergy() {
+        return isEdible ? fruitEnergy : 0;
+    }
 
     @Override
     public int getSellPrice() {
