@@ -65,9 +65,9 @@ public enum FishingPole implements Tool {
     @Override
     public int getEnergy(Player player) {
         if (player.getAbilityLevel(Ability.FISHING) == 4){
-            return energyCost - 1;
+            return (int) (App.getInstance().getCurrentGame().getWeatherCoefficient() * energyCost - 1);
         }
-        return energyCost;
+        return (int) (App.getInstance().getCurrentGame().getWeatherCoefficient() * energyCost);
     }
 
     @Override
@@ -77,23 +77,14 @@ public enum FishingPole implements Tool {
         FishType fishType = generateFishType(player);
         Fish fish = new Fish(fishType);
         fish.setProductQuality(ProductQuality.getQualityByDouble(quality));
-        afterUseTool(fish,player,numberOfFish);
-        player.changeEnergy(-this.getEnergy(player));
-        return "you got " + numberOfFish + " of " + fishType.getName() +
-                " with quality " + quality +
-                " (" + ProductQuality.getQualityByDouble(quality).toString().toLowerCase() + ")";
-    }
-
-    private void afterUseTool(Fish fish, Player player,int itemNumber){
         if (player.getInventory().isInventoryHaveCapacity(fish)){
-            player.getInventory().addProductToBackPack(fish,itemNumber);
+            player.getInventory().addProductToBackPack(fish,numberOfFish);
+            player.changeEnergy(-this.getEnergy(player));
+            return "you got " + numberOfFish + " of " + fishType.getName() +
+                    " with quality " + quality +
+                    " (" + ProductQuality.getQualityByDouble(quality).toString().toLowerCase() + ")";
         }
-        else {
-            Tile tile = player.getTiles().getFirst();
-            fish.setTiles(List.of(tile));
-            fish.setIsPickable(true);
-            App.getInstance().getCurrentGame().getVillage().addStructureToPlayerFarmByPlayerTile(player,fish);
-        }
+        return "your inventory is full so you can not fishing";
     }
 
     private int generateNumberOfFish(Player player){

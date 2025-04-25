@@ -20,11 +20,6 @@ public class GameCommands extends CommandClass {
     public static final GameCommands printMap = new GameCommands("^\\s*print\\s+map\\s+-l\\s+(?<X>\\d+)\\s*,\\s*(?<Y>\\d+)\\s+" +
             "-s\\s+(?<size>\\d+)\\s*$");
     public static final GameCommands helpReadingMap = new GameCommands("^\\s*help\\s+reading\\s+map\\s*$");
-    public static final GameCommands craftInfo = new GameCommands("^\\s*craft\\s+info\\s+-n\\s+(?<craftName>.+)\\s*$");
-    public static final GameCommands plantSeed = new GameCommands("^\\s*plant\\s+seed\\s+-s\\s+(?<seed>.+)\\s+-d\\s+(?<direction>\\d+)\\s*$");
-    public static final GameCommands showplant = new GameCommands("^\\s*showplant\\s+-l\\s+(?<X>\\d+)\\s*,\\s*(?<Y>\\d+)\\s*$");
-    public static final GameCommands fertilize = new GameCommands("^\\s*fertilize\\s+-f\\s+(?<fertilizer>.+)\\s+-d\\s+(?<direction>\\d+)\\s*$");
-    public static final GameCommands howMuchWater = new GameCommands("^\\s*howmuch\\s+water\\s*$");
     public static final GameCommands placeItem = new GameCommands("^\\s*place\\s+item\\s+-n\\s+(?<itemName>.+)\\s+-d\\s+(?<direction>\\d+)\\s*$");
     public static final GameCommands C_AddItem = new GameCommands("^\\s*cheat\\s+add\\s+item\\s+-n\\s+(?<name>\\S+)\\s+-c\\s+" +
             "(?<count>\\d+)\\s*$");
@@ -97,6 +92,14 @@ public class GameCommands extends CommandClass {
     public static final GameCommands SELL_ANIMAL = new GameCommands("^\\s*sell\\s+animal\\s+-n\\s+(?<name>.+)\\s*$");
     public static final GameCommands SHEPHERD_ANIMALS = new GameCommands("^\\s*shepherd\\s+animals\\s+-n\\s+(?<name>.+)\\s+-l\\s+<\\s*(\\d+)\\s*,\\s*(\\d+)\\s*>\\s*$");
     public static final GameCommands PRODUCES = new GameCommands("^\\s*produces\\s*$");
+
+    public static final GameCommands CRAFT_INFO = new GameCommands("^\\s*craft\\s+info\\s+-n\\s+(?<craftName>.+)\\s*$");
+
+    public static final GameCommands PLANT_SEED = new GameCommands("^\\s*plant\\s+seed\\s+-s\\s+(?<seed>.+)\\s+-d\\s+(north|south|west|east|northwest|northeast|southeast|southwest)\\s*$");
+    public static final GameCommands SHOW_PLANT = new GameCommands("^\\s*showplant\\s+-l\\s+<\\s*(?<X>\\d+)\\s*,\\s*(?<Y>\\d+)\\s*>\\s*$");
+    public static final GameCommands FERTILIZE = new GameCommands("^\\s*fertilize\\s+-f\\s+(?<fertilizer>.+)\\s+-d\\s+(north|south|west|east|northwest|northeast|southeast|southwest)\\s*$");
+    public static final GameCommands HOW_MUCH_WATER = new GameCommands("^\\s*howmuch\\s+water\\s*$");
+
     GameCommands(String regex) {
         super(regex);
     }

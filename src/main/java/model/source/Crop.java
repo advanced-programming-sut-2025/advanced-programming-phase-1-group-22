@@ -2,20 +2,30 @@ package model.source;
 
 import lombok.Getter;
 import lombok.Setter;
+import model.TimeAndDate;
 import model.products.HarvestAbleProduct;
+import utils.App;
 
 
 @Getter
 @Setter
 public class Crop extends HarvestAbleProduct implements Source {
     private CropType cropType;
+    private TimeAndDate startPlanting;
+    private TimeAndDate lastHarvest;
+    private Boolean isWaterToday;
+    private Boolean isFertilized;
+    private Integer numberOfWithoutWaterDays;
+    private int numberOfStages;
 
-    public Crop(CropType cropType1) {
-        super(cropType1.getName(), cropType1.getSource(), cropType1.isForaging(),
-                cropType1.getHarvestStages(), !cropType1.isOneTime(), cropType1.getRegrowthTime(),
-                cropType1.getSellPrice(), cropType1.isEdible(),
-                cropType1.getEnergy(), cropType1.getSeasons(), cropType1.isCanBecomeGiant());
-        this.cropType = cropType1;
+    public Crop(CropType cropType) {
+        this.cropType = cropType;
+        if (cropType.getHarvestStages() != null){
+            numberOfStages = cropType.getHarvestStages().size();
+        }
+        else {
+            numberOfStages = 0;
+        }
     }
 
     @Override
@@ -28,7 +38,107 @@ public class Crop extends HarvestAbleProduct implements Source {
         return cropType.getSellPrice();
     }
 
+    @Override
+    public int getContainingEnergy() {
+        return cropType.getEnergy();
+    }
+
     public void burn() {
         //TODO
+    }
+
+    public int calculateRegrowthLevel(){
+        int level = 1;
+        TimeAndDate now = App.getInstance().getCurrentGame().getTimeAndDate();
+        int spendDays = now.getDay() - this.startPlanting.getDay();
+        if (this.cropType.getHarvestStages() != null){
+            int sum = 0;
+            for (Integer harvestStage : this.cropType.getHarvestStages()) {
+                sum += harvestStage;
+                if (spendDays >= sum){
+                    level += 1;
+                }
+            }
+        }
+        return level;
+    }
+
+    public int calculateDaysAfterPlanting(){
+        return App.getInstance().getCurrentGame().getTimeAndDate().getDay() - this.startPlanting.getDay();
+    }
+
+    public int calculateDaysAfterLastHarvest(){
+        return App.getInstance().getCurrentGame().getTimeAndDate().getDay() - this.lastHarvest.getDay();
+    }
+
+    public int calculateTotalHarvestTime(){
+        if (this.cropType.getHarvestStages() != null){
+            int total = 0;
+            for (Integer harvestStage : this.cropType.getHarvestStages()) {
+                total += harvestStage;
+            }
+            return total;
+        }
+        return 0;
+    }
+
+    public boolean canHarvest(){
+        if (this.cropType.isForaging()){
+            return true;
+        }
+        else {
+            if (calculateDaysAfterPlanting() >= calculateTotalHarvestTime()){
+                if (lastHarvest == null){
+                    return true;
+                }
+				return calculateDaysAfterLastHarvest() >= this.cropType.getRegrowthTime();
+			}
+            return false;
+        }
+    }
+
+    @Override
+    public boolean getIsOneTime() {
+        return this.cropType.isOneTime();
+    }
+
+    @Override
+    public void setLastHarvest(TimeAndDate lastHarvest) {
+        this.lastHarvest = lastHarvest;
+    }
+
+    @Override
+    public void setFertilized(Boolean fertilized) {
+        this.isFertilized = fertilized;
+    }
+
+    public int remainDaysUntilCanHarvest(){
+        if (this.cropType.isForaging()){
+            return 0;
+        }
+        else {
+            if (calculateDaysAfterPlanting() >= calculateTotalHarvestTime()){
+                if (lastHarvest == null){
+                    return 0;
+                }
+                return Math.max(0,this.cropType.getRegrowthTime() - calculateDaysAfterLastHarvest());
+            }
+            return calculateTotalHarvestTime() - calculateDaysAfterPlanting();
+        }
+    }
+
+    @Override
+    public void setWaterToday(Boolean waterToday) {
+        this.isWaterToday = waterToday;
+    }
+
+    @Override
+    public void setNumberOfWithoutWaterDays(Integer numberOfWithoutWaterDays) {
+        this.numberOfWithoutWaterDays = numberOfWithoutWaterDays;
+    }
+
+    @Override
+    public void setStartPlanting(TimeAndDate startPlanting) {
+        this.startPlanting = startPlanting;
     }
 }

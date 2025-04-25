@@ -51,7 +51,7 @@ public enum MixedSeedsType implements Source{
     WINTER ("winter mixed seed") {
         @Override
         protected void initialize() {
-            seedTypeList.add(SeedType.POWDERMELON_SEEDS);
+            seedTypeList.add(SeedType.POWDER_MELON_SEEDS);
         }
     };
 

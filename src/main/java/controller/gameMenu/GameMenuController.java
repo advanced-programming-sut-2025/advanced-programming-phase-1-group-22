@@ -1,16 +1,8 @@
 package controller.gameMenu;
 
 import controller.MenuController;
-import model.*;
-import model.enums.Weather;
-import model.exception.InvalidInputException;
 import model.records.Response;
-import model.structure.farmInitialElements.GreenHouse;
 import service.GameService;
-import utils.App;
-
-import javax.swing.plaf.SpinnerUI;
-import java.util.Scanner;
 
 public class GameMenuController extends MenuController {
     private final GameService gameService = GameService.getInstance();
@@ -198,23 +190,30 @@ public class GameMenuController extends MenuController {
     }
 
     public Response craftInfo(String[] params) {
-        return null;
+        String name = params[0].trim();
+        return gameService.craftInfo(name);
     }
 
     public Response plantSeed(String[] params) {
-        return null;
+        String name = params[0].trim();
+        String direction = params[1];
+        return gameService.plantSeed(name,direction);
     }
 
-    public Response showplant(String[] params) {
-        return null;
+    public Response showPlant(String[] params) {
+        int x = Integer.parseInt(params[0]);
+        int y = Integer.parseInt(params[1]);
+        return gameService.showPlant(x,y);
     }
 
     public Response fertilize(String[] params) {
-        return null;
+        String fertilize = params[0].trim();
+        String direction = params[1];
+        return gameService.fertilize(fertilize,direction);
     }
 
     public Response howMuchWater(String[] params) {
-        return null;
+        return gameService.howMuchWater();
     }
 
     public Response placeItem(String[] params) {

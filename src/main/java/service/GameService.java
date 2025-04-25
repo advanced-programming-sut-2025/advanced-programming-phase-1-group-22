@@ -4,21 +4,26 @@ import model.*;
 import model.abilitiy.Ability;
 import model.animal.Animal;
 import model.animal.AnimalType;
+import model.craft.CraftType;
+import model.enums.Season;
 import model.enums.Weather;
 import model.exception.InvalidInputException;
-import model.products.AnimalProduct;
-import model.products.Hay;
-import model.products.Product;
+import model.products.*;
+import model.products.TreesAndFruitsAndSeeds.FruitType;
+import model.products.TreesAndFruitsAndSeeds.Tree;
+import model.products.TreesAndFruitsAndSeeds.TreeType;
 import model.records.Response;
 import model.relations.Player;
 import model.shelter.FarmBuilding;
+import model.source.Crop;
+import model.source.CropType;
+import model.source.Seed;
+import model.source.SeedType;
 import model.structure.Structure;
 import model.structure.farmInitialElements.GreenHouse;
 import model.structure.farmInitialElements.Lake;
 import model.structure.stores.*;
-import model.tools.MilkPail;
-import model.tools.Shear;
-import model.tools.Tool;
+import model.tools.*;
 import utils.App;
 import variables.Session;
 import view.Menu;
@@ -526,6 +531,92 @@ public class GameService {
 		return new Response(collectProduce(currentAnimal,currentPlayer),true);
 	}
 
+	public Response craftInfo(String name){
+		Harvestable harvestableType = getHarvestableType(name);
+		if (harvestableType == null){
+			return new Response("there is no harvestable with this name");
+		}
+		return new Response(harvestableType.craftInfo(),true);
+	}
+
+	public Response plantSeed(String name, String direction){
+		Player currentPlayer = getCurrentPlayer();
+		Seed seed = (Seed) getProductFromInventory(currentPlayer,name);
+		if (seed == null){
+			return new Response("you do not have this seed in your inventory");
+		}
+		Direction currentDirection = Direction.getByName(direction);
+		Tile currentTile = getTileByXAndY(currentPlayer.getTiles().getFirst().getX() + currentDirection.getXTransmit(),
+				currentPlayer.getTiles().getFirst().getY() + currentDirection.getYTransmit());
+		if (currentTile == null){
+			return new Response("out of bound");
+		}
+		else if (currentTile.getIsFilled()){
+			return new Response("this tile is not available for farming");
+		}
+		else if (!currentTile.getTileType().equals(TileType.PLOWED)){
+			return new Response("you should plow the tile first");
+		}
+		else if (!seed.getSeedType().getSeason().equals(App.getInstance().getCurrentGame().getTimeAndDate().getSeason()) &&
+		!seed.getSeedType().getSeason().equals(Season.SPECIAL)){
+			return new Response("you should use this seed in " + seed.getSeedType().getSeason());
+		}
+		HarvestAbleProduct harvestableProduct = getHarvestableFromSeed(seed.getSeedType());
+		if (harvestableProduct == null){
+			return new Response("this seed is not valid");
+		}
+		harvestableProduct.setTiles(List.of(currentTile));
+		harvestableProduct.setStartPlanting(App.getInstance().getCurrentGame().getTimeAndDate());
+		Farm currentFarm = getPlayerInWitchFarm(currentPlayer);
+		if (currentFarm == null){
+			return new Response("you should plant in a farm");
+		}
+		currentFarm.getStructures().add(harvestableProduct);
+		return new Response("you plant successfully",true);
+	}
+
+	public Response showPlant(int x, int y){
+		Player currentPlayer = getCurrentPlayer();
+		Tile currentTile = getTileByXAndY(x,y);
+		if (currentTile == null){
+			return new Response("out of bound");
+		}
+		if (!isTileInPlayerFarms(getPlayerFarms(currentPlayer),currentTile)){
+			return new Response("you can not access other farms");
+		}
+		HarvestAbleProduct harvestAbleProduct = findHarvestable(currentTile);
+		if (harvestAbleProduct == null){
+			return new Response("there is no harvestable in this tile");
+		}
+		return new Response(makeTokenShowHarvestable(harvestAbleProduct),true);
+	}
+
+	public Response fertilize(String fertilize,String direction){
+		//TODO fertilizing
+		Player currentPlayer = getCurrentPlayer();
+		Direction currentDirection = Direction.getByName(direction);
+		Tile currentTile = getTileByXAndY(currentPlayer.getTiles().getFirst().getX() + currentDirection.getXTransmit(),
+				currentPlayer.getTiles().getFirst().getY() + currentDirection.getYTransmit());
+		if (currentTile == null){
+			return new Response("out of bound");
+		}
+		HarvestAbleProduct harvestAbleProduct = findHarvestable(currentTile);
+		if (harvestAbleProduct == null){
+			return new Response("there is no harvestable in this tile");
+		}
+		harvestAbleProduct.setFertilized(true);
+		return new Response("you successfully fertilize " + harvestAbleProduct.getName(),true);
+	}
+
+	public Response howMuchWater(){
+		Player currentPlayer = getCurrentPlayer();
+		Tool currentTool = getCurrentTool(currentPlayer);
+		if (currentTool == null || !(currentTool instanceof WateringCan)){
+			return new Response("you do not carrying watering can");
+		}
+		return new Response("remain water: " + ((WateringCan)currentTool).getRemain(),true);
+	}
+
 	private Player getCurrentPlayer() {
 		return App.getInstance().getCurrentGame().getCurrentPlayer();
 	}
@@ -595,9 +686,13 @@ public class GameService {
 				player.getInventory().deleteProductFromBackPack(productIntegerEntry.getKey(), player, productIntegerEntry.getValue());
 			}
 		}
-
-		player.getInventory().getProducts().remove(oldtool);
-		player.getInventory().getProducts().put(upgradeTool, 1);
+		if (oldtool instanceof WateringCan){
+			((WateringCan)oldtool).setWateringCanType((WateringCanType) upgradeTool);
+		}
+		else {
+			player.getInventory().getProducts().remove(oldtool);
+			player.getInventory().getProducts().put(upgradeTool, 1);
+		}
 	}
 
 	private Tool getCurrentTool(Player player) {
@@ -935,24 +1030,70 @@ public class GameService {
 		}
 	}
 
-	public Response craftInfo(String craftName) {
+	private Harvestable getHarvestableType(String name){
+		for (FruitType value : FruitType.values()) {
+			if (value.getName().equals(name)){
+				return value;
+			}
+		}
+		for (CropType value : CropType.values()) {
+			if (value.getName().equals(name)){
+				return value;
+			}
+		}
 		return null;
 	}
 
-	public Response plantSeed(String seed, String direction) {
+	private HarvestAbleProduct getHarvestableFromSeed(SeedType seedType){
+		for (TreeType value : TreeType.values()) {
+			if (value.getSource() != null && value.getSource().equals(seedType)){
+				return new Tree(value);
+			}
+		}
+		for (CropType value : CropType.values()) {
+			if (value.getSource() != null && value.getSource().equals(seedType)){
+				return new Crop(value);
+			}
+		}
 		return null;
 	}
 
-	public Response showPlant(String x, String y) {
+	private Farm getPlayerInWitchFarm(Player player){
+		for (Farm farm : App.getInstance().getCurrentGame().getVillage().getFarms()) {
+			if (farm.getTiles().contains(player.getTiles().getFirst())){
+				return farm;
+			}
+		}
 		return null;
 	}
 
-	public Response fertilize(String fertilizer) {
+	private HarvestAbleProduct findHarvestable(Tile tile){
+		List<Structure> structures = App.getInstance().getCurrentGame().getVillage().findStructuresByTile(tile);
+		for (Structure structure : structures) {
+			if (structure instanceof HarvestAbleProduct){
+				return (HarvestAbleProduct) structure;
+			}
+		}
 		return null;
 	}
 
-	public Response howmuchWater() {
-		return null;
+	private boolean isTileInPlayerFarms(List<Farm> farms,Tile tile){
+		for (Farm farm : farms) {
+			if (farm.getTiles().contains(tile)){
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private String makeTokenShowHarvestable(HarvestAbleProduct harvestAbleProduct){
+		String token = "";
+		token += "Name:" + harvestAbleProduct.getName() + "\n";
+		token += "Remain days until can harvest: " + harvestAbleProduct.remainDaysUntilCanHarvest() + "\n";
+		token += "Regrowth level: " + harvestAbleProduct.calculateRegrowthLevel() + "\n";
+		token += "isWatered today: " + harvestAbleProduct.getIsWaterToday() + "\n";
+		token += "isFertilized: " + harvestAbleProduct.getIsFertilized() + "\n";
+		return token;
 	}
 
 	public Response placeItem(String itemName, String direction) {
