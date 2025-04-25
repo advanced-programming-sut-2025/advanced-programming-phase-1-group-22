@@ -1,7 +1,6 @@
 package model.tools;
 
 import lombok.Getter;
-import model.enums.Weather;
 import model.relations.Player;
 import model.Salable;
 import model.Tile;
@@ -79,6 +78,17 @@ public enum Axe implements Tool{
         for (Structure structure : structures) {
             if (structure != null){
                 if (structure instanceof Trunk){
+                    if (((Trunk)structure).getIsBurn()){
+                        Mineral mineral = new Mineral(MineralType.COAL);
+                        if (player.getInventory().isInventoryHaveCapacity(mineral)){
+                            addToInventoryAndDeleteStructure(mineral,player,structure);
+                            message.append("you break a burned trunk and get coal");
+                            success = true;
+                            break;
+                        }
+                        message.append("your inventory is full so you can not break this burned trunk");
+                        break;
+                    }
                     if (((Trunk)structure).getTrunkType().equals(TrunkType.SMALL_TRUNK)){
                         Mineral mineral = new Mineral(MineralType.WOOD);
                         if (player.getInventory().isInventoryHaveCapacity(mineral)){
@@ -91,12 +101,38 @@ public enum Axe implements Tool{
                         break;
                     }
                 }
+                if (structure instanceof Crop){
+                    if (((Crop)structure).getBurn()){
+                        Mineral mineral = new Mineral(MineralType.COAL);
+                        if (player.getInventory().isInventoryHaveCapacity(mineral)){
+                            addToInventoryAndDeleteStructure(mineral,player,structure);
+                            message.append("you break a burned crop and get coal");
+                            success = true;
+                            break;
+                        }
+                        message.append("your inventory is full so you can not break this burned crop");
+                        break;
+                    }
+                }
                 if (structure instanceof Tree){
+                    if (((Tree)structure).getBurn()){
+                        Mineral mineral = new Mineral(MineralType.COAL);
+                        if (player.getInventory().isInventoryHaveCapacity(mineral)){
+                            addToInventoryAndDeleteStructure(mineral,player,structure);
+                            message.append("you break a burned tree and get coal");
+                            success = true;
+                            break;
+                        }
+                        message.append("your inventory is full so you can not break this burned tree");
+                        break;
+                    }
                     if (((Tree)structure).getTreeType().getIsForaging()){
                         Seed seed = new Seed((SeedType) ((Tree)structure).getTreeType().getSource());
                         Mineral mineral = new Mineral(MineralType.WOOD);
                         if (player.getInventory().isInventoryHaveCapacity(seed) &&
                         player.getInventory().isInventoryHaveCapacity(mineral)){
+                            addToInventoryAndDeleteStructure(mineral,player,structure);
+                            addToInventoryAndDeleteStructure(seed,player,structure);
                             message.append("you break a foraging tree and get wood and seed");
                             success = true;
                             break;
@@ -106,6 +142,7 @@ public enum Axe implements Tool{
                     }
                     Mineral mineral = new Mineral(MineralType.WOOD);
                     if (player.getInventory().isInventoryHaveCapacity(mineral)){
+                        addToInventoryAndDeleteStructure(mineral,player,structure);
                         message.append("you break a tree and get wood");
                         success = true;
                         break;

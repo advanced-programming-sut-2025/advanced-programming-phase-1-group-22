@@ -85,18 +85,18 @@ public enum Pickaxe implements Tool {
                 if (structure instanceof Stone){
                     if (((Stone)structure).getStoneType().equals(StoneType.SMALL_STONE)){
                         Mineral mineral = new Mineral(MineralType.STONE);
-                        return breakStone(mineral,player);
+                        return breakStone(mineral,player,structure);
                     }
                 }
                 else if (structure instanceof Mineral){
                     if (((Mineral)structure).getForagingMineralType().equals(MineralType.COPPER_ORE)){
                         Mineral mineral = new Mineral(MineralType.COPPER_ORE);
-                        return breakStone(mineral,player);
+                        return breakStone(mineral,player,structure);
                     }
                     else if (((Mineral)structure).getForagingMineralType().equals(MineralType.IRON_ORE)){
                         if (this.level >= 1){
                             Mineral mineral = new Mineral(MineralType.IRON_ORE);
-                            return breakStone(mineral,player);
+                            return breakStone(mineral,player,structure);
                         }
                         player.changeEnergy(-Math.max(0,this.getEnergy(player) - 1));
                         return "your tool have to be at least level 1 to break iron ore";
@@ -104,7 +104,7 @@ public enum Pickaxe implements Tool {
                     else if (((Mineral)structure).getForagingMineralType().equals(MineralType.IRIDIUM_ORE)){
                         if (this.level >= 3){
                             Mineral mineral = new Mineral(MineralType.IRIDIUM_ORE);
-                            return breakStone(mineral,player);
+                            return breakStone(mineral,player,structure);
                         }
                         player.changeEnergy(-Math.max(0,this.getEnergy(player) - 1));
                         return "your tool have to be at least level 3 to break iridium ore";
@@ -112,7 +112,7 @@ public enum Pickaxe implements Tool {
                     else if (((Mineral)structure).getForagingMineralType().equals(MineralType.GOLD_ORE)){
                         if (this.level >= 2){
                             Mineral mineral = new Mineral(MineralType.GOLD_ORE);
-                            return breakStone(mineral,player);
+                            return breakStone(mineral,player,structure);
                         }
                         player.changeEnergy(-Math.max(0,this.getEnergy(player) - 1));
                         return "your tool have to be at least level 2 to break gold ore";
@@ -128,12 +128,13 @@ public enum Pickaxe implements Tool {
         return "you use this tool in a wrong way";
     }
 
-    private String breakStone(Mineral mineral,Player player){
+    private String breakStone(Mineral mineral,Player player,Structure structure){
         if (player.getInventory().isInventoryHaveCapacity(mineral)){
             player.getInventory().addProductToBackPack(mineral,1);
             player.upgradeAbility(Ability.MINING);
             player.upgradeAbility(Ability.FORAGING);
             player.changeEnergy(-this.getEnergy(player));
+            App.getInstance().getCurrentGame().getVillage().removeStructure(structure);
             return  "you break a stone and get " + mineral.getName();
         }
         player.changeEnergy(-Math.max(0,this.getEnergy(player) - 1));

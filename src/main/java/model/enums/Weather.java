@@ -41,9 +41,6 @@ public enum Weather {
             if (structure instanceof Trunk) {
                 ((Trunk)structure).burn();
             }
-            if (structure instanceof Seed) {
-                ((Seed)structure).burn();
-            }
             if (structure instanceof Crop) {
                 ((Crop)structure).burn();
             }

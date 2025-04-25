@@ -5,7 +5,6 @@ import lombok.Setter;
 import lombok.ToString;
 import model.TimeAndDate;
 import model.products.HarvestAbleProduct;
-import model.structure.Structure;
 import utils.App;
 
 @Getter
@@ -17,6 +16,7 @@ public class Tree extends HarvestAbleProduct {
     private TimeAndDate lastHarvest;
     private Boolean isWaterToday;
     private Boolean isFertilized;
+    private Boolean isBurn;
     private Integer numberOfWithoutWaterDays;
     private int numberOfStages;
 
@@ -31,7 +31,7 @@ public class Tree extends HarvestAbleProduct {
     }
 
     public void burn() {
-        //TODO
+        this.isBurn = true;
     }
 
     public int calculateRegrowthLevel(){
@@ -147,5 +147,10 @@ public class Tree extends HarvestAbleProduct {
     @Override
     public boolean getIsWaterToday(){
         return this.isWaterToday;
+    }
+
+    @Override
+    public boolean getBurn() {
+        return isBurn;
     }
 }
