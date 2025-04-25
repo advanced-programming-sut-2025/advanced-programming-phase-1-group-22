@@ -544,6 +544,10 @@ public class GameService {
 			if (!mixedSeeds.getMixedSeedsType().getSeason().equals(App.getInstance().getCurrentGame().getTimeAndDate().getSeason())){
 				return new Response("you should use this seed in " + mixedSeeds.getMixedSeedsType().getSeason());
 			}
+			seed = generateSeedOfMixedSeed(mixedSeeds.getMixedSeedsType());
+		}
+		else {
+			seed = (Seed) getProductFromInventory(currentPlayer,name);
 		}
 		if (seed == null){
 			return new Response("you do not have this seed in your inventory");
@@ -1094,6 +1098,12 @@ public class GameService {
 		token += "isWatered today: " + harvestAbleProduct.getIsWaterToday() + "\n";
 		token += "isFertilized: " + harvestAbleProduct.getIsFertilized() + "\n";
 		return token;
+	}
+
+	private Seed generateSeedOfMixedSeed(MixedSeedsType mixedSeedsType){
+		Random random = new Random();
+		int randNumber = random.nextInt();
+		return new Seed(mixedSeedsType.getSeedTypeList().get(randNumber % mixedSeedsType.getSeedTypeList().size()));
 	}
 
 	public Response placeItem(String itemName, String direction) {
