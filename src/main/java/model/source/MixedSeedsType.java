@@ -1,12 +1,13 @@
 package model.source;
 
 import lombok.Getter;
+import model.enums.Season;
 
 import java.util.ArrayList;
 import java.util.List;
 @Getter
 public enum MixedSeedsType implements Source{
-    SPRING ("spring mixed seed"){
+    SPRING ("spring mixed seed",Season.SPRING){
         @Override
         protected void initialize() {
             seedTypeList.add(SeedType.CAULIFLOWER_SEEDS);
@@ -20,7 +21,7 @@ public enum MixedSeedsType implements Source{
             seedTypeList.add(SeedType.STRAWBERRY_SEEDS);
         }
     },
-    SUMMER ("summer mixed seed") {
+    SUMMER ("summer mixed seed",Season.SUMMER) {
         @Override
         protected void initialize() {
             seedTypeList.add(SeedType.CORN_SEEDS);
@@ -34,7 +35,7 @@ public enum MixedSeedsType implements Source{
             seedTypeList.add(SeedType.TOMATO_SEEDS);
         }
     },
-    FALL ("fall mixed seed") {
+    FALL ("fall mixed seed",Season.FALL) {
         @Override
         protected void initialize() {
             seedTypeList.add(SeedType.ARTICHOKE_SEEDS);
@@ -48,7 +49,7 @@ public enum MixedSeedsType implements Source{
             seedTypeList.add(SeedType.CRANBERRY_SEEDS);
         }
     },
-    WINTER ("winter mixed seed") {
+    WINTER ("winter mixed seed",Season.WINTER) {
         @Override
         protected void initialize() {
             seedTypeList.add(SeedType.POWDER_MELON_SEEDS);
@@ -56,10 +57,12 @@ public enum MixedSeedsType implements Source{
     };
 
     private final String name;
+    private final Season season;
     protected final List<SeedType> seedTypeList;
 
-    MixedSeedsType(String name) {
+    MixedSeedsType(String name,Season season) {
         this.name = name;
+        this.season = season;
         this.seedTypeList = new ArrayList<>();
         initialize();
     }

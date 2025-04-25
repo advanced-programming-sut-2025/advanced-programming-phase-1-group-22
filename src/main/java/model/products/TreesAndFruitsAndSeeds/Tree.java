@@ -12,7 +12,7 @@ import utils.App;
 @Setter
 @ToString
 public class Tree extends HarvestAbleProduct {
-    TreeType treeType;
+    private TreeType treeType;
     private TimeAndDate startPlanting;
     private TimeAndDate lastHarvest;
     private Boolean isWaterToday;
@@ -71,7 +71,7 @@ public class Tree extends HarvestAbleProduct {
 
     public boolean canHarvest(){
         if (this.treeType.getIsForaging()){
-            return true;
+            return false;
         }
         else {
             if (calculateDaysAfterPlanting() >= calculateTotalHarvestTime()){
