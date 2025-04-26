@@ -17,7 +17,7 @@ import java.util.List;
 @Getter
 public enum Pickaxe implements Tool {
     NORMAL("normal pickaxe",0, 5),
-    CUPPER("cupper pickaxe",1, 4),
+    COPPER("copper pickaxe",1, 4),
     IRON("iron pickaxe",2, 3),
     GOLD("gold pickaxe",3, 2),
     IRIDIUM("iridium pickaxe",4, 1);
@@ -116,6 +116,14 @@ public enum Pickaxe implements Tool {
                         }
                         player.changeEnergy(-Math.max(0,this.getEnergy(player) - 1));
                         return "your tool have to be at least level 2 to break gold ore";
+                    }
+                    else {
+                        if (this.level >= 2){
+                            Mineral mineral = new Mineral(((Mineral)structure).getForagingMineralType());
+                            return breakStone(mineral,player,structure);
+                        }
+                        player.changeEnergy(-Math.max(0,this.getEnergy(player) - 1));
+                        return "your tool have to be at least level 2 to break jewelry ore";
                     }
                 }
                 else if (structure.getIsPickable()){
