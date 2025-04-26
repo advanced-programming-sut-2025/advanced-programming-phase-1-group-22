@@ -69,6 +69,9 @@ public class Scythe implements Tool {
                     return "you have to wait until complete harvest";
                 }
                 if (structure instanceof Tree){
+                    if (((Tree)structure).getTreeType().getIsForaging()){
+                        return "foraging tree does not have fruit";
+                    }
                     Fruit fruit = new Fruit(((Tree)structure).getTreeType().getFruit());
                     if (player.getInventory().isInventoryHaveCapacity(fruit)){
                         player.getInventory().addProductToBackPack(fruit,1);

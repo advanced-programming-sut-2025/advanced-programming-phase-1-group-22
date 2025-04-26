@@ -180,7 +180,6 @@ public class Farm {
             setStructurePlace(seed, 1, 1);
             int cropRand = random.nextInt(41, 62);
             Crop crop = new Crop(CropType.values()[cropRand]);
-            crop.setIsPickable(true);
             setStructurePlace(crop, 1, 1);
         }
         for (int i = 0; i < foragingRand2; i++) {
@@ -191,7 +190,6 @@ public class Farm {
         for (int i = 0; i < foragingRand3; i++) {
             int mineralRand = random.nextInt(0,21);
             Mineral mineral = new Mineral(MineralType.values()[mineralRand]);
-            mineral.setIsPickable(true);
             setStructurePlace(mineral,1,1);
         }
     }
@@ -242,14 +240,12 @@ public class Farm {
             int cropRand = random.nextInt(41, 62);
             Crop crop = new Crop(CropType.values()[cropRand]);
             if (crop.getCropType().getSeasons().contains(App.getInstance().getCurrentGame().getTimeAndDate().getSeason())){
-                crop.setIsPickable(true);
                 setForagingPlace(crop, 1, 1);
             }
         }
         for (int i = 0; i < foragingRand3; i++) {
             int mineralRand = random.nextInt(0,21);
             Mineral mineral = new Mineral(MineralType.values()[mineralRand]);
-            mineral.setIsPickable(true);
             setStructurePlace(mineral,1,1);
         }
     }

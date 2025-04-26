@@ -572,6 +572,7 @@ public class GameService {
 		if (harvestableProduct == null){
 			return new Response("this seed is not valid");
 		}
+		currentTile.setIsFilled(true);
 		harvestableProduct.setTiles(List.of(currentTile));
 		harvestableProduct.setStartPlanting(App.getInstance().getCurrentGame().getTimeAndDate());
 		Farm currentFarm = getPlayerInWitchFarm(currentPlayer);

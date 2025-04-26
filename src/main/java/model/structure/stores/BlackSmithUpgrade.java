@@ -10,7 +10,7 @@ import java.util.Map;
 public enum BlackSmithUpgrade {
 	COPPER_AXE(Axe.COPPER,Map.of(MadeProductType.COPPER_BAR,5),2000,1),
 	COPPER_HOE(Hoe.COPPER,Map.of(MadeProductType.COPPER_BAR,5),2000,1),
-	COPPER_PICKAXE(Pickaxe.CUPPER,Map.of(MadeProductType.COPPER_BAR,5),2000,1),
+	COPPER_PICKAXE(Pickaxe.COPPER,Map.of(MadeProductType.COPPER_BAR,5),2000,1),
 	COPPER_TRASHCAN(TrashCan.COPPER,Map.of(MadeProductType.COPPER_BAR,5),2000,1),
 	COPPER_WATER_CAN(WateringCanType.CUPPER,Map.of(MadeProductType.COPPER_BAR,5),2000,1),
 	COPPER_TRASH_CAN(TrashCan.COPPER,Map.of(MadeProductType.COPPER_BAR,5),1000,1),
