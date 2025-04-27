@@ -46,4 +46,14 @@ public enum Weather {
             }
         }
     }
+
+    public void breakTree(int x, int y){
+        Game game = App.getInstance().getCurrentGame();
+        ArrayList<Structure> structures = game.getVillage().findStructuresByTile(game.tiles[x][y]);
+        for (Structure structure : structures) {
+            if (structure instanceof Tree) {
+                ((Tree)structure).breakTree();
+            }
+        }
+    }
 }

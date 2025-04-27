@@ -72,6 +72,9 @@ public class Scythe implements Tool {
                     if (((Tree)structure).getTreeType().getIsForaging()){
                         return "foraging tree does not have fruit";
                     }
+                    if (((Tree)structure).getIsBroken()){
+                        return "this tree is broken, use axe to get its wood";
+                    }
                     Fruit fruit = new Fruit(((Tree)structure).getTreeType().getFruit());
                     if (player.getInventory().isInventoryHaveCapacity(fruit)){
                         player.getInventory().addProductToBackPack(fruit,1);
