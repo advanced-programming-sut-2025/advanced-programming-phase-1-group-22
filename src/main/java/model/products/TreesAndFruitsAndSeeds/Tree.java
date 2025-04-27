@@ -17,6 +17,7 @@ public class Tree extends HarvestAbleProduct {
     private Boolean isWaterToday;
     private Boolean isFertilized;
     private Boolean isBurn;
+    private Boolean isBroken;
     private Integer numberOfWithoutWaterDays;
     private int numberOfStages;
 
@@ -32,6 +33,10 @@ public class Tree extends HarvestAbleProduct {
 
     public void burn() {
         this.isBurn = true;
+    }
+
+    public void breakTree(){
+        this.isBroken = true;
     }
 
     public int calculateRegrowthLevel(){

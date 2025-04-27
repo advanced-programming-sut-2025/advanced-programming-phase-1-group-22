@@ -58,6 +58,9 @@ public class Game {
                     int randY = random.nextInt(farm.getFarmYStart(), farm.getFarmYEnd());
                     weather.thunderBolt(randX, randY);
                 }
+                int randX = random.nextInt(farm.getFarmXStart(), farm.getFarmXEnd());
+                int randY = random.nextInt(farm.getFarmYStart(), farm.getFarmYEnd());
+                weather.breakTree(randX,randY);
             }
         }
         automaticWatering(this.village.getWeather());
@@ -168,10 +171,14 @@ public class Game {
     }
 
     private void setWeatherCoefficientEveryDay(){
-        double weatherCoefficient;
-        weatherCoefficient = this.getVillage().getWeather().equals(Weather.SNOWY) ? 2.0 : 1.0;
-        weatherCoefficient = this.getVillage().getWeather().equals(Weather.RAINY) ||
-                this.getVillage().getWeather().equals(Weather.STORMY) ? 1.5 : 1.0;
+        double weatherCoefficient = 1.0;
+        if (this.getVillage().getWeather().equals(Weather.SNOWY)){
+            weatherCoefficient = 2.0;
+        }
+        else if (this.getVillage().getWeather().equals(Weather.RAINY) ||
+                this.getVillage().getWeather().equals(Weather.STORMY)){
+            weatherCoefficient = 1.5;
+        }
         this.weatherCoefficient = weatherCoefficient;
     }
 }
