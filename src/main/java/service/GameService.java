@@ -466,10 +466,7 @@ public class GameService {
 			return new Response("you can not put your animal in this tile");
 		}
 		currentAnimal.setTiles(List.of(currentTile));
-		if (isAnimalInBarnOrCage(currentAnimal,farms)){
-			currentAnimal.setIsAnimalStayOutAllNight(false);
-		}
-		currentAnimal.setIsAnimalStayOutAllNight(true);
+		currentAnimal.setIsAnimalStayOutAllNight(!isAnimalInBarnOrCage(currentAnimal, farms));
 		if (!currentAnimal.getIsFeed()){
 			currentAnimal.setIsFeed(true);
 			int oldFriendShip = currentAnimal.getRelationShipQuality();
@@ -850,12 +847,11 @@ public class GameService {
 						((FarmBuilding)structure).getAnimals().add(animal);
 						int oldGold = player.getAccount().getGolds();
 						player.getAccount().setGolds(oldGold - marnieShopAnimal.getPrice());
-						animal.setTiles(List.of(structure.getTiles().getFirst()));
+						animal.setTiles(List.of(Objects.requireNonNull(getAFreeTileInBarnOrCoop((FarmBuilding) structure))));
 						player.getAnimals().add(animal);
 						farm.getStructures().add(animal);
 						return "a/an " + animal.getAnimalType().getName() + " added successfully";
 					}
-
 				}
 			}
 		}
@@ -871,7 +867,7 @@ public class GameService {
 						((FarmBuilding)structure).getAnimals().add(animal);
 						int oldGold = player.getAccount().getGolds();
 						player.getAccount().setGolds(oldGold - marnieShopAnimal.getPrice());
-						animal.setTiles(List.of(structure.getTiles().getFirst()));
+						animal.setTiles(List.of(Objects.requireNonNull(getAFreeTileInBarnOrCoop((FarmBuilding) structure))));
 						player.getAnimals().add(animal);
 						farm.getStructures().add(animal);
 						return "a/an " + animal.getAnimalType().getName() + " added successfully";
@@ -880,6 +876,23 @@ public class GameService {
 			}
 		}
 		return "your coop is full";
+	}
+
+	private Tile getAFreeTileInBarnOrCoop(FarmBuilding farmBuilding){
+		for (Tile tile : farmBuilding.getTiles()) {
+			List<Structure> structures = App.getInstance().getCurrentGame().getVillage().findStructuresByTile(tile);
+			boolean flag = true;
+			for (Structure structure : structures) {
+				if (structure instanceof Animal) {
+					flag = false;
+					break;
+				}
+			}
+			if (flag){
+				return tile;
+			}
+		}
+		return null;
 	}
 
 	private boolean playerHaveEnoughResourceToBuyAnimal(MarnieShopAnimal marnieShopAnimal,Player player){
@@ -973,6 +986,13 @@ public class GameService {
 	private void removeAnimalFromVillage(Animal animal,List<Farm> farms){
 		for (Farm farm : farms) {
 			farm.getStructures().remove(animal);
+		}
+		for (Farm farm : farms) {
+			for (Structure structure : farm.getStructures()) {
+				if (structure instanceof FarmBuilding){
+					((FarmBuilding)structure).getAnimals().remove(animal);
+				}
+			}
 		}
 	}
 
