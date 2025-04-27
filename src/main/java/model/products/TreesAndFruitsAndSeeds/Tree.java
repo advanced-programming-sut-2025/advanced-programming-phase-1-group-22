@@ -75,18 +75,13 @@ public class Tree extends HarvestAbleProduct {
     }
 
     public boolean canHarvest(){
-        if (this.treeType.getIsForaging()){
-            return false;
-        }
-        else {
-            if (calculateDaysAfterPlanting() >= calculateTotalHarvestTime()){
-                if (lastHarvest == null){
-                    return true;
-                }
-                return calculateDaysAfterLastHarvest() >= this.treeType.getHarvestCycle();
+        if (calculateDaysAfterPlanting() >= calculateTotalHarvestTime()){
+            if (lastHarvest == null){
+                return true;
             }
-            return false;
+            return calculateDaysAfterLastHarvest() >= this.treeType.getHarvestCycle();
         }
+        return false;
     }
 
     @Override
