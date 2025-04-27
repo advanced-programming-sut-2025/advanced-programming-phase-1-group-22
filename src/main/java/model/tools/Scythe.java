@@ -84,18 +84,26 @@ public class Scythe implements Tool {
                 Crop crop = new Crop(((Crop)structure).getCropType());
                 if (crop.getIsOneTime()){
                     if (player.getInventory().isInventoryHaveCapacity(crop)){
-                        player.getInventory().addProductToBackPack(crop,1);
+                        int numberOfHarvest = ((Crop)structure).getIsGiant() ? 10 : 1;
+                        player.getInventory().addProductToBackPack(crop,numberOfHarvest);
                         App.getInstance().getCurrentGame().getVillage().removeStructure(structure);
                         player.upgradeAbility(Ability.FARMING);
+                        if (numberOfHarvest == 10){
+                            return "you harvest a giant crop so you got 10 " + crop.getName();
+                        }
                         return "you harvest a " + crop.getName();
                     }
                     return "your inventory is full so you can not harvest";
                 }
                 else {
                     if (player.getInventory().isInventoryHaveCapacity(crop)){
-                        player.getInventory().addProductToBackPack(crop,1);
+                        int numberOfHarvest = ((Crop)structure).getIsGiant() ? 10 : 1;
+                        player.getInventory().addProductToBackPack(crop,numberOfHarvest);
                         crop.setLastHarvest(App.getInstance().getCurrentGame().getTimeAndDate());
                         player.upgradeAbility(Ability.FARMING);
+                        if (numberOfHarvest == 10){
+                            return "you harvest a giant crop so you got 10 " + crop.getName();
+                        }
                         return "you harvest a " + crop.getName();
                     }
                     return "your inventory is full so you can not harvest";
