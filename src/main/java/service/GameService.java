@@ -580,6 +580,12 @@ public class GameService {
 			return new Response("you should plant in a farm");
 		}
 		currentFarm.getStructures().add(harvestableProduct);
+		if (harvestableProduct instanceof Crop &&
+				((Crop)harvestableProduct).getCropType().isCanBecomeGiant()){
+			if (giantCrop(currentPlayer,(Crop) harvestableProduct)){
+				return new Response("you plant and it become a giant crop",true);
+			}
+		}
 		return new Response("you plant successfully",true);
 	}
 
@@ -1105,6 +1111,120 @@ public class GameService {
 		Random random = new Random();
 		int randNumber = random.nextInt();
 		return new Seed(mixedSeedsType.getSeedTypeList().get(randNumber % mixedSeedsType.getSeedTypeList().size()));
+	}
+
+	private boolean giantCrop(Player player,Crop crop){
+		Crop newCrop = new Crop(crop.getCropType());
+		newCrop.setIsGiant(true);
+
+		Tile tile1 = getTileByXAndY(crop.getTiles().getFirst().getX(),crop.getTiles().getFirst().getY() + 1);
+		Crop crop1 = getCropInTile(tile1);
+		Tile tile2 = getTileByXAndY(crop.getTiles().getFirst().getX() + 1, crop.getTiles().getFirst().getY() + 1);
+		Crop crop2 = getCropInTile(tile2);
+		Tile tile3 = getTileByXAndY(crop.getTiles().getFirst().getX() + 1, crop.getTiles().getFirst().getY());
+		Crop crop3 = getCropInTile(tile3);
+		if (canBeGiant(crop,crop1,crop2,crop3)){
+			makeGiant(player,newCrop,crop.getTiles().getFirst(),crop,crop1,crop2,crop3);
+			newCrop.setStartPlanting(findMinimumTime(crop.getStartPlanting(),crop1.getStartPlanting(),
+					crop2.getStartPlanting(),crop3.getStartPlanting()));
+			newCrop.setIsGiant(true);
+			return true;
+		}
+
+		Tile tile4 = getTileByXAndY(crop.getTiles().getFirst().getX() + 1, crop.getTiles().getFirst().getY() - 1);
+		Crop crop4 = getCropInTile(tile4);
+		Tile tile5 = getTileByXAndY(crop.getTiles().getFirst().getX(), crop.getTiles().getFirst().getY() - 1);
+		Crop crop5 = getCropInTile(tile5);
+		if (canBeGiant(crop,crop3,crop4,crop5)){
+			makeGiant(player,newCrop,crop5.getTiles().getFirst(),crop,crop3,crop4,crop5);
+			newCrop.setStartPlanting(findMinimumTime(crop.getStartPlanting(),crop3.getStartPlanting(),
+							crop4.getStartPlanting(),crop5.getStartPlanting()));
+			newCrop.setIsGiant(true);
+			return true;
+		}
+
+		Tile tile6 = getTileByXAndY(crop.getTiles().getFirst().getX() - 1, crop.getTiles().getFirst().getY() - 1);
+		Crop crop6 = getCropInTile(tile6);
+		Tile tile7 = getTileByXAndY(crop.getTiles().getFirst().getX() - 1, crop.getTiles().getFirst().getY());
+		Crop crop7 = getCropInTile(tile7);
+		if (canBeGiant(crop,crop5,crop6,crop7)){
+			makeGiant(player,newCrop,crop6.getTiles().getFirst(),crop,crop5,crop6,crop7);
+			newCrop.setStartPlanting(findMinimumTime(crop.getStartPlanting(),crop5.getStartPlanting(),
+							crop6.getStartPlanting(),crop7.getStartPlanting()));
+			newCrop.setIsGiant(true);
+			return true;
+		}
+
+		Tile tile8 = getTileByXAndY(crop.getTiles().getFirst().getX() - 1, crop.getTiles().getFirst().getY() + 1);
+		Crop crop8 = getCropInTile(tile8);
+		if (canBeGiant(crop,crop1,crop7,crop8)){
+			makeGiant(player,newCrop,crop7.getTiles().getFirst(),crop,crop1,crop7,crop8);
+			newCrop.setStartPlanting(findMinimumTime(crop.getStartPlanting(),crop1.getStartPlanting(),
+					crop7.getStartPlanting(),crop8.getStartPlanting()));
+			newCrop.setIsGiant(true);
+			return true;
+		}
+		return false;
+	}
+
+	private Crop getCropInTile(Tile tile){
+		List<Structure> structures = App.getInstance().getCurrentGame().getVillage().findStructuresByTile(tile);
+		for (Structure structure : structures) {
+			if (structure instanceof Crop){
+				return (Crop) structure;
+			}
+		}
+		return null;
+	}
+
+	private void makeGiant(Player player,Crop newCrop,Tile tile,Crop... crops){
+		for (Crop crop : crops) {
+			if (crop.getIsFertilized()){
+				newCrop.setFertilized(true);
+			}
+			if (crop.getIsWaterToday()){
+				newCrop.setIsWaterToday(true);
+			}
+		}
+		for (Crop crop : crops) {
+			App.getInstance().getCurrentGame().getVillage().removeStructure(crop);
+		}
+		setStructureInAPlace(getPlayerInWitchFarm(player),newCrop,2,2,tile.getX(),tile.getY());
+	}
+
+	private void setStructureInAPlace(Farm farm, Structure structure, int length, int width, int x, int y) {
+		Tile[][] tiles1 = app.getCurrentGame().tiles;
+		List<Tile> tiles2 = new ArrayList<>();
+		for (int j = x; j < x + length; j++) {
+			for (int k = y; k < y + width; k++) {
+					tiles1[j][k].setIsFilled(true);
+					tiles2.add(tiles1[j][k]);
+			}
+		}
+		structure.getTiles().addAll(tiles2);
+		farm.getStructures().add(structure);
+	}
+
+	private boolean canBeGiant(Crop... crops){
+		for (Crop crop : crops) {
+			if (crop == null){
+				return false;
+			}
+			if (crop.getIsGiant()){
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private TimeAndDate findMinimumTime(TimeAndDate... timeAndDates){
+		TimeAndDate minimum = App.getInstance().getCurrentGame().getTimeAndDate();
+		for (TimeAndDate timeAndDate : timeAndDates) {
+			if (timeAndDate.getDay() < minimum.getDay()){
+				minimum = timeAndDate;
+			}
+		}
+		return minimum;
 	}
 
 	public Response placeItem(String itemName, String direction) {

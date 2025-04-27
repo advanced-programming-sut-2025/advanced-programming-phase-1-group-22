@@ -16,6 +16,7 @@ public class Crop extends HarvestAbleProduct implements Source {
     private Boolean isWaterToday;
     private Boolean isFertilized;
     private Boolean isBurn;
+    private Boolean isGiant;
     private Integer numberOfWithoutWaterDays;
     private int numberOfStages;
 
