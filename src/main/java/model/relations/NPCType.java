@@ -9,6 +9,7 @@ import model.craft.CraftType;
 import model.enums.Season;
 import model.products.AnimalProductType;
 import model.products.TreesAndFruitsAndSeeds.MadeProductType;
+import model.receipe.CookingRecipe;
 import model.receipe.CraftingRecipe;
 import model.source.CropType;
 import model.source.MineralType;
@@ -61,7 +62,7 @@ public enum NPCType {
                             Map.of(MineralType.GOLD, 500), 0),
                     new Mission(NPCType.valueOf("LIA"),
                             Map.of(FishType.SALMON, 1),
-                            Map.of(new CraftingRecipe("salmon dinner recipe", "A receipe to make Salmon Dinner", 0), 1), 1),
+                            Map.of(new CookingRecipe("salmon dinner recipe", "A receipe to make Salmon Dinner", 0, FoodType.SALMON_DINNER), 1), 1),
                     new Mission(NPCType.valueOf("LIA"),
                             Map.of(MineralType.WOOD, 200),
                             Map.of(CraftType.DELUXE_SCARECROW, 3), Season.SUMMER)));
