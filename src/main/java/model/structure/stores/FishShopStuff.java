@@ -2,6 +2,7 @@ package model.structure.stores;
 
 import lombok.Getter;
 import model.cook.FoodType;
+import model.craft.CraftType;
 import model.receipe.CraftingRecipe;
 import model.records.Response;
 import model.relations.Player;
@@ -10,7 +11,7 @@ import utils.App;
 
 @Getter
 public enum FishShopStuff  implements Shop{
-	FISH_SMOKER_RECIPE(new CraftingRecipe("fish smoker recipe","A recipe to make Fish Smoker",10000),10000,0,1),
+	FISH_SMOKER_RECIPE(new CraftingRecipe("fish smoker recipe","A recipe to make Fish Smoker",10000, CraftType.FISH_SMOKER),10000,0,1),
 	BAMBOO_POLE(FishingPole.BAMBOO,500,0,1),
 	TRAINING_ROD(FishingPole.TRAINING,25,0,1),
 	FIBERGLASS_ROD(FishingPole.FIBER_GLASS,1800,2,1),
