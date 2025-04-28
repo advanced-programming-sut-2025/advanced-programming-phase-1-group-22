@@ -42,4 +42,12 @@ public class ShippingBin extends HardCodeFarmElements {
         salable.clear();
         return price;
     }
+
+    public void add(Salable salable, int count) {
+        if (this.salable.containsKey(salable)) {
+            this.salable.put(salable, this.salable.get(salable) + count);
+        } else {
+            this.salable.put(salable, count);
+        }
+    }
 }

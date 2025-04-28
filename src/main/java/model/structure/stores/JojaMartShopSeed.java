@@ -2,11 +2,14 @@ package model.structure.stores;
 
 import lombok.Getter;
 import model.enums.Season;
+import model.records.Response;
+import model.relations.Player;
 import model.source.SeedType;
+import utils.App;
 
 import java.util.List;
 @Getter
-public enum JojaMartShopSeed {
+public enum JojaMartShopSeed implements Shop {
 	PARSNIP_SEEDS(SeedType.PARSNIP_SEEDS,List.of(Season.SPRING),25,5),
 	BEAN_STARTER(SeedType.BEAN_STARTER,List.of(Season.SPRING),75,5),
 	CAULIFLOWER_SEEDS(SeedType.CAULIFLOWER_SEEDS,List.of(Season.SPRING),100,5),
@@ -47,6 +50,7 @@ public enum JojaMartShopSeed {
 	private final List<Season> seasons;
 	private final Integer price;
 	private final Integer dailyLimit;
+	private Integer dailySold = 0;
 
 	JojaMartShopSeed(SeedType seedType, List<Season> seasons, Integer price, Integer dailyLimit) {
 		this.seedType = seedType;
@@ -54,4 +58,44 @@ public enum JojaMartShopSeed {
 		this.price = price;
 		this.dailyLimit = dailyLimit;
 	}
+	public static String showAllProducts() {
+		StringBuilder res = new StringBuilder();
+		for (JojaMartShopSeed value : JojaMartShopSeed.values()) {
+			res.append(value.toString()).append(" ").append(value.getPrice()).append("$\n");
+		}
+		return res.toString();
+	}
+	public static String showAvailableProducts() {
+		StringBuilder res = new StringBuilder();
+		for (JojaMartShopSeed value : JojaMartShopSeed.values()) {
+			if (value.dailyLimit != value.dailySold) {
+				res.append(value.toString()).append(" ").append(value.getPrice()).append("$\n");
+			}
+		}
+		return res.toString();
+	}
+	public static Response purchase(String name, Integer count) {
+		JojaMartShopSeed salable = null;
+		for (JojaMartShopSeed value : JojaMartShopSeed.values()) {
+			if(value.getSeedType().getName().equals(name)) {
+				salable = value;
+			}
+		}
+		if (salable == null) return null;
+		if (salable.dailyLimit != -1 && salable.dailyLimit < salable.dailySold + count) {
+			return new Response("Not enough in stock");
+		}
+		Player player = App.getInstance().getCurrentGame().getCurrentPlayer();
+		if (!player.getInventory().isInventoryHaveCapacity(salable.getSeedType())) {
+			return new Response("Not enough space in your backpack.");
+		}
+		if (player.getAccount().getGolds() < salable.getPrice()) {
+			return new Response("Not enough golds");
+		}
+		player.getAccount().removeGolds(salable.getPrice());
+		salable.dailySold += count;
+		player.getInventory().addProductToBackPack(salable.getSeedType(), count);
+		return new Response("Bought successfully", true);
+	}
+
 }

@@ -29,6 +29,6 @@ public enum Direction {
 				return value;
 			}
 		}
-		throw new InvalidInputException("direction is invalid");
+		return null;
 	}
 }

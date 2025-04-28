@@ -4,12 +4,15 @@ import controller.MenuController;
 import model.*;
 import model.enums.Weather;
 import model.exception.InvalidInputException;
+import model.receipe.CraftingRecipe;
 import model.records.Response;
+import model.relations.Player;
 import model.structure.farmInitialElements.GreenHouse;
 import service.GameService;
 import utils.App;
 
 import javax.swing.plaf.SpinnerUI;
+import java.util.List;
 import java.util.Scanner;
 
 public class GameMenuController extends MenuController {
@@ -159,11 +162,11 @@ public class GameMenuController extends MenuController {
     }
 
     public Response placeItem(String[] params) {
-        return null;
+        return gameService.placeItem(params[0], params[1]);
     }
 
     public Response C_AddItem(String[] params) {
-        return null;
+        return gameService.C_AddItem(params[0], params[1]);
     }
 
     public Response pet(String[] params) {
@@ -199,19 +202,23 @@ public class GameMenuController extends MenuController {
     }
 
     public Response artisanUse(String[] params) {
-        return null;
+        return gameService.artisanUse(params[0], params[1], params[2]);
     }
 
     public Response artisanGet(String[] params) {
-        return null;
+        return gameService.artisanGet(params[0]);
     }
 
     public Response C_AddDollars(String[] params) {
-        return null;
+        return gameService.C_AddDollars(params[0]);
     }
 
     public Response sell(String[] params) {
-        return null;
+        return gameService.sell(params[0], params[1]);
+    }
+
+    public Response sellAll(String[] params) {
+        return gameService.sellAll(params[0]);
     }
 
     public Response friendship(String[] params) {
@@ -275,7 +282,7 @@ public class GameMenuController extends MenuController {
     }
 
     public Response eat(String[] params) {
-        return null;
+        return gameService.eat(params[0]);
     }
 
     public Response questsList(String[] params) {
@@ -287,27 +294,27 @@ public class GameMenuController extends MenuController {
     }
 
     public Response craftingShowRecipes(String[] strings) {
-        return null;
+        return gameService.craftingShowRecipes();
     }
 
     public Response cookingShowRecipes(String[] strings) {
-        return null;
+        return gameService.cookingShowRecipes();
     }
 
     public Response cookingRefrigeratorPick(String[] strings) {
-        return null;
+        return gameService.cookingRefrigeratorPick(strings[0]);
     }
 
     public Response craftingCraft(String[] strings) {
-        return null;
+        return gameService.craftingCraft(strings[0]);
     }
 
     public Response cookingRefrigeratorPut(String[] strings) {
-        return null;
+        return gameService.cookingRefrigeratorPut(strings[0]);
     }
 
     public Response cookingPrepare(String[] strings) {
-        return null;
+        return gameService.cookingPrepare(strings[0]);
     }
 
     public Response build(String[] strings) {
@@ -319,15 +326,18 @@ public class GameMenuController extends MenuController {
     }
 
     public Response showAllProducts(String[] strings) {
-        return null;
+        return gameService.showAllProducts();
+    }
+    public Response showAllAvailableProducts(String[] strings) {
+        return gameService.showAllAvailableProducts();
     }
 
     public Response purchase(String[] strings) {
-        return null;
+        return gameService.purchase(strings[0], strings[1]);
     }
 
     public Response purchase1(String[] strings) {
-        return null;
+        return gameService.purchase(strings[0], "1");
     }
 
     public Response trade(String[] strings) {

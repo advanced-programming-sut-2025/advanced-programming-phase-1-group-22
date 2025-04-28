@@ -29,7 +29,7 @@ public class WalkingStrategy {
             if (distances.get(pair) == distance) {
                 for (int i = 0; i < 8; i++) {
                     newPair = new Pair(origin.getX() + xs[i], origin.getY() + ys[i]);
-                    if (!app.getCurrentGame().getTiles()[newPair.getX()][newPair.getY()].isPassible()) continue;
+                    if (!app.getCurrentGame().getTiles()[newPair.getX()][newPair.getY()].isPassable()) continue;
                     if (distances.containsKey(newPair)) continue;
                     distances.put(newPair, distance + 1);
                     if (calculateTile(newPair, dest, distance + 1)) {
