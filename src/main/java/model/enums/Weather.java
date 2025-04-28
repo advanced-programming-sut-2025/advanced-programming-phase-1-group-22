@@ -15,14 +15,15 @@ import java.util.List;
 @Getter
 
 public enum Weather {
-    SUNNY(List.of(Season.SPRING, Season.SUMMER, Season.FALL, Season.WINTER)),
-    RAINY(List.of(Season.SPRING, Season.SUMMER, Season.FALL)),
-    STORMY(List.of(Season.SPRING, Season.SUMMER, Season.FALL)),
-    SNOWY(List.of(Season.WINTER));
+    SUNNY(List.of(Season.SPRING, Season.SUMMER, Season.FALL, Season.WINTER),1.5),
+    RAINY(List.of(Season.SPRING, Season.SUMMER, Season.FALL),1.2),
+    STORMY(List.of(Season.SPRING, Season.SUMMER, Season.FALL),0.5),
+    SNOWY(List.of(Season.WINTER),1.0);
     private final List<Season> seasons;
+    private final Double fishingCoefficient;
 
-    Weather(List<Season> seasons) {
-
+    Weather(List<Season> seasons,Double fishingCoefficient) {
+        this.fishingCoefficient = fishingCoefficient;
         this.seasons = seasons;
     }
 
@@ -40,11 +41,18 @@ public enum Weather {
             if (structure instanceof Trunk) {
                 ((Trunk)structure).burn();
             }
-            if (structure instanceof Seed) {
-                ((Seed)structure).burn();
-            }
             if (structure instanceof Crop) {
                 ((Crop)structure).burn();
+            }
+        }
+    }
+
+    public void breakTree(int x, int y){
+        Game game = App.getInstance().getCurrentGame();
+        ArrayList<Structure> structures = game.getVillage().findStructuresByTile(game.tiles[x][y]);
+        for (Structure structure : structures) {
+            if (structure instanceof Tree) {
+                ((Tree)structure).breakTree();
             }
         }
     }

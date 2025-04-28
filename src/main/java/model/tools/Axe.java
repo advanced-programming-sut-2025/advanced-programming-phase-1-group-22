@@ -17,7 +17,7 @@ import java.util.List;
 @Getter
 public enum Axe implements Tool{
     NORMAL("normal axe",0, 5),
-    CUPPER("cupper axe",1, 4),
+    COPPER("copper axe",1, 4),
     IRON("iron axe",2, 3),
     GOLD("gold axe",3, 2),
     IRIDIUM("iridium axe",4, 1);
@@ -65,32 +65,90 @@ public enum Axe implements Tool{
     @Override
     public int getEnergy(Player player) {
         if (player.getAbilityLevel(Ability.FORAGING) == 4){
-            return energyCost - 1;
+            return (int) (App.getInstance().getCurrentGame().getWeatherCoefficient() * energyCost - 1);
         }
-        return energyCost;
+        return (int) (App.getInstance().getCurrentGame().getWeatherCoefficient() * energyCost);
     }
 
     @Override
     public String useTool(Player player, Tile tile) {
         boolean success = false;
+        StringBuilder message = new StringBuilder();
         List<Structure> structures = App.getInstance().getCurrentGame().getVillage().findStructuresByTile(tile);
         for (Structure structure : structures) {
             if (structure != null){
                 if (structure instanceof Trunk){
+                    if (((Trunk)structure).getIsBurn()){
+                        Mineral mineral = new Mineral(MineralType.COAL);
+                        if (player.getInventory().isInventoryHaveCapacity(mineral)){
+                            addToInventoryAndDeleteStructure(mineral,player,structure);
+                            message.append("you break a burned trunk and get coal");
+                            success = true;
+                            break;
+                        }
+                        message.append("your inventory is full so you can not break this burned trunk");
+                        break;
+                    }
                     if (((Trunk)structure).getTrunkType().equals(TrunkType.SMALL_TRUNK)){
-                        afterUseToolForMineralOrTree(new Mineral(MineralType.WOOD),player,tile,structure);
-                        success = true;
+                        Mineral mineral = new Mineral(MineralType.WOOD);
+                        if (player.getInventory().isInventoryHaveCapacity(mineral)){
+                            addToInventoryAndDeleteStructure(mineral,player,structure);
+                            message.append("you break a trunk and get wood");
+                            success = true;
+                            break;
+                        }
+                        message.append("your inventory is full so you can not break trunk");
+                        break;
+                    }
+                }
+                if (structure instanceof Crop){
+                    if (((Crop)structure).getBurn()){
+                        Mineral mineral = new Mineral(MineralType.COAL);
+                        if (player.getInventory().isInventoryHaveCapacity(mineral)){
+                            addToInventoryAndDeleteStructure(mineral,player,structure);
+                            message.append("you break a burned crop and get coal");
+                            success = true;
+                            break;
+                        }
+                        message.append("your inventory is full so you can not break this burned crop");
                         break;
                     }
                 }
                 if (structure instanceof Tree){
+                    if (((Tree)structure).getBurn()){
+                        Mineral mineral = new Mineral(MineralType.COAL);
+                        if (player.getInventory().isInventoryHaveCapacity(mineral)){
+                            addToInventoryAndDeleteStructure(mineral,player,structure);
+                            message.append("you break a burned tree and get coal");
+                            success = true;
+                            break;
+                        }
+                        message.append("your inventory is full so you can not break this burned tree");
+                        break;
+                    }
                     if (((Tree)structure).getTreeType().getIsForaging()){
-                        afterUseToolForMineralOrTree(new Seed(SeedType.getFromName(((Tree)structure).getTreeType().getName())),
-                                player,tile,structure);
-                        afterUseToolForMineralOrTree(new Mineral(MineralType.WOOD),player,tile,structure);
+                        Seed seed = new Seed((SeedType) ((Tree)structure).getTreeType().getSource());
+                        Mineral mineral = new Mineral(MineralType.WOOD);
+                        if (player.getInventory().isInventoryHaveCapacity(seed) &&
+                        player.getInventory().isInventoryHaveCapacity(mineral)){
+                            addToInventoryAndDeleteStructure(mineral,player,structure);
+                            addToInventoryAndDeleteStructure(seed,player,structure);
+                            message.append("you break a foraging tree and get wood and seed");
+                            success = true;
+                            break;
+                        }
+                        message.append("your inventory is full so you can not break tree");
+                        break;
+                    }
+                    Mineral mineral = new Mineral(MineralType.WOOD);
+                    if (player.getInventory().isInventoryHaveCapacity(mineral)){
+                        addToInventoryAndDeleteStructure(mineral,player,structure);
+                        message.append("you break a tree and get wood");
                         success = true;
                         break;
                     }
+                    message.append("your inventory is full so you can not break tree");
+                    break;
                 }
             }
         }
@@ -98,21 +156,19 @@ public enum Axe implements Tool{
         if (success){
             player.upgradeAbility(Ability.FORAGING);
             player.changeEnergy(-this.getEnergy(player));
-            return "you successfully use this tool";
+            return message.toString();
         }
         player.changeEnergy(-Math.max(0,this.getEnergy(player) - 1));
-        return "you use this tool in a wrong way";
+        if (message.isEmpty()){
+            return "you use this tool in a wrong way";
+        }
+        return message.toString();
     }
 
-    private void afterUseToolForMineralOrTree(Structure mineralOrSeed, Player player, Tile tile, Structure structure){
-        if (player.getInventory().isInventoryHaveCapacity((Salable) mineralOrSeed)){
-            player.getInventory().addProductToBackPack((Salable) mineralOrSeed,1);
+    private void addToInventoryAndDeleteStructure(Salable mineralOrSeed, Player player, Structure structure){
+        player.getInventory().addProductToBackPack(mineralOrSeed,1);
+        for (Tile tile : structure.getTiles()) {
             tile.setIsFilled(false);
-        }
-        else {
-            mineralOrSeed.setTiles(List.of(tile));
-            mineralOrSeed.setIsPickable(true);
-            App.getInstance().getCurrentGame().getVillage().addStructureToPlayerFarmByPlayerTile(player, mineralOrSeed);
         }
         App.getInstance().getCurrentGame().getVillage().removeStructure(structure);
     }

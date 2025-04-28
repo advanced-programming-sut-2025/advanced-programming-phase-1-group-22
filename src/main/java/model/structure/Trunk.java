@@ -4,13 +4,14 @@ import lombok.Getter;
 
 @Getter
 public class Trunk extends Structure {
-    private TrunkType trunkType;
+    private final TrunkType trunkType;
+    private Boolean isBurn;
 
     public Trunk(TrunkType trunkType) {
         this.trunkType = trunkType;
     }
 
     public void burn() {
-        //TODO
+        this.isBurn = true;
     }
 }

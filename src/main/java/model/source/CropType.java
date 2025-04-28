@@ -2,12 +2,12 @@ package model.source;
 
 import lombok.Getter;
 import model.enums.Season;
-import model.products.Product;
+import model.products.Harvestable;
 
 import java.util.List;
 
 @Getter
-public enum CropType implements Product {
+public enum CropType implements Harvestable {
 	BLUE_JAZZ("Blue Jazz", (SeedType.JAZZ_SEEDS),
 			List.of(1, 2, 2, 2), true, 0, 50, true, 45, List.of(Season.SPRING), false, false),
 	CARROT("Carrot", (SeedType.CARROT_SEEDS),
@@ -86,7 +86,7 @@ public enum CropType implements Product {
 			List.of(1, 3, 3, 3), true, 0, 160, true, 45, List.of(Season.FALL), false, false),
 	SWEET_GEM_BERRY("Sweet Gem Berry", (SeedType.RARE_SEED),
 			List.of(2, 4, 6, 6, 6), true, 0, 3000, false, 0, List.of(Season.FALL), false, false),
-	POWDERMELON("Powdermelon", (SeedType.POWDERMELON_SEEDS),
+	POWDERMELON("Powdermelon", (SeedType.POWDER_MELON_SEEDS),
 			List.of(1, 2, 1, 2, 1), true, 0, 60, true, 63, List.of(Season.WINTER), true, false),
 	ANCIENT_FRUIT("Ancient Fruit", (SeedType.ANCIENT_SEEDS),
 			List.of(2, 7, 7, 7, 5), false, 7, 550, false, 0, List.of(Season.SPRING, Season.SUMMER, Season.FALL), false, false),
@@ -153,5 +153,48 @@ public enum CropType implements Product {
 	@Override
 	public String getName() {
 		return this.name.toLowerCase();
+	}
+
+	@Override
+	public String craftInfo() {
+		StringBuilder token = new StringBuilder();
+		token.append("Name: ").append(this.name).append("\n");
+		token.append("Source: ");
+		if (this.source != null){
+			token.append("Source: ").append(this.getSource().getName());
+		}
+		token.append("\n");
+		token.append("Stages: ");
+		if (this.harvestStages != null){
+			for (int i = 0; i < harvestStages.size(); i++) {
+				token.append(harvestStages);
+				if (i != harvestStages.size() - 1){
+					token.append("-");
+				}
+			}
+		}
+		token.append("\n");
+		token.append("Total Harvest Time: ");
+		if (this.harvestStages != null){
+			int total = 0;
+			for (Integer harvestStage : harvestStages) {
+				total += harvestStage;
+			}
+			token.append(total);
+		}
+		token.append("\n");
+		token.append("One Time: ").append(this.oneTime).append("\n");
+		token.append("Regrowth Time: ").append(this.regrowthTime).append("\n");
+		token.append("Base Sell Price: ").append(this.baseSellPrice).append("\n");
+		token.append("IsEdible: ").append(this.isEdible).append("\n");
+		token.append("Base Energy: ").append(this.energy).append("\n");
+		token.append("Base Health: \n");
+		token.append("Season: ");
+		for (Season season : this.seasons) {
+			token.append(season).append(" ");
+		}
+		token.append("\n");
+		token.append("Can Become Giant: ").append(this.canBecomeGiant).append("\n");
+		return token.toString();
 	}
 }

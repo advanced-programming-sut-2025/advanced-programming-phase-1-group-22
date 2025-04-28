@@ -5,6 +5,7 @@ import lombok.Setter;
 import lombok.ToString;
 import model.*;
 import model.abilitiy.Ability;
+import model.animal.Animal;
 import model.craft.Craft;
 import model.craft.CraftType;
 import model.exception.InvalidInputException;
@@ -25,6 +26,7 @@ import java.util.Random;
 
 @Getter
 @Setter
+@ToString
 public class Player extends Actor {
     private Integer id;
     private User user;
@@ -44,6 +46,7 @@ public class Player extends Actor {
     private List<Trade> gootenTradeList;
     private Boolean isFainted;
     private Salable currentCarrying = null;
+    private List<Animal> animals = new ArrayList<>();
     private List<CookingRecipe> cookingRecipes = new ArrayList<>();
     private List<Craft> crafts = new ArrayList<>();
     private List<CraftingRecipe> craftingRecipes = new ArrayList<>();

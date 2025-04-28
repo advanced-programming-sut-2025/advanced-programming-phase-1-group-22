@@ -181,8 +181,7 @@ public class Farm {
             setStructurePlace(seed, 1, 1, true, true);
             int cropRand = random.nextInt(41, 62);
             Crop crop = new Crop(CropType.values()[cropRand]);
-            crop.setIsPickable(true);
-            setStructurePlace(crop, 1, 1, true, true);
+            setStructurePlace(crop, 1, 1);
         }
         for (int i = 0; i < foragingRand2; i++) {
             int foragingRandTree = random.nextInt(0, 5);
@@ -194,6 +193,7 @@ public class Farm {
             Mineral mineral = new Mineral(MineralType.values()[mineralRand]);
             mineral.setIsPickable(true);
             setStructurePlace(mineral,1,1, true, true);
+            setStructurePlace(mineral,1,1);
         }
     }
 
@@ -212,6 +212,7 @@ public class Farm {
                     if (tiles1[j][k].getIsFilled()) {
                         flag = false;
                     } else {
+                        tiles1[j][k].setIsFilled(true);
                         tiles2.add(tiles1[j][k]);
                     }
                 }
@@ -259,8 +260,7 @@ public class Farm {
         for (int i = 0; i < foragingRand3; i++) {
             int mineralRand = random.nextInt(0,21);
             Mineral mineral = new Mineral(MineralType.values()[mineralRand]);
-            mineral.setIsPickable(true);
-            setStructurePlace(mineral,1,1, true, true);
+            setStructurePlace(mineral,1,1);
         }
     }
 

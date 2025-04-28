@@ -3,10 +3,13 @@ package model;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import model.animal.Animal;
 import model.enums.Weather;
+import model.products.HarvestAbleProduct;
 import model.relations.Friendship;
 import model.relations.NPC;
 import model.relations.Player;
+import model.structure.Structure;
 import utils.App;
 
 import java.util.ArrayList;
@@ -23,6 +26,7 @@ public class Game {
     private final List<NPC> npcs = new ArrayList<>();
     private final List<Friendship> friendships = new ArrayList<>();
     private TimeAndDate timeAndDate;
+    private Double weatherCoefficient;
     private final Integer length = 160;
     private final Integer width = 120;
     private int playersInFavorTermination = 0;
@@ -38,6 +42,7 @@ public class Game {
     }
 
     public void startDay() {
+        manageHarvest();
         TimeAndDate timeAndDate = this.getTimeAndDate();
         Weather tomorrowWeather = this.getVillage().getTomorrowWeather();
         Weather weather = this.getVillage().getWeather();
@@ -53,14 +58,27 @@ public class Game {
                     int randY = random.nextInt(farm.getFarmYStart(), farm.getFarmYEnd());
                     weather.thunderBolt(randX, randY);
                 }
+                int randX = random.nextInt(farm.getFarmXStart(), farm.getFarmXEnd());
+                int randY = random.nextInt(farm.getFarmYStart(), farm.getFarmYEnd());
+                weather.breakTree(randX,randY);
             }
         }
+        automaticWatering(this.village.getWeather());
+        setWeatherCoefficientEveryDay();
         for (Player player : players) {
             player.resetEnergy();
             addGoldToPlayerForShippingBin(player.getShippingBin().CalculatePriceOfShippingBinProducts(), player);
         }
         for (Farm farm : App.getInstance().getCurrentGame().getVillage().getFarms()) {
             farm.generateRandomForaging();
+        }
+        for (Farm farm : App.getInstance().getCurrentGame().getVillage().getFarms()) {
+            for (Structure structure : farm.getStructures()) {
+                if (structure instanceof Animal){
+                    ((Animal)structure).produceAnimalProduct();
+                    calculateAnimalFriendShip((Animal) structure);
+                }
+            }
         }
     }
 
@@ -106,5 +124,72 @@ public class Game {
             }
         }
         return null;
+    }
+}
+
+    private void calculateAnimalFriendShip(Animal animal){
+        if (!animal.getIsFeed()){
+            changeFriendShip(animal,-20);
+        }
+        if (animal.getIsAnimalStayOutAllNight()){
+            changeFriendShip(animal,-20);
+        }
+        if (!animal.getPet()){
+            changeFriendShip(animal,-10);
+        }
+        animal.setIsFeed(false);
+        animal.setPet(false);
+    }
+
+    private void changeFriendShip(Animal animal,int value){
+        int oldValue = animal.getRelationShipQuality();
+        animal.setRelationShipQuality(oldValue + value);
+    }
+
+    private void automaticWatering(Weather weather){
+        if (weather.equals(Weather.RAINY) || weather.equals(Weather.STORMY)){
+            for (Farm farm : App.getInstance().getCurrentGame().getVillage().getFarms()) {
+                for (Structure structure : farm.getStructures()) {
+                    if (structure instanceof HarvestAbleProduct){
+                        ((HarvestAbleProduct)structure).setWaterToday(true);
+                    }
+                }
+            }
+        }
+    }
+
+    private void manageHarvest(){
+        for (Farm farm : this.getVillage().getFarms()) {
+            for (Structure structure : farm.getStructures()) {
+                if (structure instanceof HarvestAbleProduct harvestAbleProduct){
+					if (!harvestAbleProduct.getIsWaterToday()){
+                        int oldNumber = harvestAbleProduct.getNumberOfWithoutWaterDays();
+                        harvestAbleProduct.setNumberOfWithoutWaterDays(oldNumber + 1);
+                        if (harvestAbleProduct.getNumberOfWithoutWaterDays() >= 2){
+                            this.getVillage().removeStructure(harvestAbleProduct);
+                            for (Tile tile : structure.getTiles()) {
+                                tile.setTileType(TileType.FLAT);
+                            }
+                        }
+                    }
+                    else {
+                        harvestAbleProduct.setNumberOfWithoutWaterDays(0);
+                    }
+                    harvestAbleProduct.setWaterToday(false);
+                }
+            }
+        }
+    }
+
+    private void setWeatherCoefficientEveryDay(){
+        double weatherCoefficient = 1.0;
+        if (this.getVillage().getWeather().equals(Weather.SNOWY)){
+            weatherCoefficient = 2.0;
+        }
+        else if (this.getVillage().getWeather().equals(Weather.RAINY) ||
+                this.getVillage().getWeather().equals(Weather.STORMY)){
+            weatherCoefficient = 1.5;
+        }
+        this.weatherCoefficient = weatherCoefficient;
     }
 }

@@ -260,6 +260,9 @@ public class Village {
         for (Farm farm : this.getFarms()) {
             farm.getStructures().remove(structure);
         }
+        for (Tile tile : structure.getTiles()) {
+            tile.setIsFilled(false);
+        }
     }
 
     public void addStructureToPlayerFarmByPlayerTile(Player player, Structure structure) {

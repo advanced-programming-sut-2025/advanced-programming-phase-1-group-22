@@ -44,7 +44,7 @@ public enum JojaMartShopSeed implements Shop {
 	CRANBERRY_SEEDS(SeedType.CRANBERRY_SEEDS, List.of(Season.FALL), 300, 5),
 	FAIRY_SEEDS(SeedType.FAIRY_SEEDS, List.of(Season.FALL), 250, 5),
 	RARE_SEED(SeedType.RARE_SEED, List.of(Season.FALL), 1000, 1),
-	POWDERMELON_SEEDS(SeedType.POWDERMELON_SEEDS, List.of(Season.WINTER), 20, 10);
+	POWDERMELON_SEEDS(SeedType.POWDER_MELON_SEEDS, List.of(Season.WINTER), 20, 10);
 
 	private final SeedType seedType;
 	private final List<Season> seasons;
