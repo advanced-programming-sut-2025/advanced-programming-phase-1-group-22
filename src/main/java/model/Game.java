@@ -125,7 +125,7 @@ public class Game {
         }
         return null;
     }
-}
+
 
     private void calculateAnimalFriendShip(Animal animal){
         if (!animal.getIsFeed()){
