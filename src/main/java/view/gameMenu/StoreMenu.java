@@ -24,8 +24,8 @@ public class StoreMenu extends GameMenu {
 
     private StoreMenu() {
         commandsFunctionMap.putAll(super.getFunctionsMap());
-        commandsFunctionMap.put(build, controller::build);
-        commandsFunctionMap.put(buyAnimal, controller::buyAnimal);
+        commandsFunctionMap.put(BUILD_FARM_BUILDING, controller::build);
+        commandsFunctionMap.put(BUY_ANIMAL, controller::buyAnimal);
         commandsFunctionMap.put(showAllProducts, controller::showAllProducts);
         commandsFunctionMap.put(showAllAvailableProducts, controller::showAllAvailableProducts);
         commandsFunctionMap.put(purchase, controller::purchase);

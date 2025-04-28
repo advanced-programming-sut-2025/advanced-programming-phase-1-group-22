@@ -9,6 +9,7 @@ import model.structure.Structure;
 @Setter
 public class AnimalProduct extends Structure implements Salable {
     private AnimalProductType animalProductType;
+    private ProductQuality productQuality;
 
     public AnimalProduct(AnimalProductType animalProductType) {
         this.animalProductType = animalProductType;
@@ -21,6 +22,6 @@ public class AnimalProduct extends Structure implements Salable {
 
     @Override
     public int getSellPrice() {
-        return animalProductType.getSellPrice();
+        return (int) (animalProductType.getSellPrice() * productQuality.getPriceCoefficient());
     }
 }

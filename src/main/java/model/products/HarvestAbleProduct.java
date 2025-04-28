@@ -3,64 +3,26 @@ package model.products;
 import lombok.Getter;
 import lombok.Setter;
 import model.Salable;
-import model.enums.Season;
-import model.source.Seed;
-import model.source.Source;
+import model.TimeAndDate;
 import model.structure.Structure;
-
-import java.util.List;
 
 @Getter
 @Setter
 public abstract class HarvestAbleProduct extends Structure implements Salable {
-    private Integer id;
-    private String name;
-    private Source source;
-    private Boolean isFarming;
-    private List<Integer> harvests;
-    private Boolean isMultiHarvestable;
-    private Integer timeDiffBetweenHarvests;
-    private Integer basePrice;
-    private Boolean isEdible;
-    private Integer containingEnergy;
-    private List<Season> seasonList;
-    private Boolean isEnormosable;
-
-    public HarvestAbleProduct(String name, Source source, Boolean isFarming, List<Integer> harvests,
-                              Boolean isMultiHarvestable, Integer timeDiffBetweenHarvests, Integer basePrice,
-                              Boolean isEdible, Integer containingEnergy, List<Season> seasonList, Boolean isEnormosable) {
-        this.name = name;
-        this.source = source;
-        this.isFarming = isFarming;
-        this.harvests = harvests;
-        this.isMultiHarvestable = isMultiHarvestable;
-        this.timeDiffBetweenHarvests = timeDiffBetweenHarvests;
-        this.basePrice = basePrice;
-        this.isEdible = isEdible;
-        this.containingEnergy = containingEnergy;
-        this.seasonList = seasonList;
-        this.isEnormosable = isEnormosable;
-    }
-
-    @Override
-    public String toString() {
-        return "HarvestAbleProduct{" +
-                ", name='" + name + '\'' +
-                ", source=" + source +
-                ", isFarming=" + isFarming +
-                ", harvests=" + harvests +
-                ", isMultiHarvestable=" + isMultiHarvestable +
-                ", timeDiffBetweenHarvests=" + timeDiffBetweenHarvests +
-                ", basePrice=" + basePrice +
-                ", isEdible=" + isEdible +
-                ", ContainingEnergy=" + containingEnergy +
-                ", seasonList=" + seasonList +
-                ", isEnormosable=" + isEnormosable +
-                '}';
-    }
-
-    @Override
-    public String getName(){
-        return this.name.toLowerCase();
-    }
+    public abstract String getName();
+    public abstract int getSellPrice();
+    public abstract int getContainingEnergy();
+    public abstract void setStartPlanting(TimeAndDate startPlanting);
+    public abstract int calculateRegrowthLevel();
+    public abstract int remainDaysUntilCanHarvest();
+    public abstract boolean getIsWaterToday();
+    public abstract void setWaterToday(Boolean waterToday);
+    public abstract boolean getIsFertilized();
+    public abstract boolean canHarvest();
+    public abstract boolean getIsOneTime();
+    public abstract void setLastHarvest(TimeAndDate lastHarvest);
+    public abstract void setFertilized(Boolean fertilized);
+    public abstract void setNumberOfWithoutWaterDays(Integer numberOfWithoutWaterDays);
+    public abstract int getNumberOfWithoutWaterDays();
+    public abstract boolean getBurn();
 }

@@ -141,24 +141,90 @@ public class GameMenuController extends MenuController {
         return gameService.pickFromFloor();
     }
 
+    public Response fishing(String[] parms){
+        String fishingPoleName = parms[0];
+        return gameService.fishing(fishingPoleName);
+    }
+
+    public Response build(String[] parms){
+        String buildingName = parms[0].trim();
+        int x = Integer.parseInt(parms[1]);
+        int y = Integer.parseInt(parms[2]);
+        return gameService.build(buildingName,x,y);
+    }
+
+    public Response buyAnimal(String[] parms){
+        String animal = parms[0].trim();
+        String name = parms[1].trim();
+        return gameService.buyAnimal(animal,name);
+    }
+
+    public Response pet(String[] params) {
+        String name = params[0].trim();
+        return gameService.pet(name);
+    }
+
+    public Response setFriendship(String[] parms){
+        String name = parms[0].trim();
+        int count = Integer.parseInt(parms[1]);
+        return gameService.setFriendShip(name,count);
+    }
+
+    public Response showAnimals(String[] parms){
+        return gameService.showAnimals();
+    }
+
+    public Response shepherdAnimals(String[] params) {
+        String name = params[0].trim();
+        int x = Integer.parseInt(params[1]);
+        int y = Integer.parseInt(params[2]);
+        return gameService.shepherdAnimals(name,x,y);
+    }
+
+    public Response feedHay(String[] parms){
+        String name = parms[0].trim();
+        return gameService.feedHay(name);
+    }
+
+    public Response sellAnimal(String[] params) {
+        String name = params[0].trim();
+        return gameService.sellAnimal(name);
+    }
+
+    public Response produces(String[] params) {
+        return gameService.produces();
+    }
+
+    public Response collectProduce(String[] params) {
+        String name = params[0].trim();
+        return gameService.collectProduce(name);
+    }
+
     public Response craftInfo(String[] params) {
-        return null;
+        String name = params[0].trim();
+        return gameService.craftInfo(name);
     }
 
     public Response plantSeed(String[] params) {
-        return null;
+        String name = params[0].trim();
+        String direction = params[1];
+        return gameService.plantSeed(name,direction);
     }
 
-    public Response showplant(String[] params) {
-        return null;
+    public Response showPlant(String[] params) {
+        int x = Integer.parseInt(params[0]);
+        int y = Integer.parseInt(params[1]);
+        return gameService.showPlant(x,y);
     }
 
     public Response fertilize(String[] params) {
-        return null;
+        String fertilize = params[0].trim();
+        String direction = params[1];
+        return gameService.fertilize(fertilize,direction);
     }
 
     public Response howMuchWater(String[] params) {
-        return null;
+        return gameService.howMuchWater();
     }
 
     public Response placeItem(String[] params) {
