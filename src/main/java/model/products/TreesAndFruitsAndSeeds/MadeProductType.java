@@ -234,7 +234,7 @@ public enum MadeProductType implements Product {
     private final String name;
     private CraftType craftType;
     private String description;
-    private Integer energy;
+    private int energy;
     private TimeAndDate processingTime;
     private Map<Salable, Integer> ingredients;
     private Integer sellPrice;

@@ -9,19 +9,20 @@ import utils.App;
 
 @Getter
 @Setter
-@ToString
 public class CraftingRecipe implements Recipe {
+    //TODO Adding other recipes on the due time available
 
     private String name;
     private Integer id;
     private String description;
     private Integer price;
-    private CraftType craftType; //TODO adding craftType to constructor
+    private CraftType craftType;
 
-    public CraftingRecipe(String name, String description, Integer price) {
+    public CraftingRecipe(String name, String description, Integer price, CraftType craftType) {
         this.name = name;
         this.description = description;
         this.price = price;
+        this.craftType = craftType;
     }
 
     @Override

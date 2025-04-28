@@ -10,19 +10,20 @@ import utils.App;
 
 @Getter
 @Setter
-@ToString
 public class CookingRecipe implements Recipe {
+    //TODO Adding other recipes on the due time available
 
     private String name;
     private Integer id;
     private String description;
     private Integer price;
-    private FoodType foodType; //TODO
+    private FoodType foodType;
 
-    public CookingRecipe(String name, String description, Integer price) {
+    public CookingRecipe(String name, String description, Integer price, FoodType foodType) {
         this.name = name;
         this.description = description;
         this.price = price;
+        this.foodType = foodType;
     }
 
     @Override

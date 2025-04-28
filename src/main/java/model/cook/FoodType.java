@@ -207,8 +207,8 @@ public enum FoodType implements Product {
     };
     private final String name;
     private Map<Product, Integer> ingredients;
-    private Integer energy;
-    private Integer sellPrice;
+    private int energy;
+    private int sellPrice;
     private Buff buff;
     private Object source;
     private Integer[] level;
