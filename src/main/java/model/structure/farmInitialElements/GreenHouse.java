@@ -10,6 +10,7 @@ import model.source.MineralType;
 @Setter
 public class GreenHouse extends HardCodeFarmElements {
     private final FarmBuildingType farmBuildingType = FarmBuildingType.GreenHouse;
+    private Lake pool;
 
     private boolean isBuilt = false;
     public GreenHouse(GreenHouse greenHouse) {
@@ -34,5 +35,13 @@ public class GreenHouse extends HardCodeFarmElements {
     @Override
     public HardCodeFarmElements cloneEl() {
         return new GreenHouse(this);
+    }
+
+    public void build() {
+        isBuilt = true;
+        pool = new Lake();
+        for (int i = 0; i <8; i++) {
+            pool.getTiles().add(getTiles().get(i));
+        }
     }
 }

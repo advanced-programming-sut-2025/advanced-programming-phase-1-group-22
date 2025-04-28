@@ -235,34 +235,6 @@ public class GameMenuController extends MenuController {
         return gameService.C_AddItem(params[0], params[1]);
     }
 
-    public Response pet(String[] params) {
-        return null;
-    }
-
-    public Response feedHay(String[] params) {
-        return null;
-    }
-
-    public Response collectProduce(String[] params) {
-        return null;
-    }
-
-    public Response sellAnimal(String[] params) {
-        return null;
-    }
-
-    public Response shepherdAnimals(String[] params) {
-        return null;
-    }
-
-    public Response animals(String[] params) {
-        return null;
-    }
-
-    public Response produces(String[] params) {
-        return null;
-    }
-
     public Response C_SetFriendship(String[] params) {
         return null;
     }
@@ -382,15 +354,6 @@ public class GameMenuController extends MenuController {
     public Response cookingPrepare(String[] strings) {
         return gameService.cookingPrepare(strings[0]);
     }
-
-    public Response build(String[] strings) {
-        return null;
-    }
-
-    public Response buyAnimal(String[] strings) {
-        return null;
-    }
-
     public Response showAllProducts(String[] strings) {
         return gameService.showAllProducts();
     }
