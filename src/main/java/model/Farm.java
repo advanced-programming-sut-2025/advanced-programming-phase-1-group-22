@@ -33,6 +33,7 @@ public class Farm {
     private Integer farmXEnd;
     private Integer farmYEnd;
     private Integer farmIndex = 0;
+    private Fridge fridge = new Fridge();
 
     public Farm(Player player, FarmType farmType) {
         this.players.add(player);
@@ -154,7 +155,7 @@ public class Farm {
                     trunk = new Trunk(TrunkType.LARGE_TRUNK);
                 }
             }
-            setStructurePlace(trunk, trunk.getTrunkType().getLength(), trunk.getTrunkType().getWidth());
+            setStructurePlace(trunk, trunk.getTrunkType().getLength(), trunk.getTrunkType().getWidth(), true, false);
         }
         for (int i = 0; i < stoneRand; i++) {
             Stone stone = null;
@@ -170,33 +171,33 @@ public class Farm {
 
                 }
             }
-            setStructurePlace(stone, stone.getStoneType().getLength(), stone.getStoneType().getWidth());
+            setStructurePlace(stone, stone.getStoneType().getLength(), stone.getStoneType().getWidth(), true, false);
         }
 
         for (int i = 0; i < foragingRand; i++) {
             int foragingRandSeed = random.nextInt(0, 41);
             Seed seed = new Seed(SeedType.values()[foragingRandSeed]);
             seed.setIsPickable(true);
-            setStructurePlace(seed, 1, 1);
+            setStructurePlace(seed, 1, 1, true, true);
             int cropRand = random.nextInt(41, 62);
             Crop crop = new Crop(CropType.values()[cropRand]);
             crop.setIsPickable(true);
-            setStructurePlace(crop, 1, 1);
+            setStructurePlace(crop, 1, 1, true, true);
         }
         for (int i = 0; i < foragingRand2; i++) {
             int foragingRandTree = random.nextInt(0, 5);
             Tree tree = new Tree(TreeType.values()[foragingRandTree]);
-            setStructurePlace(tree, 1, 1);
+            setStructurePlace(tree, 1, 1, true, false);
         }
         for (int i = 0; i < foragingRand3; i++) {
             int mineralRand = random.nextInt(0,21);
             Mineral mineral = new Mineral(MineralType.values()[mineralRand]);
             mineral.setIsPickable(true);
-            setStructurePlace(mineral,1,1);
+            setStructurePlace(mineral,1,1, true, true);
         }
     }
 
-    public void setStructurePlace(Structure structure, int length, int width) {
+    public void setStructurePlace(Structure structure, int length, int width, boolean isFilled, boolean isPassible) {
         Tile[][] tiles1 = app.getCurrentGame().tiles;
         List<Tile> tiles2 = new ArrayList<>();
         boolean flag = true;
@@ -211,12 +212,21 @@ public class Farm {
                     if (tiles1[j][k].getIsFilled()) {
                         flag = false;
                     } else {
-                        tiles1[j][k].setIsFilled(true);
                         tiles2.add(tiles1[j][k]);
                     }
                 }
             }
             if (flag) {
+                if (!isPassible) {
+                    for (Tile tile : tiles2) {
+                        tile.setIsPassable(false);
+                    }
+                }
+                if (isFilled) {
+                    for (Tile tile : tiles2) {
+                        tile.setIsFilled(true);
+                    }
+                }
                 structure.getTiles().addAll(tiles2);
                 this.getStructures().add(structure);
                 return;
@@ -250,7 +260,7 @@ public class Farm {
             int mineralRand = random.nextInt(0,21);
             Mineral mineral = new Mineral(MineralType.values()[mineralRand]);
             mineral.setIsPickable(true);
-            setStructurePlace(mineral,1,1);
+            setStructurePlace(mineral,1,1, true, true);
         }
     }
 

@@ -5,11 +5,17 @@ import lombok.Setter;
 import lombok.ToString;
 import model.*;
 import model.abilitiy.Ability;
+import model.craft.Craft;
+import model.craft.CraftType;
 import model.exception.InvalidInputException;
+import model.receipe.CookingRecipe;
+import model.receipe.CraftingRecipe;
 import model.records.Response;
 import model.shelter.ShippingBin;
 import model.source.*;
+import model.structure.stores.StoreType;
 import model.tools.*;
+import view.Menu;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,6 +44,11 @@ public class Player extends Actor {
     private List<Trade> gootenTradeList;
     private Boolean isFainted;
     private Salable currentCarrying = null;
+    private List<CookingRecipe> cookingRecipes = new ArrayList<>();
+    private List<Craft> crafts = new ArrayList<>();
+    private List<CraftingRecipe> craftingRecipes = new ArrayList<>();
+    private StoreType storeType;
+    private Menu currentMenu = Menu.GAME_MAIN_MENU;
 
     public Player(User user) {
         this.user = user;
@@ -155,5 +166,28 @@ public class Player extends Actor {
     @Override
     public String toString() {
         return user.toString();
+    }
+
+    public CraftingRecipe findCraftingRecipe(String string) {
+        for (CraftingRecipe craftingRecipe : craftingRecipes) {
+            if  (craftingRecipe.getName().equals(string)) return craftingRecipe;
+        }
+        return null;
+    }
+    public CookingRecipe findCookingRecipe(String string) {
+        for (CookingRecipe cookingRecipe : cookingRecipes) {
+            if  (cookingRecipe.getName().equals(string)) return cookingRecipe;
+        }
+        return null;
+    }
+
+    public void addCraft(Craft craft) {
+        crafts.add(craft);
+    }
+
+    public Craft findCraft(Salable craftType) {
+        for (Craft craft : crafts) {
+            if (craft.getCraftType().equals(craftType)) return craft;
+        } return null;
     }
 }

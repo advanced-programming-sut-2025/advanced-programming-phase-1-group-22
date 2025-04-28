@@ -178,6 +178,7 @@ public class Village {
             for (int j = yStart; j < yEnd; j++) {
                 NPC.getTiles().add(app.getCurrentGame().tiles[i][j]);
                 app.getCurrentGame().tiles[i][j].setIsFilled(true);
+                app.getCurrentGame().tiles[i][j].setIsPassable(false);
             }
         }
     }
