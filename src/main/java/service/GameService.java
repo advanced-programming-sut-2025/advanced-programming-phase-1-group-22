@@ -194,6 +194,7 @@ public class GameService {
 				return new Response("You need 500 golds to build it");
 			}
 		}
+		greenHouse.build();
 		return new Response("The greenhouse is built", true);
 		//TODO greenhouse initialization
 	}
@@ -683,6 +684,8 @@ public class GameService {
 				currentTool = (Tool) salableIntegerEntry.getKey();
 			}
 		}
+		return currentTool;
+	}
     private void setMenu(Player player, Farm farm) {
         if (farm == null) {
             Village village = app.getCurrentGame().getVillage();
@@ -713,17 +716,6 @@ public class GameService {
 
     }
 
-    private Tool getToolFromPlayerInventory(String name, Player player){
-        Tool currentTool = null;
-        for (Map.Entry<Salable, Integer> salableIntegerEntry : player.getInventory().getProducts().entrySet()) {
-            if (salableIntegerEntry.getKey().getName().equals(name) &&
-                    salableIntegerEntry.getKey() instanceof Tool){
-                currentTool = (Tool) salableIntegerEntry.getKey();
-            }
-        }
-
-		return currentTool;
-	}
 
 	private String makeTokenToShowAvailableTools(Player player) {
 		if (player.getInventory().getProducts().isEmpty()) {
@@ -1404,14 +1396,6 @@ public class GameService {
 		return minimum;
 	}
 
-	public Response placeItem(String itemName, String direction) {
-		return null;
-	}
-
-	public Response C_AddItem(String name, String count) {
-		return null;
-	}
-
 	public Response shepherAnimal(String name, String x, String y) {
 		return null;
 	}
@@ -1424,9 +1408,6 @@ public class GameService {
 		return null;
 	}
 
-	public Response artisanUse(String name, String item1, String item2) {
-		return null;
-	}
     public Response artisanUse(String name, String item1, String item2) {
         Player player = app.getCurrentGame().getCurrentPlayer();
         Salable craft = player.getInventory().findProductInBackPackByNAme(name);

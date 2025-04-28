@@ -4,10 +4,13 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import model.Salable;
+import model.Tile;
 import model.TimeAndDate;
 import model.products.TreesAndFruitsAndSeeds.MadeProduct;
 import model.products.TreesAndFruitsAndSeeds.MadeProductType;
 import model.structure.Structure;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -22,6 +25,10 @@ public class Craft extends Structure implements Salable {
         this.craftType = craftType;
         this.madeProduct = madeProduct;
         this.ETA = ETA;
+    }
+
+    public List<Tile> getRange() {
+        return craftType.getTilesAffected(getTiles().getFirst());
     }
 
     @Override
