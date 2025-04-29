@@ -568,11 +568,24 @@ public class GameService {
 
 	public Response plantSeed(String name, String direction){
 		Player currentPlayer = getCurrentPlayer();
+		Direction currentDirection = Direction.getByName(direction);
+		Tile currentTile = getTileByXAndY(currentPlayer.getTiles().getFirst().getX() + currentDirection.getXTransmit(),
+				currentPlayer.getTiles().getFirst().getY() + currentDirection.getYTransmit());
+		if (currentTile == null){
+			return new Response("out of bound");
+		}
+		else if (currentTile.getIsFilled() && !isThereGreenHouseForHarvest(currentTile)){
+			return new Response("this tile is not available for farming");
+		}
+		else if (!currentTile.getTileType().equals(TileType.PLOWED)){
+			return new Response("you should plow the tile first");
+		}
 		MixedSeeds mixedSeeds = (MixedSeeds) getProductFromInventory(currentPlayer,name);
 		Seed seed;
 		Craft craft = (Craft) getProductFromInventory(currentPlayer,name);
 		if (mixedSeeds != null){
-			if (!mixedSeeds.getMixedSeedsType().getSeason().equals(App.getInstance().getCurrentGame().getTimeAndDate().getSeason())){
+			if (!isThereGreenHouseForHarvest(currentTile) &&
+					!mixedSeeds.getMixedSeedsType().getSeason().equals(App.getInstance().getCurrentGame().getTimeAndDate().getSeason())){
 				return new Response("you should use this seed in " + mixedSeeds.getMixedSeedsType().getSeason());
 			}
 			seed = generateSeedOfMixedSeed(mixedSeeds.getMixedSeedsType());
@@ -586,20 +599,9 @@ public class GameService {
 		if (seed == null){
 			return new Response("you do not have this seed in your inventory");
 		}
-		Direction currentDirection = Direction.getByName(direction);
-		Tile currentTile = getTileByXAndY(currentPlayer.getTiles().getFirst().getX() + currentDirection.getXTransmit(),
-				currentPlayer.getTiles().getFirst().getY() + currentDirection.getYTransmit());
-		if (currentTile == null){
-			return new Response("out of bound");
-		}
-		else if (currentTile.getIsFilled()){
-			return new Response("this tile is not available for farming");
-		}
-		else if (!currentTile.getTileType().equals(TileType.PLOWED)){
-			return new Response("you should plow the tile first");
-		}
-		else if (!seed.getSeedType().getSeason().equals(App.getInstance().getCurrentGame().getTimeAndDate().getSeason()) &&
-		!seed.getSeedType().getSeason().equals(Season.SPECIAL)){
+		else if (!isThereGreenHouseForHarvest(currentTile) &&
+				!seed.getSeedType().getSeason().equals(App.getInstance().getCurrentGame().getTimeAndDate().getSeason()) &&
+				!seed.getSeedType().getSeason().equals(Season.SPECIAL)){
 			return new Response("you should use this seed in " + seed.getSeedType().getSeason());
 		}
 		HarvestAbleProduct harvestableProduct = getHarvestableFromSeed(seed.getSeedType());
@@ -614,7 +616,10 @@ public class GameService {
 		harvestableProduct.setTiles(List.of(currentTile));
 		harvestableProduct.setStartPlanting(App.getInstance().getCurrentGame().getTimeAndDate());
 		currentFarm.getStructures().add(harvestableProduct);
-		if (harvestableProduct instanceof Crop &&
+		if (isThereGreenHouseForHarvest(currentTile)){
+			harvestableProduct.setInGreenHouse(true);
+		}
+		else if (harvestableProduct instanceof Crop &&
 				((Crop)harvestableProduct).getCropType().isCanBecomeGiant()){
 			if (giantCrop(currentPlayer,(Crop) harvestableProduct)){
 				setScareCrowAndSprinklerForAll();
@@ -1570,6 +1575,16 @@ public class GameService {
 				}
 			}
 		}
+	}
+
+	private boolean isThereGreenHouseForHarvest(Tile tile){
+		List<Structure> structures = App.getInstance().getCurrentGame().getVillage().findStructuresByTile(tile);
+		for (Structure structure : structures) {
+			if (structure instanceof GreenHouse){
+				return !((GreenHouse) structure).getPool().getTiles().contains(tile);
+			}
+		}
+		return false;
 	}
 
 	public Response friendship() {

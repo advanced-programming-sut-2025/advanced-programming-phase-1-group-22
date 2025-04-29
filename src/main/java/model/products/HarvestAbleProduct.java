@@ -29,4 +29,6 @@ public abstract class HarvestAbleProduct extends Structure implements Salable {
     public abstract void setAroundSprinkler(Boolean aroundSprinkler);
     public abstract Boolean getAroundScareCrow();
     public abstract void setAroundScareCrow(Boolean aroundScareCrow);
+    public abstract  Boolean getInGreenHouse();
+    public abstract void setInGreenHouse(Boolean inGreenHouse);
 }

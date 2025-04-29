@@ -19,6 +19,7 @@ public class Crop extends HarvestAbleProduct implements Source {
     private Boolean isFertilized;
     private Boolean isBurn;
     private Boolean isGiant;
+    private Boolean isInGreenHouse;
     private Integer numberOfWithoutWaterDays;
     private int numberOfStages;
 
@@ -185,5 +186,13 @@ public class Crop extends HarvestAbleProduct implements Source {
     @Override
     public void setAroundScareCrow(Boolean aroundScareCrow) {
         isAroundScareCrow = aroundScareCrow;
+    }
+
+    public Boolean getInGreenHouse() {
+        return isInGreenHouse;
+    }
+
+    public void setInGreenHouse(Boolean inGreenHouse) {
+        isInGreenHouse = inGreenHouse;
     }
 }

@@ -21,6 +21,7 @@ public class Tree extends HarvestAbleProduct {
     private Boolean isAroundScareCrow;
     private Boolean isBurn;
     private Boolean isBroken;
+    private Boolean isInGreenHouse;
     private Integer numberOfWithoutWaterDays;
     private int numberOfStages;
 
@@ -175,5 +176,15 @@ public class Tree extends HarvestAbleProduct {
 
     public void setAroundScareCrow(Boolean aroundScareCrow) {
         isAroundScareCrow = aroundScareCrow;
+    }
+
+    @Override
+    public Boolean getInGreenHouse() {
+        return isInGreenHouse;
+    }
+
+    @Override
+    public void setInGreenHouse(Boolean inGreenHouse) {
+        isInGreenHouse = inGreenHouse;
     }
 }

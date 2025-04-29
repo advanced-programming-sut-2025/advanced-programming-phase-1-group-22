@@ -27,21 +27,17 @@ public enum Weather {
         this.seasons = seasons;
     }
 
-    public void weatherEffect() {
-
-    }
-
     public void thunderBolt(int x, int y) {
         Game game = App.getInstance().getCurrentGame();
         ArrayList<Structure> structures = game.getVillage().findStructuresByTile(game.tiles[x][y]);
         for (Structure structure : structures) {
-            if (structure instanceof Tree) {
+            if (structure instanceof Tree && !((Tree)structure).getInGreenHouse()) {
                 ((Tree)structure).burn();
             }
             if (structure instanceof Trunk) {
                 ((Trunk)structure).burn();
             }
-            if (structure instanceof Crop) {
+            if (structure instanceof Crop && !((Crop)structure).getInGreenHouse()) {
                 ((Crop)structure).burn();
             }
         }
@@ -51,7 +47,7 @@ public enum Weather {
         Game game = App.getInstance().getCurrentGame();
         ArrayList<Structure> structures = game.getVillage().findStructuresByTile(game.tiles[x][y]);
         for (Structure structure : structures) {
-            if (structure instanceof Tree) {
+            if (structure instanceof Tree && !((Tree)structure).getInGreenHouse()) {
                 ((Tree)structure).breakTree();
             }
         }
