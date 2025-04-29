@@ -570,11 +570,15 @@ public class GameService {
 		Player currentPlayer = getCurrentPlayer();
 		MixedSeeds mixedSeeds = (MixedSeeds) getProductFromInventory(currentPlayer,name);
 		Seed seed;
+		Craft craft = (Craft) getProductFromInventory(currentPlayer,name);
 		if (mixedSeeds != null){
 			if (!mixedSeeds.getMixedSeedsType().getSeason().equals(App.getInstance().getCurrentGame().getTimeAndDate().getSeason())){
 				return new Response("you should use this seed in " + mixedSeeds.getMixedSeedsType().getSeason());
 			}
 			seed = generateSeedOfMixedSeed(mixedSeeds.getMixedSeedsType());
+		}
+		else if (craft != null && name.equalsIgnoreCase("mystic tree seeds")){
+			seed = new Seed(SeedType.MYSTIC_TREE_SEEDS);
 		}
 		else {
 			seed = (Seed) getProductFromInventory(currentPlayer,name);
@@ -602,22 +606,24 @@ public class GameService {
 		if (harvestableProduct == null){
 			return new Response("this seed is not valid");
 		}
-		currentTile.setIsFilled(true);
-		harvestableProduct.setTiles(List.of(currentTile));
-		harvestableProduct.setStartPlanting(App.getInstance().getCurrentGame().getTimeAndDate());
 		Farm currentFarm = getPlayerInWitchFarm(currentPlayer);
 		if (currentFarm == null){
 			return new Response("you should plant in a farm");
 		}
+		currentTile.setIsFilled(true);
+		harvestableProduct.setTiles(List.of(currentTile));
+		harvestableProduct.setStartPlanting(App.getInstance().getCurrentGame().getTimeAndDate());
 		currentFarm.getStructures().add(harvestableProduct);
 		if (harvestableProduct instanceof Crop &&
 				((Crop)harvestableProduct).getCropType().isCanBecomeGiant()){
 			if (giantCrop(currentPlayer,(Crop) harvestableProduct)){
 				setScareCrowAndSprinklerForAll();
+				currentPlayer.getInventory().deleteProductFromBackPack(getProductFromInventory(currentPlayer,name),currentPlayer,1);
 				return new Response("you plant and it become a giant crop",true);
 			}
 		}
 		setScareCrowAndSprinklerForAll();
+		currentPlayer.getInventory().deleteProductFromBackPack(getProductFromInventory(currentPlayer,name),currentPlayer,1);
 		return new Response("you plant successfully",true);
 	}
 
@@ -1549,7 +1555,7 @@ public class GameService {
 			}
 		}
 	}
-	
+
 	private void setScareCrowAndSprinklerForAll(){
 		for (Farm farm : App.getInstance().getCurrentGame().getVillage().getFarms()) {
 			for (Structure structure : farm.getStructures()) {
