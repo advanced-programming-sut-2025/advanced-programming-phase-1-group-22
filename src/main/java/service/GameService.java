@@ -613,9 +613,11 @@ public class GameService {
 		if (harvestableProduct instanceof Crop &&
 				((Crop)harvestableProduct).getCropType().isCanBecomeGiant()){
 			if (giantCrop(currentPlayer,(Crop) harvestableProduct)){
+				setScareCrowAndSprinklerForAll();
 				return new Response("you plant and it become a giant crop",true);
 			}
 		}
+		setScareCrowAndSprinklerForAll();
 		return new Response("you plant successfully",true);
 	}
 
@@ -1148,6 +1150,12 @@ public class GameService {
         if (!(product instanceof Structure)) return  new Response(itemName + " Cannot be put on ground"); //TODO Some objects are not structure but must be put on ground
         player.getInventory().deleteProductFromBackPack(product, player, 1);
         ((Structure)product).getTiles().add(tile);
+		Farm currentFarm = getPlayerInWitchFarm(player);
+		if (currentFarm == null){
+			return new Response("you have to be in a farm");
+		}
+		currentFarm.getStructures().add((Structure) product);
+		setScareCrowAndSprinklerForAll();
         tile.setIsFilled(true); //TODO not always is filled;
         return new Response(itemName + " is put on the ground.", true);
     }
@@ -1517,6 +1525,46 @@ public class GameService {
         shippingBin.add(salable, count);
         return new Response("Item(s) is(are) put in the bin"); //TODO resetting bins at the start day
     }
+
+	private void setScareCrowAffect(Craft craft){
+		List<Tile> tiles = craft.getCraftType().getTilesAffected(craft.getTiles().getFirst());
+		for (Tile tile : tiles) {
+			List<Structure> structures = App.getInstance().getCurrentGame().getVillage().findStructuresByTile(tile);
+			for (Structure structure : structures) {
+				if (structure instanceof HarvestAbleProduct){
+					((HarvestAbleProduct)structure).setAroundScareCrow(true);
+				}
+			}
+		}
+	}
+
+	private void setSprinklerAffect(Craft craft){
+		List<Tile> tiles = craft.getCraftType().getTilesAffected(craft.getTiles().getFirst());
+		for (Tile tile : tiles) {
+			List<Structure> structures = App.getInstance().getCurrentGame().getVillage().findStructuresByTile(tile);
+			for (Structure structure : structures) {
+				if (structure instanceof HarvestAbleProduct){
+					((HarvestAbleProduct)structure).setAroundSprinkler(true);
+				}
+			}
+		}
+	}
+	
+	private void setScareCrowAndSprinklerForAll(){
+		for (Farm farm : App.getInstance().getCurrentGame().getVillage().getFarms()) {
+			for (Structure structure : farm.getStructures()) {
+				if (structure instanceof Craft && (((Craft)structure).getCraftType().equals(CraftType.SCARE_CROW) ||
+						((Craft)structure).getCraftType().equals(CraftType.DELUXE_SCARECROW))){
+					setScareCrowAffect((Craft) structure);
+				}
+				else if (structure instanceof Craft && (((Craft)structure).getCraftType().equals(CraftType.SPRINKLER) ||
+						((Craft)structure).getCraftType().equals(CraftType.QUALITY_SPRINKLER) ||
+						((Craft)structure).getCraftType().equals(CraftType.IRIDIUM_SPRINKLER))){
+					setSprinklerAffect((Craft) structure);
+				}
+			}
+		}
+	}
 
 	public Response friendship() {
 		return null;

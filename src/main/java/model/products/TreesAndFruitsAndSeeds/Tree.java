@@ -16,6 +16,9 @@ public class Tree extends HarvestAbleProduct {
     private TimeAndDate lastHarvest;
     private Boolean isWaterToday;
     private Boolean isFertilized;
+    private Boolean attackByCrow;
+    private Boolean isAroundSprinkler;
+    private Boolean isAroundScareCrow;
     private Boolean isBurn;
     private Boolean isBroken;
     private Integer numberOfWithoutWaterDays;
@@ -75,6 +78,9 @@ public class Tree extends HarvestAbleProduct {
     }
 
     public boolean canHarvest(){
+        if (attackByCrow){
+            return false;
+        }
         if (calculateDaysAfterPlanting() >= calculateTotalHarvestTime()){
             if (lastHarvest == null){
                 return true;
@@ -152,5 +158,22 @@ public class Tree extends HarvestAbleProduct {
     @Override
     public boolean getBurn() {
         return isBurn;
+    }
+
+    public Boolean getAroundSprinkler() {
+        return isAroundSprinkler;
+    }
+
+    public void setAroundSprinkler(Boolean aroundSprinkler) {
+        isAroundSprinkler = aroundSprinkler;
+        isWaterToday = true;
+    }
+
+    public Boolean getAroundScareCrow() {
+        return isAroundScareCrow;
+    }
+
+    public void setAroundScareCrow(Boolean aroundScareCrow) {
+        isAroundScareCrow = aroundScareCrow;
     }
 }

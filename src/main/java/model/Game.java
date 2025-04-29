@@ -6,10 +6,12 @@ import lombok.ToString;
 import model.animal.Animal;
 import model.enums.Weather;
 import model.products.HarvestAbleProduct;
+import model.products.TreesAndFruitsAndSeeds.Tree;
 import model.relations.Friendship;
 import model.relations.NPC;
 import model.relations.Player;
 import model.structure.Structure;
+import org.hibernate.sql.ast.tree.from.TableReference;
 import utils.App;
 
 import java.util.ArrayList;
@@ -65,6 +67,9 @@ public class Game {
         }
         automaticWatering(this.village.getWeather());
         setWeatherCoefficientEveryDay();
+        for (Farm farm : this.getVillage().getFarms()) {
+            crowAttack(farm);
+        }
         for (Player player : players) {
             player.resetEnergy();
             addGoldToPlayerForShippingBin(player.getShippingBin().CalculatePriceOfShippingBinProducts(), player);
@@ -162,7 +167,7 @@ public class Game {
         for (Farm farm : this.getVillage().getFarms()) {
             for (Structure structure : farm.getStructures()) {
                 if (structure instanceof HarvestAbleProduct harvestAbleProduct){
-					if (!harvestAbleProduct.getIsWaterToday()){
+					if (!harvestAbleProduct.getIsWaterToday() && !harvestAbleProduct.getAroundSprinkler()){
                         int oldNumber = harvestAbleProduct.getNumberOfWithoutWaterDays();
                         harvestAbleProduct.setNumberOfWithoutWaterDays(oldNumber + 1);
                         if (harvestAbleProduct.getNumberOfWithoutWaterDays() >= 2){
@@ -175,7 +180,12 @@ public class Game {
                     else {
                         harvestAbleProduct.setNumberOfWithoutWaterDays(0);
                     }
-                    harvestAbleProduct.setWaterToday(false);
+                    if (!harvestAbleProduct.getAroundSprinkler()){
+                        harvestAbleProduct.setWaterToday(false);
+                    }
+                    if (harvestAbleProduct instanceof Tree){
+                        ((Tree)harvestAbleProduct).setAttackByCrow(false);
+                    }
                 }
             }
         }
@@ -191,5 +201,32 @@ public class Game {
             weatherCoefficient = 1.5;
         }
         this.weatherCoefficient = weatherCoefficient;
+    }
+
+    private void crowAttack(Farm farm){
+        int numberOfHarvest = 0;
+        List<HarvestAbleProduct> harvestAbleProducts = new ArrayList<>();
+        for (Structure structure : farm.getStructures()) {
+            if (structure instanceof HarvestAbleProduct){
+                harvestAbleProducts.add((HarvestAbleProduct) structure);
+                numberOfHarvest += 1;
+            }
+        }
+        int numberOfCrow = numberOfHarvest / 16;
+        for (int i = 0; i < numberOfCrow; i++) {
+            Random random = new Random();
+            Random random1 = new Random();
+            if (random.nextInt() % 4 == 0){
+                HarvestAbleProduct harvestAbleProduct = harvestAbleProducts.get(random1.nextInt() % harvestAbleProducts.size());
+                if (!harvestAbleProduct.getAroundScareCrow()){
+                    if (harvestAbleProduct instanceof Tree){
+                        ((Tree)harvestAbleProduct).setAttackByCrow(true);
+                    }
+                    else {
+                        App.getInstance().getCurrentGame().getVillage().removeStructure(harvestAbleProduct);
+                    }
+                }
+            }
+        }
     }
 }

@@ -13,6 +13,8 @@ public class Crop extends HarvestAbleProduct implements Source {
     private CropType cropType;
     private TimeAndDate startPlanting;
     private TimeAndDate lastHarvest;
+    private Boolean isAroundSprinkler;
+    private Boolean isAroundScareCrow;
     private Boolean isWaterToday;
     private Boolean isFertilized;
     private Boolean isBurn;
@@ -162,5 +164,26 @@ public class Crop extends HarvestAbleProduct implements Source {
     @Override
     public boolean getBurn() {
         return isBurn;
+    }
+
+    @Override
+    public Boolean getAroundSprinkler() {
+        return isAroundSprinkler;
+    }
+
+    @Override
+    public void setAroundSprinkler(Boolean aroundSprinkler) {
+        isAroundSprinkler = aroundSprinkler;
+        isWaterToday = true;
+    }
+
+    @Override
+    public Boolean getAroundScareCrow() {
+        return isAroundScareCrow;
+    }
+
+    @Override
+    public void setAroundScareCrow(Boolean aroundScareCrow) {
+        isAroundScareCrow = aroundScareCrow;
     }
 }
