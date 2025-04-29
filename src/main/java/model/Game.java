@@ -155,7 +155,8 @@ public class Game {
         if (weather.equals(Weather.RAINY) || weather.equals(Weather.STORMY)){
             for (Farm farm : App.getInstance().getCurrentGame().getVillage().getFarms()) {
                 for (Structure structure : farm.getStructures()) {
-                    if (structure instanceof HarvestAbleProduct){
+                    if (structure instanceof HarvestAbleProduct &&
+                            !((HarvestAbleProduct)structure).getInGreenHouse()){
                         ((HarvestAbleProduct)structure).setWaterToday(true);
                     }
                 }
@@ -218,7 +219,7 @@ public class Game {
             Random random1 = new Random();
             if (random.nextInt() % 4 == 0){
                 HarvestAbleProduct harvestAbleProduct = harvestAbleProducts.get(random1.nextInt() % harvestAbleProducts.size());
-                if (!harvestAbleProduct.getAroundScareCrow()){
+                if (!harvestAbleProduct.getAroundScareCrow() && !harvestAbleProduct.getInGreenHouse()){
                     if (harvestAbleProduct instanceof Tree){
                         ((Tree)harvestAbleProduct).setAttackByCrow(true);
                     }
