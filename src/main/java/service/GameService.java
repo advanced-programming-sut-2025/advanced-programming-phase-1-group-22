@@ -681,7 +681,7 @@ public class GameService {
 	private Salable getProductFromInventory(Player currentPlayer, String itemName) {
 		Salable currentProduct = null;
 		for (Map.Entry<Salable, Integer> salableIntegerEntry : currentPlayer.getInventory().getProducts().entrySet()) {
-			if (salableIntegerEntry.getKey().getName().equals(itemName)) {
+			if (salableIntegerEntry.getKey().getName().equalsIgnoreCase(itemName)) {
 				currentProduct = salableIntegerEntry.getKey();
 			}
 		}
@@ -692,7 +692,7 @@ public class GameService {
 	private Tool getToolFromPlayerInventory(String name, Player player) {
 		Tool currentTool = null;
 		for (Map.Entry<Salable, Integer> salableIntegerEntry : player.getInventory().getProducts().entrySet()) {
-			if (salableIntegerEntry.getKey().getName().equals(name) &&
+			if (salableIntegerEntry.getKey().getName().equalsIgnoreCase(name) &&
 					salableIntegerEntry.getKey() instanceof Tool) {
 				currentTool = (Tool) salableIntegerEntry.getKey();
 			}
@@ -905,7 +905,7 @@ public class GameService {
 	private boolean isAnimalNameUnique(Farm farm, String name){
 		for (Structure structure : farm.getStructures()) {
 			if (structure instanceof Animal){
-				if (((Animal)structure).getName().equals(name)){
+				if (((Animal)structure).getName().equalsIgnoreCase(name)){
 					return false;
 				}
 			}
@@ -976,7 +976,7 @@ public class GameService {
 
 	private Animal getAnimalAroundPlayer(Player player,String name){
 		for (Animal animal : player.getAnimals()) {
-			if (animal.getName().equals(name)){
+			if (animal.getName().equalsIgnoreCase(name)){
 				for (Direction value : Direction.values()) {
 					if (player.getTiles().getFirst().getX() + value.getXTransmit() == animal.getTiles().getFirst().getX() &&
 							player.getTiles().getFirst().getY() + value.getYTransmit() == animal.getTiles().getFirst().getY()){
@@ -990,7 +990,7 @@ public class GameService {
 
 	private Animal getAnimalWithName(String name, Player player){
 		for (Animal animal : player.getAnimals()) {
-			if (animal.getName().equals(name)){
+			if (animal.getName().equalsIgnoreCase(name)){
 				return animal;
 			}
 		}
@@ -1138,12 +1138,12 @@ public class GameService {
 
 	private Harvestable getHarvestableType(String name){
 		for (FruitType value : FruitType.values()) {
-			if (value.getName().equals(name)){
+			if (value.getName().equalsIgnoreCase(name)){
 				return value;
 			}
 		}
 		for (CropType value : CropType.values()) {
-			if (value.getName().equals(name)){
+			if (value.getName().equalsIgnoreCase(name)){
 				return value;
 			}
 		}
@@ -1175,41 +1175,41 @@ public class GameService {
         BackPack inventory = app.getCurrentGame().getCurrentPlayer().getInventory();
         Salable salable = null;
         for (FishType value : FishType.values()) {
-            if (name.equals(value.getName())) salable = value;
+            if (name.equalsIgnoreCase(value.getName())) salable = value;
         }
         if (salable == null) {
             for (FoodType value : FoodType.values()) {
-                if (name.equals(value.getName())) salable = value;
+                if (name.equalsIgnoreCase(value.getName())) salable = value;
             }
         }
 
         if (salable == null) {
             for (CraftType value : CraftType.values()) {
-                if (name.equals(value.getName())) salable = value;
+                if (name.equalsIgnoreCase(value.getName())) salable = value;
             }
         }
 
         if (salable == null) {
             for (FruitType value : FruitType.values()) {
-                if (name.equals(value.getName())) salable = value;
+                if (name.equalsIgnoreCase(value.getName())) salable = value;
             }
         }
 
         if (salable == null) {
             for (MadeProductType value : MadeProductType.values()) {
-                if (name.equals(value.getName())) salable = value;
+                if (name.equalsIgnoreCase(value.getName())) salable = value;
             }
         }
 
         if (salable == null) {
             for (AnimalProductType value : AnimalProductType.values()) {
-                if (name.equals(value.getName())) salable = value;
+                if (name.equalsIgnoreCase(value.getName())) salable = value;
             }
         }
 
         if (salable == null) {
             for (CropType value : CropType.values()) {
-                if (name.equals(value.getName())) salable = value;
+                if (name.equalsIgnoreCase(value.getName())) salable = value;
             }
         }
 
@@ -1221,21 +1221,21 @@ public class GameService {
 
         if (salable == null) {
             for (MixedSeedsType value : MixedSeedsType.values()) {
-                if (name.equals(value.getName())) salable = value;
+                if (name.equalsIgnoreCase(value.getName())) salable = value;
             }
         }
 
         if (salable == null) {
             for (SeedType value : SeedType.values()) {
-                if (name.equals(value.getName())) salable = value;
+                if (name.equalsIgnoreCase(value.getName())) salable = value;
             }
         }
 
         if (salable == null) {
-            if (name.equals("hay")) salable = new Hay();
+            if (name.equalsIgnoreCase("hay")) salable = new Hay();
         }
         if (salable == null) {
-            if (name.equals("flower")) salable = new Flower();
+            if (name.equalsIgnoreCase("flower")) salable = new Flower();
         }
 
         if (salable == null) return new Response(name + " cannot be added to the backpack");
@@ -1415,18 +1415,6 @@ public class GameService {
 		return minimum;
 	}
 
-	public Response shepherAnimal(String name, String x, String y) {
-		return null;
-	}
-
-	public Response animals() {
-		return null;
-	}
-
-	public Response C_SetFriendship(String name, String count) {
-		return null;
-	}
-
     public Response artisanUse(String name, String item1, String item2) {
         Player player = app.getCurrentGame().getCurrentPlayer();
         Salable craft = player.getInventory().findProductInBackPackByNAme(name);
@@ -1435,7 +1423,7 @@ public class GameService {
         }
         Salable product1 = null, product2 = null;
         for (Salable value : player.getInventory().getProducts().keySet()) {
-            if (item1.equals(value.getName())) {
+            if (item1.equalsIgnoreCase(value.getName())) {
                 product1 = value;
                 break;
             }
@@ -1443,7 +1431,7 @@ public class GameService {
         if (product1 == null) return new Response(item1 + " not found in your backpack.");
         if (item2 != null && !item2.isEmpty()) {
             for (Salable value : player.getInventory().getProducts().keySet()) {
-                if (item2.equals(value.getName())) {
+                if (item2.equalsIgnoreCase(value.getName())) {
                     product2 = value;
                     break;
                 }
@@ -1586,74 +1574,6 @@ public class GameService {
 		}
 		return false;
 	}
-
-	public Response friendship() {
-		return null;
-	}
-
-	public Response talk(String username, String message) {
-		return null;
-	}
-
-    public Response talkHistory(String username) {
-        return null;
-    }
-
-    public Response gift(String username, String item, String amount) {
-        return null;
-    }
-
-    public Response giftList() {
-        return null;
-    }
-
-    public Response giftRate(String giftNumber, String rate) {
-        return null;
-    }
-
-    public Response giftHistory(String username) {
-        return null;
-    }
-
-    public Response hug(String username) {
-        return null;
-    }
-
-    public Response flower(String username) {
-        return null;
-    }
-
-    public Response askMarriage(String username, String ring) {
-        return null;
-    }
-
-    public Response respond(String respond, String username) {
-        return null;
-    }
-
-    public Response startTrade() {
-        return null;
-    }
-
-    public Response meetNPC(String npcName) {
-        return null;
-    }
-
-    public Response giftNPC(String npcName) {
-        return null;
-    }
-
-    public Response questsFinish(String index) {
-        return null;
-    }
-
-    public Response questsList() {
-        return null;
-    }
-
-    public Response friendshipNPCList() {
-        return null;
-    }
 
     public Response eat(String foodName) {
         Player player = app.getCurrentGame().getCurrentPlayer();
