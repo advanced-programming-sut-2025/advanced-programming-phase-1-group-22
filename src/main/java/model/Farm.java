@@ -184,7 +184,7 @@ public class Farm {
             setStructurePlace(crop, 1, 1, true, true);
         }
         for (int i = 0; i < foragingRand2; i++) {
-            int foragingRandTree = random.nextInt(0, 5);
+            int foragingRandTree = random.nextInt(0, 4);
             Tree tree = new Tree(TreeType.values()[foragingRandTree]);
             setStructurePlace(tree, 1, 1, true, false);
         }
