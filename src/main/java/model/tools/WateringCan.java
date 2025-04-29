@@ -6,6 +6,7 @@ import model.products.HarvestAbleProduct;
 import model.relations.Player;
 import model.Tile;
 import model.structure.Structure;
+import model.structure.farmInitialElements.GreenHouse;
 import model.structure.farmInitialElements.Lake;
 import utils.App;
 
@@ -44,7 +45,6 @@ public class WateringCan implements Tool{
 
 	@Override
 	public String useTool(Player player, Tile tile) {
-		//Green house //TODO
 		player.changeEnergy(-this.getEnergy(player));
 		List<Structure> structures = App.getInstance().getCurrentGame().getVillage().findStructuresByTile(tile);
 		for (Structure structure : structures) {
@@ -52,6 +52,12 @@ public class WateringCan implements Tool{
 				if (structure instanceof Lake){ // or GreenHouse
 					this.remain = this.wateringCanType.getCapacity();
 					return "the watering can completely filled";
+				}
+				if (structure instanceof GreenHouse){
+					if (((GreenHouse)structure).getPool().getTiles().contains(tile)){
+						this.remain = this.wateringCanType.getCapacity();
+						return "the watering can completely filled";
+					}
 				}
 				if (structure instanceof HarvestAbleProduct){
 					if (this.remain <= 0){
