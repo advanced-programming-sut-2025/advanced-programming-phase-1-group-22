@@ -2,12 +2,15 @@ package model.tools;
 
 import lombok.Getter;
 import lombok.Setter;
+import model.products.ProductQuality;
 import model.relations.Player;
 import model.Salable;
 import model.exception.InvalidInputException;
 
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
+
 @Getter
 @Setter
 public class BackPack {
@@ -18,7 +21,7 @@ public class BackPack {
         this.backPackType = backPackType;
     }
 
-    public String showInventory(){
+    public String showInventory() {
         StringBuilder message = new StringBuilder();
         for (Map.Entry<Salable, Integer> salableIntegerEntry : products.entrySet()) {
             message.append(salableIntegerEntry.getKey().getName()).append(" : ").append(salableIntegerEntry.getValue());
@@ -26,32 +29,69 @@ public class BackPack {
         return message.toString();
     }
 
-    public void deleteProductFromBackPack(Salable product,Player player,int itemNumber) {
+    public void deleteProductFromBackPack(Salable product, Player player, int itemNumber) {
         TrashCan trashCan = getPlayerTrashCan(player);
-        if (trashCan != null){
-            trashCan.givePlayerProductPrice(player,product,itemNumber);
+        if (trashCan != null) {
+            trashCan.givePlayerProductPrice(player, product, itemNumber);
         }
-        if (products.get(product) == itemNumber){
-            products.remove(product);
-        }
-        else if (products.get(product) < itemNumber){
-            int oldItemNumber = products.getOrDefault(product,0);
-            products.put(product,oldItemNumber - itemNumber);
+        Salable equivalentProduct = findEquivalentProduct(product);
+        if (equivalentProduct != null) {
+            if (products.get(equivalentProduct) == itemNumber) {
+                products.remove(equivalentProduct);
+            } else if (products.get(product) < itemNumber) {
+                int oldItemNumber = products.getOrDefault(equivalentProduct, 0);
+                products.put(equivalentProduct, oldItemNumber - itemNumber);
+            }
         }
     }
 
-    public void addProductToBackPack(Salable product,int itemNumber) {
-        int oldValue = products.getOrDefault(product,0);
-        products.put(product,itemNumber + oldValue);
+    public void addProductToBackPack(Salable product, int itemNumber) {
+        Salable existingProduct = findEquivalentProduct(product);
+        if (existingProduct != null) {
+            int currentQuantity = products.getOrDefault(existingProduct, 0);
+            products.put(existingProduct, currentQuantity + itemNumber);
+        } else {
+            products.put(product, itemNumber);
+        }
     }
 
-    public Salable getProductFromBackPack(String name) throws InvalidInputException{
+    private Salable findEquivalentProduct(Salable newProduct) {
+        for (Salable existingProduct : products.keySet()) {
+            if (areProductsEquivalent(existingProduct, newProduct)) {
+                return existingProduct;
+            }
+        }
+        return null;
+    }
+
+    private boolean areProductsEquivalent(Salable product1, Salable product2) {
+        if (!product1.getClass().equals(product2.getClass())) {
+            return false;
+        }
+
+        try {
+            for (Field field : product1.getClass().getDeclaredFields()) {
+                if (field.getType().equals(ProductQuality.class)) {
+                    field.setAccessible(true);
+                    ProductQuality quality1 = (ProductQuality) field.get(product1);
+                    ProductQuality quality2 = (ProductQuality) field.get(product2);
+                    field.setAccessible(false);
+                    return quality1 == quality2;
+                }
+            }
+            return true;
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException("Failed to compare products", e);
+        }
+    }
+
+    public Salable getProductFromBackPack(String name) {
         for (Map.Entry<Salable, Integer> salableIntegerEntry : products.entrySet()) {
-            if (salableIntegerEntry.getKey().getName().equals(name)){
+            if (salableIntegerEntry.getKey().getName().equals(name)) {
                 return salableIntegerEntry.getKey();
             }
         }
-        throw new InvalidInputException("there is no item name " + name);
+        return null;
     }
 
     public Integer countProductFromBackPack(Salable salable) {
@@ -59,10 +99,10 @@ public class BackPack {
         return products.get(salable);
     }
 
-    public Boolean isInventoryHaveCapacity(Salable product){
-		return backPackType.getIsInfinite() || backPackType.getCapacity() < products.size() ||
-				products.containsKey(product);
-	}
+    public Boolean isInventoryHaveCapacity(Salable product) {
+        return backPackType.getIsInfinite() || backPackType.getCapacity() < products.size() ||
+                products.containsKey(product);
+    }
 
     private TrashCan getPlayerTrashCan(Player player) {
         for (Map.Entry<Salable, Integer> salableIntegerEntry : player.getInventory().getProducts().entrySet()) {
@@ -77,6 +117,7 @@ public class BackPack {
         if (!products.containsKey(product)) return false;
         return products.get(product) >= count;
     }
+
     public Salable findProductInBackPackByNAme(String product) {
         for (Salable salable : products.keySet()) {
             if (salable.getName().equals(product)) {
