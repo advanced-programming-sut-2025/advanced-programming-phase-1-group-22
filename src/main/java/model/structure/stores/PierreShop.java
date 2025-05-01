@@ -1,5 +1,6 @@
 package model.structure.stores;
 
+import lombok.Getter;
 import model.Salable;
 import model.gameSundry.SundryType;
 import model.products.TreesAndFruitsAndSeeds.MadeProductType;
@@ -11,6 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Getter
 public enum PierreShop implements Shop {
     // Miscellaneous Items
     RICE(SundryType.RICE, SundryType.RICE.getName(),
@@ -172,7 +174,8 @@ public enum PierreShop implements Shop {
             "Plant in fall. Takes 8 days to mature.",
             30, 45, 5, Season.FALL);
 
-    private final Salable salable;
+	// Getters
+	private final Salable salable;
     private final String name;
     private final String description;
     private final int inSeasonPrice;
@@ -265,36 +268,4 @@ public enum PierreShop implements Shop {
         }
     }
 
-    // Getters
-    public Salable getSalable() {
-        return salable;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public int getInSeasonPrice() {
-        return inSeasonPrice;
-    }
-
-    public int getOutOfSeasonPrice() {
-        return outOfSeasonPrice;
-    }
-
-    public int getDailySold() {
-        return dailySold;
-    }
-
-    public int getDailyLimit() {
-        return dailyLimit;
-    }
-
-    public Season getSeason() {
-        return season;
-    }
 }

@@ -4,7 +4,10 @@ import lombok.Getter;
 import lombok.Setter;
 import model.Salable;
 import model.TimeAndDate;
+import model.gameSundry.SundryType;
 import model.structure.Structure;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -31,4 +34,5 @@ public abstract class HarvestAbleProduct extends Structure implements Salable {
     public abstract void setAroundScareCrow(Boolean aroundScareCrow);
     public abstract  Boolean getInGreenHouse();
     public abstract void setInGreenHouse(Boolean inGreenHouse);
+    public abstract List<SundryType> getFertilizes();
 }

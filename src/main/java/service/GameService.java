@@ -12,6 +12,8 @@ import model.craft.Craft;
 import model.craft.CraftType;
 import model.enums.Weather;
 import model.exception.InvalidInputException;
+import model.gameSundry.Sundry;
+import model.gameSundry.SundryType;
 import model.products.*;
 import model.products.TreesAndFruitsAndSeeds.FruitType;
 import model.products.TreesAndFruitsAndSeeds.Tree;
@@ -638,8 +640,14 @@ public class GameService {
     }
 
     public Response fertilize(String fertilize, String direction) {
-        //TODO fertilizing
         Player currentPlayer = getCurrentPlayer();
+        Sundry currentFertilize = (Sundry) currentPlayer.getInventory().getProductFromBackPack(fertilize);
+        if (currentFertilize == null){
+            return new Response("this item is not exist in the inventory");
+        }
+        if (!isThisFertilize(currentFertilize)){
+            return new Response("there is no fertilize with this name");
+        }
         Direction currentDirection = Direction.getByName(direction);
         Tile currentTile = getTileByXAndY(currentPlayer.getTiles().getFirst().getX() + currentDirection.getXTransmit(),
                 currentPlayer.getTiles().getFirst().getY() + currentDirection.getYTransmit());
@@ -651,6 +659,7 @@ public class GameService {
             return new Response("there is no harvestable in this tile");
         }
         harvestAbleProduct.setFertilized(true);
+        harvestAbleProduct.getFertilizes().add(currentFertilize.getSundryType());
         return new Response("you successfully fertilize " + harvestAbleProduct.getName(), true);
     }
 
@@ -1562,6 +1571,19 @@ public class GameService {
             if (structure instanceof GreenHouse) {
                 return !((GreenHouse) structure).getPool().getTiles().contains(tile);
             }
+        }
+        return false;
+    }
+
+    private boolean isThisFertilize(Salable salable){
+        if (salable instanceof Sundry){
+            if (((Sundry)salable).getSundryType().equals(SundryType.BASIC_RETAINING_SOIL) ||
+                    ((Sundry)salable).getSundryType().equals(SundryType.QUALITY_RETAINING_SOIL) ||
+                    ((Sundry)salable).getSundryType().equals(SundryType.DELUXE_RETAINING_SOIL) ||
+                    ((Sundry)salable).getSundryType().equals(SundryType.SPEED_GROW)){
+                return true;
+            }
+            return false;
         }
         return false;
     }

@@ -4,8 +4,12 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import model.TimeAndDate;
+import model.gameSundry.SundryType;
 import model.products.HarvestAbleProduct;
 import utils.App;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -22,8 +26,9 @@ public class Tree extends HarvestAbleProduct {
     private Boolean isBurn;
     private Boolean isBroken;
     private Boolean isInGreenHouse;
+    private List<SundryType> fertilizes = new ArrayList<>();
     private Integer numberOfWithoutWaterDays;
-    private int numberOfStages;
+    private Integer numberOfStages;
 
     public Tree(TreeType treeType) {
         this.treeType = treeType;
@@ -79,14 +84,20 @@ public class Tree extends HarvestAbleProduct {
     }
 
     public boolean canHarvest(){
+        int totalHarvestTime = calculateTotalHarvestTime();
+        int regrowthTime = this.treeType.getHarvestCycle();
+        if (this.fertilizes.contains(SundryType.SPEED_GROW)){
+            totalHarvestTime = Math.max(0,totalHarvestTime - 1);
+            regrowthTime = Math.max(0,regrowthTime - 1);
+        }
         if (attackByCrow){
             return false;
         }
-        if (calculateDaysAfterPlanting() >= calculateTotalHarvestTime()){
+        if (calculateDaysAfterPlanting() >= totalHarvestTime){
             if (lastHarvest == null){
                 return true;
             }
-            return calculateDaysAfterLastHarvest() >= this.treeType.getHarvestCycle();
+            return calculateDaysAfterLastHarvest() >= regrowthTime;
         }
         return false;
     }
@@ -186,5 +197,10 @@ public class Tree extends HarvestAbleProduct {
     @Override
     public void setInGreenHouse(Boolean inGreenHouse) {
         isInGreenHouse = inGreenHouse;
+    }
+
+    @Override
+    public List<SundryType> getFertilizes() {
+        return fertilizes;
     }
 }
