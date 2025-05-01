@@ -1,6 +1,7 @@
 package model.structure.stores;
 
 import lombok.Getter;
+import lombok.Setter;
 import model.Salable;
 import model.records.Response;
 import model.relations.Player;
@@ -62,5 +63,9 @@ public enum BlackSmithStuff implements Shop {
         salable.dailySold += count;
         player.getInventory().addProductToBackPack(salable.mineralType, count);
         return new Response("Bought successfully", true);
+    }
+
+    public void resetDailySold() {
+        dailySold = 0;
     }
 }

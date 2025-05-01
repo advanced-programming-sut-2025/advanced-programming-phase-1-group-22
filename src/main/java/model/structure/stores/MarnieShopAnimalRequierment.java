@@ -63,4 +63,8 @@ public enum MarnieShopAnimalRequierment  implements Shop{
         player.getInventory().addProductToBackPack(salable.getProduct(), count);
         return new Response("Bought successfully", true);
     }
+
+    public void resetDailySold() {
+        dailySold = 0;
+    }
 }

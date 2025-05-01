@@ -103,11 +103,17 @@ public class GameService {
     public Response nextTurn() {
         Player player = app.getCurrentGame().getCurrentPlayer();
         player.setEnergyPerTurn(player.getMaxEnergyPerTurn());
+        if (player.getBuff() != null) {
+            if (!player.getBuff().nextHour()) {
+                player.getBuff().defectBuff(player);
+                player.setBuff(null);
+            }
+        }
         app.getCurrentGame().nextPlayer();
         TimeAndDate time = new TimeAndDate(0, 8);
         if (app.getCurrentGame().getTimeAndDate().compareDailyTime(time) <= 0) {
+            app.getCurrentGame().startDay();
             return new Response("It's next player's turn", true);
-//            player.setEnergy(player.getMaxEnergy()); //TODO implementing the faint
         }
         if (app.getCurrentGame().getCurrentPlayer().getIsFainted()) return nextTurn();
         Session.setCurrentMenu(app.getCurrentGame().getCurrentPlayer().getCurrentMenu());
@@ -1595,7 +1601,15 @@ public class GameService {
         if (((Product) food).getEnergy() == 0) return new Response(foodName + " is not edible");
         player.getInventory().deleteProductFromBackPack(food, player, 1);
         player.changeEnergy(((Product) food).getEnergy());
-        if (food instanceof FoodType) player.setBuff((Buff) ((FoodType) food).getBuff().clone());
+        if (food instanceof FoodType) {
+            if (((FoodType) food).getBuff() != null) {
+                if (player.getBuff() != null) {
+                    player.getBuff().defectBuff(player);
+                }
+                player.setBuff((Buff) ((FoodType) food).getBuff().clone());
+                player.getBuff().affectBuff(player);
+            }
+        }
         return new Response(foodName + " is eaten now");
     }
 

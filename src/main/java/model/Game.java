@@ -12,6 +12,7 @@ import model.relations.Friendship;
 import model.relations.NPC;
 import model.relations.Player;
 import model.structure.Structure;
+import model.structure.stores.*;
 import org.hibernate.sql.ast.tree.from.TableReference;
 import utils.App;
 
@@ -74,6 +75,10 @@ public class Game {
 		for (Player player : players) {
 			player.resetEnergy();
 			addGoldToPlayerForShippingBin(player.getShippingBin().CalculatePriceOfShippingBinProducts(), player);
+			if (player.getBuff() != null) {
+				player.getBuff().defectBuff(player);
+				player.setBuff(null);
+			}
 		}
 		for (Farm farm : App.getInstance().getCurrentGame().getVillage().getFarms()) {
 			farm.generateRandomForaging();
@@ -85,6 +90,36 @@ public class Game {
 					calculateAnimalFriendShip((Animal) structure);
 				}
 			}
+		}
+		for (BlackSmithStuff value : BlackSmithStuff.values()) {
+			value.resetDailySold();
+		}
+		for (BlackSmithUpgrade value : BlackSmithUpgrade.values()) {
+			value.resetDailySold();
+		}
+		for (CarpenterShopFarmBuildings value : CarpenterShopFarmBuildings.values()) {
+			value.resetDailySold();
+		}
+		for (CarpenterShopMineralStuff value : CarpenterShopMineralStuff.values()) {
+			value.resetDailySold();
+		}
+		for (FishShopStuff value : FishShopStuff.values()) {
+			value.resetDailySold();
+		}
+		for (JojaMartShopSeed value : JojaMartShopSeed.values()) {
+			value.resetDailySold();
+		}
+		for (MarnieShopAnimalRequierment value : MarnieShopAnimalRequierment.values()) {
+			value.resetDailySold();
+		}
+		for (MarnieShopAnimal value : MarnieShopAnimal.values()) {
+			value.resetDailySold();
+		}
+		for (PierreShop value : PierreShop.values()) {
+			value.resetDailySold();
+		}
+		for (TheStardropSaloonStuff value : TheStardropSaloonStuff.values()) {
+			value.resetDailySold();
 		}
 	}
 

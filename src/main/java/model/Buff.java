@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import model.abilitiy.Ability;
+import model.relations.Player;
+
 @Getter
 @Setter
 @ToString
@@ -25,6 +27,29 @@ public class Buff {
         }
         if (object instanceof Integer) {
             this.maxPower = (Integer) object;
+        }
+    }
+
+    public boolean nextHour() {
+        buffImpact.setHour(buffImpact.getHour() - 1);
+        return buffImpact.getHour() != 0;
+    }
+    public void affectBuff(Player player) {
+        if (maxPower != null && maxPower != 0) {
+            player.setMaxEnergy(player.getMaxEnergy() + maxPower);
+            player.changeEnergy(maxPower);
+        }
+        if (ability != null) {
+            player.setBuffAbility(ability);
+        }
+    }
+
+    public void defectBuff(Player player) {
+        if (maxPower != null && maxPower != 0) {
+            player.setMaxEnergy(player.getMaxEnergy() - maxPower);
+        }
+        if (ability != null) {
+            player.setBuffAbility(null);
         }
     }
 
