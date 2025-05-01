@@ -145,9 +145,10 @@ public enum CraftType implements Product{
     public Response isCraftingPossible(Player player) {
         BackPack inventory = player.getInventory();
         for (Salable salable : products.keySet()) {
-            if (!inventory.checkProductAvailabilityInBackPack(salable, products.get(salable))) {
-                return new Response("You lack " + (products.get(salable) - inventory.countProductFromBackPack(salable))
-                    + " of " + salable.getName() + " in order to craft this item.");
+            if (!inventory.checkProductAvailabilityInBackPack(salable.getName(), products.get(salable))) {
+                return new Response("You lack " + (products.get(salable)
+                        - inventory.countProductFromBackPack(salable.getName()))
+                        + " of " + salable.getName() + " in order to craft this item.");
             }
         }
         return new Response("You can craft this item.", true);

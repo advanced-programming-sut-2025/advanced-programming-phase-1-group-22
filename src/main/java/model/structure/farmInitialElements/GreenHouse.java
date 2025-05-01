@@ -24,7 +24,7 @@ public class GreenHouse extends HardCodeFarmElements {
 
     public int areIngredientsAvailable(Player player) {
         if (player.getAccount().getGolds() < 1000) return 1;
-        if (player.getInventory().checkProductAvailabilityInBackPack(MineralType.WOOD, 500)) return 2;
+        if (player.getInventory().checkProductAvailabilityInBackPack(MineralType.WOOD.getName(), 500)) return 2;
         player.getAccount().removeGolds(1000);
         player.getInventory().deleteProductFromBackPack(MineralType.WOOD, player,500);
         isBuilt = true;
