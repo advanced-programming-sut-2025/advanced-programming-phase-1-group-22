@@ -81,7 +81,7 @@ public enum JojaMartShopSeed implements Shop {
 				salable = value;
 			}
 		}
-		if (salable == null) return null;
+		if (salable == null) return new Response("Item not found");
 		if (salable.dailyLimit != -1 && salable.dailyLimit < salable.dailySold + count) {
 			return new Response("Not enough in stock");
 		}
