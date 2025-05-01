@@ -3,6 +3,7 @@ package model.structure.stores;
 import lombok.Getter;
 import model.records.Response;
 import model.relations.Player;
+import model.source.Mineral;
 import model.source.MineralType;
 import utils.App;
 
@@ -46,7 +47,7 @@ public enum CarpenterShopMineralStuff implements Shop {
 		}
 		if (salable == null) return new Response("Item not found");
 		Player player = App.getInstance().getCurrentGame().getCurrentPlayer();
-		if (!player.getInventory().isInventoryHaveCapacity(salable.getMineralType())) {
+		if (!player.getInventory().isInventoryHaveCapacity(new Mineral(salable.getMineralType()))) {
 			return new Response("Not enough space in your backpack.");
 		}
 		if (player.getAccount().getGolds() < salable.getPrice()) {
@@ -54,7 +55,7 @@ public enum CarpenterShopMineralStuff implements Shop {
 		}
 		player.getAccount().removeGolds(salable.getPrice());
 		salable.dailySold += count;
-		player.getInventory().addProductToBackPack(salable.mineralType, count);
+		player.getInventory().addProductToBackPack(new Mineral(salable.mineralType), count);
 		return new Response("Bought successfully", true);
 	}
 

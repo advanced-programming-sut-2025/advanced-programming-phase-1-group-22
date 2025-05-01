@@ -157,6 +157,7 @@ public enum CraftType implements Product{
     public void removeIngredients(Player player) {
         BackPack inventory = player.getInventory();
         for (Salable salable : products.keySet()) {
+            salable = inventory.findProductInBackPackByNAme(salable.getName());
             inventory.deleteProductFromBackPack(salable, player, products.get(salable));
         }
     }

@@ -4,6 +4,7 @@ import lombok.Getter;
 import model.enums.Season;
 import model.records.Response;
 import model.relations.Player;
+import model.source.Seed;
 import model.source.SeedType;
 import utils.App;
 
@@ -86,7 +87,7 @@ public enum JojaMartShopSeed implements Shop {
 			return new Response("Not enough in stock");
 		}
 		Player player = App.getInstance().getCurrentGame().getCurrentPlayer();
-		if (!player.getInventory().isInventoryHaveCapacity(salable.getSeedType())) {
+		if (!player.getInventory().isInventoryHaveCapacity(new Seed(salable.getSeedType()))) {
 			return new Response("Not enough space in your backpack.");
 		}
 		if (player.getAccount().getGolds() < salable.getPrice()) {
@@ -94,7 +95,7 @@ public enum JojaMartShopSeed implements Shop {
 		}
 		player.getAccount().removeGolds(salable.getPrice());
 		salable.dailySold += count;
-		player.getInventory().addProductToBackPack(salable.getSeedType(), count);
+		player.getInventory().addProductToBackPack(new Seed(salable.getSeedType()), count);
 		return new Response("Bought successfully", true);
 	}
 

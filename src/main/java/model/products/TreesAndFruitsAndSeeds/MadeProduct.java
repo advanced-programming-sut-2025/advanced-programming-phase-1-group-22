@@ -18,6 +18,11 @@ public class MadeProduct implements Salable {
         price = madeProductType.calcPrice((Product) product);
     }
 
+    public MadeProduct(MadeProductType value) {
+        this.madeProductType = value;
+        //TODO adding default product
+    }
+
     public int getPrice() {
         return madeProductType.calcPrice((Product) product);
     }

@@ -2,6 +2,7 @@ package model.structure.farmInitialElements;
 
 import lombok.Getter;
 import lombok.Setter;
+import model.Salable;
 import model.relations.Player;
 import model.shelter.FarmBuildingType;
 import model.source.MineralType;
@@ -26,7 +27,8 @@ public class GreenHouse extends HardCodeFarmElements {
         if (player.getAccount().getGolds() < 1000) return 1;
         if (player.getInventory().checkProductAvailabilityInBackPack(MineralType.WOOD.getName(), 500)) return 2;
         player.getAccount().removeGolds(1000);
-        player.getInventory().deleteProductFromBackPack(MineralType.WOOD, player,500);
+        Salable salable = player.getInventory().findProductInBackPackByNAme(MineralType.WOOD.getName());
+        player.getInventory().deleteProductFromBackPack(salable, player,500);
         isBuilt = true;
         return 0;
     }

@@ -245,7 +245,7 @@ public enum FoodType implements Product {
 
     public Boolean isValidIngredient(Fridge fridge) {
         for (Product product : ingredients.keySet()) {
-            if (!fridge.checkProductAvailability(product, ingredients.get(product))) return false;
+            if (!fridge.checkProductAvailability(product.getName(), ingredients.get(product))) return false;
         }
         return true;
     }
@@ -274,6 +274,7 @@ public enum FoodType implements Product {
 
     public void removeIngredients(Fridge fridge) {
         for (Product product : ingredients.keySet()) {
+            product = (Product) fridge.findProduct(product.getName());
             fridge.deleteProduct(product, ingredients.get(product));
         }
     }

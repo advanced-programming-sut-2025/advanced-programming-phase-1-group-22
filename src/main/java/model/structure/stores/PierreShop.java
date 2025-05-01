@@ -3,12 +3,18 @@ package model.structure.stores;
 import lombok.Getter;
 import model.Salable;
 import model.enums.Season;
+import model.exception.InvalidInputException;
+import model.gameSundry.Sundry;
 import model.gameSundry.SundryType;
+import model.products.TreesAndFruitsAndSeeds.MadeProduct;
 import model.products.TreesAndFruitsAndSeeds.MadeProductType;
 import model.records.Response;
 import model.relations.Player;
+import model.source.Seed;
 import model.source.SeedType;
+import model.tools.BackPack;
 import model.tools.BackPackType;
+import model.tools.Tool;
 import utils.App;
 
 import java.util.Arrays;
@@ -255,7 +261,13 @@ public enum PierreShop implements Shop {
         }
         player.getAccount().removeGolds(salable.getPrice());
         salable.dailySold += count;
-        player.getInventory().addProductToBackPack(salable.getSalable(), count);
+        Salable item = null;
+        if (salable.getSalable() instanceof SundryType) item = new Sundry((SundryType) salable.salable);
+        if (salable.getSalable() instanceof MadeProductType) item = new MadeProduct((MadeProductType) salable.salable);
+        if (salable.getSalable() instanceof SeedType) item = new Seed((SeedType) salable.salable);
+        if (salable.getSalable() instanceof Tool) item = salable.salable;
+        if (item == null) throw new InvalidInputException("Item not found in pierreShop");
+        player.getInventory().addProductToBackPack(item, count);
         return new Response("Bought successfully", true);
     }
 

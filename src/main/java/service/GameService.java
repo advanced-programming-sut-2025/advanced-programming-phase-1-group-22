@@ -4,6 +4,8 @@ import model.*;
 import model.abilitiy.Ability;
 import model.animal.Animal;
 import model.animal.AnimalType;
+import model.animal.Fish;
+import model.cook.Food;
 import model.craft.CraftType;
 import model.enums.Season;
 import model.animal.FishType;
@@ -15,15 +17,11 @@ import model.exception.InvalidInputException;
 import model.gameSundry.Sundry;
 import model.gameSundry.SundryType;
 import model.products.*;
-import model.products.TreesAndFruitsAndSeeds.FruitType;
-import model.products.TreesAndFruitsAndSeeds.Tree;
-import model.products.TreesAndFruitsAndSeeds.TreeType;
+import model.products.TreesAndFruitsAndSeeds.*;
 import model.products.AnimalProductType;
 import model.products.Hay;
 import model.products.Product;
 import model.products.TreesAndFruitsAndSeeds.FruitType;
-import model.products.TreesAndFruitsAndSeeds.MadeProduct;
-import model.products.TreesAndFruitsAndSeeds.MadeProductType;
 import model.receipe.CookingRecipe;
 import model.receipe.CraftingRecipe;
 import model.records.Response;
@@ -1191,29 +1189,29 @@ public class GameService {
         BackPack inventory = app.getCurrentGame().getCurrentPlayer().getInventory();
         Salable salable = null;
         for (FishType value : FishType.values()) {
-            if (name.equalsIgnoreCase(value.getName())) salable = value;
+            if (name.equalsIgnoreCase(value.getName())) salable = new Fish(value);
         }
         if (salable == null) {
             for (FoodType value : FoodType.values()) {
-                if (name.equalsIgnoreCase(value.getName())) salable = value;
+                if (name.equalsIgnoreCase(value.getName())) salable = new Food(value);
             }
         }
 
         if (salable == null) {
             for (CraftType value : CraftType.values()) {
-                if (name.equalsIgnoreCase(value.getName())) salable = value;
+                if (name.equalsIgnoreCase(value.getName())) salable = new Craft(value, null, null);
             }
         }
 
         if (salable == null) {
             for (FruitType value : FruitType.values()) {
-                if (name.equalsIgnoreCase(value.getName())) salable = value;
+                if (name.equalsIgnoreCase(value.getName())) salable = new Fruit(value);
             }
         }
 
         if (salable == null) {
             for (MadeProductType value : MadeProductType.values()) {
-                if (name.equalsIgnoreCase(value.getName())) salable = value;
+                if (name.equalsIgnoreCase(value.getName())) salable = new MadeProduct(value);
             }
         }
 
@@ -1461,8 +1459,12 @@ public class GameService {
                 player.getInventory().countProductFromBackPack(product1.getName()),
                 product2 != null);
         if (!isArtisanValid.shouldBeBack()) return isArtisanValid;
+        product1 = player.getInventory().findProductInBackPackByNAme(product1.getName());
         player.getInventory().deleteProductFromBackPack(product1, player, madeProductType.countIngredient());
-        if (product2 != null) player.getInventory().deleteProductFromBackPack(MadeProductType.COAL, player, 1);
+        if (product2 != null) {
+            product2 = player.getInventory().findProductInBackPackByNAme(MadeProductType.COAL.getName());
+            player.getInventory().deleteProductFromBackPack(product2, player, 1);
+        }
         player.addCraft(new Craft(madeProductType.getCraftType(), new MadeProduct(madeProductType, product1), madeProductType.calcETA(product1)));
         return new Response("The item will be ready in due time.");
     }
@@ -1652,12 +1654,12 @@ public class GameService {
         if (recipe == null) return new Response("You've not learnt to craft " + name);
         Response isPossible = recipe.getCraftType().isCraftingPossible(player);
         if (!isPossible.shouldBeBack()) return isPossible;
-        if (!player.getInventory().isInventoryHaveCapacity(recipe.getCraftType())) {
+        if (!player.getInventory().isInventoryHaveCapacity(new Craft(recipe.getCraftType(), null, null))) {
             return new Response("You don't have enough space in your backpack");
         }
         player.removeEnergy(2);
         recipe.getCraftType().removeIngredients(player);
-        player.getInventory().addProductToBackPack(recipe.getCraftType(), 1);
+        player.getInventory().addProductToBackPack(new Craft(recipe.getCraftType(), null, null), 1);
         return new Response(recipe.getCraftType().getName() + " crafted successfully.");
     }
 
@@ -1684,7 +1686,7 @@ public class GameService {
         if (product == null) {
             return new Response(name + " not found in the backpack");
         }
-        if (((Product) product).getEnergy() == 0) { //TODO check for being edible
+        if (((Product) product).getEnergy() == 0) {
             return new Response("Can't put the inedible items in the refrigerator.");
         }
         fridge.addProduct(product, player.getInventory().countProductFromBackPack(product.getName()));
@@ -1705,7 +1707,7 @@ public class GameService {
         }
         player.removeEnergy(3);
         recipe.getFoodType().removeIngredients(fridge);
-        player.getInventory().addProductToBackPack(recipe.getFoodType(), 1);
+        player.getInventory().addProductToBackPack(new Food(recipe.getFoodType()), 1);
         return new Response(recipe.getFoodType().getName() + " cooked successfully.");
     }
 

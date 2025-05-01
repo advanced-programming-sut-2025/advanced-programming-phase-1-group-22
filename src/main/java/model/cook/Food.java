@@ -9,6 +9,10 @@ public class Food implements Salable {
     private Integer id;
     private FoodType foodType;
 
+    public Food(FoodType foodType) {
+        this.foodType = foodType;
+    }
+
     @Override
     public String getName() {
         return this.foodType.getName();
