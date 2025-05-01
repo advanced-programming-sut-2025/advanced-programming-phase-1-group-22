@@ -6,6 +6,7 @@ import model.enums.Season;
 import model.gameSundry.SundryType;
 import model.products.TreesAndFruitsAndSeeds.MadeProductType;
 import model.records.Response;
+import model.relations.Player;
 import model.source.SeedType;
 import model.tools.BackPackType;
 import utils.App;
@@ -234,23 +235,28 @@ public enum PierreShop implements Shop {
     private Season getCurrentSeason() {
         return App.getInstance().getCurrentGame().getTimeAndDate().getSeason();
     }
-
-    public static List<PierreShop> getProductsForSeason(Season season) {
-        return Arrays.stream(values())
-                .filter(item -> item.season == season)
-                .collect(Collectors.toList());
-    }
-
-    public static List<PierreShop> getAvailableProducts() {
-        return Arrays.stream(values())
-                .filter(item -> item.dailyLimit == -1 || item.dailySold < item.dailyLimit)
-                .collect(Collectors.toList());
-    }
-
-
-
-    public static Response purchase(String name, int quantity) {
-        return Response.empty();//TODO
+    public static Response purchase(String name, Integer count) {
+        PierreShop salable = null;
+        for (PierreShop value : PierreShop.values()) {
+            if(value.getName().equals(name)) {
+                salable = value;
+            }
+        }
+        if (salable == null) return new Response("Item not found");
+        if (salable.dailyLimit != -1 && salable.dailyLimit < salable.dailySold + count) {
+            return new Response("Not enough in stock");
+        }
+        Player player = App.getInstance().getCurrentGame().getCurrentPlayer();
+        if (!player.getInventory().isInventoryHaveCapacity(salable.getSalable())) {
+            return new Response("Not enough space in your backpack.");
+        }
+        if (player.getAccount().getGolds() < salable.getPrice()) {
+            return new Response("Not enough golds");
+        }
+        player.getAccount().removeGolds(salable.getPrice());
+        salable.dailySold += count;
+        player.getInventory().addProductToBackPack(salable.getSalable(), count);
+        return new Response("Bought successfully", true);
     }
 
     public void resetDailySold() {

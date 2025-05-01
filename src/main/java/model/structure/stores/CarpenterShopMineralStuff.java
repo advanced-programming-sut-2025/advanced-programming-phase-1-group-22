@@ -44,7 +44,7 @@ public enum CarpenterShopMineralStuff implements Shop {
 				salable = value;
 			}
 		}
-		if (salable == null) return null;
+		if (salable == null) return new Response("Item not found");
 		Player player = App.getInstance().getCurrentGame().getCurrentPlayer();
 		if (!player.getInventory().isInventoryHaveCapacity(salable.getMineralType())) {
 			return new Response("Not enough space in your backpack.");
