@@ -1,7 +1,10 @@
 package model.gameSundry;
 
+import lombok.Getter;
+import lombok.Setter;
 import model.Salable;
-
+@Getter
+@Setter
 public class Sundry implements Salable {
     private SundryType sundryType;
 
