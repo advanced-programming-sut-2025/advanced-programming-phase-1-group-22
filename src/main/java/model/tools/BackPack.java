@@ -94,9 +94,10 @@ public class BackPack {
         return null;
     }
 
-    public Integer countProductFromBackPack(Salable salable) {
-        if (!products.containsKey(salable)) return 0;
-        return products.get(salable);
+    public Integer countProductFromBackPack(String salable) {
+        Salable product = findProductInBackPackByNAme(salable);
+        if (product == null) return 0;
+        return products.get(product);
     }
 
     public Boolean isInventoryHaveCapacity(Salable product) {
@@ -113,8 +114,9 @@ public class BackPack {
         return null;
     }
 
-    public boolean checkProductAvailabilityInBackPack(Salable product, int count) {
-        if (!products.containsKey(product)) return false;
+    public boolean checkProductAvailabilityInBackPack(String name, int count) {
+        Salable product = findProductInBackPackByNAme(name);
+        if (product == null) return false;
         return products.get(product) >= count;
     }
 

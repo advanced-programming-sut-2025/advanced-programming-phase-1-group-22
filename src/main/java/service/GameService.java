@@ -1168,10 +1168,20 @@ public class GameService {
         player.getInventory().deleteProductFromBackPack(product, player, 1);
         ((Structure) product).getTiles().add(tile);
         Farm currentFarm = getPlayerInWitchFarm(player);
-        if (currentFarm == null) {
-            return new Response("you have to be in a farm");
+        if (product instanceof Craft) {
+            switch (((Craft)product).getCraftType()) {
+                case CraftType.BOMB:
+                case CraftType.CHERRY_BOMB:
+                case CraftType.MEGA_BOMB: {
+                    for (Tile tile1 : ((Craft) product).getTiles()) {
+                        //TODO BURN;
+                    }
+                } break;
+            }
         }
-        currentFarm.getStructures().add((Structure) product);
+        if (currentFarm != null) {
+            currentFarm.getStructures().add((Structure) product);
+        }
         setScareCrowAndSprinklerForAll();
         tile.setIsFilled(true); //TODO not always is filled;
         return new Response(itemName + " is put on the ground.", true);
@@ -1447,7 +1457,8 @@ public class GameService {
         }
         MadeProductType madeProductType = MadeProductType.findByCraft((CraftType) craft);
         if (madeProductType == null) return new Response(name + "is not a valid artisan.");
-        Response isArtisanValid = madeProductType.isIngredientsValid((Product) product1, player.getInventory().countProductFromBackPack(product1),
+        Response isArtisanValid = madeProductType.isIngredientsValid((Product) product1,
+                player.getInventory().countProductFromBackPack(product1.getName()),
                 product2 != null);
         if (!isArtisanValid.shouldBeBack()) return isArtisanValid;
         player.getInventory().deleteProductFromBackPack(product1, player, madeProductType.countIngredient());
@@ -1498,7 +1509,7 @@ public class GameService {
         }
         Salable salable = player.getInventory().findProductInBackPackByNAme(name);
         if (salable == null) return new Response("Item not found in your backpack");
-        if (player.getInventory().countProductFromBackPack(salable) < Integer.parseInt(count)) {
+        if (player.getInventory().countProductFromBackPack(salable.getName()) < Integer.parseInt(count)) {
             return new Response("Not enough in your backpack");
         }
         if (false) return new Response("Item not salable"); //TODO checking not salable
@@ -1524,7 +1535,7 @@ public class GameService {
             return new Response("You are not next to any shipping bins");
         }
         Salable salable = player.getInventory().findProductInBackPackByNAme(name);
-        int count = player.getInventory().countProductFromBackPack(salable);
+        int count = player.getInventory().countProductFromBackPack(salable.getName());
         if (salable == null) return new Response("Item not found in your backpack");
         if (false) return new Response("Item not salable"); //TODO checking not salable
         player.getInventory().deleteProductFromBackPack(salable, player, count);
@@ -1676,9 +1687,9 @@ public class GameService {
         if (((Product) product).getEnergy() == 0) { //TODO check for being edible
             return new Response("Can't put the inedible items in the refrigerator.");
         }
-        fridge.addProduct(product, player.getInventory().countProductFromBackPack(product));
+        fridge.addProduct(product, player.getInventory().countProductFromBackPack(product.getName()));
         player.getInventory().deleteProductFromBackPack(product, player,
-                player.getInventory().countProductFromBackPack(product));
+                player.getInventory().countProductFromBackPack(product.getName()));
         return new Response("Put down.");
     }
 

@@ -85,7 +85,7 @@ public enum BlackSmithUpgrade implements Shop {
 		}
 		Player player = App.getInstance().getCurrentGame().getCurrentPlayer();
 		for (Map.Entry<Product, Integer> productIntegerEntry : salable.ingredient.entrySet()) {
-			if (!player.getInventory().checkProductAvailabilityInBackPack(productIntegerEntry.getKey(),
+			if (!player.getInventory().checkProductAvailabilityInBackPack(productIntegerEntry.getKey().getName(),
 					productIntegerEntry.getValue())) {
 				return new Response("Ingredients not found.");
 			}
