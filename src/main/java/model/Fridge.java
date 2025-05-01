@@ -53,8 +53,9 @@ public class Fridge extends Structure {
         return products.get(salable);
     }
 
-    public boolean checkProductAvailability(Salable product, int count) {
-        if (!products.containsKey(product)) return false;
+    public boolean checkProductAvailability(String name, int count) {
+        Salable product = findProduct(name);
+        if (product == null) return false;
         return products.get(product) >= count;
     }
 

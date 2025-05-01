@@ -30,6 +30,7 @@ public class BackPack {
     }
 
     public void deleteProductFromBackPack(Salable product, Player player, int itemNumber) {
+        if (product == null) throw new InvalidInputException("Product wanted to be deleted is not available in backpack");
         TrashCan trashCan = getPlayerTrashCan(player);
         if (trashCan != null) {
             trashCan.givePlayerProductPrice(player, product, itemNumber);
@@ -101,6 +102,7 @@ public class BackPack {
     }
 
     public Boolean isInventoryHaveCapacity(Salable product) {
+        if (!(product instanceof Tool)) product = findProductInBackPackByNAme(product.getName());
         return backPackType.getIsInfinite() || backPackType.getCapacity() < products.size() ||
                 products.containsKey(product);
     }
@@ -121,12 +123,13 @@ public class BackPack {
     }
 
     public Salable findProductInBackPackByNAme(String product) {
-        for (Salable salable : products.keySet()) {
-            if (salable.getName().equals(product)) {
-                return salable;
-            }
-        }
-        return null;
+        return getProductFromBackPack(product);
+//        for (Salable salable : products.keySet()) {
+//            if (salable.getName().equals(product)) {
+//                return salable;
+//            }
+//        }
+//        return null;
 
     }
 }

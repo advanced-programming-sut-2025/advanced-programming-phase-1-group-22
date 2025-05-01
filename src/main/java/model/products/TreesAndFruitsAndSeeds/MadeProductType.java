@@ -275,6 +275,7 @@ public enum MadeProductType implements Product {
         return null;
     }
 
+
     public Integer calcPrice(Salable product) {
         return sellPrice;
     }

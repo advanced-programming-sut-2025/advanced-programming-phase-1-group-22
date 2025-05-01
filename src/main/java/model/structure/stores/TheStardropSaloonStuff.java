@@ -2,12 +2,20 @@ package model.structure.stores;
 
 import lombok.Getter;
 import model.Salable;
+import model.cook.Food;
 import model.cook.FoodType;
+import model.exception.InvalidInputException;
+import model.gameSundry.Sundry;
+import model.gameSundry.SundryType;
+import model.products.TreesAndFruitsAndSeeds.MadeProduct;
 import model.products.TreesAndFruitsAndSeeds.MadeProductType;
 import model.receipe.CookingRecipe;
 import model.receipe.CraftingRecipe;
 import model.receipe.Recipe;
 import model.records.Response;
+import model.source.Seed;
+import model.source.SeedType;
+import model.tools.Tool;
 import utils.App;
 import model.relations.Player;
 
@@ -78,7 +86,12 @@ public enum TheStardropSaloonStuff implements Shop {
 			}
 			player.getAccount().removeGolds(salable.getPrice());
 			salable.dailySold += count;
-			player.getInventory().addProductToBackPack(salable.product, count);
+			Salable item = null;
+			if (salable.getProduct() instanceof MadeProductType) item = new MadeProduct((MadeProductType) salable.product);
+			if (salable.getProduct() instanceof FoodType) item = new Food((FoodType) salable.product);
+			if (item == null) throw new InvalidInputException("Item not found in Star drop Saloon");
+
+			player.getInventory().addProductToBackPack(item, count);
 			return new Response("Bought successfully", true);
 		}
 		for (TheStardropSaloonStuff value : TheStardropSaloonStuff.values()) {
