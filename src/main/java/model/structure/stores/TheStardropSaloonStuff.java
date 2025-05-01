@@ -100,4 +100,8 @@ public enum TheStardropSaloonStuff implements Shop {
 		player.getCookingRecipes().add((CookingRecipe) salable.product);
 		return new Response("Bought successfully", true);
 	}
+
+	public void resetDailySold() {
+		dailySold = 0;
+	}
 }

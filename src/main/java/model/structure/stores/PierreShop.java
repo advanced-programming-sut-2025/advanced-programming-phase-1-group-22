@@ -2,11 +2,13 @@ package model.structure.stores;
 
 import lombok.Getter;
 import model.Salable;
+import model.enums.Season;
 import model.gameSundry.SundryType;
 import model.products.TreesAndFruitsAndSeeds.MadeProductType;
 import model.records.Response;
 import model.source.SeedType;
 import model.tools.BackPackType;
+import utils.App;
 
 import java.util.Arrays;
 import java.util.List;
@@ -184,10 +186,6 @@ public enum PierreShop implements Shop {
     private final int dailyLimit;
     private final Season season;
 
-    public enum Season {
-        SPRING, SUMMER, FALL, WINTER
-    }
-
     // Constructor for non-seasonal items
     PierreShop(Salable salable, String name, String description, int price, int dailyLimit) {
         this(salable, name, description, price, price, dailyLimit, null);
@@ -233,11 +231,8 @@ public enum PierreShop implements Shop {
         }
         return res.toString();
     }
-    // This should be implemented based on your game's calendar system
     private Season getCurrentSeason() {
-        // Placeholder - replace with actual game season tracking
-        // Example: return GameState.getCurrentSeason();
-        return Season.SPRING; // Default for example
+        return App.getInstance().getCurrentGame().getTimeAndDate().getSeason();
     }
 
     public static List<PierreShop> getProductsForSeason(Season season) {
@@ -258,14 +253,7 @@ public enum PierreShop implements Shop {
         return Response.empty();//TODO
     }
 
-    public void resetDailyStock() {
-        this.dailySold = 0;
+    public void resetDailySold() {
+        dailySold = 0;
     }
-
-    public static void resetAllDailyStock() {
-        for (PierreShop item : values()) {
-            item.resetDailyStock();
-        }
-    }
-
 }

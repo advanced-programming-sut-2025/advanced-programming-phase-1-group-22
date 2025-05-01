@@ -38,6 +38,7 @@ public class Player extends Actor {
     private Integer daysOfSadness = 0;
     private BackPack inventory;
     private Buff buff;
+    private Ability buffAbility;
     private Map<Ability, Integer> abilities = new HashMap<>();
     private ShippingBin shippingBin;
     private Account account = new Account();

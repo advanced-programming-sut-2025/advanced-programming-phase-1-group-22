@@ -62,4 +62,8 @@ public enum CarpenterShopFarmBuildings {
 	public static Response purchase(String name, Integer count) {
 		return new Response("Invalid command.");
 	}
+
+	public void resetDailySold() {
+		dailySold = 0;
+	}
 }

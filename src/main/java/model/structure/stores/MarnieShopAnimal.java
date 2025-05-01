@@ -57,4 +57,8 @@ public enum MarnieShopAnimal {
 		}
 		return null;
 	}
+
+	public void resetDailySold() {
+		dailySold = 0;
+	}
 }
