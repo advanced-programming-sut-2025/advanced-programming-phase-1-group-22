@@ -7,7 +7,6 @@ import model.*;
 import model.abilitiy.Ability;
 import model.animal.Animal;
 import model.craft.Craft;
-import model.craft.CraftType;
 import model.exception.InvalidInputException;
 import model.receipe.CookingRecipe;
 import model.receipe.CraftingRecipe;
@@ -64,6 +63,18 @@ public class Player extends Actor {
         for (Ability ability : Ability.values()) {
             abilities.put(ability, 0);
         }
+        for (CookingRecipe value : CookingRecipe.values()) {
+            cookingRecipes.put(value, false);
+        }
+        cookingRecipes.put(CookingRecipe.FRIED_EGG_RECIPE, true);
+        cookingRecipes.put(CookingRecipe.BAKED_FISH_RECIPE, true);
+        cookingRecipes.put(CookingRecipe.SALAD_RECIPE, true);
+        for (CraftingRecipe value : CraftingRecipe.values()) {
+            craftingRecipes.put(value, false);
+        }
+        craftingRecipes.put(CraftingRecipe.FURNACE_RECIPE, true);
+        craftingRecipes.put(CraftingRecipe.SCARECROW_RECIPE, true);
+        craftingRecipes.put(CraftingRecipe.MAYONNAISE_MACHINE_RECIPE, true);
         addBasicTools();
     }
 

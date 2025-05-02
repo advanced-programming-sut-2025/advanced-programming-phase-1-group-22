@@ -8,7 +8,7 @@ import utils.App;
 @Getter
 public enum CookingRecipe implements Recipe {
     FRIED_EGG_RECIPE("fried egg recipe", "A recipe to make fried egg", 0, FoodType.FRIED_EGG),
-    BACKED_FISH_RECIPE("backed fish recipe", "A recipe to make backed fish", 0, FoodType.BACKED_FISH),
+    BAKED_FISH_RECIPE("backed fish recipe", "A recipe to make backed fish", 0, FoodType.BACKED_FISH),
     SALAD_RECIPE("salad recipe", "A recipe to make Salad", 0, FoodType.SALAD),
     SALMON_DINNER_RECIPE("salmon dinner recipe", "A recipe to make Salmon Dinner", 0, FoodType.SALMON_DINNER),
     HASHBROWNS_RECIPE("hashbrowns recipe","A recipe to make Hashbrowns",50, FoodType.HASH_BROWNS),
