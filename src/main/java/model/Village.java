@@ -3,11 +3,22 @@ package model;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import model.animal.Animal;
+import model.animal.Fish;
+import model.cook.Food;
+import model.craft.Craft;
 import model.enums.Weather;
+import model.products.AnimalProduct;
+import model.products.Hay;
+import model.products.TreesAndFruitsAndSeeds.Fruit;
+import model.products.TreesAndFruitsAndSeeds.MadeProduct;
 import model.products.TreesAndFruitsAndSeeds.Tree;
 import model.relations.NPC;
 import model.relations.NPCType;
 import model.relations.Player;
+import model.shelter.FarmBuilding;
+import model.shelter.ShippingBin;
+import model.source.*;
 import model.structure.NPCHouse;
 import model.structure.Stone;
 import model.structure.Structure;
@@ -18,6 +29,7 @@ import model.structure.farmInitialElements.Lake;
 import model.structure.farmInitialElements.Quarry;
 import model.structure.stores.Store;
 import model.structure.stores.StoreType;
+import model.tools.Tool;
 import utils.App;
 
 import java.util.ArrayList;
@@ -211,32 +223,49 @@ public class Village {
             if (structure instanceof Store) symbol = 's';
             else if (structure instanceof NPCHouse) symbol = 'N';
             else if (structure instanceof Fountain) symbol = 'f';
+            else if (structure instanceof NPC) symbol = '?';
+            else if (structure instanceof Player) symbol = '!';
 
-            for (Tile tile : structure.getTiles()) {
-                str[tile.getX()][tile.getY()] = symbol;
-            }
-        }
-        for (Farm farm : farms) {
-            for (Structure structure : farm.getStructures()) {
-                char symbol = ' ';
-                if (structure instanceof Cottage) symbol = 'C';
-                else if (structure instanceof Lake) symbol = 'L';
-                else if (structure instanceof Quarry) symbol = 'Q';
-                else if (structure instanceof GreenHouse) {
-                    if (((GreenHouse) structure).isBuilt()) symbol = 'G';
-                    else symbol = 'g';
-                } else if (structure instanceof Trunk) symbol = 't';
-                else if (structure instanceof Tree) symbol = 'T';
-                else if (structure instanceof Stone) symbol = '*';
-
+            if (symbol != ' ') {
                 for (Tile tile : structure.getTiles()) {
                     str[tile.getX()][tile.getY()] = symbol;
                 }
             }
         }
-        for (Player player : game.getPlayers()) {
-            str[player.getTiles().getFirst().getX()][player.getTiles().getFirst().getY()] = '@';
+        for (Farm farm : farms) {
+            for (Structure structure : farm.getStructures()) {
+                char symbol = ' ';
+                if (structure instanceof Cottage) symbol = 'c';
+                else if (structure instanceof Lake) symbol = 'L';
+                else if (structure instanceof Quarry) symbol = 'Q';
+                else if (structure instanceof GreenHouse) {
+                    if (((GreenHouse) structure).isBuilt()) symbol = 'g';
+                    else symbol = '-';
+                } else if (structure instanceof Trunk) symbol = 't';
+                else if (structure instanceof Tree) symbol = 'T';
+                else if (structure instanceof Stone) symbol = '*';
+                else if (structure instanceof Animal) symbol = 'a';
+                else if (structure instanceof Fish) symbol = 'x';
+                else if (structure instanceof Craft) symbol = '&';
+                else if (structure instanceof AnimalProduct) symbol = '^';
+                else if (structure instanceof FarmBuilding) symbol = '#';
+                else if (structure instanceof ShippingBin) symbol = 'O';
+                else if (structure instanceof Crop) symbol = 'r';
+                else if (structure instanceof Mineral) symbol = '=';
+                else if (structure instanceof MixedSeeds) symbol = '$';
+                else if (structure instanceof Seed) symbol = 'z';
+                else if (structure instanceof Tool) symbol = '\\';
+
+                if (symbol != ' ') {
+                    for (Tile tile : structure.getTiles()) {
+                        str[tile.getX()][tile.getY()] = symbol;
+                    }
+                }
+            }
         }
+        Player player = app.getCurrentGame().getCurrentPlayer();
+        str[player.getTiles().getFirst().getX()][player.getTiles().getFirst().getY()] = '@';
+
         int xStart = x - size / 2;
         int xEnd = x + size / 2;
         int yStart = y - size / 2;
