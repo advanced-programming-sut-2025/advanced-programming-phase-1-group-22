@@ -1626,7 +1626,61 @@ public class GameService {
         return new Response(foodName + " is eaten now");
     }
 
+    private void updateRecipes() {
+        Player player = app.getCurrentGame().getCurrentPlayer();
+        switch (player.getAbilityLevel(Ability.MINING)) {
+            case 4:
+            case 3:
+                player.getCraftingRecipes().put(CraftingRecipe.MEGA_BOMB_RECIPE, true);
+            case 2:
+                player.getCraftingRecipes().put(CraftingRecipe.BOMB_RECIPE, true);
+            case 1: {
+                player.getCraftingRecipes().put(CraftingRecipe.CHERRY_BOMB_RECIPE, true);
+                player.getCookingRecipes().put(CookingRecipe.MINERS_TREAT_RECIPE, true);
+            }
+        }
+        switch (player.getAbilityLevel(Ability.FARMING)) {
+            case 4:
+            case 3: {
+                player.getCraftingRecipes().put(CraftingRecipe.IRIDIUM_SPRINKLER_RECIPE, true);
+                player.getCraftingRecipes().put(CraftingRecipe.KEG_RECIPE, true);
+                player.getCraftingRecipes().put(CraftingRecipe.LOOM_RECIPE, true);
+                player.getCraftingRecipes().put(CraftingRecipe.OIL_MAKER_RECIPE, true);
+            }
+            case 2: {
+                player.getCraftingRecipes().put(CraftingRecipe.QUALITY_SPRINKLER_RECIPE, true);
+                player.getCraftingRecipes().put(CraftingRecipe.DELUXE_SCARECROW_RECIPE, true);
+                player.getCraftingRecipes().put(CraftingRecipe.CHEESE_PRESS_RECIPE, true);
+                player.getCraftingRecipes().put(CraftingRecipe.PRESERVES_JAR_RECIPE, true);
+            }
+            case 1: {
+                player.getCraftingRecipes().put(CraftingRecipe.SPRINKLER_RECIPE, true);
+                player.getCraftingRecipes().put(CraftingRecipe.BEE_HOUSE_RECIPE, true);
+                player.getCookingRecipes().put(CookingRecipe.FARMERS_LUNCH_RECIPE, true);
+            }
+        }
+        switch (player.getAbilityLevel(Ability.FORAGING)) {
+            case 4:
+                player.getCraftingRecipes().put(CraftingRecipe.MYSTIC_TREE_SEED_RECIPE, true);
+            case 3:
+                player.getCookingRecipes().put(CookingRecipe.SURVIVAL_BURGER_RECIPE, true);
+            case 2:
+                player.getCookingRecipes().put(CookingRecipe.VEGETABLE_MEDLEY_RECIPE, true);
+            case 1:
+                player.getCraftingRecipes().put(CraftingRecipe.CHARCOAL_KILN_RECIPE, true);
+        }
+
+        switch (player.getAbilityLevel(Ability.FISHING)) {
+            case 4:
+            case 3:
+                player.getCookingRecipes().put(CookingRecipe.SEAFOAM_PUDDING_RECIPE, true);
+            case 2:
+                player.getCookingRecipes().put(CookingRecipe.DISH_O_THE_SEA_RECIPE, true);
+        }
+    }
+
     public Response craftingShowRecipes() {
+        updateRecipes();
         Player player = app.getCurrentGame().getCurrentPlayer();
         Map<CraftingRecipe, Boolean> craftingRecipeList = player.getCraftingRecipes();
         if (craftingRecipeList.isEmpty()) return new Response("No recipe found you loser.");
@@ -1640,6 +1694,7 @@ public class GameService {
     }
 
     public Response cookingShowRecipes() {
+        updateRecipes();
         Player player = app.getCurrentGame().getCurrentPlayer();
         Map<CookingRecipe, Boolean> cookingRecipeList = player.getCookingRecipes();
         if (cookingRecipeList.isEmpty()) return new Response("No recipe found you loser.");
@@ -1653,6 +1708,7 @@ public class GameService {
     }
 
     public Response craftingCraft(String name) {
+        updateRecipes();
         Player player = app.getCurrentGame().getCurrentPlayer();
         CraftingRecipe recipe = player.findCraftingRecipe(name);
         if (recipe == null) return new Response("You've not learnt to craft " + name);
@@ -1700,6 +1756,7 @@ public class GameService {
     }
 
     public Response cookingPrepare(String name) {
+        updateRecipes();
         Player player = app.getCurrentGame().getCurrentPlayer();
         Fridge fridge = app.getCurrentGame().findFarm().getFridge();
         CookingRecipe recipe = player.findCookingRecipe(name);
