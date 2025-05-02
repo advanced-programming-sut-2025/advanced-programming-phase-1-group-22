@@ -68,7 +68,6 @@ public class TimeAndDate {
         }
         if (nextDay) {
             App.getInstance().getCurrentGame().startDay();
-            //TODO: reset Energy sets and randomizing the day
         }
     }
 

@@ -67,7 +67,7 @@ public class GameMenuController extends MenuController {
     }
 
     public Response walk(String[] params) {
-        return gameService.walk(params[0], params[1]); //TODO Scanner not passed
+        return gameService.walk(params[0], params[1]);
     }
 
     public Response C_Thor(String[] params) {

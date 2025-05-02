@@ -202,7 +202,6 @@ public class GameService {
         }
         greenHouse.build();
         return new Response("The greenhouse is built", true);
-        //TODO greenhouse initialization
     }
 
     public Response weatherForecast() {
@@ -1171,9 +1170,12 @@ public class GameService {
                 case CraftType.BOMB:
                 case CraftType.CHERRY_BOMB:
                 case CraftType.MEGA_BOMB: {
-                    for (Tile tile1 : ((Craft) product).getTiles()) {
+                    for (Tile tile1 : ((Craft) product).getAffectedTiles()) {
                         //TODO BURN;
                     }
+                } break;
+                case CraftType.GRASS_STARTER: {
+                    ((Craft) product).getTiles().getFirst().setTileType(TileType.GRASS);
                 } break;
             }
         }
@@ -1537,12 +1539,12 @@ public class GameService {
             return new Response("You are not next to any shipping bins");
         }
         Salable salable = player.getInventory().findProductInBackPackByNAme(name);
-        int count = player.getInventory().countProductFromBackPack(salable.getName());
         if (salable == null) return new Response("Item not found in your backpack");
-        if (false) return new Response("Item not salable"); //TODO checking not salable
+        int count = player.getInventory().countProductFromBackPack(salable.getName());
+        if (salable.getSellPrice() == 0) return new Response("Item not salable");
         player.getInventory().deleteProductFromBackPack(salable, player, count);
         shippingBin.add(salable, count);
-        return new Response("Item(s) is(are) put in the bin"); //TODO resetting bins at the start day
+        return new Response("Item(s) is(are) put in the bin");
     }
 
     private void setScareCrowAffect(Craft craft) {

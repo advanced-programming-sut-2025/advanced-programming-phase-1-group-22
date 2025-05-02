@@ -51,7 +51,7 @@ public enum StoreType {
             try {
                 res += shop2.getMethod("showAvailableProducts").invoke(null);
             } catch (Exception ignored) {}
-        } //TODO changing price in different times and ...
+        }
         return new Response(res, true);
     }
     public Response purchase(String name, Integer count) {
