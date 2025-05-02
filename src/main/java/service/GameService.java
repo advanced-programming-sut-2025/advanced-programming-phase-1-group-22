@@ -1628,22 +1628,26 @@ public class GameService {
 
     public Response craftingShowRecipes() {
         Player player = app.getCurrentGame().getCurrentPlayer();
-        List<CraftingRecipe> craftingRecipeList = player.getCraftingRecipes();
+        Map<CraftingRecipe, Boolean> craftingRecipeList = player.getCraftingRecipes();
         if (craftingRecipeList.isEmpty()) return new Response("No recipe found you loser.");
         StringBuilder response = new StringBuilder("Crafting recipes you've learnt so far: \n");
-        for (CraftingRecipe craftingRecipe : craftingRecipeList) {
-            response.append(craftingRecipe.toString()).append("\n");
+        for (CraftingRecipe craftingRecipe : craftingRecipeList.keySet()) {
+            if (craftingRecipeList.get(craftingRecipe)) {
+                response.append(craftingRecipe.toString()).append("\n");
+            }
         }
         return new Response(response.append("\n").toString(), true);
     }
 
     public Response cookingShowRecipes() {
         Player player = app.getCurrentGame().getCurrentPlayer();
-        List<CookingRecipe> cookingRecipeList = player.getCookingRecipes();
+        Map<CookingRecipe, Boolean> cookingRecipeList = player.getCookingRecipes();
         if (cookingRecipeList.isEmpty()) return new Response("No recipe found you loser.");
         StringBuilder response = new StringBuilder("Cooking recipes you've learnt so far: \n");
-        for (CookingRecipe cookingRecipe : cookingRecipeList) {
-            response.append(cookingRecipe.toString()).append("\n");
+        for (CookingRecipe cookingRecipe : cookingRecipeList.keySet()) {
+            if (cookingRecipeList.get(cookingRecipe)) {
+                response.append(cookingRecipe.toString()).append("\n");
+            }
         }
         return new Response(response.append("\n").toString(), true);
     }

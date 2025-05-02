@@ -8,6 +8,7 @@ import model.gameSundry.Sundry;
 import model.gameSundry.SundryType;
 import model.products.TreesAndFruitsAndSeeds.MadeProduct;
 import model.products.TreesAndFruitsAndSeeds.MadeProductType;
+import model.receipe.CraftingRecipe;
 import model.records.Response;
 import model.relations.Player;
 import model.source.Seed;
@@ -24,6 +25,12 @@ import java.util.stream.Collectors;
 @Getter
 public enum PierreShop implements Shop {
     // Miscellaneous Items
+    DEHYDRATOR_RECIPE(CraftingRecipe.DEHYDRATOR_RECIPE, CraftingRecipe.DEHYDRATOR_RECIPE.getName(),
+            "dehydrator recipe.",
+            CraftingRecipe.DEHYDRATOR_RECIPE.getPrice(), 1),
+    GRASS_STARTER_RECIPE(CraftingRecipe.GRASS_STARTER_RECIPE, CraftingRecipe.GRASS_STARTER_RECIPE.getName(),
+            "grass starter recipe.",
+            CraftingRecipe.GRASS_STARTER_RECIPE.getPrice(), 1),
     RICE(SundryType.RICE, SundryType.RICE.getName(),
             "A basic grain used in many recipes.",
             SundryType.RICE.getPrice() * 2, -1),
@@ -262,6 +269,10 @@ public enum PierreShop implements Shop {
         player.getAccount().removeGolds(salable.getPrice());
         salable.dailySold += count;
         Salable item = null;
+        if (salable.getSalable() instanceof CraftingRecipe) {
+            player.getCraftingRecipes().put((CraftingRecipe) salable.salable, true);
+            return new Response("Bought successfully", true);
+        }
         if (salable.getSalable() instanceof SundryType) item = new Sundry((SundryType) salable.salable);
         if (salable.getSalable() instanceof MadeProductType) item = new MadeProduct((MadeProductType) salable.salable);
         if (salable.getSalable() instanceof SeedType) item = new Seed((SeedType) salable.salable);
