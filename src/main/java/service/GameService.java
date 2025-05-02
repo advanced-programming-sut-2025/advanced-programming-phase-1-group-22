@@ -264,8 +264,43 @@ public class GameService {
     }
 
     public Response helpReadingMap() {
-        //TODO
-        return Response.empty();
+        String resp = "@\tYou\n\nTile Types:\n" +
+                "!\tOther Players\n\nTile Types:\n" +
+                "?\tNPC\n\nTile Types:\n" +
+                "G\tGrass\n" +
+                "F\tFlower\n" +
+                "S\tSnow\n" +
+                "M\tMud\n" +
+                ".\tFlat\n" +
+                "+\tPath\n" +
+                "C\tFence\n" +
+                "D\tDoor\n" +
+                "P\tPlowed\n" +
+                "\nBuildings:\n" +
+                "S\tStore\n" +
+                "N\tNPC House\n" +
+                "f\tFountain\n" +
+                "c\tCottage\n" +
+                "L\tLake\n" +
+                "Q\tQuarry\n" +
+                "g\tGreenhouse\n" +
+                "-\tBuilt Greenhouse\n" +
+                "#\tFarm Building\n" +
+                "\nOther Structures\n" +
+                "t\tTrunk\n" +
+                "T\tTree\n" +
+                "*\tStone\n" +
+                "a\tAnimal\n" +
+                "x\tFish\n" +
+                "&\tCraft\n" +
+                "^\tAnimalProduct\n" +
+                "O\tShipping Bin\n" +
+                "r\tCrop\n" +
+                "=\tMineral\n" +
+                "$\tMixed Seed\n" +
+                "z\tSeed\n" +
+                "\\\tTool\n";
+        return new Response(resp, true);
     }
 
     public Response showPlayerEnergy() {
