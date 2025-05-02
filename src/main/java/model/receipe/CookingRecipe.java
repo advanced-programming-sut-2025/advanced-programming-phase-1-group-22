@@ -27,8 +27,6 @@ public enum CookingRecipe implements Recipe {
     SEAFOAM_PUDDING_RECIPE("seafoam pudding recipe", "A recipe to make seafoam pudding", 300, FoodType.SEA_FORM_PUDDING),
     MINERS_TREAT_RECIPE("miner's treat recipe", "A recipe to make miner's treat", 200, FoodType.MINERS_TREAT);
 
-    //TODO Adding other recipes on the due time available
-
     private String name;
     private Integer id;
     private String description;

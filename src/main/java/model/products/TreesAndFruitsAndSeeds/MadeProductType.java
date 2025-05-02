@@ -301,7 +301,6 @@ public enum MadeProductType implements Product {
     }
 
     private static TimeAndDate calcNextMorning() {
-        //TODO
         return null;
     }
 

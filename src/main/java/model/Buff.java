@@ -57,5 +57,4 @@ public class Buff {
     public Object clone() {
         return new Buff(maxPower, ability, buffImpact);
     }
-    //TODO implement buff
 }

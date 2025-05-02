@@ -31,10 +31,6 @@ public enum CraftingRecipe implements Recipe {
     FISH_SMOKER_RECIPE("Fish Smoker recipe", "A recipe to make Fish Smoker", 0, CraftType.FISH_SMOKER),
     MYSTIC_TREE_SEED_RECIPE("Mystic Tree Seed recipe", "A recipe to make Mystic Tree Seed", 100, CraftType.MYSTIC_TREE_SEEDS);
 
-
-
-    //TODO Adding other recipes on the due time available
-
     private String name;
     private Integer id;
     private String description;

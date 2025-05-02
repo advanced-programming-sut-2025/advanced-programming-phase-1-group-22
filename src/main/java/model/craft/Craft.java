@@ -40,4 +40,8 @@ public class Craft extends Structure implements Salable {
     public int getSellPrice() {
         return craftType.getSellPrice();
     }
+
+    public List<Tile> getAffectedTiles() {
+        return null;
+    }
 }
