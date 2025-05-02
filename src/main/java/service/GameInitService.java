@@ -45,7 +45,7 @@ public class GameInitService {
         if (user == null) return 1;
         if (user.getIsPlaying()) return 2;
         for (User addedUser : users) {
-            if (user == addedUser) return 3;
+            if (user.getUsername().equals(addedUser.getUsername())) return 3;
         }
         users.add(user);
         return 0;
@@ -53,7 +53,7 @@ public class GameInitService {
 
     public Response newGame(String players) {
         Matcher matcher;
-        String newGameEmpty = "\\S+";
+        String newGameEmpty = "^\\s*$";
         String newGamePlayers1 = "^(?<player1>\\S+)$";
         String newGamePlayers2 = "^(?<player1>\\S+)\\s+(?<player2>\\S+)$";
         String newGamePlayers3 = "^(?<player1>\\S+)\\s+(?<player2>\\S+)\\s+(?<player3>\\S+)$";
@@ -62,7 +62,7 @@ public class GameInitService {
         ArrayList<String> usernames = new ArrayList<>();
         ArrayList<User> users = new ArrayList<>();
         usernames.add(Session.getCurrentUser().getUsername());
-        if (isMatched(players, newGameEmpty) != null) {
+        if (players == null || isMatched(players, newGameEmpty) != null) {
             return new Response("No players added");
         }
         if (isMatched(players, newGamePlayers4) != null) {
@@ -89,7 +89,7 @@ public class GameInitService {
                     return new Response("Username: " + username + " has already an active game");
                 }
                 case 3 -> {
-                    return new Response("Username: " + username + " has already added");
+                    return new Response("Username: " + username + " has been already added");
                 }
             }
         }

@@ -31,17 +31,14 @@ public class MainMenuController extends MenuController {
     }
 
     public Response newGame(String[] params) {
-        gameInitService.newGame(params[0]);
-        return null;
+        return gameInitService.newGame(params[1]);
     }
 
     public Response loadGame(String[] params) {
-        gameInitService.loadGame();
-        return null;
+        return gameInitService.loadGame();
     }
 
     public Response gameMap(String[] params) {
-        gameInitService.gameMap(params[0]);
-        return null;
+        return gameInitService.gameMap(params[0]);
     }
 }
