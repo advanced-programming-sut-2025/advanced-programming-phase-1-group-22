@@ -96,6 +96,7 @@ public enum CraftType implements Product{
     OIL_MAKER("oil_maker","truffle را به روغن تبدیل میکند",Map.of(MineralType.WOOD,100,MadeProductType.IRON_BAR,1,MadeProductType.GOLD_BAR,1),0,Map.of(Ability.FARMING,3)),
     PRESERVES_JAR("preserves_jar","سبزیجات را به ترشی و میوه ها را به مربا تبدیل میکند",Map.of(MineralType.WOOD,50,MineralType.STONE,40,MineralType.COAL,8),0,Map.of(Ability.FARMING,2)),
     DEHYDRATOR("dehydrator","میوه یا قارچ را خشک میکند",Map.of(MineralType.WOOD,30,MineralType.STONE,20,MineralType.FIBER,30),0,StoreType.PIERRE_SHOP),
+    GRASS_STARTER("grass_starter","باعث رشد علف میشود",Map.of(MineralType.WOOD,1,MineralType.FIBER,1),0,StoreType.PIERRE_SHOP),
     FISH_SMOKER("fish_smoker","هر ماهی را با یک ذغال با حفظ کیفیتش تبدیل به ماهی دودی میکند",Map.of(MineralType.WOOD,50,MineralType.COAL,10,MadeProductType.IRON_BAR,3),0,StoreType.FISH_SHOP),
     MYSTIC_TREE_SEEDS("mystic_tree_seed","میتواند کاشته شود تا mystic tree رشد کند",Map.of(SeedType.PINE_CONES,5,SeedType.MAHOGANY_SEEDS,5,SeedType.ACORNS,5, SeedType.MAPLE_SEEDS,5),100,Map.of(Ability.MINING,4));
 

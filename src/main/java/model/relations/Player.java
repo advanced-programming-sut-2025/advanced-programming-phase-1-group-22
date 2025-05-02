@@ -48,9 +48,9 @@ public class Player extends Actor {
     private Boolean isFainted;
     private Salable currentCarrying = null;
     private List<Animal> animals = new ArrayList<>();
-    private List<CookingRecipe> cookingRecipes = new ArrayList<>();
+    private Map<CookingRecipe, Boolean> cookingRecipes = new HashMap<>();
     private List<Craft> crafts = new ArrayList<>();
-    private List<CraftingRecipe> craftingRecipes = new ArrayList<>();
+    private Map<CraftingRecipe, Boolean> craftingRecipes = new HashMap<>();
     private StoreType storeType;
     private Menu currentMenu = Menu.GAME_MAIN_MENU;
 
@@ -173,14 +173,20 @@ public class Player extends Actor {
     }
 
     public CraftingRecipe findCraftingRecipe(String string) {
-        for (CraftingRecipe craftingRecipe : craftingRecipes) {
-            if  (craftingRecipe.getName().equals(string)) return craftingRecipe;
+        for (CraftingRecipe craftingRecipe : craftingRecipes.keySet()) {
+            if  (craftingRecipe.getName().equals(string)) {
+                if (craftingRecipes.get(craftingRecipe)) return craftingRecipe;
+                return null;
+            }
         }
         return null;
     }
     public CookingRecipe findCookingRecipe(String string) {
-        for (CookingRecipe cookingRecipe : cookingRecipes) {
-            if  (cookingRecipe.getName().equals(string)) return cookingRecipe;
+        for (CookingRecipe cookingRecipe : cookingRecipes.keySet()) {
+            if (cookingRecipe.getName().equals(string)) {
+                if (cookingRecipes.get(cookingRecipe)) return cookingRecipe;
+                return null;
+            }
         }
         return null;
     }
