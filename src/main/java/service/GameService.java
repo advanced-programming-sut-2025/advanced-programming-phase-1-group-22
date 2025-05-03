@@ -784,7 +784,7 @@ public class GameService {
         if (blackSmithUpgrade.getCost() > player.getAccount().getGolds()) {
             return false;
         }
-        for (Map.Entry<Product, Integer> productIntegerEntry : blackSmithUpgrade.getIngredient().entrySet()) {
+        for (Map.Entry<Salable, Integer> productIntegerEntry : blackSmithUpgrade.getIngredients().entrySet()) {
             if (player.getInventory().getProducts().containsKey(productIntegerEntry.getKey())) {
                 if (player.getInventory().getProducts().get(productIntegerEntry.getKey()) < productIntegerEntry.getValue()) {
                     return false;
@@ -799,7 +799,7 @@ public class GameService {
         int oldGold = player.getAccount().getGolds();
         player.getAccount().setGolds(oldGold - blackSmithUpgrade.getCost());
 
-        for (Map.Entry<Product, Integer> productIntegerEntry : blackSmithUpgrade.getIngredient().entrySet()) {
+        for (Map.Entry<Salable, Integer> productIntegerEntry : blackSmithUpgrade.getIngredient().entrySet()) {
             if (player.getInventory().getProducts().containsKey(productIntegerEntry.getKey())) {
                 player.getInventory().deleteProductFromBackPack(productIntegerEntry.getKey(), player, productIntegerEntry.getValue());
             }

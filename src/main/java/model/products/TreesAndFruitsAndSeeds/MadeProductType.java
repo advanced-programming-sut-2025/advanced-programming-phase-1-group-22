@@ -16,6 +16,8 @@ import model.source.MineralType;
 import model.source.SeedType;
 import utils.App;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 @Getter
@@ -234,7 +236,7 @@ public enum MadeProductType implements Product {
     private String description;
     private int energy;
     private TimeAndDate processingTime;
-    private Integer sellPrice;
+    private final Integer sellPrice;
     private boolean isEdible;
     private boolean isCoalNeeded;
 
@@ -257,6 +259,7 @@ public enum MadeProductType implements Product {
         this.ingredientsSupplier = ingredientsSupplier;
         this.isEdible = isEdible;
         this.isCoalNeeded = false;
+        this.resolvedIngredients = null;
     }
 
 
@@ -272,6 +275,7 @@ public enum MadeProductType implements Product {
         this.sellPrice = sellPrice;
         this.isEdible = isEdible;
         this.isCoalNeeded = isCoalNeeded;
+        this.resolvedIngredients = null;
     }
 
 
@@ -283,10 +287,20 @@ public enum MadeProductType implements Product {
     }
 
     public Map<Salable, Integer> getIngredients() {
-        if (resolvedIngredients == null) {
-            resolvedIngredients = ingredientsSupplier.get();
+        if (ingredientsSupplier == null) {
+            return Collections.emptyMap();
         }
-        return resolvedIngredients;
+        Map<Salable, Integer> result = resolvedIngredients;
+        if (result == null) {
+            synchronized (this) {
+                result = resolvedIngredients;
+                if (result == null) {
+                    resolvedIngredients = result = ingredientsSupplier != null ?
+                            ingredientsSupplier.get() : Collections.emptyMap();
+                }
+            }
+        }
+        return result;
     }
 
     public Integer calcPrice(Salable product) {

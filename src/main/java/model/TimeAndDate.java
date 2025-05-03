@@ -34,6 +34,14 @@ public class TimeAndDate {
         this.year = year;
     }
 
+    public TimeAndDate(int day, int hour, int minute, Season season, int year) {
+        this.hour = hour;
+        this.day = day;
+        this.season = season;
+        this.year = year;
+        this.minute = minute;
+    }
+
 //    public void moveTimeForward(TimeAndDate timeAndDate)) {
 //    }
 
@@ -154,7 +162,7 @@ public class TimeAndDate {
             year++;
             season = Season.SPRING;
         }
-        return new TimeAndDate(day, this.hour, season, year);
+        return new TimeAndDate(day, this.hour, this.minute, season, year);
     }
 
     public TimeAndDate getNextXDay(int x) {
