@@ -20,12 +20,13 @@ import model.tools.BackPack;
 import model.tools.FishingPole;
 
 import javax.xml.transform.sax.SAXResult;
+import java.util.Collections;
 import java.util.Map;
 
 @Getter
 @ToString
 public enum FoodType implements Product {
-    FRIED_EGG("fried egg",null, 50, 35) {
+    FRIED_EGG("fried egg", null, 50, 35) {
         @Override
         public Boolean isValidIngredient(Fridge fridge) {
             return fridge.checkProductInFridge(AnimalProductType.DINOSAUR_EGG) ||
@@ -33,22 +34,24 @@ public enum FoodType implements Product {
                     fridge.checkProductInFridge(AnimalProductType.DUCK_EGG) ||
                     fridge.checkProductInFridge(AnimalProductType.HEN_BIG_EGG);
         }
+
         @Override
         public String getProductsString() {
             return "Any Egg\n";
         }
+
         @Override
         public void removeIngredients(Fridge fridge) {
             AnimalProductType[] eggs = {AnimalProductType.DINOSAUR_EGG, AnimalProductType.HEN_EGG,
-                                        AnimalProductType.DUCK_EGG, AnimalProductType.HEN_BIG_EGG};
+                    AnimalProductType.DUCK_EGG, AnimalProductType.HEN_BIG_EGG};
             for (AnimalProductType egg : eggs) {
                 if (fridge.checkProductInFridge(egg)) fridge.deleteProduct(egg, 1);
             }
         }
     },
-    BACKED_FISH("backed fish",Map.of(FishType.SARDINE, 1, FishType.SALMON, 1, CropType.WHEAT, 1), 75, 100),
-    SALAD("salad",Map.of(CropType.DANDELION, 1), 113, 110),
-    OMELET("omelet",null, 100, 115, StoreType.STARDROPSALON) {
+    BACKED_FISH("backed fish", ()->Map.of(FishType.SARDINE, 1, FishType.SALMON, 1, CropType.WHEAT, 1), 75, 100),
+    SALAD("salad", ()->Map.of(CropType.DANDELION, 1), 113, 110),
+    OMELET("omelet", null, 100, 115, StoreType.STARDROPSALON) {
         @Override
         public Boolean isValidIngredient(Fridge fridge) {
             return (fridge.checkProductInFridge(AnimalProductType.DINOSAUR_EGG) ||
@@ -60,6 +63,7 @@ public enum FoodType implements Product {
                             fridge.checkProductInFridge(AnimalProductType.GOAT_MILK) ||
                             fridge.checkProductInFridge(AnimalProductType.BIG_MILK));
         }
+
         @Override
         public String getProductsString() {
             return "Any Egg, Any Milk\n";
@@ -79,7 +83,7 @@ public enum FoodType implements Product {
             }
         }
     },
-    PUMPKIN_PIE("pumpkin pie",null, 225, 385, StoreType.STARDROPSALON) {
+    PUMPKIN_PIE("pumpkin pie", null, 225, 385, StoreType.STARDROPSALON) {
         @Override
         public Boolean isValidIngredient(Fridge fridge) {
             return (fridge.checkProductInFridge(AnimalProductType.MILK) ||
@@ -88,10 +92,12 @@ public enum FoodType implements Product {
                     fridge.checkProductInFridge(AnimalProductType.BIG_MILK)) &&
                     fridge.checkProductInFridge(CropType.PUMPKIN) && fridge.checkProductInFridge(CropType.WHEAT);
         }
+
         @Override
         public String getProductsString() {
             return "Any Milk, Pumpkin, Wheat\n";
         }
+
         @Override
         public void removeIngredients(Fridge fridge) {
             AnimalProductType[] milks = {AnimalProductType.MILK, AnimalProductType.BIG_MILK,
@@ -103,10 +109,10 @@ public enum FoodType implements Product {
             fridge.deleteProduct(CropType.WHEAT, 1);
         }
     },
-    SPAGHETTI("spaghetti",Map.of(CropType.TOMATO, 1, CropType.WHEAT, 1), 75, 120, StoreType.STARDROPSALON),
-    PIZZA("pizza",Map.of(CropType.TOMATO, 1, MadeProductType.CHEESE, 1, CropType.WHEAT, 1), 150, 300, StoreType.STARDROPSALON),
-    TORTILLA("tortilla",Map.of(CropType.CORN, 1), 50, 50, StoreType.STARDROPSALON),
-    MAKI_ROLL("maki roll",null, 100, 220, StoreType.STARDROPSALON) {
+    SPAGHETTI("spaghetti", ()->Map.of(CropType.TOMATO, 1, CropType.WHEAT, 1), 75, 120, StoreType.STARDROPSALON),
+    PIZZA("pizza", ()->Map.of(CropType.TOMATO, 1, MadeProductType.CHEESE, 1, CropType.WHEAT, 1), 150, 300, StoreType.STARDROPSALON),
+    TORTILLA("tortilla", ()->Map.of(CropType.CORN, 1), 50, 50, StoreType.STARDROPSALON),
+    MAKI_ROLL("maki roll", null, 100, 220, StoreType.STARDROPSALON) {
         @Override
         public Boolean isValidIngredient(Fridge fridge) {
             for (Salable salable : fridge.getProducts().keySet()) {
@@ -114,10 +120,12 @@ public enum FoodType implements Product {
             }
             return false;
         }
+
         @Override
         public String getProductsString() {
             return "Any Fish\n";
         }
+
         @Override
         public void removeIngredients(Fridge fridge) {
             for (Salable salable : fridge.getProducts().keySet()) {
@@ -125,8 +133,8 @@ public enum FoodType implements Product {
             }
         }
     },
-    TRIPLE_SHOT_ESPRESSO("triple shot espresso",Map.of(MadeProductType.COFFE, 3), 200, 450, new Buff(5, 100), StoreType.STARDROPSALON),
-    COOKIE("cookie",null, 90, 140, StoreType.STARDROPSALON) {
+    TRIPLE_SHOT_ESPRESSO("triple shot espresso", ()->Map.of(MadeProductType.COFFE, 3), 200, 450, new Buff(5, 100), StoreType.STARDROPSALON),
+    COOKIE("cookie", null, 90, 140, StoreType.STARDROPSALON) {
         @Override
         public Boolean isValidIngredient(Fridge fridge) {
             return (fridge.checkProductInFridge(AnimalProductType.DINOSAUR_EGG) ||
@@ -135,10 +143,12 @@ public enum FoodType implements Product {
                     fridge.checkProductInFridge(AnimalProductType.HEN_BIG_EGG)) &&
                     fridge.checkProductInFridge(CropType.WHEAT);
         }
+
         @Override
         public String getProductsString() {
             return "Any Egg, Wheat\n";
         }
+
         @Override
         public void removeIngredients(Fridge fridge) {
             AnimalProductType[] milks = {AnimalProductType.MILK, AnimalProductType.BIG_MILK,
@@ -146,11 +156,11 @@ public enum FoodType implements Product {
             for (AnimalProductType milk : milks) {
                 if (fridge.checkProductInFridge(milk)) fridge.deleteProduct(milk, 1);
             }
-            fridge.deleteProduct(CropType.WHEAT,1);
+            fridge.deleteProduct(CropType.WHEAT, 1);
         }
     },
-    HASH_BROWNS("hash browns",Map.of(CropType.POTATO, 1, MadeProductType.OIL, 1), 90, 120, new Buff(5, Ability.FARMING), StoreType.STARDROPSALON),
-    PANCAKES("pancakes",null, 90, 80, new Buff(11, Ability.FORAGING), StoreType.STARDROPSALON) {
+    HASH_BROWNS("hash browns", ()->Map.of(CropType.POTATO, 1, MadeProductType.OIL, 1), 90, 120, new Buff(5, Ability.FARMING), StoreType.STARDROPSALON),
+    PANCAKES("pancakes", null, 90, 80, new Buff(11, Ability.FORAGING), StoreType.STARDROPSALON) {
         @Override
         public Boolean isValidIngredient(Fridge fridge) {
             return (fridge.checkProductInFridge(AnimalProductType.DINOSAUR_EGG) ||
@@ -159,10 +169,12 @@ public enum FoodType implements Product {
                     fridge.checkProductInFridge(AnimalProductType.HEN_BIG_EGG)) &&
                     fridge.checkProductInFridge(CropType.WHEAT);
         }
+
         @Override
         public String getProductsString() {
             return "Any Pancakes\n";
         }
+
         @Override
         public void removeIngredients(Fridge fridge) {
             AnimalProductType[] eggs = {AnimalProductType.DINOSAUR_EGG, AnimalProductType.HEN_EGG,
@@ -173,16 +185,16 @@ public enum FoodType implements Product {
             fridge.deleteProduct(CropType.WHEAT, 1);
         }
     },
-    FRUIT_SALAD("fruit salad",Map.of(FruitType.APRICOT, 1, CropType.BLUEBERRY, 1, CropType.MELON, 1), 263, 450, StoreType.STARDROPSALON),
-    RED_PLATE("red plate",Map.of(CropType.RED_CABBAGE, 1, CropType.RADISH, 1), 240, 400, new Buff(3, 50), StoreType.STARDROPSALON),
-    BREAD("bread",Map.of(CropType.WHEAT, 1), 50, 60, StoreType.STARDROPSALON),
-    SALMON_DINNER("salmon dinner",Map.of(FishType.SALMON, 1, CropType.KALE, 1, CropType.AMARANTH, 1), 125, 300, StoreType.STARDROPSALON),
-    VEGETABLE_MEDLEY("vegetable medley",Map.of(CropType.TOMATO, 1, CropType.BEET, 1), 165, 120, StoreType.STARDROPSALON),
-    FORMER_LUNCH("former lunch",Map.of(CropType.PARSNIP, 1, FoodType.OMELET, 1), 200, 150, new Buff(5, Ability.FARMING), Ability.FARMING, 1),
-    SURVIVAL_BURGER("survival burger",Map.of(CropType.EGGPLANT, 1, CropType.CARROT, 1, FoodType.BREAD, 1), 125, 180, new Buff(5, Ability.FORAGING), Ability.FORAGING, 3),
-    DISH_O_THE_SEA("dish o the sea",Map.of(FoodType.HASH_BROWNS, 1, FishType.SARDINE, 1), 150, 220, new Buff(5, Ability.FISHING), Ability.FISHING, 2),
-    SEA_FORM_PUDDING("sea from pudding",Map.of(FishType.FLOUNDER, 1, FishType.MIDNIGHT_CARP, 1), 175, 300, new Buff(10, Ability.FISHING), Ability.FISHING, 3),
-    MINERS_TREAT("miners treat",null, 125, 200, new Buff(5, Ability.MINING), Ability.MINING, 1) {
+    FRUIT_SALAD("fruit salad", ()->Map.of(FruitType.APRICOT, 1, CropType.BLUEBERRY, 1, CropType.MELON, 1), 263, 450, StoreType.STARDROPSALON),
+    RED_PLATE("red plate", ()->Map.of(CropType.RED_CABBAGE, 1, CropType.RADISH, 1), 240, 400, new Buff(3, 50), StoreType.STARDROPSALON),
+    BREAD("bread", ()->Map.of(CropType.WHEAT, 1), 50, 60, StoreType.STARDROPSALON),
+    SALMON_DINNER("salmon dinner", ()->Map.of(FishType.SALMON, 1, CropType.KALE, 1, CropType.AMARANTH, 1), 125, 300, StoreType.STARDROPSALON),
+    VEGETABLE_MEDLEY("vegetable medley", ()->Map.of(CropType.TOMATO, 1, CropType.BEET, 1), 165, 120, StoreType.STARDROPSALON),
+    FORMER_LUNCH("former lunch", ()->Map.of(CropType.PARSNIP, 1, FoodType.OMELET, 1), 200, 150, new Buff(5, Ability.FARMING), Ability.FARMING, 1),
+    SURVIVAL_BURGER("survival burger", ()->Map.of(CropType.EGGPLANT, 1, CropType.CARROT, 1, FoodType.BREAD, 1), 125, 180, new Buff(5, Ability.FORAGING), Ability.FORAGING, 3),
+    DISH_O_THE_SEA("dish o the sea", ()->Map.of(FoodType.HASH_BROWNS, 1, FishType.SARDINE, 1), 150, 220, new Buff(5, Ability.FISHING), Ability.FISHING, 2),
+    SEA_FORM_PUDDING("sea from pudding", ()->Map.of(FishType.FLOUNDER, 1, FishType.MIDNIGHT_CARP, 1), 175, 300, new Buff(10, Ability.FISHING), Ability.FISHING, 3),
+    MINERS_TREAT("miners treat", null, 125, 200, new Buff(5, Ability.MINING), Ability.MINING, 1) {
         @Override
         public Boolean isValidIngredient(Fridge fridge) {
             return (fridge.checkProductInFridge(AnimalProductType.MILK) ||
@@ -191,10 +203,12 @@ public enum FoodType implements Product {
                     fridge.checkProductInFridge(AnimalProductType.BIG_MILK)) &&
                     fridge.checkProductInFridge(CropType.CARROT);
         }
+
         @Override
         public String getProductsString() {
             return "Any Milk, Carrot\n";
         }
+
         @Override
         public void removeIngredients(Fridge fridge) {
             AnimalProductType[] milks = {AnimalProductType.MILK, AnimalProductType.BIG_MILK,
@@ -206,16 +220,36 @@ public enum FoodType implements Product {
         }
     };
     private final String name;
-    private Map<Product, Integer> ingredients;
     private int energy;
     private int sellPrice;
     private Buff buff;
     private Object source;
     private Integer[] level;
+    private final IngredientsSupplier ingredientsSupplier;
+    private transient volatile Map<Product, Integer> resolvedIngredients;
 
-    FoodType(String name,Map<Product, Integer> products, Integer energy, Integer sellPrice, Buff buff, Object source, Integer... level) {
+    @FunctionalInterface
+    private interface IngredientsSupplier {
+        Map<Product, Integer> get();
+    }
+
+    public Map<Product, Integer> getIngredients() {
+        Map<Product, Integer> result = resolvedIngredients;
+        if (result == null) {
+            synchronized (this) {
+                result = resolvedIngredients;
+                if (result == null) {
+                    resolvedIngredients = result = ingredientsSupplier != null ?
+                            ingredientsSupplier.get() : Collections.emptyMap();
+                }
+            }
+        }
+        return result;
+    }
+
+    FoodType(String name, IngredientsSupplier ingredientsSupplier, Integer energy, Integer sellPrice, Buff buff, Object source, Integer... level) {
         this.name = name;
-        this.ingredients = products;
+        this.ingredientsSupplier = ingredientsSupplier;
         this.energy = energy;
         this.sellPrice = sellPrice;
         this.buff = buff;
@@ -225,9 +259,9 @@ public enum FoodType implements Product {
         }
     }
 
-    FoodType(String name,Map<Product, Integer> products, Integer energy, Integer sellPrice, Object source, Integer... level) {
+    FoodType(String name, IngredientsSupplier ingredientsSupplier, Integer energy, Integer sellPrice, Object source, Integer... level) {
         this.name = name;
-        this.ingredients = products;
+        this.ingredientsSupplier = ingredientsSupplier;
         this.energy = energy;
         this.sellPrice = sellPrice;
         this.source = source;
@@ -236,16 +270,16 @@ public enum FoodType implements Product {
         }
     }
 
-    FoodType(String name,Map<Product, Integer> products, Integer energy, Integer sellPrice) {
+    FoodType(String name, IngredientsSupplier ingredientsSupplier, Integer energy, Integer sellPrice) {
         this.name = name;
-        this.ingredients = products;
+        this.ingredientsSupplier = ingredientsSupplier;
         this.energy = energy;
         this.sellPrice = sellPrice;
     }
 
     public Boolean isValidIngredient(Fridge fridge) {
-        for (Product product : ingredients.keySet()) {
-            if (!fridge.checkProductAvailability(product.getName(), ingredients.get(product))) return false;
+        for (Product product : this.getIngredients().keySet()) {
+            if (!fridge.checkProductAvailability(product.getName(), this.getIngredients().get(product))) return false;
         }
         return true;
     }
@@ -256,26 +290,27 @@ public enum FoodType implements Product {
     }
 
     @Override
-    public String getName(){
+    public String getName() {
         return this.name.toLowerCase();
     }
 
     public String getProductsString() {
-        if (ingredients != null) {
+        if (this.getIngredients() != null) {
             StringBuilder res = new StringBuilder();
-            for (Product salable : ingredients.keySet()) {
+            for (Product salable : this.getIngredients().keySet()) {
                 res.append(salable.getName());
-                if (ingredients.get(salable) != 1) res.append(" *").append(ingredients.get(salable));
+                if (this.getIngredients().get(salable) != 1) res.append(" *").append(this.getIngredients().get(salable));
                 res.append(", ");
             }
             return res + "\n";
-        } return "";
+        }
+        return "";
     }
 
     public void removeIngredients(Fridge fridge) {
-        for (Product product : ingredients.keySet()) {
+        for (Product product : this.getIngredients().keySet()) {
             product = (Product) fridge.findProduct(product.getName());
-            fridge.deleteProduct(product, ingredients.get(product));
+            fridge.deleteProduct(product, this.getIngredients().get(product));
         }
     }
 }
