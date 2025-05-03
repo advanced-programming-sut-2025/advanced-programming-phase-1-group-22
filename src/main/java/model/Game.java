@@ -12,6 +12,7 @@ import model.relations.Friendship;
 import model.relations.Mission;
 import model.relations.NPC;
 import model.relations.Player;
+import model.shelter.ShippingBin;
 import model.structure.Structure;
 import model.structure.stores.*;
 import utils.App;
@@ -64,7 +65,7 @@ public class Game {
         Random random = new Random();
         do {
             tomorrowWeather = Weather.values()[random.nextInt(0, 3)];
-        } while (tomorrowWeather.getSeasons().contains(timeAndDate.getSeason()));
+        } while (!tomorrowWeather.getSeasons().contains(timeAndDate.getSeason()));
         if (weather == Weather.STORMY) {
             for (Farm farm : this.village.getFarms()) {
                 for (int i = 0; i < 3; i++) {
@@ -84,7 +85,12 @@ public class Game {
         }
         for (Player player : players) {
             player.resetEnergy();
-            addGoldToPlayerForShippingBin(player.getShippingBin().CalculatePriceOfShippingBinProducts(), player);
+
+            int total = player.getShippingBinList().stream()
+                    .mapToInt(ShippingBin::CalculatePriceOfShippingBinProducts)
+                    .sum();
+            addGoldToPlayerForShippingBin(total, player);
+
             if (player.getBuff() != null) {
                 player.getBuff().defectBuff(player);
                 player.setBuff(null);
@@ -261,7 +267,7 @@ public class Game {
             Random random = new Random();
             Random random1 = new Random();
             if (random.nextInt() % 4 == 0) {
-                HarvestAbleProduct harvestAbleProduct = harvestAbleProducts.get(random1.nextInt() % harvestAbleProducts.size());
+                HarvestAbleProduct harvestAbleProduct = harvestAbleProducts.get(Math.abs(random1.nextInt()) % harvestAbleProducts.size());
                 if (!harvestAbleProduct.getAroundScareCrow() && !harvestAbleProduct.getInGreenHouse()) {
                     if (harvestAbleProduct instanceof Tree) {
                         ((Tree) harvestAbleProduct).setAttackByCrow(true);
