@@ -11,6 +11,7 @@ import variables.Session;
 import view.Menu;
 
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -41,8 +42,11 @@ public class GameInitService {
     }
 
     private int isPlayerAvailable(String username, ArrayList<User> users) {
-        User user = (User) userRepository.findByUsername(username).get();
-        if (user == null) return 1;
+        Optional byUsername = userRepository.findByUsername(username);
+        if (byUsername.isEmpty()) {
+            return 1;
+        }
+        User user = (User) byUsername.get();
         if (user.getIsPlaying()) return 2;
         for (User addedUser : users) {
             if (user.getUsername().equals(addedUser.getUsername())) return 3;
