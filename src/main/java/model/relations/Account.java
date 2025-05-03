@@ -7,9 +7,9 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class Account  {
+public class Account {
     private Integer id;
-    private Integer golds;
+    private Integer golds = 0;
 
     public void removeGolds(int count) {
         golds -= count;

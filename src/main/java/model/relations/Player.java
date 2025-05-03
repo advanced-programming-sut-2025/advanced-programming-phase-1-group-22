@@ -32,14 +32,13 @@ public class Player extends Actor {
     private Integer energy;
     private Integer maxEnergy;
     private Integer energyPerTurn;
-    private Boolean energyIsInfinite;
+    private Boolean energyIsInfinite = false;
     private Integer maxEnergyPerTurn;
     private Integer daysOfSadness = 0;
     private BackPack inventory;
     private Buff buff;
     private Ability buffAbility;
     private Map<Ability, Integer> abilities = new HashMap<>();
-    private ShippingBin shippingBin;
     private Account account = new Account();
     private List<ShippingBin> shippingBinList = new ArrayList<>();
     private Player couple;
