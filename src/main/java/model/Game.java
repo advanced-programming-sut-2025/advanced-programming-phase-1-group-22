@@ -217,23 +217,27 @@ public class Game {
 
     private void manageHarvest() {
         for (Farm farm : this.getVillage().getFarms()) {
-            for (Structure structure : farm.getStructures()) {
+            List<Structure> structures = new ArrayList<>(farm.getStructures());
+            for (Structure structure : structures) {
                 if (structure instanceof HarvestAbleProduct harvestAbleProduct) {
                     if (!harvestAbleProduct.getIsWaterToday() && !harvestAbleProduct.getAroundSprinkler()) {
                         int oldNumber = harvestAbleProduct.getNumberOfWithoutWaterDays();
                         harvestAbleProduct.setNumberOfWithoutWaterDays(oldNumber + 1);
                         if (harvestAbleProduct.getNumberOfWithoutWaterDays() >= 2) {
-                            this.getVillage().removeStructure(harvestAbleProduct);
+                            farm.getStructures().remove(harvestAbleProduct);
                             for (Tile tile : structure.getTiles()) {
                                 tile.setTileType(TileType.FLAT);
                             }
+                            continue;
                         }
                     } else {
                         harvestAbleProduct.setNumberOfWithoutWaterDays(0);
                     }
+
                     if (!harvestAbleProduct.getAroundSprinkler() && !canHoldWater(harvestAbleProduct)) {
                         harvestAbleProduct.setWaterToday(false);
                     }
+
                     if (harvestAbleProduct instanceof Tree) {
                         ((Tree) harvestAbleProduct).setAttackByCrow(false);
                     }
@@ -241,6 +245,7 @@ public class Game {
             }
         }
     }
+
 
     private void setWeatherCoefficientEveryDay() {
         double weatherCoefficient = 1.0;
