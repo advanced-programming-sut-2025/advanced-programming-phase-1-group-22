@@ -26,6 +26,7 @@ public class TimeAndDate {
         this.hour = hour;
         this.day = day;
     }
+
     public TimeAndDate(int day, int hour, Season season, int year) {
         this.hour = hour;
         this.day = day;
@@ -37,25 +38,16 @@ public class TimeAndDate {
 //    }
 
     public void moveTimeForward() {
-        for (Friendship friendship : currentGame.getFriendships()) {
-            if (friendship.getLastSeen().getDay().equals(day)) {
-                friendship.setXp(friendship.getXp() + -10);
-                if (friendship.getXp() <= 0) {
-                    friendship.setXp(90);
-                    friendship.setFriendShipLevel(friendship.getFriendShipLevel() - 1);
-                }
-            }
-        }
-        giveRewardToLevelThreeFriends();
         boolean nextDay = false;
         minute += 15;
         if (minute >= 60) {
             hour++;
             minute = 0;
         }
-        if (hour >= 21) {
+        if (hour >= 22) {
             day++;
             hour = 9;
+            minute = 30;
             nextDay = true;
         }
         if (day >= 29) {
@@ -71,30 +63,6 @@ public class TimeAndDate {
         }
     }
 
-    private void giveRewardToLevelThreeFriends() {
-        for (Friendship friendship : currentGame.getFriendships()) {
-            if ((friendship.getFirstPlayer() instanceof NPC && friendship.getSecondPlayer() instanceof Player)) {
-                if (friendship.getFriendShipLevel() == 3) {
-                    NPC npc = (NPC) friendship.getFirstPlayer();
-                    Mission mission = npc.getType().getMissions().get(npc.getType().getMissions().size() % 3);
-                    int size = mission.getReward().entrySet().size();
-                    Salable[] array = (Salable[]) mission.getReward().keySet().toArray();
-                    Salable gift = array[size % 4];
-                    ((Player) friendship.getSecondPlayer()).getInventory().addProductToBackPack(gift, 1);
-                }
-            }
-            if ((friendship.getSecondPlayer() instanceof NPC && friendship.getFirstPlayer() instanceof Player)) {
-                if (friendship.getFriendShipLevel() == 3) {
-                    NPC npc = (NPC) friendship.getSecondPlayer();
-                    Mission mission = npc.getType().getMissions().get(npc.getType().getMissions().size() % 3);
-                    int size = mission.getReward().entrySet().size();
-                    Salable[] array = (Salable[]) mission.getReward().keySet().toArray();
-                    Salable gift = array[size % 4];
-                    ((Player) friendship.getFirstPlayer()).getInventory().addProductToBackPack(gift, 1);
-                }
-            }
-        }
-    }
 
     public int compareDailyTime(TimeAndDate timeAndDate) {
         if (timeAndDate.getHour() > hour) return 1;
@@ -127,7 +95,7 @@ public class TimeAndDate {
     @Override
     public String toString() {
         String res = "Year: " + year + "\nDay: " + (season.ordinal() * 28 + day);
-        res += "Time: " + hour + ":" + minute + "'";
+        res += "\nTime: " + hour + ":" + minute + "'";
         return res;
     }
 
@@ -188,6 +156,7 @@ public class TimeAndDate {
         }
         return new TimeAndDate(day, this.hour, season, year);
     }
+
     public TimeAndDate getNextXDay(int x) {
         TimeAndDate timeAndDate = this;
         for (int i = 0; i < x; i++) {

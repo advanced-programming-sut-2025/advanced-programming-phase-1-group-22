@@ -17,29 +17,28 @@ public class Crop extends HarvestAbleProduct implements Source {
     private CropType cropType;
     private TimeAndDate startPlanting;
     private TimeAndDate lastHarvest;
-    private Boolean isAroundSprinkler;
-    private Boolean isAroundScareCrow;
-    private Boolean isWaterToday;
-    private Boolean isFertilized;
-    private Boolean isBurn;
-    private Boolean isGiant;
-    private Boolean isInGreenHouse;
+    private Boolean isAroundSprinkler = false;
+    private Boolean isAroundScareCrow = false;
+    private Boolean isWaterToday = false;
+    private Boolean isFertilized = false;
+    private Boolean isBurn = false;
+    private Boolean isGiant = false;
+    private Boolean isInGreenHouse = false;
     private List<SundryType> fertilizes = new ArrayList<>();
-    private Integer numberOfWithoutWaterDays;
-    private int numberOfStages;
+    private Integer numberOfWithoutWaterDays = 0;
+    private Integer numberOfStages = 0;
 
     public Crop(CropType cropType) {
         this.cropType = cropType;
-        if (cropType.getHarvestStages() != null){
+        if (cropType.getHarvestStages() != null) {
             numberOfStages = cropType.getHarvestStages().size();
-        }
-        else {
+        } else {
             numberOfStages = 0;
         }
     }
 
     @Override
-    public String getName(){
+    public String getName() {
         return this.cropType.getName();
     }
 
@@ -57,15 +56,15 @@ public class Crop extends HarvestAbleProduct implements Source {
         this.isBurn = true;
     }
 
-    public int calculateRegrowthLevel(){
+    public int calculateRegrowthLevel() {
         int level = 1;
         TimeAndDate now = App.getInstance().getCurrentGame().getTimeAndDate();
         int spendDays = now.getDay() - this.startPlanting.getDay();
-        if (this.cropType.getHarvestStages() != null){
+        if (this.cropType.getHarvestStages() != null) {
             int sum = 0;
             for (Integer harvestStage : this.cropType.getHarvestStages()) {
                 sum += harvestStage;
-                if (spendDays >= sum){
+                if (spendDays >= sum) {
                     level += 1;
                 }
             }
@@ -73,16 +72,16 @@ public class Crop extends HarvestAbleProduct implements Source {
         return level;
     }
 
-    public int calculateDaysAfterPlanting(){
+    public int calculateDaysAfterPlanting() {
         return App.getInstance().getCurrentGame().getTimeAndDate().getDay() - this.startPlanting.getDay();
     }
 
-    public int calculateDaysAfterLastHarvest(){
+    public int calculateDaysAfterLastHarvest() {
         return App.getInstance().getCurrentGame().getTimeAndDate().getDay() - this.lastHarvest.getDay();
     }
 
-    public int calculateTotalHarvestTime(){
-        if (this.cropType.getHarvestStages() != null){
+    public int calculateTotalHarvestTime() {
+        if (this.cropType.getHarvestStages() != null) {
             int total = 0;
             for (Integer harvestStage : this.cropType.getHarvestStages()) {
                 total += harvestStage;
@@ -92,23 +91,22 @@ public class Crop extends HarvestAbleProduct implements Source {
         return 0;
     }
 
-    public boolean canHarvest(){
+    public boolean canHarvest() {
         int totalHarvestTime = calculateTotalHarvestTime();
         int regrowthTime = this.cropType.getRegrowthTime();
-        if (this.fertilizes.contains(SundryType.SPEED_GROW)){
-            totalHarvestTime = Math.max(0,totalHarvestTime - 1);
-            regrowthTime = Math.max(0,regrowthTime - 1);
+        if (this.fertilizes.contains(SundryType.SPEED_GROW)) {
+            totalHarvestTime = Math.max(0, totalHarvestTime - 1);
+            regrowthTime = Math.max(0, regrowthTime - 1);
         }
-        if (this.cropType.isForaging()){
+        if (this.cropType.isForaging()) {
             return true;
-        }
-        else {
-            if (calculateDaysAfterPlanting() >= totalHarvestTime){
-                if (lastHarvest == null){
+        } else {
+            if (calculateDaysAfterPlanting() >= totalHarvestTime) {
+                if (lastHarvest == null) {
                     return true;
                 }
-				return calculateDaysAfterLastHarvest() >= regrowthTime;
-			}
+                return calculateDaysAfterLastHarvest() >= regrowthTime;
+            }
             return false;
         }
     }
@@ -128,16 +126,15 @@ public class Crop extends HarvestAbleProduct implements Source {
         this.isFertilized = fertilized;
     }
 
-    public int remainDaysUntilCanHarvest(){
-        if (this.cropType.isForaging()){
+    public int remainDaysUntilCanHarvest() {
+        if (this.cropType.isForaging()) {
             return 0;
-        }
-        else {
-            if (calculateDaysAfterPlanting() >= calculateTotalHarvestTime()){
-                if (lastHarvest == null){
+        } else {
+            if (calculateDaysAfterPlanting() >= calculateTotalHarvestTime()) {
+                if (lastHarvest == null) {
                     return 0;
                 }
-                return Math.max(0,this.cropType.getRegrowthTime() - calculateDaysAfterLastHarvest());
+                return Math.max(0, this.cropType.getRegrowthTime() - calculateDaysAfterLastHarvest());
             }
             return calculateTotalHarvestTime() - calculateDaysAfterPlanting();
         }
@@ -164,12 +161,12 @@ public class Crop extends HarvestAbleProduct implements Source {
     }
 
     @Override
-    public boolean getIsFertilized(){
+    public boolean getIsFertilized() {
         return this.isFertilized;
     }
 
     @Override
-    public boolean getIsWaterToday(){
+    public boolean getIsWaterToday() {
         return this.isWaterToday;
     }
 

@@ -138,8 +138,6 @@ public class GameInitService {
             Farm farm;
             if (player != null) {
                 farm = new Farm(player, player.getFarmType());
-                Tile tile = farm.getCottage().getTiles().getFirst();
-                player.getTiles().add(tile);
             } else {
                 Random random = new Random();
                 farm = new Farm(null, FarmType.values()[random.nextInt(0, 4)]);
@@ -147,5 +145,10 @@ public class GameInitService {
             village.getFarms().add(farm);
         }
         village.fillFarms();
+        for (Farm farm : village.getFarms()) {
+            if (farm.getPlayers().isEmpty()) continue;
+            Tile tile = farm.getCottage().getTiles().getFirst();
+            farm.getPlayers().getFirst().getTiles().add(tile);
+        }
     }
 }

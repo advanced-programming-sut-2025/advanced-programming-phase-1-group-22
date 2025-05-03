@@ -44,7 +44,7 @@ public class Player extends Actor {
     private List<ShippingBin> shippingBinList = new ArrayList<>();
     private Player couple;
     private List<Trade> gootenTradeList;
-    private Boolean isFainted;
+    private Boolean isFainted = false;
     private Salable currentCarrying = null;
     private List<Animal> animals = new ArrayList<>();
     private Map<CookingRecipe, Boolean> cookingRecipes = new HashMap<>();

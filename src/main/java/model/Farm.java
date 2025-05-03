@@ -36,7 +36,9 @@ public class Farm {
     private Fridge fridge = new Fridge();
 
     public Farm(Player player, FarmType farmType) {
-        this.players.add(player);
+        if (null != player) {
+            this.players.add(player);
+        }
         this.farmType = farmType;
     }
 
@@ -141,7 +143,7 @@ public class Farm {
         int stoneRand = random.nextInt(12, 15);
         int foragingRand = random.nextInt(14, 18);
         int foragingRand2 = random.nextInt(12, 16);
-        int foragingRand3 = random.nextInt(10,12);
+        int foragingRand3 = random.nextInt(10, 12);
         for (int i = 0; i < trunkRand; i++) {
             Trunk trunk = null;
             switch (trunkRand % 3) {
@@ -189,9 +191,9 @@ public class Farm {
             setStructurePlace(tree, 1, 1, true, false);
         }
         for (int i = 0; i < foragingRand3; i++) {
-            int mineralRand = random.nextInt(0,21);
+            int mineralRand = random.nextInt(0, 21);
             Mineral mineral = new Mineral(MineralType.values()[mineralRand]);
-            setStructurePlace(mineral,1,1, true, false);
+            setStructurePlace(mineral, 1, 1, true, false);
         }
     }
 
@@ -234,35 +236,35 @@ public class Farm {
         }
     }
 
-    public void generateRandomForaging(){
+    public void generateRandomForaging() {
         Random random = new Random();
         int foragingRand = random.nextInt(14, 18);
         int foragingRand2 = random.nextInt(12, 16);
-        int foragingRand3 = random.nextInt(10,12);
+        int foragingRand3 = random.nextInt(10, 12);
         for (int i = 0; i < foragingRand; i++) {
             int foragingRandSeed = random.nextInt(0, 41);
             Seed seed = new Seed(SeedType.values()[foragingRandSeed]);
-            if (seed.getSeedType().getSeason().equals(App.getInstance().getCurrentGame().getTimeAndDate().getSeason())){
+            if (seed.getSeedType().getSeason().equals(App.getInstance().getCurrentGame().getTimeAndDate().getSeason())) {
                 seed.setIsPickable(true);
                 setForagingPlace(seed, 1, 1);
             }
         }
-        for (int i = 0; i < foragingRand2; i++){
+        for (int i = 0; i < foragingRand2; i++) {
             int cropRand = random.nextInt(41, 62);
             Crop crop = new Crop(CropType.values()[cropRand]);
-            if (crop.getCropType().getSeasons().contains(App.getInstance().getCurrentGame().getTimeAndDate().getSeason())){
+            if (crop.getCropType().getSeasons().contains(App.getInstance().getCurrentGame().getTimeAndDate().getSeason())) {
                 crop.setIsPickable(true);
                 setForagingPlace(crop, 1, 1);
             }
         }
         for (int i = 0; i < foragingRand3; i++) {
-            int mineralRand = random.nextInt(0,21);
+            int mineralRand = random.nextInt(0, 21);
             Mineral mineral = new Mineral(MineralType.values()[mineralRand]);
-            setStructurePlace(mineral,1,1, true, false);
+            setStructurePlace(mineral, 1, 1, true, false);
         }
     }
 
-    private void setForagingPlace(Structure structure,int length, int width){
+    private void setForagingPlace(Structure structure, int length, int width) {
         Tile[][] tiles1 = app.getCurrentGame().tiles;
         List<Tile> tiles2 = new ArrayList<>();
         boolean flag = true;
@@ -278,8 +280,8 @@ public class Farm {
                             !tiles1[j][k].getTileType().equals(TileType.PLOWED)) {
                         flag = false;
                     } else {
-                        int rand = random.nextInt(1,100);
-                        if (rand == 1){
+                        int rand = random.nextInt(1, 100);
+                        if (rand == 1) {
                             tiles1[j][k].setIsFilled(true);
                             tiles2.add(tiles1[j][k]);
                         }
@@ -297,10 +299,11 @@ public class Farm {
 
     public Cottage getCottage() {
         for (Structure structure : structures) {
-            if (structure instanceof Cottage) return (Cottage)structure;
+            if (structure instanceof Cottage) return (Cottage) structure;
         }
         return null;
     }
+
     public GreenHouse getGreenHouse() {
         for (Structure structure : structures) {
             if (structure instanceof GreenHouse) return (GreenHouse) structure;
@@ -310,7 +313,7 @@ public class Farm {
 
     public boolean isPairInFarm(Pair pair) {
         return Math.abs(xCenter - pair.getX()) <= (farmType.getLength() / 2) &&
-               Math.abs(yCenter - pair.getY()) <= (farmType.getWidth() / 2);
+                Math.abs(yCenter - pair.getY()) <= (farmType.getWidth() / 2);
     }
 }
 

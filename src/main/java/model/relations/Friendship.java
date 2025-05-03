@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import model.Actor;
 import model.TimeAndDate;
+import model.enums.Season;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,7 +21,7 @@ public class Friendship {
     private Integer friendShipLevel;
     private Integer xp;
     private Map<String, Actor> dialogs;
-    private TimeAndDate lastSeen;
+    private TimeAndDate lastSeen = new TimeAndDate(1, 9, Season.SPRING, 0);
     private TimeAndDate timeFromGettingFirstLevel;
 
     public Friendship(Integer id, Actor firstPlayer, Actor secondPlayer) {

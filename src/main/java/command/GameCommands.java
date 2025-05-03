@@ -3,7 +3,7 @@ package command;
 public class GameCommands extends CommandClass {
     public static final GameCommands exitGame = new GameCommands("^\\s*exit\\s+game\\s*$");
     public static final GameCommands terminateGame = new GameCommands("^\\s*terminate\\s+game\\s*$");
-    public static final GameCommands nextTurn = new GameCommands("^\\s*next\\s+Turn\\s*$");
+    public static final GameCommands nextTurn = new GameCommands("^\\s*next\\s+turn\\s*$");
     public static final GameCommands time = new GameCommands("^\\s*time\\s*$");
     public static final GameCommands date = new GameCommands("^\\s*date\\s*$");
     public static final GameCommands dateTime = new GameCommands("^\\s*dateTime\\s*$");
