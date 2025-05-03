@@ -108,11 +108,6 @@ public class GameService {
             }
         }
         app.getCurrentGame().nextPlayer();
-        TimeAndDate time = new TimeAndDate(0, 8);
-        if (app.getCurrentGame().getTimeAndDate().compareDailyTime(time) <= 0) {
-            app.getCurrentGame().startDay();
-            return new Response("It's next player's turn", true);
-        }
         if (app.getCurrentGame().getCurrentPlayer().getIsFainted()) return nextTurn();
         Session.setCurrentMenu(app.getCurrentGame().getCurrentPlayer().getCurrentMenu());
         return new Response("It's next player's turn", true);
@@ -120,7 +115,7 @@ public class GameService {
 
     public Response time() {
         String result = app.getCurrentGame().getTimeAndDate().getHour() + ":";
-        result += app.getCurrentGame().getTimeAndDate().getHour();
+        result += app.getCurrentGame().getTimeAndDate().getMinute();
         return new Response(result, true);
     }
 
