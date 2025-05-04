@@ -1,13 +1,10 @@
 package model.receipe;
 
 import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-import model.Salable;
 import model.craft.CraftType;
 import utils.App;
 
-import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Getter
 public enum CraftingRecipe implements Recipe {
@@ -39,26 +36,25 @@ public enum CraftingRecipe implements Recipe {
     private Integer price;
 
     @FunctionalInterface
-    private interface IngredientsSupplier {
+    private interface CraftTypeSupplier {
         CraftType get();
     }
 
-    private transient volatile CraftType craftType;
-    private final CraftingRecipe.IngredientsSupplier ingredientsSupplier;
+    private transient final AtomicReference<CraftType> craftType = new AtomicReference<>();
+    private final CraftingRecipe.CraftTypeSupplier craftTypeSupplier;
 
-    public CraftType getIngredients() {
-        if (craftType == null) {
-            craftType = ingredientsSupplier.get();
-        }
-        return craftType;
+    public CraftType getCraft() {
+        return craftType.updateAndGet(cache ->
+                cache != null ? cache : craftTypeSupplier.get()
+        );
     }
 
 
-    private CraftingRecipe(String name, String description, Integer price, IngredientsSupplier craftType) {
+    CraftingRecipe(String name, String description, Integer price, CraftTypeSupplier craftType) {
         this.name = name;
         this.description = description;
         this.price = price;
-        this.ingredientsSupplier = craftType;
+        this.craftTypeSupplier = craftType;
     }
 
     @Override
@@ -73,10 +69,10 @@ public enum CraftingRecipe implements Recipe {
 
     @Override
     public String toString() {
-        String res = this.getIngredients().getName() + ":\n\n" + this.getIngredients().getDescription() + "\n\nIngredients:\n";
-        res += this.getIngredients().getProductsString();
-        res += "\nPrice: " + this.getIngredients().getSellPrice() + "$\n";
-        res += this.getIngredients().isCraftingPossible(App.getInstance().getCurrentGame().getCurrentPlayer()) + "\n";
+        String res = this.getCraft().getName() + ":\n\n" + this.getCraft().getDescription() + "\n\nIngredients:\n";
+        res += this.getCraft().getProductsString();
+        res += "\nPrice: " + this.getCraft().getSellPrice() + "$\n";
+        res += this.getCraft().isCraftingPossible(App.getInstance().getCurrentGame().getCurrentPlayer()) + "\n";
         return res;
     }
 }

@@ -22,7 +22,9 @@ public class InitialGame {
             game.addNPC(new NPC(npc));
         }
         for (int i = 0; i < users.size(); i++) {
-            game.addPlayer(new Player(users.get(i)));
+            Player player = new Player(users.get(i));
+            game.addPlayer(player);
+
         }
         game.setCurrentPlayer(game.getPlayers().getFirst());
         Session.setCurrentMenu(Menu.MAP_SELECTION);

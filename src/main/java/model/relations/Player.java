@@ -71,9 +71,9 @@ public class Player extends Actor {
         for (CraftingRecipe value : CraftingRecipe.values()) {
             craftingRecipes.put(value, false);
         }
+        craftingRecipes.put(CraftingRecipe.MAYONNAISE_MACHINE_RECIPE, true);
         craftingRecipes.put(CraftingRecipe.FURNACE_RECIPE, true);
         craftingRecipes.put(CraftingRecipe.SCARECROW_RECIPE, true);
-        craftingRecipes.put(CraftingRecipe.MAYONNAISE_MACHINE_RECIPE, true);
         addBasicTools();
     }
 

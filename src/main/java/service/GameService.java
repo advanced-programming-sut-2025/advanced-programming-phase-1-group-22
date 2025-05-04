@@ -1501,7 +1501,7 @@ public class GameService {
             product2 = player.getInventory().findProductInBackPackByNAme(MadeProductType.COAL.getName());
             player.getInventory().deleteProductFromBackPack(product2, player, 1);
         }
-        player.addCraft(new Craft(madeProductType.getCraftType(), new MadeProduct(madeProductType, product1), madeProductType.calcETA(product1)));
+        player.addCraft(new Craft(madeProductType.getCraft(), new MadeProduct(madeProductType, product1), madeProductType.calcETA(product1)));
         return new Response("The item will be ready in due time.");
     }
 
@@ -1748,15 +1748,15 @@ public class GameService {
         Player player = app.getCurrentGame().getCurrentPlayer();
         CraftingRecipe recipe = player.findCraftingRecipe(name);
         if (recipe == null) return new Response("You've not learnt to craft " + name);
-        Response isPossible = recipe.getCraftType().isCraftingPossible(player);
+        Response isPossible = recipe.getCraft().isCraftingPossible(player);
         if (!isPossible.shouldBeBack()) return isPossible;
-        if (!player.getInventory().isInventoryHaveCapacity(new Craft(recipe.getCraftType(), null, null))) {
+        if (!player.getInventory().isInventoryHaveCapacity(new Craft(recipe.getCraft(), null, null))) {
             return new Response("You don't have enough space in your backpack");
         }
         player.removeEnergy(2);
-        recipe.getCraftType().removeIngredients(player);
-        player.getInventory().addProductToBackPack(new Craft(recipe.getCraftType(), null, null), 1);
-        return new Response(recipe.getCraftType().getName() + " crafted successfully.");
+        recipe.getCraft().removeIngredients(player);
+        player.getInventory().addProductToBackPack(new Craft(recipe.getCraft(), null, null), 1);
+        return new Response(recipe.getCraft().getName() + " crafted successfully.");
     }
 
     public Response cookingRefrigeratorPick(String name) {
