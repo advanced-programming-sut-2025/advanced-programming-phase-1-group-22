@@ -49,7 +49,7 @@ public class GameCommands extends CommandClass {
     public static final GameCommands questsFinish = new GameCommands("^\\s*quests\\s+finish\\s+-i\\s+(?<index>\\d+)\\s*$");
     public static final GameCommands eat = new GameCommands("^\\s*eat\\s+(?<foodName>)\\s*$");
 
-    public static final GameCommands craftingShowRecipes = new GameCommands("^\\s*crafting\\s+show\\s+recipes\\s*$");
+    public static final GameCommands craftingShowRecipes = new GameCommands("crafting show recipes");
     public static final GameCommands craftingCraft = new GameCommands("^\\s*crafting\\s+craft\\s+(?<itemName>.+)\\s*$");
     public static final GameCommands cookingRefrigeratorPut = new GameCommands("^\\s*cooking\\s+refrigerator\\s+put\\s+(?<itemName>.+)\\s*$");
     public static final GameCommands cookingRefrigeratorPick = new GameCommands("^\\s*cooking\\s+refrigerator\\s+pick\\s+(?<itemName>.+)\\s*$");
@@ -62,11 +62,11 @@ public class GameCommands extends CommandClass {
     public static final GameCommands purchase1 = new GameCommands("^\\s*purchase\\s+(?<name>.+)\\s*$");
 
     public static final GameCommands SHOW_ENERGY = new GameCommands("show\\s+energy");
-    public static final GameCommands ENERGY_SET = new GameCommands("set\\+energy\\s+-v\\s+(\\d+)");
+    public static final GameCommands ENERGY_SET = new GameCommands("set\\s+energy\\s+-v\\s+(\\d+)");
     public static final GameCommands SET_ENERGY_UNLIMITED = new GameCommands("energy\\s+unlimited");
 
     public static final GameCommands SHOW_INVENTORY = new GameCommands("inventory\\s+show");
-    public static final GameCommands REMOVE_FROM_INVENTORY = new GameCommands("inventory\\s+trash\\s+-i\\s+([a-zA-Z ]+)\\s*(\\d+)?");
+    public static final GameCommands REMOVE_FROM_INVENTORY = new GameCommands("inventory\\s+trash\\s+-i\\s+([a-zA-Z ]+)(\\s+-n\\s*(\\d+))?");
     public static final GameCommands PICK_PRODUCT = new GameCommands("pick\\s+up");
 
     public static final GameCommands TOOL_EQUIP = new GameCommands("tool\\s+equip\\s+()");

@@ -16,13 +16,13 @@ public class CottageMenu extends GameMenu {
     private final Map<CommandClass, Function<String[], Response>> commandsFunctionMap = new HashMap<>();
 
     private CottageMenu() {
-        commandsFunctionMap.putAll(super.getFunctionsMap());
         commandsFunctionMap.put(craftingShowRecipes, controller::craftingShowRecipes);
         commandsFunctionMap.put(cookingShowRecipes, controller::cookingShowRecipes);
         commandsFunctionMap.put(cookingRefrigeratorPick, controller::cookingRefrigeratorPick);
         commandsFunctionMap.put(craftingCraft, controller::craftingCraft);
         commandsFunctionMap.put(cookingRefrigeratorPut, controller::cookingRefrigeratorPut);
         commandsFunctionMap.put(cookingPrepare, controller::cookingPrepare);
+        commandsFunctionMap.putAll(super.getFunctionsMap());
 
     }
 
@@ -31,6 +31,10 @@ public class CottageMenu extends GameMenu {
             instance = new CottageMenu();
         }
         return instance;
+    }
+    @Override
+    public Map<CommandClass, Function<String[], Response>> getFunctionsMap() {
+        return commandsFunctionMap;
     }
 
 }

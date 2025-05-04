@@ -114,12 +114,11 @@ public class GameMenuController extends MenuController {
 
     public Response removeFromPlayerInventory(String[] params) {
         String itemName = params[0];
-        boolean haveItemNumber = params.length == 2;
-        if (haveItemNumber) {
+        if (params[2] != null) {
             int itemNumber = Integer.parseInt(params[1]);
             return gameService.removeFromPlayerInventory(itemName, true, itemNumber);
         }
-        return gameService.removeFromPlayerInventory(itemName,false);
+        return gameService.removeFromPlayerInventory(itemName, false);
     }
 
     public Response toolEquip(String[] params) {
@@ -146,22 +145,22 @@ public class GameMenuController extends MenuController {
         return gameService.pickFromFloor();
     }
 
-    public Response fishing(String[] parms){
+    public Response fishing(String[] parms) {
         String fishingPoleName = parms[0];
         return gameService.fishing(fishingPoleName);
     }
 
-    public Response build(String[] parms){
+    public Response build(String[] parms) {
         String buildingName = parms[0].trim();
         int x = Integer.parseInt(parms[1]);
         int y = Integer.parseInt(parms[2]);
-        return gameService.build(buildingName,x,y);
+        return gameService.build(buildingName, x, y);
     }
 
-    public Response buyAnimal(String[] parms){
+    public Response buyAnimal(String[] parms) {
         String animal = parms[0].trim();
         String name = parms[1].trim();
-        return gameService.buyAnimal(animal,name);
+        return gameService.buyAnimal(animal, name);
     }
 
     public Response pet(String[] params) {
@@ -169,13 +168,13 @@ public class GameMenuController extends MenuController {
         return gameService.pet(name);
     }
 
-    public Response setFriendship(String[] parms){
+    public Response setFriendship(String[] parms) {
         String name = parms[0].trim();
         int count = Integer.parseInt(parms[1]);
-        return gameService.setFriendShip(name,count);
+        return gameService.setFriendShip(name, count);
     }
 
-    public Response showAnimals(String[] parms){
+    public Response showAnimals(String[] parms) {
         return gameService.showAnimals();
     }
 
@@ -183,10 +182,10 @@ public class GameMenuController extends MenuController {
         String name = params[0].trim();
         int x = Integer.parseInt(params[1]);
         int y = Integer.parseInt(params[2]);
-        return gameService.shepherdAnimals(name,x,y);
+        return gameService.shepherdAnimals(name, x, y);
     }
 
-    public Response feedHay(String[] parms){
+    public Response feedHay(String[] parms) {
         String name = parms[0].trim();
         return gameService.feedHay(name);
     }
@@ -213,19 +212,19 @@ public class GameMenuController extends MenuController {
     public Response plantSeed(String[] params) {
         String name = params[0].trim();
         String direction = params[1];
-        return gameService.plantSeed(name,direction);
+        return gameService.plantSeed(name, direction);
     }
 
     public Response showPlant(String[] params) {
         int x = Integer.parseInt(params[0]);
         int y = Integer.parseInt(params[1]);
-        return gameService.showPlant(x,y);
+        return gameService.showPlant(x, y);
     }
 
     public Response fertilize(String[] params) {
         String fertilize = params[0].trim();
         String direction = params[1];
-        return gameService.fertilize(fertilize,direction);
+        return gameService.fertilize(fertilize, direction);
     }
 
     public Response howMuchWater(String[] params) {
@@ -359,9 +358,11 @@ public class GameMenuController extends MenuController {
     public Response cookingPrepare(String[] strings) {
         return gameService.cookingPrepare(strings[0]);
     }
+
     public Response showAllProducts(String[] strings) {
         return gameService.showAllProducts();
     }
+
     public Response showAllAvailableProducts(String[] strings) {
         return gameService.showAllAvailableProducts();
     }

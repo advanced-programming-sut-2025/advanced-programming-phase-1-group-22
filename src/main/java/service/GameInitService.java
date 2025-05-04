@@ -123,7 +123,7 @@ public class GameInitService {
         player.setFarmType(FarmType.values()[mapNumber]);
         app.getCurrentGame().nextPlayer();
         if (app.getCurrentGame().getCurrentPlayer().getFarmType() != null) {
-            Session.setCurrentMenu(Menu.GAME_MAIN_MENU);
+            Session.setCurrentMenu(Menu.COTTAGE);
             completeMap();
         }
         return new Response("Farm " + FarmType.values()[mapNumber] + " chosen.");
