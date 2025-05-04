@@ -249,10 +249,10 @@ public class GameService {
             return new Response("Not enough energy; you fainted");
         }
         player.removeEnergy(energy);
-        player.getTiles().getFirst().setIsPassable(true);
+//        player.getTiles().getFirst().setIsPassable(true);
         player.getTiles().clear();
         player.getTiles().add(app.getCurrentGame().tiles[x1][y1]);
-        player.getTiles().getFirst().setIsPassable(false);
+//        player.getTiles().getFirst().setIsPassable(false);
         setMenu(player, destFarm);
         if (player.getEnergyPerTurn() <= 0) nextTurn();
         return new Response("Moved to the tile.", true);
@@ -746,6 +746,7 @@ public class GameService {
                     }
                 }
             }
+            Session.setCurrentMenu(Menu.GAME_MAIN_MENU);
             return;
         }
         Cottage cottage = farm.getCottage();
