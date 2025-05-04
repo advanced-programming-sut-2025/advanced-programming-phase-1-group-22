@@ -17,6 +17,7 @@ public class GameCommands extends CommandClass {
     public static final GameCommands C_WeatherSet = new GameCommands("^\\s*cheat\\s+weather\\s+set\\s+(?<Type>\\S+)\\s*$");
     public static final GameCommands greenhouseBuild = new GameCommands("^\\s*greenhouse\\s+build\\s*$");
     public static final GameCommands walk = new GameCommands("^\\s*walk\\s+-l\\s+(?<X>\\d+)\\s*,\\s*(?<Y>\\d+)\\s*$");
+    public static final GameCommands whereAmI = new GameCommands("^\\s*@\\s*$");
     public static final GameCommands printMap = new GameCommands("^\\s*print\\s+map\\s+-l\\s+(?<X>\\d+)\\s*,\\s*(?<Y>\\d+)\\s+" +
             "-s\\s+(?<size>\\d+)\\s*$");
     public static final GameCommands helpReadingMap = new GameCommands("^\\s*help\\s+reading\\s+map\\s*$");

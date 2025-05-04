@@ -138,6 +138,7 @@ public class GameInitService {
             Farm farm;
             if (player != null) {
                 farm = new Farm(player, player.getFarmType());
+                village.getStructures().add(player);
             } else {
                 Random random = new Random();
                 farm = new Farm(null, FarmType.values()[random.nextInt(0, 4)]);

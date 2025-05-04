@@ -31,6 +31,7 @@ public abstract class GameMenu implements CommandProcessor {
         commandsFunctionMap.put(greenhouseBuild, controller::greenhouseBuild);
         commandsFunctionMap.put(helpReadingMap, controller::helpReadingMap);
         commandsFunctionMap.put(walk, controller::walk);
+        commandsFunctionMap.put(whereAmI, controller::whereAmI);
         commandsFunctionMap.put(C_Thor, controller::C_Thor);
         commandsFunctionMap.put(C_WeatherSet, controller::C_WeatherSet);
         commandsFunctionMap.put(printMap, controller::printMap);

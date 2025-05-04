@@ -11,9 +11,13 @@ public class WalkingStrategy {
     private int distance = 0;
     private final App app = App.getInstance();
     public int calculateEnergy(Pair origin, Pair dest) {
+        distances.clear();
+        distances.put(origin, 0);
         if (!calculateTile(origin, dest, 0)) {
+            distances.clear();
             return -1;
         }
+        distances.clear();
         return distance/20;
     }
 
