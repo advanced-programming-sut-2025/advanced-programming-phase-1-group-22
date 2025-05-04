@@ -24,13 +24,14 @@ public class BackPack {
     public String showInventory() {
         StringBuilder message = new StringBuilder();
         for (Map.Entry<Salable, Integer> salableIntegerEntry : products.entrySet()) {
-            message.append(salableIntegerEntry.getKey().getName()).append(" : ").append(salableIntegerEntry.getValue());
+            message.append(salableIntegerEntry.getKey().getName()).append(" : ").append(salableIntegerEntry.getValue()).append("\n");
         }
         return message.toString();
     }
 
     public void deleteProductFromBackPack(Salable product, Player player, int itemNumber) {
-        if (product == null) throw new InvalidInputException("Product wanted to be deleted is not available in backpack");
+        if (product == null)
+            throw new InvalidInputException("Product wanted to be deleted is not available in backpack");
         TrashCan trashCan = getPlayerTrashCan(player);
         if (trashCan != null) {
             trashCan.givePlayerProductPrice(player, product, itemNumber);
@@ -103,7 +104,7 @@ public class BackPack {
 
     public Boolean isInventoryHaveCapacity(Salable product) {
         if (!(product instanceof Tool)) product = findProductInBackPackByNAme(product.getName());
-        return backPackType.getIsInfinite() || backPackType.getCapacity() < products.size() ||
+        return backPackType.getIsInfinite() || (backPackType.getCapacity() > products.size()) ||
                 products.containsKey(product);
     }
 

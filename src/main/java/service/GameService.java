@@ -53,15 +53,15 @@ import javax.tools.JavaCompiler;
 import java.util.*;
 
 public class GameService {
-    private static GameService instance;
+    private static volatile GameService instance;
     App app = App.getInstance();
 
 
-    private GameService() {
+    public GameService() {
     }
 
     public static GameService getInstance() {
-        if (instance == null) {
+        if (instance == null) {        // Second check (inside lock)
             instance = new GameService();
         }
         return instance;
@@ -188,10 +188,10 @@ public class GameService {
             return new Response("Greenhouse already built.");
         }
         switch (greenHouse.areIngredientsAvailable(app.getCurrentGame().getCurrentPlayer())) {
-            case 1 -> {
+            case 2 -> {
                 return new Response("You need 1000 golds to build it");
             }
-            case 2 -> {
+            case 1 -> {
                 return new Response("You need 500 golds to build it");
             }
         }
@@ -675,10 +675,10 @@ public class GameService {
     public Response fertilize(String fertilize, String direction) {
         Player currentPlayer = getCurrentPlayer();
         Sundry currentFertilize = (Sundry) currentPlayer.getInventory().getProductFromBackPack(fertilize);
-        if (currentFertilize == null){
+        if (currentFertilize == null) {
             return new Response("this item is not exist in the inventory");
         }
-        if (!isThisFertilize(currentFertilize)){
+        if (!isThisFertilize(currentFertilize)) {
             return new Response("there is no fertilize with this name");
         }
         Direction currentDirection = Direction.getByName(direction);
@@ -1197,17 +1197,19 @@ public class GameService {
         ((Structure) product).getTiles().add(tile);
         Farm currentFarm = getPlayerInWitchFarm(player);
         if (product instanceof Craft) {
-            switch (((Craft)product).getCraftType()) {
+            switch (((Craft) product).getCraftType()) {
                 case CraftType.BOMB:
                 case CraftType.CHERRY_BOMB:
                 case CraftType.MEGA_BOMB: {
                     for (Tile tile1 : ((Craft) product).getAffectedTiles()) {
                         //TODO BURN;
                     }
-                } break;
+                }
+                break;
                 case CraftType.GRASS_STARTER: {
                     ((Craft) product).getTiles().getFirst().setTileType(TileType.GRASS);
-                } break;
+                }
+                break;
             }
         }
         if (currentFarm != null) {
@@ -1242,11 +1244,11 @@ public class GameService {
             }
         }
 
-        if (salable == null) {
-            for (MadeProductType value : MadeProductType.values()) {
-                if (name.equalsIgnoreCase(value.getName())) salable = new MadeProduct(value);
-            }
-        }
+//        if (salable == null) {
+//            for (MadeProductType value : MadeProductType.values()) {
+//                if (name.equalsIgnoreCase(value.getName())) salable = new MadeProduct(value);
+//            }
+//        }
 
         if (salable == null) {
             for (AnimalProductType value : AnimalProductType.values()) {
@@ -1286,7 +1288,7 @@ public class GameService {
         }
 
         if (salable == null) return new Response(name + " cannot be added to the backpack");
-        if (inventory.isInventoryHaveCapacity(salable)) return new Response("Backpack hasn't enough space");
+        if (!inventory.isInventoryHaveCapacity(salable)) return new Response("Backpack hasn't enough space");
         inventory.addProductToBackPack(salable, Integer.parseInt(count));
         return new Response(name + " *" + count + " added to backpack.", true);
     }
@@ -1627,12 +1629,12 @@ public class GameService {
         return false;
     }
 
-    private boolean isThisFertilize(Salable salable){
-        if (salable instanceof Sundry){
-            if (((Sundry)salable).getSundryType().equals(SundryType.BASIC_RETAINING_SOIL) ||
-                    ((Sundry)salable).getSundryType().equals(SundryType.QUALITY_RETAINING_SOIL) ||
-                    ((Sundry)salable).getSundryType().equals(SundryType.DELUXE_RETAINING_SOIL) ||
-                    ((Sundry)salable).getSundryType().equals(SundryType.SPEED_GROW)){
+    private boolean isThisFertilize(Salable salable) {
+        if (salable instanceof Sundry) {
+            if (((Sundry) salable).getSundryType().equals(SundryType.BASIC_RETAINING_SOIL) ||
+                    ((Sundry) salable).getSundryType().equals(SundryType.QUALITY_RETAINING_SOIL) ||
+                    ((Sundry) salable).getSundryType().equals(SundryType.DELUXE_RETAINING_SOIL) ||
+                    ((Sundry) salable).getSundryType().equals(SundryType.SPEED_GROW)) {
                 return true;
             }
             return false;
