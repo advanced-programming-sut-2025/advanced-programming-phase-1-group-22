@@ -10,6 +10,7 @@ import model.structure.*;
 import model.structure.farmInitialElements.Cottage;
 import model.structure.farmInitialElements.GreenHouse;
 import model.structure.farmInitialElements.HardCodeFarmElements;
+import model.structure.farmInitialElements.Lake;
 import utils.App;
 
 import java.util.ArrayList;
@@ -90,6 +91,9 @@ public class Farm {
         for (Pair pair : farmElements.getTilePairList()) {
             Tile tile = app.getCurrentGame().tiles[pair.getX() + farmXStart][pair.getY() + farmYStart];
             tile.setIsFilled(true);
+            if (farmElements instanceof Lake) {
+                tile.setIsPassable(false);
+            }
             farmElements.getTiles().add(tile);
         }
     }

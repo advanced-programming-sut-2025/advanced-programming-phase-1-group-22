@@ -5,13 +5,9 @@ import lombok.Setter;
 import lombok.ToString;
 import model.animal.Animal;
 import model.animal.Fish;
-import model.cook.Food;
 import model.craft.Craft;
 import model.enums.Weather;
 import model.products.AnimalProduct;
-import model.products.Hay;
-import model.products.TreesAndFruitsAndSeeds.Fruit;
-import model.products.TreesAndFruitsAndSeeds.MadeProduct;
 import model.products.TreesAndFruitsAndSeeds.Tree;
 import model.relations.NPC;
 import model.relations.NPCType;
@@ -43,7 +39,6 @@ public class Village {
     private List<Tile> tiles;
     private List<Farm> farms = new ArrayList<>();
     private List<Structure> structures = new ArrayList<>();
-    private List<NPC> npcs = new ArrayList<>();
     private Weather weather = Weather.SUNNY;
     private Weather tomorrowWeather = Weather.SUNNY;
     private App app = App.getInstance();
@@ -162,13 +157,31 @@ public class Village {
 
     public void addNPC(NPCType NPCType, int xStart, int yStart, boolean vertical) {
         NPC npc = new NPC(NPCType);
+        NPCHouse npcHouse = new NPCHouse(npc);
         if (vertical) {
-            setTileOfNPC(npc, xStart, yStart, xStart + 4, yStart + 6);
+            setTileOfNPCHouse(npcHouse, xStart, yStart, xStart + 4, yStart + 6);
         } else {
-            setTileOfNPC(npc, xStart, yStart, xStart + 6, yStart + 4);
+            setTileOfNPCHouse(npcHouse, xStart, yStart, xStart + 6, yStart + 4);
         }
-        npcs.add(npc);
+        App.getInstance().getCurrentGame().getNpcs().add(npc);
+        Tile tileByXAndY = getTileByXAndY(npcHouse.getTiles().getFirst().getX(), npcHouse.getTiles().getFirst().getY() - 1);
+        tileByXAndY.setIsFilled(true);
+        tileByXAndY.setIsPassable(false);
+        npc.getTiles().add(tileByXAndY);
+        structures.add(npcHouse);
         structures.add(npc);
+    }
+
+
+    private Tile getTileByXAndY(int x, int y) {
+        for (Tile[] tile : App.getInstance().getCurrentGame().tiles) {
+            for (Tile tile1 : tile) {
+                if (tile1.getX() == x && tile1.getY() == y) {
+                    return tile1;
+                }
+            }
+        }
+        return null;
     }
 
     public int getRandomNumber(int start, int end) {
@@ -185,10 +198,10 @@ public class Village {
         }
     }
 
-    public void setTileOfNPC(NPC NPC, int xStart, int yStart, int xEnd, int yEnd) {
+    public void setTileOfNPCHouse(NPCHouse npcHouse, int xStart, int yStart, int xEnd, int yEnd) {
         for (int i = xStart; i < xEnd; i++) {
             for (int j = yStart; j < yEnd; j++) {
-                NPC.getTiles().add(app.getCurrentGame().tiles[i][j]);
+                npcHouse.getTiles().add(app.getCurrentGame().tiles[i][j]);
                 app.getCurrentGame().tiles[i][j].setIsFilled(true);
                 app.getCurrentGame().tiles[i][j].setIsPassable(false);
             }
