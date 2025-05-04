@@ -234,7 +234,7 @@ public class GameService {
         WalkingStrategy walkingStrategy = new WalkingStrategy();
         Player player = app.getCurrentGame().getCurrentPlayer();
         int energy = walkingStrategy.calculateEnergy(
-                new Pair(player.getTiles().getFirst().getX(), player.getTiles().getFirst().getX()), new Pair(x1, y1)
+                new Pair(player.getTiles().getFirst().getX(), player.getTiles().getFirst().getY()), new Pair(x1, y1)
         );
         if (energy == -1) return new Response("No path available");
         String confirmation;

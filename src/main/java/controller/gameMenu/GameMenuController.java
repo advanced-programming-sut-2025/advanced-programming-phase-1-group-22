@@ -70,6 +70,11 @@ public class GameMenuController extends MenuController {
         return gameService.walk(params[0], params[1]);
     }
 
+    public Response whereAmI(String[] params) {
+        return new Response(App.getInstance().getCurrentGame().getCurrentPlayer().getTiles().getFirst().toString(),
+                true);
+    }
+
     public Response C_Thor(String[] params) {
         return gameService.C_Thor(params[0], params[1]);
     }

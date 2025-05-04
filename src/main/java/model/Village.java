@@ -168,7 +168,7 @@ public class Village {
             setTileOfNPC(npc, xStart, yStart, xStart + 6, yStart + 4);
         }
         npcs.add(npc);
-//        structures.add(npc);
+        structures.add(npc);
     }
 
     public int getRandomNumber(int start, int end) {
@@ -218,20 +218,6 @@ public class Village {
             }
         }
 
-        for (Structure structure : structures) {
-            char symbol = ' ';
-            if (structure instanceof Store) symbol = 's';
-            else if (structure instanceof NPCHouse) symbol = 'N';
-            else if (structure instanceof Fountain) symbol = 'f';
-            else if (structure instanceof NPC) symbol = '?';
-            else if (structure instanceof Player) symbol = '!';
-
-            if (symbol != ' ') {
-                for (Tile tile : structure.getTiles()) {
-                    str[tile.getX()][tile.getY()] = symbol;
-                }
-            }
-        }
         for (Farm farm : farms) {
             for (Structure structure : farm.getStructures()) {
                 char symbol = ' ';
@@ -260,6 +246,21 @@ public class Village {
                     for (Tile tile : structure.getTiles()) {
                         str[tile.getX()][tile.getY()] = symbol;
                     }
+                }
+            }
+        }
+        for (Structure structure : structures) {
+            char symbol = ' ';
+
+            if (structure instanceof NPC) symbol = '?';
+            else if (structure instanceof Player) symbol = '!';
+            else if (structure instanceof Store) symbol = 's';
+            else if (structure instanceof NPCHouse) symbol = 'N';
+            else if (structure instanceof Fountain) symbol = 'f';
+
+            if (symbol != ' ') {
+                for (Tile tile : structure.getTiles()) {
+                    str[tile.getX()][tile.getY()] = symbol;
                 }
             }
         }
