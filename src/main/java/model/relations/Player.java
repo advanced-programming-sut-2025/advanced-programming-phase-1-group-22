@@ -50,7 +50,7 @@ public class Player extends Actor {
     private List<Craft> crafts = new ArrayList<>();
     private Map<CraftingRecipe, Boolean> craftingRecipes = new HashMap<>();
     private StoreType storeType;
-    private Menu currentMenu = Menu.GAME_MAIN_MENU;
+    private Menu currentMenu = Menu.COTTAGE;
 
     public Player(User user) {
         this.user = user;
@@ -81,8 +81,7 @@ public class Player extends Actor {
     private FarmType farmType;
 
     public void removeEnergy(int amount) {
-        energyPerTurn -= amount;
-        energy -= amount;
+        changeEnergy(-amount);
     }
 
     public void faint() {
@@ -92,8 +91,9 @@ public class Player extends Actor {
 
     public void changeEnergy(int currentEnergy) {
         if (energyIsInfinite) {
-            energy = Math.max(0, energy + currentEnergy);
+            energy = Math.max(maxEnergy, energy + currentEnergy);
         } else {
+            energyPerTurn += currentEnergy;
             energy = Math.min(Math.max(0, energy + currentEnergy), maxEnergy);
         }
     }
@@ -111,10 +111,13 @@ public class Player extends Actor {
     }
 
     public void setEnergyIsInfinite(Boolean energyIsInfinite) {
+        this.energyIsInfinite = energyIsInfinite;
         if (!energyIsInfinite) {
             energy = Math.min(energy, maxEnergy);
+            return;
         }
-        this.energyIsInfinite = energyIsInfinite;
+
+        energy = maxEnergy;
     }
 
     public int getAbilityLevel(Ability ability) {
@@ -184,13 +187,14 @@ public class Player extends Actor {
 
     public CraftingRecipe findCraftingRecipe(String string) {
         for (CraftingRecipe craftingRecipe : craftingRecipes.keySet()) {
-            if  (craftingRecipe.getName().equals(string)) {
+            if (craftingRecipe.getName().equals(string)) {
                 if (craftingRecipes.get(craftingRecipe)) return craftingRecipe;
                 return null;
             }
         }
         return null;
     }
+
     public CookingRecipe findCookingRecipe(String string) {
         for (CookingRecipe cookingRecipe : cookingRecipes.keySet()) {
             if (cookingRecipe.getName().equals(string)) {
@@ -208,6 +212,7 @@ public class Player extends Actor {
     public Craft findCraft(Salable craftType) {
         for (Craft craft : crafts) {
             if (craft.getCraftType().equals(craftType)) return craft;
-        } return null;
+        }
+        return null;
     }
 }

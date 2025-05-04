@@ -246,15 +246,16 @@ public class GameService {
         }
         if (player.getEnergy() < energy) {
             player.faint();
+            nextTurn();
             return new Response("Not enough energy; you fainted");
         }
         player.removeEnergy(energy);
-//        player.getTiles().getFirst().setIsPassable(true);
         player.getTiles().clear();
         player.getTiles().add(app.getCurrentGame().tiles[x1][y1]);
-//        player.getTiles().getFirst().setIsPassable(false);
         setMenu(player, destFarm);
-        if (player.getEnergyPerTurn() <= 0) nextTurn();
+        if (player.getEnergyPerTurn() <= 0) {
+            nextTurn();
+        }
         return new Response("Moved to the tile.", true);
     }
 
@@ -329,7 +330,7 @@ public class GameService {
         }
         int itemNumber = Math.min(itemNumbers[0], currentPlayer.getInventory().getProducts().get(currentProduct));
         currentPlayer.getInventory().deleteProductFromBackPack(currentProduct, currentPlayer, itemNumber);
-        return new Response(itemName + " of " + itemName + "removed", true);
+        return new Response(itemNumber + " of " + itemName + "removed", true);
     }
 
     public Response toolEquip(String name) {
@@ -1796,15 +1797,15 @@ public class GameService {
         Fridge fridge = app.getCurrentGame().findFarm().getFridge();
         CookingRecipe recipe = player.findCookingRecipe(name);
         if (recipe == null) return new Response("You've not learnt to cook " + name);
-        boolean isPossible = recipe.getFoodType().isValidIngredient(fridge);
+        boolean isPossible = recipe.getIngredients().isValidIngredient(fridge);
         if (!isPossible) return new Response("Ingredients not found in the refrigerator.");
-        if (!player.getInventory().isInventoryHaveCapacity(recipe.getFoodType())) {
+        if (!player.getInventory().isInventoryHaveCapacity(recipe.getIngredients())) {
             return new Response("You don't have enough space in your backpack");
         }
         player.removeEnergy(3);
-        recipe.getFoodType().removeIngredients(fridge);
-        player.getInventory().addProductToBackPack(new Food(recipe.getFoodType()), 1);
-        return new Response(recipe.getFoodType().getName() + " cooked successfully.");
+        recipe.getIngredients().removeIngredients(fridge);
+        player.getInventory().addProductToBackPack(new Food(recipe.getIngredients()), 1);
+        return new Response(recipe.getIngredients().getName() + " cooked successfully.");
     }
 
     private Response isStoreOpen() {

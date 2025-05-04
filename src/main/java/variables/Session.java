@@ -1,15 +1,11 @@
 package variables;
 
-import lombok.Getter;
 import model.User;
 import view.Menu;
 
 public class Session {
-    @Getter
     private static User currentUser;
-    @Getter
     private static Menu currentMenu = Menu.LOGIN;
-    @Getter
     private static boolean stayedLoggedIn = false;
 
     public Session() {
@@ -25,5 +21,17 @@ public class Session {
 
     public static void setStayedLoggedIn(boolean stayedLoggedIn) {
         Session.stayedLoggedIn = stayedLoggedIn;
+    }
+
+    public static User getCurrentUser() {
+        return Session.currentUser;
+    }
+
+    public static Menu getCurrentMenu() {
+        return Session.currentMenu;
+    }
+
+    public static boolean isStayedLoggedIn() {
+        return Session.stayedLoggedIn;
     }
 }
