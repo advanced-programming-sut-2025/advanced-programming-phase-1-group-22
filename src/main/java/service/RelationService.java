@@ -264,7 +264,7 @@ public class RelationService {
     public Response meetNpc(String npcName) {
         NPCType npcType = NPCType.valueOf(npcName);
         NPC npc1 = null;
-        for (NPC npc : game.getVillage().getNpcs()) {
+        for (NPC npc : game.getNpcs()) {
             if (npc.getType().equals(npcType)) {
                 npc1 = npc;
             }
@@ -321,7 +321,7 @@ public class RelationService {
     public Response giftNPC(String npcName, String item) {
         NPCType npcType = NPCType.valueOf(npcName);
         NPC npc1 = null;
-        for (NPC npc : game.getVillage().getNpcs()) {
+        for (NPC npc : game.getNpcs()) {
             if (npc.getType().equals(npcType)) {
                 npc1 = npc;
             }

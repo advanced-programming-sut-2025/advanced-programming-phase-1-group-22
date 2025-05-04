@@ -1,28 +1,5 @@
 package model;
 
-import model.animal.Animal;
-import model.animal.Fish;
-import model.craft.Craft;
-import model.products.AnimalProduct;
-import model.products.TreesAndFruitsAndSeeds.Tree;
-import model.relations.NPC;
-import model.relations.Player;
-import model.shelter.FarmBuilding;
-import model.shelter.ShippingBin;
-import model.source.Crop;
-import model.source.Mineral;
-import model.source.MixedSeeds;
-import model.source.Seed;
-import model.structure.NPCHouse;
-import model.structure.Stone;
-import model.structure.Structure;
-import model.structure.Trunk;
-import model.structure.farmInitialElements.Cottage;
-import model.structure.farmInitialElements.GreenHouse;
-import model.structure.farmInitialElements.Lake;
-import model.structure.farmInitialElements.Quarry;
-import model.structure.stores.Store;
-import model.tools.Tool;
 import utils.App;
 
 import java.util.*;
@@ -31,6 +8,7 @@ public class WalkingStrategy {
     private final Map<Pair, Integer> distances = new HashMap<>();
     private int distance = 0;
     private final App app = App.getInstance();
+
     public int calculateEnergy(Pair origin, Pair dest) {
         distances.clear();
         distances.put(origin, 0);
@@ -39,7 +17,7 @@ public class WalkingStrategy {
             return -1;
         }
         distances.clear();
-        return distance/20;
+        return distance / 20;
     }
 
     public boolean calculateTile(Pair origin, Pair dest, int distance) {
@@ -49,8 +27,8 @@ public class WalkingStrategy {
             this.distance = distance;
             return true;
         }
-        int[] xs = {1,1,0,-1,-1,-1,0,1};
-        int[] ys = {0,1,1,1,0,-1,-1,-1};
+        int[] xs = {1, 1, 0, -1, -1, -1, 0, 1};
+        int[] ys = {0, 1, 1, 1, 0, -1, -1, -1};
         Pair newPair = new Pair(origin.getX(), origin.getY());
         boolean flag = true;
         while (flag) {
