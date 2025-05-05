@@ -18,15 +18,14 @@ public class TradeMenuController extends MenuController {
         String type = params[1];
         String item = params[2];
         int amount = Integer.parseInt(params[3]);
-        if (params.length == 5) {
+        if (params[5] == null || params[6] == null) {
             int price = Integer.parseInt(params[4]);
             TradePriceDto tradeDto = TradePriceDto.builder().username(username).item(item).amount(amount).price(price).build();
             if (type.equals("offer")) {
                 return tradeService.tradePriceOffer(tradeDto);
             }
             return tradeService.tradePriceRequest(tradeDto);
-        }
-        if (params.length == 6) {
+        } else if (params[4]==null) {
             String targetItem = params[5];
             int targetAmount = Integer.parseInt(params[6]);
             TradeProductDto tradeDto = TradeProductDto.builder().username(username).item(item).amount(amount)
@@ -52,7 +51,7 @@ public class TradeMenuController extends MenuController {
     public Response tradeResponse(String... params) {
         boolean accept = params[0].equals("accept");
         int tradeId = Integer.parseInt(params[1]);
-        return tradeService.tradeResponse(accept,tradeId);
+        return tradeService.tradeResponse(accept, tradeId);
     }
 
 
