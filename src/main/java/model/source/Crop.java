@@ -77,6 +77,7 @@ public class Crop extends HarvestAbleProduct implements Source {
     }
 
     public int calculateDaysAfterLastHarvest() {
+      //  System.out.println( App.getInstance().getCurrentGame().getTimeAndDate().getDay() - this.lastHarvest.getDay());
         return App.getInstance().getCurrentGame().getTimeAndDate().getDay() - this.lastHarvest.getDay();
     }
 

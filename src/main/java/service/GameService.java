@@ -668,9 +668,9 @@ public class GameService {
         if (currentTile == null) {
             return new Response("out of bound");
         }
-        if (!isTileInPlayerFarms(getPlayerFarms(currentPlayer), currentTile)) {
-            return new Response("you can not access other farms");
-        }
+//        if (!isTileInPlayerFarms(getPlayerFarms(currentPlayer), currentTile)) {
+//            return new Response("you can not access other farms");
+//        }
         HarvestAbleProduct harvestAbleProduct = findHarvestable(currentTile);
         if (harvestAbleProduct == null) {
             return new Response("there is no harvestable in this tile");
