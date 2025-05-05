@@ -35,7 +35,7 @@ public class RelationShipController {
     }
 
     public Response rateGift(String... params) {
-        String item = params[0];
+      int item = Integer.parseInt(params[0]);
         int rate = Integer.parseInt(params[1]);
         return relationService.rateGift(item, rate);
     }

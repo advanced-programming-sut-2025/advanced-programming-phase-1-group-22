@@ -50,7 +50,7 @@ public class Village {
     public void shuffleFarms() {
         Random random = new Random();
         for (int i = 3; i > 0; i--) {
-            int j = random.nextInt(i + 1);
+             int j = random.nextInt(i + 1);
             Farm temp = farms.get(i);
             farms.set(i, farms.get(j));
             farms.set(j, temp);
@@ -58,7 +58,7 @@ public class Village {
     }
 
     public void fillFarms() {
-        shuffleFarms();
+       // shuffleFarms();
         for (int i = 0; i < farms.size(); i++) {
             Farm farm = farms.get(i);
             farm.fillFarmType(i);

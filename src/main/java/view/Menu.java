@@ -1,9 +1,6 @@
 package view;
 
-import view.gameMenu.CottageMenu;
-import view.gameMenu.GameMainMenu;
-import view.gameMenu.StoreMenu;
-import view.gameMenu.TradeMenu;
+import view.gameMenu.*;
 import view.mainMenu.*;
 
 import java.util.Scanner;
@@ -17,7 +14,9 @@ public enum Menu {
     COTTAGE(CottageMenu.getInstance()),
     GAME_MAIN_MENU(GameMainMenu.getInstance()),
     STORE_MENU(StoreMenu.getInstance()),
-    TRADE_MENU(TradeMenu.getInstance());
+    TRADE_MENU(TradeMenu.getInstance()),
+    RELATION_MENU(RelationShipMenu.getInstance());
+
     private final CommandProcessor commandProcessor;
 
     Menu(CommandProcessor commandProcessor) {

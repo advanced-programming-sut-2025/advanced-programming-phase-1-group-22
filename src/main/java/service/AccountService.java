@@ -229,9 +229,10 @@ public class AccountService {
         if (Session.getCurrentUser() == null) {
             return new Response("you are not logged in");
         }
-        if (!Session.getCurrentMenu().equals(Menu.MAIN)) {
+        if (Session.getCurrentMenu().equals(Menu.PROFILE)) {
             return new Response("switching menu is impossible!");
         }
+
         Session.setCurrentMenu(Menu.valueOf(menu));
         return new Response("menu changed successfully");
     }
