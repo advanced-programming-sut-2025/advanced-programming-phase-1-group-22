@@ -178,11 +178,11 @@ public class GameService {
         Farm farm = null;
         for (int i = 0; i < app.getCurrentGame().getVillage().getFarms().size(); i++) {
             farm = app.getCurrentGame().getVillage().getFarms().get(i);
-            if (farm.getPlayers() == app.getCurrentGame().getCurrentPlayer()) {
+            if (farm.getPlayers().getFirst().equals(app.getCurrentGame().getCurrentPlayer())) {
                 break;
             }
         }
-        if (farm == null) return null;
+        if (farm == null) return Response.empty();
         GreenHouse greenHouse = farm.getGreenHouse();
         if (greenHouse.isBuilt()) {
             return new Response("Greenhouse already built.");
@@ -609,27 +609,30 @@ public class GameService {
         } else if (!currentTile.getTileType().equals(TileType.PLOWED)) {
             return new Response("you should plow the tile first");
         }
-        MixedSeeds mixedSeeds = (MixedSeeds) getProductFromInventory(currentPlayer, name);
+        Salable salable = getProductFromInventory(currentPlayer, name);
         Seed seed;
-        Craft craft = (Craft) getProductFromInventory(currentPlayer, name);
-        if (mixedSeeds != null) {
+        if (salable == null){
+            return new Response("you do not have this seed in your inventory");
+        }
+        if (salable instanceof MixedSeeds) {
+            MixedSeeds mixedSeeds = (MixedSeeds) salable;
             if (!isThereGreenHouseForHarvest(currentTile) &&
                     !mixedSeeds.getMixedSeedsType().getSeason().equals(App.getInstance().getCurrentGame().getTimeAndDate().getSeason())) {
                 return new Response("you should use this seed in " + mixedSeeds.getMixedSeedsType().getSeason());
             }
             seed = generateSeedOfMixedSeed(mixedSeeds.getMixedSeedsType());
-        } else if (craft != null && name.equalsIgnoreCase("mystic tree seeds")) {
+        } else if (salable instanceof Craft && name.equalsIgnoreCase("mystic tree seeds")) {
             seed = new Seed(SeedType.MYSTIC_TREE_SEEDS);
-        } else {
+        } else if (salable instanceof Seed){
             seed = (Seed) getProductFromInventory(currentPlayer, name);
         }
-        if (seed == null) {
+        else {
             return new Response("you do not have this seed in your inventory");
-        } else if (!isThereGreenHouseForHarvest(currentTile) &&
-                !seed.getSeedType().getSeason().equals(App.getInstance().getCurrentGame().getTimeAndDate().getSeason()) &&
-                !seed.getSeedType().getSeason().equals(Season.SPECIAL)) {
-            return new Response("you should use this seed in " + seed.getSeedType().getSeason());
         }
+		if (!isThereGreenHouseForHarvest(currentTile) &&
+				!seed.getSeedType().getSeason().equals(App.getInstance().getCurrentGame().getTimeAndDate().getSeason())) {
+			return new Response("you should use this seed in " + seed.getSeedType().getSeason());
+		}
         HarvestAbleProduct harvestableProduct = getHarvestableFromSeed(seed.getSeedType());
         if (harvestableProduct == null) {
             return new Response("this seed is not valid");
@@ -640,7 +643,9 @@ public class GameService {
         }
         currentTile.setIsFilled(true);
         harvestableProduct.setTiles(List.of(currentTile));
-        harvestableProduct.setStartPlanting(App.getInstance().getCurrentGame().getTimeAndDate());
+		TimeAndDate timeAndDate = new TimeAndDate();
+		timeAndDate.setDay(App.getInstance().getCurrentGame().getTimeAndDate().getDay());
+        harvestableProduct.setStartPlanting(timeAndDate);
         currentFarm.getStructures().add(harvestableProduct);
         if (isThereGreenHouseForHarvest(currentTile)) {
             harvestableProduct.setInGreenHouse(true);
@@ -1253,31 +1258,84 @@ public class GameService {
 
         if (salable == null) {
             for (AnimalProductType value : AnimalProductType.values()) {
-                if (name.equalsIgnoreCase(value.getName())) salable = value;
+                if (name.equalsIgnoreCase(value.getName())) salable = new AnimalProduct(value);
             }
         }
-
+		if (salable == null){
+			for (SundryType value : SundryType.values()) {
+				if (name.equalsIgnoreCase(value.getName())) salable = new Sundry(value);			}
+		}
         if (salable == null) {
             for (CropType value : CropType.values()) {
-                if (name.equalsIgnoreCase(value.getName())) salable = value;
+                if (name.equalsIgnoreCase(value.getName())) salable = new Crop(value);
             }
         }
 
         if (salable == null) {
             for (MineralType value : MineralType.values()) {
-                if (name.equals(value.getName())) salable = value;
+                if (name.equals(value.getName())) salable = new Mineral(value);
             }
         }
 
         if (salable == null) {
             for (MixedSeedsType value : MixedSeedsType.values()) {
-                if (name.equalsIgnoreCase(value.getName())) salable = value;
+                if (name.equalsIgnoreCase(value.getName())) salable = new MixedSeeds(value);
             }
         }
 
         if (salable == null) {
             for (SeedType value : SeedType.values()) {
+                if (name.equalsIgnoreCase(value.getName())) salable = new Seed(value);
+            }
+        }
+
+        if (salable == null) {
+            for (Pickaxe value : Pickaxe.values()) {
                 if (name.equalsIgnoreCase(value.getName())) salable = value;
+            }
+        }
+
+        if (salable == null) {
+            for (Axe value : Axe.values()) {
+                if (name.equalsIgnoreCase(value.getName())) salable = value;
+            }
+        }
+
+        if (salable == null) {
+            for (FishingPole value : FishingPole.values()) {
+                if (name.equalsIgnoreCase(value.getName())) salable = value;
+            }
+        }
+
+        if (salable == null) {
+            for (Hoe value : Hoe.values()) {
+                if (name.equalsIgnoreCase(value.getName())) salable = value;
+            }
+        }
+
+        if (salable == null) {
+            if (name.equalsIgnoreCase("milkpail")) salable = MilkPail.getInstance();
+        }
+
+        if (salable == null) {
+            if (name.equalsIgnoreCase("scythe")) salable = new Scythe();
+        }
+
+        if (salable == null) {
+            for (Shear value : Shear.values()) {
+                if (name.equalsIgnoreCase(value.getName())) salable = value;
+            }
+        }
+
+        if (salable == null) {
+            for (TrashCan value : TrashCan.values()) {
+                if (name.equalsIgnoreCase(value.getName())) salable = value;
+            }
+        }
+
+        if (salable == null) {
+            for (WateringCanType value : WateringCanType.values()) {
+                if (name.equalsIgnoreCase(value.getName())) salable = new WateringCan(value);
             }
         }
 

@@ -22,7 +22,7 @@ public class GameCommands extends CommandClass {
             "-s\\s+(?<size>\\d+)\\s*$");
     public static final GameCommands helpReadingMap = new GameCommands("^\\s*help\\s+reading\\s+map\\s*$");
     public static final GameCommands placeItem = new GameCommands("^\\s*place\\s+item\\s+-n\\s+(?<itemName>.+)\\s+-d\\s+(?<direction>\\d+)\\s*$");
-    public static final GameCommands C_AddItem = new GameCommands("^\\s*cheat\\s+add\\s+item\\s+-n\\s+(?<name>\\S+)\\s+-c\\s+" +
+    public static final GameCommands C_AddItem = new GameCommands("^\\s*cheat\\s+add\\s+item\\s+-n\\s+(?<name>.+)\\s+-c\\s+" +
             "(?<count>\\d+)\\s*$");
 
     public static final GameCommands artisanUse = new GameCommands("^\\s*artisan\\s+use\\s+(?<name>\\S+)\\s+(?<item1>\\S+)\\s*(?<item2>\\S*)\\s*$"); //TODO Might be incorrect
@@ -69,11 +69,11 @@ public class GameCommands extends CommandClass {
     public static final GameCommands REMOVE_FROM_INVENTORY = new GameCommands("inventory\\s+trash\\s+-i\\s+([a-zA-Z ]+)(\\s+-n\\s*(\\d+))?");
     public static final GameCommands PICK_PRODUCT = new GameCommands("pick\\s+up");
 
-    public static final GameCommands TOOL_EQUIP = new GameCommands("tool\\s+equip\\s+()");
+    public static final GameCommands TOOL_EQUIP = new GameCommands("tools\\s+equip\\s+(.+)");
     public static final GameCommands SHOW_CURRENT_TOOL = new GameCommands("tools\\s+show\\s+current");
     public static final GameCommands SHOW_AVAILABLE_TOOLS = new GameCommands("tools\\s+show\\s+available");
     public static final GameCommands UPGRADE_TOOL = new GameCommands("tools\\s+upgrade\\s+([a-zA-Z ]+)");
-    public static final GameCommands USE_TOOL = new GameCommands("tool\\s+use\\s+-d\\s+(north|south|west|east|northwest|northeast|southeast|southwest)");
+    public static final GameCommands USE_TOOL = new GameCommands("tools\\s+use\\s+-d\\s+(north|south|west|east|northwest|northeast|southeast|southwest)");
 
     public static final GameCommands FISHING = new GameCommands("fishing\\s+-p\\s+(.+)");
 
@@ -91,8 +91,8 @@ public class GameCommands extends CommandClass {
 
     public static final GameCommands CRAFT_INFO = new GameCommands("^\\s*craft\\s+info\\s+-n\\s+(?<craftName>.+)\\s*$");
 
-    public static final GameCommands PLANT_SEED = new GameCommands("^\\s*plant\\s+seed\\s+-s\\s+(?<seed>.+)\\s+-d\\s+(north|south|west|east|northwest|northeast|southeast|southwest)\\s*$");
-    public static final GameCommands SHOW_PLANT = new GameCommands("^\\s*showplant\\s+-l\\s+<\\s*(?<X>\\d+)\\s*,\\s*(?<Y>\\d+)\\s*>\\s*$");
+    public static final GameCommands PLANT_SEED = new GameCommands("^\\s*plant\\s+-s\\s+(?<seed>.+)\\s+-d\\s+(north|south|west|east|northwest|northeast|southeast|southwest)\\s*$");
+    public static final GameCommands SHOW_PLANT = new GameCommands("^\\s*showplant\\s+-l\\s+(?<X>\\d+)\\s*,\\s*(?<Y>\\d+)\\s*$");
     public static final GameCommands FERTILIZE = new GameCommands("^\\s*fertilize\\s+-f\\s+(?<fertilizer>.+)\\s+-d\\s+(north|south|west|east|northwest|northeast|southeast|southwest)\\s*$");
     public static final GameCommands HOW_MUCH_WATER = new GameCommands("^\\s*howmuch\\s+water\\s*$");
 

@@ -9,7 +9,7 @@ import model.products.Product;
 @Getter
 public enum TrashCan implements Tool {
     NORMAL("normal trashcan",0,0),
-    COPPER("cupper trashcan",1,15),
+    COPPER("copper trashcan",1,15),
     IRON("iron trashcan",2,30),
     GOLD("gold trashcan",3,45),
     IRIDIUM("iridium trashcan",4,60);
