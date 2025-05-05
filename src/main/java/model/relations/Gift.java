@@ -10,7 +10,7 @@ import model.Salable;
 @Setter
 @ToString
 public class Gift {
-    private Integer giftId;
+    private Integer giftId = 0;
     private Salable gift;
     private Actor gifter;
     private Actor gifting;

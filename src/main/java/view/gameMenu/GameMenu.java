@@ -1,6 +1,8 @@
 package view.gameMenu;
 
 import command.CommandClass;
+import controller.AccountMenuController;
+import controller.MainMenuController;
 import controller.gameMenu.GameMenuController;
 import model.records.Response;
 import view.CommandProcessor;
@@ -9,12 +11,15 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+import static command.AccountCommands.ENTER_MENU;
+import static command.AccountCommands.SHOW_CURRENT_MENU;
 import static command.GameCommands.*;
 
 public abstract class GameMenu implements CommandProcessor {
 
     private final GameMenuController controller = new GameMenuController();
-    
+    private final MainMenuController mainMenuController = new MainMenuController();
+
     @Override
     public Map<CommandClass, Function<String[], Response>> getFunctionsMap() {
         final Map<CommandClass, Function<String[], Response>> commandsFunctionMap = new HashMap<>();
@@ -47,8 +52,8 @@ public abstract class GameMenu implements CommandProcessor {
         commandsFunctionMap.put(TOOL_EQUIP, controller::toolEquip);
         commandsFunctionMap.put(UPGRADE_TOOL, controller::upgradeTool);
         commandsFunctionMap.put(USE_TOOL, controller::useTool);
-        commandsFunctionMap.put(PICK_PRODUCT,controller::pickFromFloor);
-        commandsFunctionMap.put(FISHING,controller::fishing);
+        commandsFunctionMap.put(PICK_PRODUCT, controller::pickFromFloor);
+        commandsFunctionMap.put(FISHING, controller::fishing);
         commandsFunctionMap.put(CRAFT_INFO, controller::craftInfo);
         commandsFunctionMap.put(PLANT_SEED, controller::plantSeed);
         commandsFunctionMap.put(SHOW_PLANT, controller::showPlant);
@@ -69,24 +74,11 @@ public abstract class GameMenu implements CommandProcessor {
         commandsFunctionMap.put(C_AddDollars, controller::C_AddDollars);
         commandsFunctionMap.put(sell, controller::sell);
         commandsFunctionMap.put(sellAll, controller::sellAll);
-        commandsFunctionMap.put(friendship, controller::friendship);
-        commandsFunctionMap.put(talk, controller::talk);
-        commandsFunctionMap.put(talkHistory, controller::talkHistory);
-        commandsFunctionMap.put(gift, controller::gift);
-        commandsFunctionMap.put(giftList, controller::giftList);
-        commandsFunctionMap.put(giftRate, controller::giftRate);
-        commandsFunctionMap.put(giftHistory, controller::giftHistory);
-        commandsFunctionMap.put(hug, controller::hug);
-        commandsFunctionMap.put(flower, controller::flower);
-        commandsFunctionMap.put(askMarriage, controller::askMarriage);
-        commandsFunctionMap.put(respond, controller::respond);
-        commandsFunctionMap.put(startTrade, controller::startTrade);
-        commandsFunctionMap.put(meetNPC, controller::meetNPC);
-        commandsFunctionMap.put(giftNPC, controller::giftNPC);
         commandsFunctionMap.put(questsFinish, controller::questsFinish);
         commandsFunctionMap.put(eat, controller::eat);
         commandsFunctionMap.put(questsList, controller::questsList);
-        commandsFunctionMap.put(friendshipNPCList, controller::friendshipNPCList);
+        commandsFunctionMap.put(SHOW_CURRENT_MENU, mainMenuController::showCurrentMenu);
+        commandsFunctionMap.put(ENTER_MENU, mainMenuController::switchMenu);
         return commandsFunctionMap;
     }
 }
