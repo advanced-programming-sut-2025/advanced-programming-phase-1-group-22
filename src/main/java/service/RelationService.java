@@ -13,6 +13,8 @@ import java.util.Map;
 public class RelationService {
     private NPC lastTalkedNPC = null;
     private static RelationService instance;
+    Player currentPlayer;
+    Game game;
 
     private RelationService() {
     }
@@ -24,13 +26,13 @@ public class RelationService {
         return instance;
     }
 
-    Game game = App.getInstance().getCurrentGame();
-    Player currentPlayer = game.getCurrentPlayer();
 
     public Response showMyFriendShips() {
+        game = App.getInstance().getCurrentGame();
+        currentPlayer = game.getCurrentPlayer();
         StringBuilder stringBuilder = new StringBuilder();
         for (Friendship friendship : game.getFriendships()) {
-            if (friendship.getFirstPlayer().equals(currentPlayer)) {
+            if (friendship.getFirstPlayer().equals(currentPlayer) || friendship.getSecondPlayer().equals(currentPlayer)) {
                 stringBuilder.append(friendship.toString());
             }
         }
@@ -38,6 +40,8 @@ public class RelationService {
     }
 
     public Response talkToAnotherPlayer(String username, String message) {
+        game = App.getInstance().getCurrentGame();
+        currentPlayer = game.getCurrentPlayer();
         Player anotherPlayer = getPlayer(username);
         if (anotherPlayer == null) {
             return new Response("Player with that username not found");
@@ -47,11 +51,13 @@ public class RelationService {
         }
         Friendship friendship = getFriendShipBetweenTwoActors(anotherPlayer);
         friendship.getDialogs().put(message, currentPlayer);
-        if (currentPlayer.getCouple().equals(anotherPlayer)) {
-            changeFriendShipLevelUp(friendship, 50);
-        }
-        if (currentPlayer.getCouple().equals(anotherPlayer)) {
-            changeFriendShipLevelUp(friendship, 20);
+        if (currentPlayer.getCouple() != null) {
+            if (currentPlayer.getCouple().equals(anotherPlayer)) {
+                changeFriendShipLevelUp(friendship, 50);
+            }
+            if (currentPlayer.getCouple().equals(anotherPlayer)) {
+                changeFriendShipLevelUp(friendship, 20);
+            }
         }
         anotherPlayer.notify(new Response("%s called you!".formatted(currentPlayer.getUser().getUsername())));
         return new Response("message sent successfully");
@@ -59,6 +65,8 @@ public class RelationService {
 
 
     public Response showTalkHistories(String username) {
+        game = App.getInstance().getCurrentGame();
+        currentPlayer = game.getCurrentPlayer();
         Player player = getPlayer(username);
         if (player == null) {
             return new Response("Player with that username not found");
@@ -72,6 +80,8 @@ public class RelationService {
     }
 
     Friendship getFriendShipBetweenTwoActors(Actor anotherPlayer) {
+        game = App.getInstance().getCurrentGame();
+        currentPlayer = game.getCurrentPlayer();
         for (Friendship friendship : game.getFriendships()) {
             if ((friendship.getFirstPlayer().equals(currentPlayer) &&
                     friendship.getSecondPlayer().equals(anotherPlayer)) || (friendship.getSecondPlayer().equals(currentPlayer) &&
@@ -90,9 +100,11 @@ public class RelationService {
     }
 
     Player getPlayer(String username) {
+        game = App.getInstance().getCurrentGame();
+        currentPlayer = game.getCurrentPlayer();
         Player anotherPlayer = null;
         for (Player player : game.getPlayers()) {
-            if (player.getUser().equals(username)) {
+            if (player.getUser().getUsername().equals(username)) {
                 anotherPlayer = player;
             }
         }
@@ -100,6 +112,8 @@ public class RelationService {
     }
 
     public Response giveGift(String username, String itemName, int amount) {
+        game = App.getInstance().getCurrentGame();
+        currentPlayer = game.getCurrentPlayer();
         Player player = getPlayer(username);
         Salable gift = null;
         if (player == null) {
@@ -112,6 +126,7 @@ public class RelationService {
         for (Map.Entry<Salable, Integer> salableIntegerEntry : currentPlayer.getInventory().getProducts().entrySet()) {
             if (salableIntegerEntry.getKey().getName().equals(itemName) && salableIntegerEntry.getValue() >= amount) {
                 gift = salableIntegerEntry.getKey();
+                break;
             }
         }
         if (gift == null) {
@@ -127,10 +142,12 @@ public class RelationService {
             }
         }
 
-        return Response.empty();
+        return new Response("gift gived successfully");
     }
 
     public Response showGottenGifts() {
+        game = App.getInstance().getCurrentGame();
+        currentPlayer = game.getCurrentPlayer();
         Friendship friendship1 = null;
         StringBuilder stringBuilder = new StringBuilder();
         for (Friendship friendship : game.getFriendships()) {
@@ -147,7 +164,9 @@ public class RelationService {
         return new Response(stringBuilder.toString());
     }
 
-    public Response rateGift(String giftId, int rate) {
+    public Response rateGift(int giftId, int rate) {
+        game = App.getInstance().getCurrentGame();
+        currentPlayer = game.getCurrentPlayer();
         Gift giftFlag = null;
         if (rate > 5 || rate < 1) {
             return new Response("rate should be between 1 and 5");
@@ -159,15 +178,20 @@ public class RelationService {
                     gift.setRate(rate);
                     friendship.setXp(friendship.getXp() + (rate - 3) * 30 + 15);
                 }
+                else{
+                    return new Response("gift id is not correct");
+                }
             }
         }
         if (giftFlag == null) {
             return new Response("invalid gift number");
         }
-        return Response.empty();
+        return new Response("rate gift successfully");
     }
 
     public Response showGiftHistory(String username) {
+        game = App.getInstance().getCurrentGame();
+        currentPlayer = game.getCurrentPlayer();
         StringBuilder stringBuilder = new StringBuilder();
         Player player = getPlayer(username);
         Friendship friendShipBetweenTwoActors = getFriendShipBetweenTwoActors(player);
@@ -196,6 +220,8 @@ public class RelationService {
     }
 
     public Response marry(String username, String ring) {
+        game = App.getInstance().getCurrentGame();
+        currentPlayer = game.getCurrentPlayer();
         Player player = getPlayer(username);
         if (player == null) {
             return new Response("Player with that username not found");
@@ -228,6 +254,8 @@ public class RelationService {
     }
 
     public Response Respond(boolean accept, String username) {
+        game = App.getInstance().getCurrentGame();
+        currentPlayer = game.getCurrentPlayer();
         Player player = getPlayer(username);
         Friendship friendShipBetweenTwoActors = getFriendShipBetweenTwoActors(player);
         if (!accept) {
@@ -262,6 +290,8 @@ public class RelationService {
     }
 
     public Response meetNpc(String npcName) {
+        game = App.getInstance().getCurrentGame();
+        currentPlayer = game.getCurrentPlayer();
         NPCType npcType = NPCType.valueOf(npcName);
         NPC npc1 = null;
         for (NPC npc : game.getNpcs()) {
@@ -284,6 +314,8 @@ public class RelationService {
     }
 
     public void changeFriendShipLevelUp(Friendship friendShipBetweenTwoActors, int x) {
+        game = App.getInstance().getCurrentGame();
+        currentPlayer = game.getCurrentPlayer();
         if (!friendShipBetweenTwoActors.getLastSeen().getDay().equals(game.getTimeAndDate().getDay())) {
             friendShipBetweenTwoActors.setLastSeen(game.getTimeAndDate());
             friendShipBetweenTwoActors.setXp(friendShipBetweenTwoActors.getXp() + x);
@@ -306,6 +338,8 @@ public class RelationService {
     }
 
     public void changeFriendShipLevelDown(Friendship friendShipBetweenTwoActors, int x) {
+        game = App.getInstance().getCurrentGame();
+        currentPlayer = game.getCurrentPlayer();
         if (friendShipBetweenTwoActors.getFriendShipLevel() == 0)
             return;
         if (!friendShipBetweenTwoActors.getLastSeen().getDay().equals(game.getTimeAndDate().getDay())) {
@@ -319,6 +353,8 @@ public class RelationService {
     }
 
     public Response giftNPC(String npcName, String item) {
+        game = App.getInstance().getCurrentGame();
+        currentPlayer = game.getCurrentPlayer();
         NPCType npcType = NPCType.valueOf(npcName);
         NPC npc1 = null;
         for (NPC npc : game.getNpcs()) {
@@ -356,6 +392,8 @@ public class RelationService {
     }
 
     public Response showNpcFriendship() {
+        game = App.getInstance().getCurrentGame();
+        currentPlayer = game.getCurrentPlayer();
         StringBuilder stringBuilder = new StringBuilder();
         for (Friendship friendship : game.getFriendships()) {
             if (friendship.getSecondPlayer() instanceof NPC || friendship.getFirstPlayer() instanceof NPC) {
@@ -366,6 +404,8 @@ public class RelationService {
     }
 
     public Response questsList() {
+        game = App.getInstance().getCurrentGame();
+        currentPlayer = game.getCurrentPlayer();
         StringBuilder stringBuilder = new StringBuilder();
         Friendship friendShipBetweenTwoActors = getFriendShipBetweenTwoActors(lastTalkedNPC);
         int level = friendShipBetweenTwoActors.getFriendShipLevel();
@@ -385,6 +425,8 @@ public class RelationService {
     }
 
     public Response doMission(int missionId) {
+        game = App.getInstance().getCurrentGame();
+        currentPlayer = game.getCurrentPlayer();
         if (missionId < 1 || missionId > 3) {
             return new Response("missionId invalid");
         }
