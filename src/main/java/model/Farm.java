@@ -209,10 +209,11 @@ public class Farm {
         int randX = -1;
         int randY = -1;
         for (int i = 0; i < 30; i++) {
+            flag = true;
             randX = random.nextInt(farmXStart, farmXEnd);
             randY = random.nextInt(farmYStart, farmYEnd);
-            for (int j = randX; j < randX + length; j++) {
-                for (int k = randY; k < randY + width; k++) {
+            for (int j = randX; flag && j < randX + length; j++) {
+                for (int k = randY; flag && k < randY + width; k++) {
                     if (tiles1[j][k].getIsFilled()) {
                         flag = false;
                     } else {
