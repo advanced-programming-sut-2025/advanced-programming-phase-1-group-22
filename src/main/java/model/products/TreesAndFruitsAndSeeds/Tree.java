@@ -50,7 +50,7 @@ public class Tree extends HarvestAbleProduct {
     public int calculateRegrowthLevel() {
         int level = 1;
         TimeAndDate now = App.getInstance().getCurrentGame().getTimeAndDate();
-        int spendDays = now.getDay() - this.startPlanting.getDay();
+        int spendDays = now.getTotalDays() - this.startPlanting.getDay();
         if (this.treeType.getHarvestStages() != null) {
             int sum = 0;
             for (Integer harvestStage : this.treeType.getHarvestStages()) {
@@ -64,26 +64,15 @@ public class Tree extends HarvestAbleProduct {
     }
 
     public int calculateDaysAfterPlanting() {
-        return App.getInstance().getCurrentGame().getTimeAndDate().getDay() - this.startPlanting.getDay();
+        return App.getInstance().getCurrentGame().getTimeAndDate().getTotalDays() - this.startPlanting.getDay();
     }
 
     public int calculateDaysAfterLastHarvest() {
-        return App.getInstance().getCurrentGame().getTimeAndDate().getDay() - this.lastHarvest.getDay();
-    }
-
-    public int calculateTotalHarvestTime() {
-        if (this.treeType.getHarvestStages() != null) {
-            int total = 0;
-            for (Integer harvestStage : this.treeType.getHarvestStages()) {
-                total += harvestStage;
-            }
-            return total;
-        }
-        return 0;
+        return App.getInstance().getCurrentGame().getTimeAndDate().getTotalDays() - this.lastHarvest.getDay();
     }
 
     public boolean canHarvest() {
-        int totalHarvestTime = calculateTotalHarvestTime();
+        int totalHarvestTime = 28;
         int regrowthTime = this.treeType.getHarvestCycle();
         if (this.fertilizes.contains(SundryType.SPEED_GROW)) {
             totalHarvestTime = Math.max(0, totalHarvestTime - 1);
@@ -120,13 +109,13 @@ public class Tree extends HarvestAbleProduct {
         if (this.treeType.getIsForaging()) {
             return 0;
         } else {
-            if (calculateDaysAfterPlanting() >= calculateTotalHarvestTime()) {
+            if (calculateDaysAfterPlanting() >= 28) {
                 if (lastHarvest == null) {
                     return 0;
                 }
                 return Math.max(0, this.treeType.getHarvestCycle() - calculateDaysAfterLastHarvest());
             }
-            return calculateTotalHarvestTime() - calculateDaysAfterPlanting();
+            return 28 - calculateDaysAfterPlanting();
         }
     }
 

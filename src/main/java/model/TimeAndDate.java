@@ -71,6 +71,11 @@ public class TimeAndDate {
         }
     }
 
+    public int getTotalDays(){
+        int days = App.getInstance().getCurrentGame().getTimeAndDate().getSeason().ordinal() * 28;
+        days += App.getInstance().getCurrentGame().getTimeAndDate().getDay();
+        return days;
+    }
 
     public int compareDailyTime(TimeAndDate timeAndDate) {
         if (timeAndDate.getHour() > hour) return 1;
