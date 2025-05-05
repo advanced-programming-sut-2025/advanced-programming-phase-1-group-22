@@ -1,6 +1,7 @@
 package model.tools;
 
 import lombok.Getter;
+import model.TimeAndDate;
 import model.products.HarvestAbleProduct;
 import model.products.TreesAndFruitsAndSeeds.Fruit;
 import model.products.TreesAndFruitsAndSeeds.Tree;
@@ -12,6 +13,7 @@ import model.source.Crop;
 import model.structure.Structure;
 import utils.App;
 
+import java.sql.Time;
 import java.util.List;
 
 @Getter
@@ -78,7 +80,9 @@ public class Scythe implements Tool {
                     Fruit fruit = new Fruit(((Tree)structure).getTreeType().getFruit());
                     if (player.getInventory().isInventoryHaveCapacity(fruit)){
                         player.getInventory().addProductToBackPack(fruit,1);
-                        ((HarvestAbleProduct)structure).setLastHarvest(App.getInstance().getCurrentGame().getTimeAndDate());
+                        TimeAndDate timeAndDate = new TimeAndDate();
+                        timeAndDate.setDay(App.getInstance().getCurrentGame().getTimeAndDate().getDay());
+                        ((HarvestAbleProduct)structure).setLastHarvest(timeAndDate);
                         player.upgradeAbility(Ability.FARMING);
                         return "you harvest a " + fruit.getName();
                     }
@@ -102,7 +106,9 @@ public class Scythe implements Tool {
                     if (player.getInventory().isInventoryHaveCapacity(crop)){
                         int numberOfHarvest = ((Crop)structure).getIsGiant() ? 10 : 1;
                         player.getInventory().addProductToBackPack(crop,numberOfHarvest);
-                        crop.setLastHarvest(App.getInstance().getCurrentGame().getTimeAndDate());
+                        TimeAndDate timeAndDate = new TimeAndDate();
+                        timeAndDate.setDay(App.getInstance().getCurrentGame().getTimeAndDate().getDay());
+                        crop.setLastHarvest(timeAndDate);
                         player.upgradeAbility(Ability.FARMING);
                         if (numberOfHarvest == 10){
                             return "you harvest a giant crop so you got 10 " + crop.getName();

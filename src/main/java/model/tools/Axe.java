@@ -100,6 +100,9 @@ public enum Axe implements Tool{
                         message.append("your inventory is full so you can not break trunk");
                         break;
                     }
+                    else {
+                        message.append("you only can break small trunk");
+                    }
                 }
                 if (structure instanceof Crop){
                     if (((Crop)structure).getBurn()){

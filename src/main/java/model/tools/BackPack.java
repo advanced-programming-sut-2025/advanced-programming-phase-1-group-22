@@ -80,6 +80,13 @@ public class BackPack {
                     field.setAccessible(false);
                     return quality1 == quality2;
                 }
+                if (product1 instanceof Tool && field.getName().equals("level")){
+                    field.setAccessible(true);
+                    int level1 = (int) field.get(product1);
+                    int level2 = (int) field.get(product2);
+                    field.setAccessible(false);
+                    return level2 == level1;
+                }
             }
             return true;
         } catch (IllegalAccessException e) {
@@ -109,12 +116,13 @@ public class BackPack {
     }
 
     private TrashCan getPlayerTrashCan(Player player) {
+        TrashCan trashCan = null;
         for (Map.Entry<Salable, Integer> salableIntegerEntry : player.getInventory().getProducts().entrySet()) {
             if (salableIntegerEntry.getKey() instanceof TrashCan) {
-                return (TrashCan) salableIntegerEntry.getKey();
+                trashCan = (TrashCan) salableIntegerEntry.getKey();
             }
         }
-        return null;
+        return trashCan;
     }
 
     public boolean checkProductAvailabilityInBackPack(String name, int count) {

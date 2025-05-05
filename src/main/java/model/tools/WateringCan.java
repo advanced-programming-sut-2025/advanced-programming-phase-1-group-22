@@ -53,7 +53,7 @@ public class WateringCan implements Tool{
 					this.remain = this.wateringCanType.getCapacity();
 					return "the watering can completely filled";
 				}
-				if (structure instanceof GreenHouse){
+				if (structure instanceof GreenHouse && ((GreenHouse)structure).isBuilt()){
 					if (((GreenHouse)structure).getPool().getTiles().contains(tile)){
 						this.remain = this.wateringCanType.getCapacity();
 						return "the watering can completely filled";

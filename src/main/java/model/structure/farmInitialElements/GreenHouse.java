@@ -43,7 +43,7 @@ public class GreenHouse extends HardCodeFarmElements {
         isBuilt = true;
         pool = new Lake();
         for (int i = 0; i <8; i++) {
-            pool.getTiles().add(getTiles().get(i));
+            pool.getTiles().add(this.getTiles().get(i));
         }
     }
 }

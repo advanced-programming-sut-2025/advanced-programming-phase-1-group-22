@@ -31,7 +31,7 @@ public class Game {
     private final List<NPC> npcs = new ArrayList<>();
     private final List<Friendship> friendships = new ArrayList<>();
     private TimeAndDate timeAndDate;
-    private Double weatherCoefficient;
+    private Double weatherCoefficient = 1.0;
     private final Integer length = 160;
     private final Integer width = 120;
     private int playersInFavorTermination = 0;
@@ -224,7 +224,7 @@ public class Game {
                         int oldNumber = harvestAbleProduct.getNumberOfWithoutWaterDays();
                         harvestAbleProduct.setNumberOfWithoutWaterDays(oldNumber + 1);
                         if (harvestAbleProduct.getNumberOfWithoutWaterDays() >= 2) {
-                            farm.getStructures().remove(harvestAbleProduct);
+                            App.getInstance().getCurrentGame().getVillage().removeStructure(harvestAbleProduct);
                             for (Tile tile : structure.getTiles()) {
                                 tile.setTileType(TileType.FLAT);
                             }

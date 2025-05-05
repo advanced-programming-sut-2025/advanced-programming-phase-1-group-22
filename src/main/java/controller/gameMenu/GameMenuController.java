@@ -122,7 +122,7 @@ public class GameMenuController extends MenuController {
     }
 
     public Response toolEquip(String[] params) {
-        return gameService.toolEquip(params[0]);
+        return gameService.toolEquip(params[0].trim());
     }
 
     public Response showCurrentTool(String[] params) {
@@ -236,7 +236,7 @@ public class GameMenuController extends MenuController {
     }
 
     public Response C_AddItem(String[] params) {
-        return gameService.C_AddItem(params[0], params[1]);
+        return gameService.C_AddItem(params[0].trim(), params[1]);
     }
 
     public Response C_SetFriendship(String[] params) {
