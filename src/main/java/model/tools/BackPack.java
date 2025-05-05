@@ -10,6 +10,7 @@ import model.exception.InvalidInputException;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -71,17 +72,29 @@ public class BackPack {
             return false;
         }
 
+        if (product1.getClass().isEnum()) {
+            return product1 == product2;
+        }
+
         try {
+            boolean hasProductQualityField = false;
+            boolean productQualityMatches = true;
+
             for (Field field : product1.getClass().getDeclaredFields()) {
+                field.setAccessible(true);
+                Object value1 = field.get(product1);
+                Object value2 = field.get(product2);
+                field.setAccessible(false);
+
                 if (field.getType().equals(ProductQuality.class)) {
-                    field.setAccessible(true);
-                    ProductQuality quality1 = (ProductQuality) field.get(product1);
-                    ProductQuality quality2 = (ProductQuality) field.get(product2);
-                    field.setAccessible(false);
-                    return quality1 == quality2;
+                    hasProductQualityField = true;
+                    productQualityMatches = (value1 == value2);
+                } else if (!Objects.equals(value1, value2)) {
+                    return false;
                 }
             }
-            return true;
+
+            return !hasProductQualityField || productQualityMatches;
         } catch (IllegalAccessException e) {
             throw new RuntimeException("Failed to compare products", e);
         }
