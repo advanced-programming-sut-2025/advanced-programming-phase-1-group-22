@@ -1,6 +1,7 @@
 package model.tools;
 
 import lombok.Getter;
+import model.TileType;
 import model.relations.Player;
 import model.Salable;
 import model.Tile;
@@ -172,6 +173,7 @@ public enum Axe implements Tool{
         player.getInventory().addProductToBackPack(mineralOrSeed,1);
         for (Tile tile : structure.getTiles()) {
             tile.setIsFilled(false);
+            tile.setTileType(TileType.FLAT);
         }
         App.getInstance().getCurrentGame().getVillage().removeStructure(structure);
     }

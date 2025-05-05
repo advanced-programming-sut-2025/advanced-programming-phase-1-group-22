@@ -73,9 +73,9 @@ public class GameCommands extends CommandClass {
     public static final GameCommands SHOW_CURRENT_TOOL = new GameCommands("tools\\s+show\\s+current");
     public static final GameCommands SHOW_AVAILABLE_TOOLS = new GameCommands("tools\\s+show\\s+available");
     public static final GameCommands UPGRADE_TOOL = new GameCommands("tools\\s+upgrade\\s+([a-zA-Z ]+)");
-    public static final GameCommands USE_TOOL = new GameCommands("tools\\s+use\\s+-d\\s+(north|south|west|east|northwest|northeast|southeast|southwest)");
+    public static final GameCommands USE_TOOL = new GameCommands("tools\\s+use\\s+-d\\s+(\\S+)");
 
-    public static final GameCommands FISHING = new GameCommands("fishing\\s+-p\\s+(.+)");
+    public static final GameCommands FISHING = new GameCommands("fishing\\s+-p\\s+(.+)\\s+-d\\s+(\\S+)");
 
     public static final GameCommands BUILD_FARM_BUILDING = new GameCommands("build\\s+-a\\s+(.+)\\s+-l\\s+<\\s*(\\d+)\\s*,\\s*(\\d+)\\s*>");
     public static final GameCommands BUY_ANIMAL = new GameCommands("^\\s*buy\\s+animal\\s+-a\\s+(?<animal>.+)\\s+-n\\s+(?<name>.+)\\s*$");
@@ -91,9 +91,9 @@ public class GameCommands extends CommandClass {
 
     public static final GameCommands CRAFT_INFO = new GameCommands("^\\s*craft\\s+info\\s+-n\\s+(?<craftName>.+)\\s*$");
 
-    public static final GameCommands PLANT_SEED = new GameCommands("^\\s*plant\\s+-s\\s+(?<seed>.+)\\s+-d\\s+(north|south|west|east|northwest|northeast|southeast|southwest)\\s*$");
+    public static final GameCommands PLANT_SEED = new GameCommands("^\\s*plant\\s+-s\\s+(?<seed>.+)\\s+-d\\s+(\\S+)\\s*$");
     public static final GameCommands SHOW_PLANT = new GameCommands("^\\s*showplant\\s+-l\\s+(?<X>\\d+)\\s*,\\s*(?<Y>\\d+)\\s*$");
-    public static final GameCommands FERTILIZE = new GameCommands("^\\s*fertilize\\s+-f\\s+(?<fertilizer>.+)\\s+-d\\s+(north|south|west|east|northwest|northeast|southeast|southwest)\\s*$");
+    public static final GameCommands FERTILIZE = new GameCommands("^\\s*fertilize\\s+-f\\s+(?<fertilizer>.+)\\s+-d\\s+(\\S+)\\s*$");
     public static final GameCommands HOW_MUCH_WATER = new GameCommands("^\\s*howmuch\\s+water\\s*$");
 
     GameCommands(String regex) {

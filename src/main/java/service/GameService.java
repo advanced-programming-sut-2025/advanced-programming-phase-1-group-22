@@ -389,6 +389,9 @@ public class GameService {
     public Response useTool(String direction) {
         Player currentPlayer = getCurrentPlayer();
         Direction currentDirection = Direction.getByName(direction);
+        if (currentDirection == null){
+            return new Response("use valid direction");
+        }
         Tool currentTool = getCurrentTool(currentPlayer);
         if (currentTool == null) {
             return new Response("you do not carrying any tool");
@@ -600,6 +603,9 @@ public class GameService {
     public Response plantSeed(String name, String direction) {
         Player currentPlayer = getCurrentPlayer();
         Direction currentDirection = Direction.getByName(direction);
+        if (currentDirection == null){
+            return new Response("use valid direction");
+        }
         Tile currentTile = getTileByXAndY(currentPlayer.getTiles().getFirst().getX() + currentDirection.getXTransmit(),
                 currentPlayer.getTiles().getFirst().getY() + currentDirection.getYTransmit());
         if (currentTile == null) {
@@ -617,7 +623,8 @@ public class GameService {
         if (salable instanceof MixedSeeds) {
             MixedSeeds mixedSeeds = (MixedSeeds) salable;
             if (!isThereGreenHouseForHarvest(currentTile) &&
-                    !mixedSeeds.getMixedSeedsType().getSeason().equals(App.getInstance().getCurrentGame().getTimeAndDate().getSeason())) {
+                    !mixedSeeds.getMixedSeedsType().getSeason().equals(App.getInstance().getCurrentGame().getTimeAndDate().getSeason()) &&
+            !mixedSeeds.getMixedSeedsType().getSeason().equals(Season.SPECIAL)) {
                 return new Response("you should use this seed in " + mixedSeeds.getMixedSeedsType().getSeason());
             }
             seed = generateSeedOfMixedSeed(mixedSeeds.getMixedSeedsType());
@@ -630,7 +637,8 @@ public class GameService {
             return new Response("you do not have this seed in your inventory");
         }
 		if (!isThereGreenHouseForHarvest(currentTile) &&
-				!seed.getSeedType().getSeason().equals(App.getInstance().getCurrentGame().getTimeAndDate().getSeason())) {
+				!seed.getSeedType().getSeason().equals(App.getInstance().getCurrentGame().getTimeAndDate().getSeason())
+        && !seed.getSeedType().getSeason().equals(Season.SPECIAL)) {
 			return new Response("you should use this seed in " + seed.getSeedType().getSeason());
 		}
         HarvestAbleProduct harvestableProduct = getHarvestableFromSeed(seed.getSeedType());
@@ -688,6 +696,9 @@ public class GameService {
             return new Response("there is no fertilize with this name");
         }
         Direction currentDirection = Direction.getByName(direction);
+        if (currentDirection == null){
+            return new Response("use valid direction");
+        }
         Tile currentTile = getTileByXAndY(currentPlayer.getTiles().getFirst().getX() + currentDirection.getXTransmit(),
                 currentPlayer.getTiles().getFirst().getY() + currentDirection.getYTransmit());
         if (currentTile == null) {
@@ -698,6 +709,7 @@ public class GameService {
             return new Response("there is no harvestable in this tile");
         }
         harvestAbleProduct.setFertilized(true);
+        currentPlayer.getInventory().deleteProductFromBackPack(currentFertilize,currentPlayer,1);
         harvestAbleProduct.getFertilizes().add(currentFertilize.getSundryType());
         return new Response("you successfully fertilize " + harvestAbleProduct.getName(), true);
     }
@@ -1354,7 +1366,8 @@ public class GameService {
 
     private HarvestAbleProduct getHarvestableFromSeed(SeedType seedType) {
         for (TreeType value : TreeType.values()) {
-            if (value.getSource() != null && value.getSource().equals(seedType)) {
+            if (value.getSource() != null && value.getSource().equals(seedType) &&
+                    !value.getIsForaging()) {
                 return new Tree(value);
             }
         }

@@ -287,7 +287,7 @@ public class Farm {
                     } else {
                         int rand = random.nextInt(1, 100);
                         if (rand == 1) {
-                            tiles1[j][k].setIsFilled(true);
+                            tiles1[j][k].setIsFilled(false);
                             tiles2.add(tiles1[j][k]);
                         }
                     }

@@ -59,7 +59,7 @@ public class Crop extends HarvestAbleProduct implements Source {
 	public int calculateRegrowthLevel() {
 		int level = 1;
 		TimeAndDate now = App.getInstance().getCurrentGame().getTimeAndDate();
-		int spendDays = now.getDay() - this.startPlanting.getDay();
+		int spendDays = now.getTotalDays() - this.startPlanting.getDay();
 		if (this.cropType.getHarvestStages()!=null) {
 			int sum = 0;
 			for (Integer harvestStage : this.cropType.getHarvestStages()) {
@@ -73,11 +73,11 @@ public class Crop extends HarvestAbleProduct implements Source {
 	}
 
 	public int calculateDaysAfterPlanting() {
-		return App.getInstance().getCurrentGame().getTimeAndDate().getDay() - this.startPlanting.getDay();
+		return App.getInstance().getCurrentGame().getTimeAndDate().getTotalDays() - this.startPlanting.getDay();
 	}
 
 	public int calculateDaysAfterLastHarvest() {
-		return App.getInstance().getCurrentGame().getTimeAndDate().getDay() - this.lastHarvest.getDay();
+		return App.getInstance().getCurrentGame().getTimeAndDate().getTotalDays() - this.lastHarvest.getDay();
 	}
 
 	public int calculateTotalHarvestTime() {

@@ -81,7 +81,7 @@ public class Scythe implements Tool {
                     if (player.getInventory().isInventoryHaveCapacity(fruit)){
                         player.getInventory().addProductToBackPack(fruit,1);
                         TimeAndDate timeAndDate = new TimeAndDate();
-                        timeAndDate.setDay(App.getInstance().getCurrentGame().getTimeAndDate().getDay());
+                        timeAndDate.setDay(App.getInstance().getCurrentGame().getTimeAndDate().getTotalDays());
                         ((HarvestAbleProduct)structure).setLastHarvest(timeAndDate);
                         player.upgradeAbility(Ability.FARMING);
                         return "you harvest a " + fruit.getName();
@@ -94,6 +94,7 @@ public class Scythe implements Tool {
                         int numberOfHarvest = ((Crop)structure).getIsGiant() ? 10 : 1;
                         player.getInventory().addProductToBackPack(crop,numberOfHarvest);
                         App.getInstance().getCurrentGame().getVillage().removeStructure(structure);
+                        tile.setTileType(TileType.FLAT);
                         player.upgradeAbility(Ability.FARMING);
                         if (numberOfHarvest == 10){
                             return "you harvest a giant crop so you got 10 " + crop.getName();
@@ -107,8 +108,8 @@ public class Scythe implements Tool {
                         int numberOfHarvest = ((Crop)structure).getIsGiant() ? 10 : 1;
                         player.getInventory().addProductToBackPack(crop,numberOfHarvest);
                         TimeAndDate timeAndDate = new TimeAndDate();
-                        timeAndDate.setDay(App.getInstance().getCurrentGame().getTimeAndDate().getDay());
-                        crop.setLastHarvest(timeAndDate);
+                        timeAndDate.setDay(App.getInstance().getCurrentGame().getTimeAndDate().getTotalDays());
+                        ((HarvestAbleProduct)structure).setLastHarvest(timeAndDate);
                         player.upgradeAbility(Ability.FARMING);
                         if (numberOfHarvest == 10){
                             return "you harvest a giant crop so you got 10 " + crop.getName();
