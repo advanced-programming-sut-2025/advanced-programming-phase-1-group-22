@@ -123,7 +123,7 @@ public class Village {
         for (int i = 57; i < 63; i++) {
             for (int j = 77; j < 83; j++) {
                 fountain.getTiles().add(app.getCurrentGame().tiles[j][i]);
-                app.getCurrentGame().tiles[i][j].setIsFilled(true);
+                app.getCurrentGame().tiles[j][i].setIsFilled(true);
             }
         }
         structures.add(fountain);
