@@ -8,11 +8,14 @@ import model.abilitiy.Ability;
 import model.animal.Animal;
 import model.craft.Craft;
 import model.exception.InvalidInputException;
+import model.gameSundry.Sundry;
+import model.gameSundry.SundryType;
 import model.receipe.CookingRecipe;
 import model.receipe.CraftingRecipe;
 import model.records.Response;
 import model.shelter.ShippingBin;
 import model.source.*;
+import model.structure.stores.PierreShop;
 import model.structure.stores.StoreType;
 import model.tools.*;
 import view.Menu;
@@ -42,7 +45,7 @@ public class Player extends Actor {
     private Account account = new Account();
     private List<ShippingBin> shippingBinList = new ArrayList<>();
     private Player couple;
-    private List<Trade> gootenTradeList;
+    private List<Trade> gootenTradeList = new ArrayList<>();
     private Boolean isFainted = false;
     private Salable currentCarrying = null;
     private List<Animal> animals = new ArrayList<>();
@@ -139,6 +142,9 @@ public class Player extends Actor {
     }
 
     private void addBasicTools() {
+        this.getAccount().setGolds(10);
+        inventory.getProducts().put(new Flower(), 1);
+        inventory.getProducts().put(new Sundry(SundryType.WEDDING_RING), 1);
         inventory.getProducts().put(Hoe.NORMAL, 1);
         inventory.getProducts().put(Pickaxe.NORMAL, 1);
         inventory.getProducts().put(Axe.NORMAL, 1);

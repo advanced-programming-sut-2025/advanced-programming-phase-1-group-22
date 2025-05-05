@@ -58,4 +58,22 @@ public class Trade {
     public void acceptTrade() {
 
     }
+
+    @Override
+    public String toString() {
+        return "Trade{" +
+                "id=" + id +
+                ", customer=" + customer.getUser().getUsername() +
+                ", trader=" + trader.getUser().getUsername() +
+                ", salable='" + salable + '\'' +
+                ", quantity=" + quantity +
+                ", requiredItem='" + requiredItem + '\'' +
+                ", quantityRequired=" + quantityRequired +
+                ", isAccepted=" + isAccepted +
+                ", price=" + price +
+                ", IShouldAnswer=" + IShouldAnswer +
+                ", isAnswered=" + isAnswered +
+                ", isSuccessfulled=" + isSuccessfulled +
+                '}';
+    }
 }

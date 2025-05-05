@@ -1,7 +1,6 @@
 package model;
 
 import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
 import model.animal.Animal;
 import model.enums.Weather;
@@ -22,7 +21,6 @@ import java.util.List;
 import java.util.Random;
 
 @Getter
-@Setter
 @ToString
 public class Game {
     private Village village;
@@ -321,5 +319,29 @@ public class Game {
                 }
             }
         }
+    }
+
+    public void setVillage(Village village) {
+        this.village = village;
+    }
+
+    public void setCurrentPlayer(Player currentPlayer) {
+        this.currentPlayer = currentPlayer;
+    }
+
+    public void setTimeAndDate(TimeAndDate timeAndDate) {
+        this.timeAndDate = timeAndDate;
+    }
+
+    public void setWeatherCoefficient(Double weatherCoefficient) {
+        this.weatherCoefficient = weatherCoefficient;
+    }
+
+    public void setPlayersInFavorTermination(int playersInFavorTermination) {
+        this.playersInFavorTermination = playersInFavorTermination;
+    }
+
+    public void setTiles(Tile[][] tiles) {
+        this.tiles = tiles;
     }
 }

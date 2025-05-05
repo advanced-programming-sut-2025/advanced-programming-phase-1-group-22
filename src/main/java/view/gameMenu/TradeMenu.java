@@ -19,12 +19,12 @@ public class TradeMenu extends GameMenu {
     private final Map<CommandClass, Function<String[], Response>> commandsFunctionMap = new HashMap<>();
 
     private TradeMenu() {
-        commandsFunctionMap.putAll(super.getFunctionsMap());
         commandsFunctionMap.put(START_TRADE, controller::startTrade);
         commandsFunctionMap.put(TRADE, controller::trade);
         commandsFunctionMap.put(TRADE_LIST, controller::tradeList);
         commandsFunctionMap.put(TRADE_RESPONSE, controller::tradeResponse);
         commandsFunctionMap.put(TRADE_HISTORY, controller::tradeHistory);
+        commandsFunctionMap.putAll(super.getFunctionsMap());
     }
 
     public static TradeMenu getInstance() {
