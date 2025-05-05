@@ -8,6 +8,7 @@ import model.structure.stores.PierreShop;
 import model.tools.Tool;
 import utils.App;
 
+import java.util.Iterator;
 import java.util.Map;
 
 public class RelationService {
@@ -120,9 +121,9 @@ public class RelationService {
             return new Response("Player with that username not found");
         }
         boolean areNeighbors = twoActorsAreNeighbors(currentPlayer, player, 1);
-        if (!areNeighbors) {
-            return new Response("the other player is not next You");
-        }
+//        if (!areNeighbors) {
+//            return new Response("the other player is not next You");
+//        }
         for (Map.Entry<Salable, Integer> salableIntegerEntry : currentPlayer.getInventory().getProducts().entrySet()) {
             if (salableIntegerEntry.getKey().getName().equals(itemName) && salableIntegerEntry.getValue() >= amount) {
                 gift = salableIntegerEntry.getKey();
@@ -177,8 +178,7 @@ public class RelationService {
                 if (gift.getGiftId().equals(giftId)) {
                     gift.setRate(rate);
                     friendship.setXp(friendship.getXp() + (rate - 3) * 30 + 15);
-                }
-                else{
+                } else {
                     return new Response("gift id is not correct");
                 }
             }
@@ -203,14 +203,16 @@ public class RelationService {
     }
 
     public Response hug(String username) {
+        game = App.getInstance().getCurrentGame();
+        currentPlayer = game.getCurrentPlayer();
         Player player = getPlayer(username);
         if (player == null) {
             return new Response("Player with that username not found");
         }
         boolean areNeighbors = twoActorsAreNeighbors(currentPlayer, player, 1);
-        if (!areNeighbors) {
-            return new Response("the other player is not next You");
-        }
+//        if (!areNeighbors) {
+//            return new Response("the other player is not next You");
+//        }
         Friendship friendShipBetweenTwoActors = getFriendShipBetweenTwoActors(player);
         if (friendShipBetweenTwoActors.getFriendShipLevel() < 2) {
             return new Response("you are not in that level of friendship");
@@ -233,12 +235,12 @@ public class RelationService {
             return new Response("find a girl please!");
         }
         Friendship friendShipBetweenTwoActors = getFriendShipBetweenTwoActors(player);
-        if (friendShipBetweenTwoActors.getFriendShipLevel() < 3) {
-            return new Response("you are not in that level of friendship");
-        }
-        if (!twoActorsAreNeighbors(currentPlayer, player, 1)) {
-            return new Response("the other player is not next You");
-        }
+//        if (friendShipBetweenTwoActors.getFriendShipLevel() < 3) {
+//            return new Response("you are not in that level of friendship");
+//        }
+//        if (!twoActorsAreNeighbors(currentPlayer, player, 1)) {
+//            return new Response("the other player is not next You");
+//        }
         Salable wRing = null;
         for (Map.Entry<Salable, Integer> salableIntegerEntry : currentPlayer.getInventory().getProducts().entrySet()) {
             if (salableIntegerEntry.getKey().getName().equals(ring)) {
@@ -250,7 +252,7 @@ public class RelationService {
         }
         player.notify(new Response("Do you marry to %s".formatted(currentPlayer.getUser().getUsername())));
 
-        return Response.empty();
+        return new Response("Happy marriage");
     }
 
     public Response Respond(boolean accept, String username) {
@@ -258,22 +260,28 @@ public class RelationService {
         currentPlayer = game.getCurrentPlayer();
         Player player = getPlayer(username);
         Friendship friendShipBetweenTwoActors = getFriendShipBetweenTwoActors(player);
+
         if (!accept) {
             friendShipBetweenTwoActors.setFriendShipLevel(0);
             player.setDaysOfSadness(7);
-            return Response.empty();
+            return new Response("reject marriage to " + player.getUser().getUsername());
         }
-        Salable wRing = null;
-        for (Map.Entry<Salable, Integer> salableIntegerEntry : player.getInventory().getProducts().entrySet()) {
-            if (salableIntegerEntry.getKey().getName().equals(PierreShop.WEDDING_RING.getName())) {
-                wRing = salableIntegerEntry.getKey();
-                player.getInventory().getProducts().remove(wRing);
+
+        // Use Iterator to safely remove items during iteration
+        Iterator<Map.Entry<Salable, Integer>> iterator = player.getInventory().getProducts().entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<Salable, Integer> entry = iterator.next();
+            if (entry.getKey().getName().equals(PierreShop.WEDDING_RING.getName())) {
+                Salable wRing = entry.getKey();
+                iterator.remove();  // Safe removal using iterator
                 currentPlayer.getInventory().addProductToBackPack(wRing, 1);
             }
         }
+
         friendShipBetweenTwoActors.setFriendShipLevel(4);
         player.setCouple(currentPlayer);
         currentPlayer.setCouple(player);
+
         for (Farm farm : game.getVillage().getFarms()) {
             if (farm.getPlayers().contains(player)) {
                 farm.getPlayers().add(currentPlayer);
@@ -282,11 +290,13 @@ public class RelationService {
                 farm.getPlayers().add(player);
             }
         }
+
         Account wifeAccount = currentPlayer.getAccount();
         Account husbandAccount = player.getAccount();
         husbandAccount.setGolds(husbandAccount.getGolds() + wifeAccount.getGolds());
         wifeAccount = husbandAccount;
-        return null;
+
+        return new Response("Happy accepting marriage ask");
     }
 
     public Response meetNpc(String npcName) {
