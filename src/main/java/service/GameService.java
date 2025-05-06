@@ -182,20 +182,20 @@ public class GameService {
                 break;
             }
         }
-        if (farm == null) return Response.empty();
+        if (farm == null) return new Response("Please enter the farm you want to build the greenhouse in.");
         GreenHouse greenHouse = farm.getGreenHouse();
         if (greenHouse.isBuilt()) {
             return new Response("Greenhouse already built.");
         }
         switch (greenHouse.areIngredientsAvailable(app.getCurrentGame().getCurrentPlayer())) {
-            case 2 -> {
+            case 1 -> {
                 return new Response("You need 1000 golds to build it");
             }
-            case 1 -> {
-                return new Response("You need 500 golds to build it");
+            case 2 -> {
+                return new Response("You need 500 wood to build it");
             }
         }
-        greenHouse.build();
+        greenHouse.build(farm);
         return new Response("The greenhouse is built", true);
     }
 

@@ -65,7 +65,7 @@ public class Game {
             tomorrowWeather = Weather.values()[random.nextInt(0, 4)];
         } while (!tomorrowWeather.getSeasons().contains(timeAndDate.getSeason()));
         this.getVillage().setTomorrowWeather(tomorrowWeather);
-        if (weather == Weather.STORMY) {
+        if (this.getVillage().getWeather() == Weather.STORMY) {
             for (Farm farm : this.village.getFarms()) {
                 for (int i = 0; i < 3; i++) {
                     int randX = random.nextInt(farm.getFarmXStart(), farm.getFarmXEnd());

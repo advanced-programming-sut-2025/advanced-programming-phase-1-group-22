@@ -2,6 +2,7 @@ package model.structure.farmInitialElements;
 
 import lombok.Getter;
 import lombok.Setter;
+import model.Farm;
 import model.Salable;
 import model.relations.Player;
 import model.shelter.FarmBuildingType;
@@ -39,11 +40,12 @@ public class GreenHouse extends HardCodeFarmElements {
         return new GreenHouse(this);
     }
 
-    public void build() {
+    public void build(Farm farm) {
         isBuilt = true;
         pool = new Lake();
         for (int i = 0; i <8; i++) {
             pool.getTiles().add(this.getTiles().get(i));
         }
+        farm.getStructures().add(pool);
     }
 }
