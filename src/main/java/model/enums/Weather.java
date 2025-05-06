@@ -52,4 +52,9 @@ public enum Weather {
             }
         }
     }
+
+    @Override
+    public String toString() {
+        return  name().toLowerCase();
+    }
 }

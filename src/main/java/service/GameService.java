@@ -135,18 +135,18 @@ public class GameService {
 
     public Response C_AdvanceTime(String x) {
         int hours = Integer.parseInt(x);
-        for (int i = 0; i < hours * 4; i++) {
+        for (int i = 0; i < hours * app.getCurrentGame().getPlayers().size(); i++) {
             nextTurn();
         }
-        return new Response(x + "hours passed", true);
+        return new Response(x + " hours passed", true);
     }
 
     public Response C_AdvanceDate(String x) {
         int days = Integer.parseInt(x);
-        for (int i = 0; i < days * 4 * 13; i++) {
+        for (int i = 0; i < days * app.getCurrentGame().getPlayers().size() * 13; i++) {
             nextTurn();
         }
-        return new Response(x + "days passed", true);
+        return new Response(x + " days passed", true);
     }
 
     public Response season() {
@@ -178,7 +178,7 @@ public class GameService {
         Farm farm = null;
         for (int i = 0; i < app.getCurrentGame().getVillage().getFarms().size(); i++) {
             farm = app.getCurrentGame().getVillage().getFarms().get(i);
-            if (farm.getPlayers().getFirst().equals(app.getCurrentGame().getCurrentPlayer())) {
+            if (farm.getPlayers().get(0).equals(app.getCurrentGame().getCurrentPlayer())) {
                 break;
             }
         }
@@ -234,7 +234,7 @@ public class GameService {
         WalkingStrategy walkingStrategy = new WalkingStrategy();
         Player player = app.getCurrentGame().getCurrentPlayer();
         int energy = walkingStrategy.calculateEnergy(
-                new Pair(player.getTiles().getFirst().getX(), player.getTiles().getFirst().getY()), new Pair(x1, y1)
+                new Pair(player.getTiles().get(0).getX(), player.getTiles().get(0).getY()), new Pair(x1, y1)
         );
         if (energy == -1) return new Response("No path available");
         String confirmation;
@@ -398,8 +398,8 @@ public class GameService {
         } else if (currentTool.getEnergy(currentPlayer) > currentPlayer.getEnergy()) {
             return new Response("you do not have enough energy to use this tool");
         }
-        Tile currentTile = getTileByXAndY(currentPlayer.getTiles().getFirst().getX() + currentDirection.getXTransmit(),
-                currentPlayer.getTiles().getFirst().getY() + currentDirection.getYTransmit());
+        Tile currentTile = getTileByXAndY(currentPlayer.getTiles().get(0).getX() + currentDirection.getXTransmit(),
+                currentPlayer.getTiles().get(0).getY() + currentDirection.getYTransmit());
         if (currentTile == null) {
             return new Response("out of bond");
         }
@@ -408,7 +408,7 @@ public class GameService {
 
     public Response pickFromFloor() {
         Player currentPlayer = getCurrentPlayer();
-        Tile currentTile = currentPlayer.getTiles().getFirst();
+        Tile currentTile = currentPlayer.getTiles().get(0);
         List<Structure> structures = App.getInstance().getCurrentGame().getVillage().findStructuresByTile(currentTile);
         Structure currentStructure = null;
 
@@ -606,8 +606,8 @@ public class GameService {
         if (currentDirection == null){
             return new Response("use valid direction");
         }
-        Tile currentTile = getTileByXAndY(currentPlayer.getTiles().getFirst().getX() + currentDirection.getXTransmit(),
-                currentPlayer.getTiles().getFirst().getY() + currentDirection.getYTransmit());
+        Tile currentTile = getTileByXAndY(currentPlayer.getTiles().get(0).getX() + currentDirection.getXTransmit(),
+                currentPlayer.getTiles().get(0).getY() + currentDirection.getYTransmit());
         if (currentTile == null) {
             return new Response("out of bound");
         } else if (currentTile.getIsFilled() && !isThereGreenHouseForHarvest(currentTile)) {
@@ -699,8 +699,8 @@ public class GameService {
         if (currentDirection == null){
             return new Response("use valid direction");
         }
-        Tile currentTile = getTileByXAndY(currentPlayer.getTiles().getFirst().getX() + currentDirection.getXTransmit(),
-                currentPlayer.getTiles().getFirst().getY() + currentDirection.getYTransmit());
+        Tile currentTile = getTileByXAndY(currentPlayer.getTiles().get(0).getX() + currentDirection.getXTransmit(),
+                currentPlayer.getTiles().get(0).getY() + currentDirection.getYTransmit());
         if (currentTile == null) {
             return new Response("out of bound");
         }
@@ -755,7 +755,7 @@ public class GameService {
             for (Structure structure : village.getStructures()) {
                 if (structure instanceof Store) {
                     for (Tile tile : structure.getTiles()) {
-                        if (player.getTiles().getFirst() == tile) {
+                        if (player.getTiles().get(0) == tile) {
                             player.setStoreType(((Store) structure).getStoreType());
                             player.setCurrentMenu(Menu.STORE_MENU);
                             Session.setCurrentMenu(Menu.STORE_MENU);
@@ -769,7 +769,7 @@ public class GameService {
         }
         Cottage cottage = farm.getCottage();
         for (Tile tile : cottage.getTiles()) {
-            if (player.getTiles().getFirst() == tile) {
+            if (player.getTiles().get(0) == tile) {
                 player.setCurrentMenu(Menu.COTTAGE);
                 Session.setCurrentMenu(Menu.COTTAGE);
                 return;
@@ -863,8 +863,8 @@ public class GameService {
 
     private Tile isThereAnyLakeAround(Player player) {
         for (Direction value : Direction.values()) {
-            Tile currentTile = getTileByXAndY(player.getTiles().getFirst().getX() + value.getXTransmit(),
-                    player.getTiles().getFirst().getY() + value.getYTransmit());
+            Tile currentTile = getTileByXAndY(player.getTiles().get(0).getX() + value.getXTransmit(),
+                    player.getTiles().get(0).getY() + value.getYTransmit());
             if (currentTile != null) {
                 List<Structure> structures = App.getInstance().getCurrentGame().getVillage().findStructuresByTile(currentTile);
                 for (Structure structure : structures) {
@@ -879,7 +879,7 @@ public class GameService {
 
     private Farm getPlayerMainFarm(Player player) {
         for (Farm farm : App.getInstance().getCurrentGame().getVillage().getFarms()) {
-            if (farm.getPlayers().getFirst().equals(player)) {
+            if (farm.getPlayers().get(0).equals(player)) {
                 return farm;
             }
         }
@@ -1028,8 +1028,8 @@ public class GameService {
         for (Animal animal : player.getAnimals()) {
             if (animal.getName().equalsIgnoreCase(name)) {
                 for (Direction value : Direction.values()) {
-                    if (player.getTiles().getFirst().getX() + value.getXTransmit() == animal.getTiles().getFirst().getX() &&
-                            player.getTiles().getFirst().getY() + value.getYTransmit() == animal.getTiles().getFirst().getY()) {
+                    if (player.getTiles().get(0).getX() + value.getXTransmit() == animal.getTiles().get(0).getX() &&
+                            player.getTiles().get(0).getY() + value.getYTransmit() == animal.getTiles().get(0).getY()) {
                         return animal;
                     }
                 }
@@ -1070,7 +1070,7 @@ public class GameService {
     private boolean isAnimalInBarnOrCage(Animal animal, List<Farm> farms) {
         for (Farm farm : farms) {
             for (Structure structure : farm.getStructures()) {
-                if (structure instanceof FarmBuilding && structure.getTiles().contains(animal.getTiles().getFirst())) {
+                if (structure instanceof FarmBuilding && structure.getTiles().contains(animal.getTiles().get(0))) {
                     return true;
                 }
             }
@@ -1135,8 +1135,8 @@ public class GameService {
 
     private boolean isPlayerNearAnimal(Player player, Animal animal) {
         for (Direction value : Direction.values()) {
-            if (player.getTiles().getFirst().getX() + value.getXTransmit() == animal.getTiles().getFirst().getX() &&
-                    player.getTiles().getFirst().getY() + value.getYTransmit() == animal.getTiles().getFirst().getY()) {
+            if (player.getTiles().get(0).getX() + value.getXTransmit() == animal.getTiles().get(0).getX() &&
+                    player.getTiles().get(0).getY() + value.getYTransmit() == animal.getTiles().get(0).getY()) {
                 return true;
             }
         }
@@ -1147,13 +1147,13 @@ public class GameService {
         if (animal.getAnimalType().equals(AnimalType.COW) ||
                 animal.getAnimalType().equals(AnimalType.GOAT)) {
             if (player.getCurrentCarrying() != null && player.getCurrentCarrying() instanceof MilkPail) {
-                return ((Tool) player.getCurrentCarrying()).useTool(player, animal.getTiles().getFirst());
+                return ((Tool) player.getCurrentCarrying()).useTool(player, animal.getTiles().get(0));
             }
             return "you do not carrying needed tool";
         }
         if (animal.getAnimalType().equals(AnimalType.SHEEP)) {
             if (player.getCurrentCarrying() != null && player.getCurrentCarrying() instanceof Shear) {
-                return ((Tool) player.getCurrentCarrying()).useTool(player, animal.getTiles().getFirst());
+                return ((Tool) player.getCurrentCarrying()).useTool(player, animal.getTiles().get(0));
             }
             return "you do not carrying needed tool";
         }
@@ -1206,8 +1206,8 @@ public class GameService {
         if (product == null) return new Response(itemName + " not found in your backpack.");
         Direction dir = Direction.getByName(direction);
         if (dir == null) return new Response(direction + " not recognized as a direction.");
-        Tile tile = app.getCurrentGame().tiles[player.getTiles().getFirst().getX() + dir.getXTransmit()]
-                [player.getTiles().getFirst().getY() + dir.getYTransmit()];
+        Tile tile = app.getCurrentGame().tiles[player.getTiles().get(0).getX() + dir.getXTransmit()]
+                [player.getTiles().get(0).getY() + dir.getYTransmit()];
         if (tile.getIsFilled()) return new Response("The tile you're trying to put the item on, is filled");
         if (!(product instanceof Structure))
             return new Response(itemName + " Cannot be put on ground"); //TODO Some objects are not structure but must be put on ground
@@ -1216,16 +1216,16 @@ public class GameService {
         Farm currentFarm = getPlayerInWitchFarm(player);
         if (product instanceof Craft) {
             switch (((Craft) product).getCraftType()) {
-                case CraftType.BOMB:
-                case CraftType.CHERRY_BOMB:
-                case CraftType.MEGA_BOMB: {
+                case BOMB:
+                case CHERRY_BOMB:
+                case MEGA_BOMB: {
                     for (Tile tile1 : ((Craft) product).getAffectedTiles()) {
                         //TODO BURN;
                     }
                 }
                 break;
-                case CraftType.GRASS_STARTER: {
-                    ((Craft) product).getTiles().getFirst().setTileType(TileType.GRASS);
+                case GRASS_STARTER: {
+                    ((Craft) product).getTiles().get(0).setTileType(TileType.GRASS);
                 }
                 break;
             }
@@ -1381,7 +1381,7 @@ public class GameService {
 
     private Farm getPlayerInWitchFarm(Player player) {
         for (Farm farm : App.getInstance().getCurrentGame().getVillage().getFarms()) {
-            if (farm.getTiles().contains(player.getTiles().getFirst())) {
+            if (farm.getTiles().contains(player.getTiles().get(0))) {
                 return farm;
             }
         }
@@ -1427,48 +1427,48 @@ public class GameService {
         Crop newCrop = new Crop(crop.getCropType());
         newCrop.setIsGiant(true);
 
-        Tile tile1 = getTileByXAndY(crop.getTiles().getFirst().getX(), crop.getTiles().getFirst().getY() + 1);
+        Tile tile1 = getTileByXAndY(crop.getTiles().get(0).getX(), crop.getTiles().get(0).getY() + 1);
         Crop crop1 = getCropInTile(tile1);
-        Tile tile2 = getTileByXAndY(crop.getTiles().getFirst().getX() + 1, crop.getTiles().getFirst().getY() + 1);
+        Tile tile2 = getTileByXAndY(crop.getTiles().get(0).getX() + 1, crop.getTiles().get(0).getY() + 1);
         Crop crop2 = getCropInTile(tile2);
-        Tile tile3 = getTileByXAndY(crop.getTiles().getFirst().getX() + 1, crop.getTiles().getFirst().getY());
+        Tile tile3 = getTileByXAndY(crop.getTiles().get(0).getX() + 1, crop.getTiles().get(0).getY());
         Crop crop3 = getCropInTile(tile3);
         if (canBeGiant(crop, crop1, crop2, crop3)) {
-            makeGiant(player, newCrop, crop.getTiles().getFirst(), crop, crop1, crop2, crop3);
+            makeGiant(player, newCrop, crop.getTiles().get(0), crop, crop1, crop2, crop3);
             newCrop.setStartPlanting(findMinimumTime(crop.getStartPlanting(), crop1.getStartPlanting(),
                     crop2.getStartPlanting(), crop3.getStartPlanting()));
             newCrop.setIsGiant(true);
             return true;
         }
 
-        Tile tile4 = getTileByXAndY(crop.getTiles().getFirst().getX() + 1, crop.getTiles().getFirst().getY() - 1);
+        Tile tile4 = getTileByXAndY(crop.getTiles().get(0).getX() + 1, crop.getTiles().get(0).getY() - 1);
         Crop crop4 = getCropInTile(tile4);
-        Tile tile5 = getTileByXAndY(crop.getTiles().getFirst().getX(), crop.getTiles().getFirst().getY() - 1);
+        Tile tile5 = getTileByXAndY(crop.getTiles().get(0).getX(), crop.getTiles().get(0).getY() - 1);
         Crop crop5 = getCropInTile(tile5);
         if (canBeGiant(crop, crop3, crop4, crop5)) {
-            makeGiant(player, newCrop, crop5.getTiles().getFirst(), crop, crop3, crop4, crop5);
+            makeGiant(player, newCrop, crop5.getTiles().get(0), crop, crop3, crop4, crop5);
             newCrop.setStartPlanting(findMinimumTime(crop.getStartPlanting(), crop3.getStartPlanting(),
                     crop4.getStartPlanting(), crop5.getStartPlanting()));
             newCrop.setIsGiant(true);
             return true;
         }
 
-        Tile tile6 = getTileByXAndY(crop.getTiles().getFirst().getX() - 1, crop.getTiles().getFirst().getY() - 1);
+        Tile tile6 = getTileByXAndY(crop.getTiles().get(0).getX() - 1, crop.getTiles().get(0).getY() - 1);
         Crop crop6 = getCropInTile(tile6);
-        Tile tile7 = getTileByXAndY(crop.getTiles().getFirst().getX() - 1, crop.getTiles().getFirst().getY());
+        Tile tile7 = getTileByXAndY(crop.getTiles().get(0).getX() - 1, crop.getTiles().get(0).getY());
         Crop crop7 = getCropInTile(tile7);
         if (canBeGiant(crop, crop5, crop6, crop7)) {
-            makeGiant(player, newCrop, crop6.getTiles().getFirst(), crop, crop5, crop6, crop7);
+            makeGiant(player, newCrop, crop6.getTiles().get(0), crop, crop5, crop6, crop7);
             newCrop.setStartPlanting(findMinimumTime(crop.getStartPlanting(), crop5.getStartPlanting(),
                     crop6.getStartPlanting(), crop7.getStartPlanting()));
             newCrop.setIsGiant(true);
             return true;
         }
 
-        Tile tile8 = getTileByXAndY(crop.getTiles().getFirst().getX() - 1, crop.getTiles().getFirst().getY() + 1);
+        Tile tile8 = getTileByXAndY(crop.getTiles().get(0).getX() - 1, crop.getTiles().get(0).getY() + 1);
         Crop crop8 = getCropInTile(tile8);
         if (canBeGiant(crop, crop1, crop7, crop8)) {
-            makeGiant(player, newCrop, crop7.getTiles().getFirst(), crop, crop1, crop7, crop8);
+            makeGiant(player, newCrop, crop7.getTiles().get(0), crop, crop1, crop7, crop8);
             newCrop.setStartPlanting(findMinimumTime(crop.getStartPlanting(), crop1.getStartPlanting(),
                     crop7.getStartPlanting(), crop8.getStartPlanting()));
             newCrop.setIsGiant(true);
@@ -1605,8 +1605,8 @@ public class GameService {
         ShippingBin shippingBin = null;
         for (ShippingBin bin : player.getShippingBinList()) {
             for (Tile tile : bin.getTiles()) {
-                if (Math.abs(tile.getX() - player.getTiles().getFirst().getX()) < 2 &&
-                        Math.abs(tile.getY() - player.getTiles().getFirst().getY()) < 2) {
+                if (Math.abs(tile.getX() - player.getTiles().get(0).getX()) < 2 &&
+                        Math.abs(tile.getY() - player.getTiles().get(0).getY()) < 2) {
                     shippingBin = bin;
                     break;
                 }
@@ -1632,8 +1632,8 @@ public class GameService {
         ShippingBin shippingBin = null;
         for (ShippingBin bin : player.getShippingBinList()) {
             for (Tile tile : bin.getTiles()) {
-                if (Math.abs(tile.getX() - player.getTiles().getFirst().getX()) < 2 &&
-                        Math.abs(tile.getY() - player.getTiles().getFirst().getY()) < 2) {
+                if (Math.abs(tile.getX() - player.getTiles().get(0).getX()) < 2 &&
+                        Math.abs(tile.getY() - player.getTiles().get(0).getY()) < 2) {
                     shippingBin = bin;
                     break;
                 }
@@ -1653,7 +1653,7 @@ public class GameService {
     }
 
     private void setScareCrowAffect(Craft craft) {
-        List<Tile> tiles = craft.getCraftType().getTilesAffected(craft.getTiles().getFirst());
+        List<Tile> tiles = craft.getCraftType().getTilesAffected(craft.getTiles().get(0));
         for (Tile tile : tiles) {
             List<Structure> structures = App.getInstance().getCurrentGame().getVillage().findStructuresByTile(tile);
             for (Structure structure : structures) {
@@ -1665,7 +1665,7 @@ public class GameService {
     }
 
     private void setSprinklerAffect(Craft craft) {
-        List<Tile> tiles = craft.getCraftType().getTilesAffected(craft.getTiles().getFirst());
+        List<Tile> tiles = craft.getCraftType().getTilesAffected(craft.getTiles().get(0));
         for (Tile tile : tiles) {
             List<Structure> structures = App.getInstance().getCurrentGame().getVillage().findStructuresByTile(tile);
             for (Structure structure : structures) {

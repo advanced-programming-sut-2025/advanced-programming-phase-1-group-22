@@ -148,8 +148,8 @@ public class GameInitService {
         village.fillFarms();
         for (Farm farm : village.getFarms()) {
             if (farm.getPlayers().isEmpty()) continue;
-            Tile tile = farm.getCottage().getTiles().getFirst();
-            farm.getPlayers().getFirst().getTiles().add(tile);
+            Tile tile = farm.getCottage().getTiles().get(0);
+            farm.getPlayers().get(0).getTiles().add(tile);
         }
     }
 }

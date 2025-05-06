@@ -26,7 +26,7 @@ public class InitialGame {
             game.addPlayer(player);
 
         }
-        game.setCurrentPlayer(game.getPlayers().getFirst());
+        game.setCurrentPlayer(game.getPlayers().get(0));
         Session.setCurrentMenu(Menu.MAP_SELECTION);
     }
 }
