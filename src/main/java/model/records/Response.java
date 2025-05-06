@@ -13,4 +13,9 @@ public record Response(String message, boolean shouldBeBack) {
     public static Response empty() {
         return new Response("", false);
     }
+
+    @Override
+    public String toString() {
+        return message;
+    }
 }

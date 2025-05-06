@@ -1262,11 +1262,11 @@ public class GameService {
             }
         }
 
-//        if (salable == null) {
-//            for (MadeProductType value : MadeProductType.values()) {
-//                if (name.equalsIgnoreCase(value.getName())) salable = new MadeProduct(value);
-//            }
-//        }
+        if (salable == null) {
+            for (MadeProductType value : MadeProductType.values()) {
+                if (name.equalsIgnoreCase(value.getName())) salable = new MadeProduct(value);
+            }
+        }
 
         if (salable == null) {
             for (AnimalProductType value : AnimalProductType.values()) {
@@ -1326,6 +1326,15 @@ public class GameService {
         }
 
         if (salable == null) {
+            for (BackPackType value : BackPackType.values()) {
+                if (name.equalsIgnoreCase(value.getName())) {
+                    App.getInstance().getCurrentGame().getCurrentPlayer().getInventory().setBackPackType(value);
+                    return new Response("Backpack is of type " + name + " now.");
+                }
+            }
+        }
+
+        if (salable == null) {
             if (name.equalsIgnoreCase("milkpail")) salable = MilkPail.getInstance();
         }
 
@@ -1358,10 +1367,34 @@ public class GameService {
             if (name.equalsIgnoreCase("flower")) salable = new Flower();
         }
 
+        if (salable == null) {
+            for (CraftingRecipe value : CraftingRecipe.values()) {
+                if (name.equalsIgnoreCase(value.getName())) {
+                    Map<CraftingRecipe, Boolean> recipes = app.getCurrentGame().getCurrentPlayer().getCraftingRecipes();
+                    if (!recipes.containsKey(value) || !recipes.get(value)) {
+                        recipes.put(value, true);
+                    }
+                    return new Response("You learnt the recipe of " + name);
+                }
+            }
+        }
+
+        if (salable == null) {
+            for (CookingRecipe value : CookingRecipe.values()) {
+                if (name.equalsIgnoreCase(value.getName())) {
+                    Map<CookingRecipe, Boolean> recipes = app.getCurrentGame().getCurrentPlayer().getCookingRecipes();
+                    if (!recipes.containsKey(value) || !recipes.get(value)) {
+                        recipes.put(value, true);
+                    }
+                    return new Response("You learnt the recipe of " + name);
+                }
+            }
+        }
+
         if (salable == null) return new Response(name + " cannot be added to the backpack");
         if (!inventory.isInventoryHaveCapacity(salable)) return new Response("Backpack hasn't enough space");
         inventory.addProductToBackPack(salable, Integer.parseInt(count));
-        return new Response(name + " *" + count + " added to backpack.", true);
+        return new Response(name + " x" + count + " added to backpack.", true);
     }
 
     private HarvestAbleProduct getHarvestableFromSeed(SeedType seedType) {
@@ -1797,7 +1830,7 @@ public class GameService {
                 response.append(craftingRecipe.toString()).append("\n");
             }
         }
-        return new Response(response.append("\n").toString(), true);
+        return new Response(response.toString(), true);
     }
 
     public Response cookingShowRecipes() {

@@ -193,7 +193,7 @@ public class Player extends Actor {
 
     public CraftingRecipe findCraftingRecipe(String string) {
         for (CraftingRecipe craftingRecipe : craftingRecipes.keySet()) {
-            if (craftingRecipe.getName().equals(string)) {
+            if (craftingRecipe.getName().equalsIgnoreCase(string + " recipe")) {
                 if (craftingRecipes.get(craftingRecipe)) return craftingRecipe;
                 return null;
             }

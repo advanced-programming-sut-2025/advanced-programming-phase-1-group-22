@@ -16,8 +16,8 @@ public enum CraftingRecipe implements Recipe {
     IRIDIUM_SPRINKLER_RECIPE("Iridium Sprinkler recipe", "A recipe to make Iridium Sprinkler", 0, () -> CraftType.IRIDIUM_SPRINKLER),
     CHARCOAL_KILN_RECIPE("Charcoal Kiln recipe", "A recipe to make Charcoal Kiln", 0, () -> CraftType.CHARCOAL_KLIN),
     FURNACE_RECIPE("Furnace recipe", "A recipe to make Furnace", 0, () -> CraftType.FURNACE),
-    SCARECROW_RECIPE("Scarecrow recipe", "A recipe to make Scarecrow", 0, () -> CraftType.SCARE_CROW),
-    DELUXE_SCARECROW_RECIPE("Deluxe Scarecrow recipe", "A recipe to make Deluxe Scarecrow", 0, () -> CraftType.DELUXE_SCARECROW),
+    SCARECROW_RECIPE("Scare crow recipe", "A recipe to make Scarecrow", 0, () -> CraftType.SCARE_CROW),
+    DELUXE_SCARECROW_RECIPE("Deluxe Scare crow recipe", "A recipe to make Deluxe Scarecrow", 0, () -> CraftType.DELUXE_SCARECROW),
     BEE_HOUSE_RECIPE("Bee House recipe", "A recipe to make Bee House", 0, () -> CraftType.BEE_HOUSE),
     CHEESE_PRESS_RECIPE("Cheese Press recipe", "A recipe to make Cheese Press", 0, () -> CraftType.CHEESE_PRESS),
     KEG_RECIPE("Keg recipe", "A recipe to make Keg", 0, () -> CraftType.KEG),
@@ -69,10 +69,10 @@ public enum CraftingRecipe implements Recipe {
 
     @Override
     public String toString() {
-        String res = this.getCraft().getName() + ":\n\n" + this.getCraft().getDescription() + "\n\nIngredients:\n";
+        String res = this.getCraft().getName() + ":\n" + this.getCraft().getDescription() + "\nIngredients:\n";
         res += this.getCraft().getProductsString();
-        res += "\nPrice: " + this.getCraft().getSellPrice() + "$\n";
-        res += this.getCraft().isCraftingPossible(App.getInstance().getCurrentGame().getCurrentPlayer()) + "\n";
+        res += "Price: " + this.getCraft().getSellPrice() + "$\n";
+        res += this.getCraft().isCraftingPossible(App.getInstance().getCurrentGame().getCurrentPlayer()) + "\n\n";
         return res;
     }
 }
