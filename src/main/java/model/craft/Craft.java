@@ -28,7 +28,7 @@ public class Craft extends Structure implements Salable {
     }
 
     public List<Tile> getRange() {
-        return craftType.getTilesAffected(getTiles().getFirst());
+        return craftType.getTilesAffected(getTiles().get(0));
     }
 
     @Override

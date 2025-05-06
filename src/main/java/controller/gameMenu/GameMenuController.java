@@ -71,7 +71,7 @@ public class GameMenuController extends MenuController {
     }
 
     public Response whereAmI(String[] params) {
-        return new Response(App.getInstance().getCurrentGame().getCurrentPlayer().getTiles().getFirst().toString(),
+        return new Response(App.getInstance().getCurrentGame().getCurrentPlayer().getTiles().get(0).toString(),
                 true);
     }
 

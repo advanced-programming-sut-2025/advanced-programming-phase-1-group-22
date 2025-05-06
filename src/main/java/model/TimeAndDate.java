@@ -47,7 +47,8 @@ public class TimeAndDate {
 
     public void moveTimeForward() {
         boolean nextDay = false;
-        minute += 15;
+        int numberOfPlayers = App.getInstance().getCurrentGame().getPlayers().size();
+        minute += 60/numberOfPlayers;
         if (minute >= 60) {
             hour++;
             minute = 0;
@@ -55,7 +56,6 @@ public class TimeAndDate {
         if (hour >= 22) {
             day++;
             hour = 9;
-            minute = 30;
             nextDay = true;
         }
         if (day >= 29) {

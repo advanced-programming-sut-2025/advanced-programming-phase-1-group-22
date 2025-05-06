@@ -172,7 +172,7 @@ public class Game {
     }
 
     public Farm findFarm() {
-        Tile tile = currentPlayer.getTiles().getFirst();
+        Tile tile = currentPlayer.getTiles().get(0);
         for (Farm farm : getVillage().getFarms()) {
             if (farm.isPairInFarm(new Pair(tile.getX(), tile.getY()))) {
                 return farm;

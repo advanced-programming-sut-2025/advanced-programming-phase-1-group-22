@@ -164,7 +164,7 @@ public class Village {
             setTileOfNPCHouse(npcHouse, xStart, yStart, xStart + 6, yStart + 4);
         }
         App.getInstance().getCurrentGame().getNpcs().add(npc);
-        Tile tileByXAndY = getTileByXAndY(npcHouse.getTiles().getFirst().getX(), npcHouse.getTiles().getFirst().getY() - 1);
+        Tile tileByXAndY = getTileByXAndY(npcHouse.getTiles().get(0).getX(), npcHouse.getTiles().get(0).getY() - 1);
         tileByXAndY.setIsFilled(true);
         tileByXAndY.setIsPassable(false);
         npc.getTiles().add(tileByXAndY);
@@ -278,7 +278,7 @@ public class Village {
             }
         }
         Player player = app.getCurrentGame().getCurrentPlayer();
-        str[player.getTiles().getFirst().getX()][player.getTiles().getFirst().getY()] = '@';
+        str[player.getTiles().get(0).getX()][player.getTiles().get(0).getY()] = '@';
 
         int xStart = x - size / 2;
         int xEnd = x + size / 2;
@@ -310,7 +310,7 @@ public class Village {
 
     public void addStructureToPlayerFarmByPlayerTile(Player player, Structure structure) {
         for (Farm farm : this.getFarms()) {
-            if (farm.getTiles().contains(player.getTiles().getFirst())) {
+            if (farm.getTiles().contains(player.getTiles().get(0))) {
                 farm.getStructures().add(structure);
             }
         }

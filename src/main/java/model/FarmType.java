@@ -10,14 +10,18 @@ import java.util.List;
 @Getter
 @ToString
 public enum FarmType {
-    GRASS_FARM(50, 40), BLUE_FARM(60, 45), FLOWER_FARM(50, 40),
-    ROCKY_FARM(60, 45),
-    DESERT_FARM(40, 30);
+    GRASS_FARM("Grass Farm", 50, 40),
+    BLUE_FARM("Blue Farm",60, 45),
+    FLOWER_FARM("Flower Farm",50, 40),
+    ROCKY_FARM("Rocky Farm",60, 45),
+    DESERT_FARM("Desert Farm",40, 30);
     private List<HardCodeFarmElements> structures = new ArrayList<>();
     private final Integer length;
+    private final String name;
     private final Integer width;
 
-    FarmType(int length, int width) {
+    FarmType(String name, int length, int width) {
+        this.name = name;
         this.length = length;
         this.width = width;
         switch (this) {
@@ -112,5 +116,10 @@ public enum FarmType {
         setTilePairs(quarry, new Pair(2, 16));
         lake.getTilePairList().addAll(List.of(new Pair(16, 15), new Pair(16, 14)));
         structures.addAll(List.of(cottage, quarry, greenHouse, lake));
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }

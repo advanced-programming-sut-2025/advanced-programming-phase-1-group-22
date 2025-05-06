@@ -10,4 +10,9 @@ import java.util.List;
 @ToString
 public enum Season {
     SPRING(),SUMMER(),FALL(),WINTER(),SPECIAL();
+
+    @Override
+    public String toString() {
+        return name().toLowerCase();
+    }
 }
