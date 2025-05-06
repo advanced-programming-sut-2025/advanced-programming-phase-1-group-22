@@ -290,9 +290,9 @@ public class Village {
         if (yEnd >= 120) yEnd = 120;
 
 
-        for (int i = yStart; i < yEnd; i++) {
+        for (int i = yEnd - 1; i >= yStart; i--) {
             for (int j1 = xStart; j1 < xEnd; j1++) {
-                System.out.print(str[j1][yEnd - 1 - i]);
+                System.out.print(str[j1][i]);
             }
             System.out.println();
         }

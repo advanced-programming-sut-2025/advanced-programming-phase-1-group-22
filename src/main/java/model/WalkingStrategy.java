@@ -17,7 +17,7 @@ public class WalkingStrategy {
             return -1;
         }
         distances.clear();
-        return distance / 20;
+        return (int) Math.ceil(((double) distance) / 20);
     }
 
     public boolean calculateTile(Pair origin, Pair dest, int distance) {
@@ -29,11 +29,9 @@ public class WalkingStrategy {
         }
         int[] xs = {1, 1, 0, -1, -1, -1, 0, 1};
         int[] ys = {0, 1, 1, 1, 0, -1, -1, -1};
-        Pair newPair = new Pair(origin.getX(), origin.getY());
+        Pair newPair;
         boolean flag = true;
         while (flag) {
-//            printMap();
-//            System.out.println("\n\n\n");
             flag = false;
             Set<Pair> set = new HashSet<>(distances.keySet());
             for (Pair pair : set) {
