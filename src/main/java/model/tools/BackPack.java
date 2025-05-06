@@ -41,7 +41,7 @@ public class BackPack {
         if (equivalentProduct != null) {
             if (products.get(equivalentProduct) == itemNumber) {
                 products.remove(equivalentProduct);
-            } else if (products.get(product) < itemNumber) {
+            } else if (products.get(product) > itemNumber) {
                 int oldItemNumber = products.getOrDefault(equivalentProduct, 0);
                 products.put(equivalentProduct, oldItemNumber - itemNumber);
             }

@@ -147,10 +147,10 @@ public enum CraftType implements Product {
         String res = "";
         for (Salable salable : this.getIngredients().keySet()) {
             res += salable.getName();
-            if (this.getIngredients().get(salable) != 1) res += " *" + this.getIngredients().get(salable);
+            if (this.getIngredients().get(salable) != 1) res += " x" + this.getIngredients().get(salable);
             res += ", ";
         }
-        return res + "\n";
+        return res.substring(0, res.length()-2) + "\n";
     }
 
     public Response isCraftingPossible(Player player) {
@@ -167,9 +167,9 @@ public enum CraftType implements Product {
 
     public void removeIngredients(Player player) {
         BackPack inventory = player.getInventory();
-        for (Salable salable : this.getIngredients().keySet()) {
-            salable = inventory.findProductInBackPackByNAme(salable.getName());
-            inventory.deleteProductFromBackPack(salable, player, this.getIngredients().get(salable));
+        for (Map.Entry<Salable, Integer> entry : this.getIngredients().entrySet()) {
+            Salable salable = inventory.findProductInBackPackByNAme(entry.getKey().getName());
+            inventory.deleteProductFromBackPack(salable, player, entry.getValue());
         }
     }
 
