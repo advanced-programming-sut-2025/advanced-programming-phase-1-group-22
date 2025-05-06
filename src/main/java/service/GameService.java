@@ -160,7 +160,7 @@ public class GameService {
         } catch (IllegalArgumentException e) {
             return new Response("Weather not found!");
         }
-        app.getCurrentGame().getVillage().setWeather(weather);
+        app.getCurrentGame().getVillage().setTomorrowWeather(weather);
         return new Response("Weather set to " + type + " successfully.", true);
     }
 
