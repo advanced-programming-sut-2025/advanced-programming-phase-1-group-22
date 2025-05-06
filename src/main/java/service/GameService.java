@@ -1226,8 +1226,8 @@ public class GameService {
                 break;
                 case GRASS_STARTER: {
                     ((Craft) product).getTiles().get(0).setTileType(TileType.GRASS);
+                    return new Response(itemName + " is put on the ground.", true);
                 }
-                break;
             }
         }
         if (currentFarm != null) {
