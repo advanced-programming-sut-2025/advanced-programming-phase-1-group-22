@@ -1748,19 +1748,27 @@ public class GameService {
         Player player = app.getCurrentGame().getCurrentPlayer();
         Salable food = player.getInventory().findProductInBackPackByNAme(foodName);
         if (food == null) return new Response(foodName + " not found in your backpack.");
-        if (((Product) food).getEnergy() == 0) return new Response(foodName + " is not edible");
+        if (food.getContainingEnergy() == 0) return new Response(foodName + " is not edible");
         player.getInventory().deleteProductFromBackPack(food, player, 1);
-        player.changeEnergy(((Product) food).getEnergy());
-        if (food instanceof FoodType) {
-            if (((FoodType) food).getBuff() != null) {
+        player.changeEnergy(food.getContainingEnergy());
+        if (food instanceof Food) {
+            if (((Food) food).getFoodType().getBuff() != null) {
                 if (player.getBuff() != null) {
                     player.getBuff().defectBuff(player);
                 }
-                player.setBuff((Buff) ((FoodType) food).getBuff().clone());
+                player.setBuff((Buff) ((Food) food).getFoodType().getBuff().clone());
                 player.getBuff().affectBuff(player);
             }
         }
-        return new Response(foodName + " is eaten now");
+        return new Response(foodName + " is eaten now.");
+    }
+
+    public Response buffShow() {
+        Player player = app.getCurrentGame().getCurrentPlayer();
+        Buff buff = player.getBuff();
+        if (buff == null) return new Response ("no buff " + player.getMaxEnergy(), true);
+        return new Response("" + buff.getBuffImpact() + " " + buff.getMaxPower() + " " + buff.getAbility()
+                + " " + player.getMaxEnergy(), true);
     }
 
     private void updateRecipes() {
@@ -1873,6 +1881,11 @@ public class GameService {
         player.getInventory().addProductToBackPack(product, fridge.countProduct(product));
         fridge.deleteProduct(product, fridge.countProduct(product));
         return new Response("Picked up.");
+    }
+
+    public Response fridgeShow() {
+        Fridge fridge = app.getCurrentGame().findFarm().getFridge();
+        return new Response(fridge.showInventory(), true);
     }
 
 

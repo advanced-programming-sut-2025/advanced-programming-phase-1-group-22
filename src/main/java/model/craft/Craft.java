@@ -44,4 +44,7 @@ public class Craft extends Structure implements Salable {
     public List<Tile> getAffectedTiles() {
         return null;
     }
+
+    @Override
+    public Integer getContainingEnergy() {return 0;}
 }

@@ -19,8 +19,10 @@ public class Fridge extends Structure {
     public String showInventory(){
         StringBuilder message = new StringBuilder();
         for (Map.Entry<Salable, Integer> salableIntegerEntry : products.entrySet()) {
-            message.append(salableIntegerEntry.getKey().getName()).append(" : ").append(salableIntegerEntry.getValue());
+            message.append(salableIntegerEntry.getKey().getName()).append(" : ")
+                    .append(salableIntegerEntry.getValue()).append("\n");
         }
+        if (message.toString().equalsIgnoreCase("")) return "No items in refrigerator";
         return message.toString();
     }
 

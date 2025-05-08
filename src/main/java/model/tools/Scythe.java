@@ -31,6 +31,9 @@ public class Scythe implements Tool {
     }
 
     @Override
+    public Integer getContainingEnergy() {return 0;}
+
+    @Override
     public int getSellPrice() {
         return 0;
     }

@@ -177,4 +177,7 @@ public enum Axe implements Tool{
         }
         App.getInstance().getCurrentGame().getVillage().removeStructure(structure);
     }
+
+    @Override
+    public Integer getContainingEnergy() {return 0;}
 }

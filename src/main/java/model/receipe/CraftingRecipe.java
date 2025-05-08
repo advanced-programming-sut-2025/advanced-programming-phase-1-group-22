@@ -75,4 +75,7 @@ public enum CraftingRecipe implements Recipe {
         res += this.getCraft().isCraftingPossible(App.getInstance().getCurrentGame().getCurrentPlayer()) + "\n\n";
         return res;
     }
+
+    @Override
+    public Integer getContainingEnergy() {return 0;}
 }
