@@ -244,7 +244,8 @@ public class GameMenuController extends MenuController {
     }
 
     public Response artisanUse(String[] params) {
-        return gameService.artisanUse(params[0], params[1], params[3]);
+        if (!params[1].contains(" coal")) return gameService.artisanUse(params[0], params[1], null);
+        else return gameService.artisanUse(params[0], params[1].replace(" coal", ""), "coal");
     }
 
     public Response artisanUseHoney(String[] params) {
