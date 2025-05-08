@@ -161,6 +161,7 @@ public class GameService {
             return new Response("Weather not found!");
         }
         app.getCurrentGame().getVillage().setTomorrowWeather(weather);
+        App.getInstance().getCurrentGame().automaticWatering(weather);
         return new Response("Weather set to " + type + " successfully.", true);
     }
 
