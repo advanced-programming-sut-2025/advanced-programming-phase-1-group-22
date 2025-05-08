@@ -244,7 +244,11 @@ public class GameMenuController extends MenuController {
     }
 
     public Response artisanUse(String[] params) {
-        return gameService.artisanUse(params[0], params[1], params[2]);
+        return gameService.artisanUse(params[0], params[1], params[3]);
+    }
+
+    public Response artisanUseHoney(String[] params) {
+        return gameService.artisanUse("bee_house", null, null);
     }
 
     public Response artisanGet(String[] params) {
