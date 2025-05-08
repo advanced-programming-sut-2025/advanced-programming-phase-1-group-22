@@ -48,7 +48,7 @@ public enum WateringCanType implements Tool {
     @Override
     public Tool getToolByLevel(int level) {
         for (WateringCanType value : WateringCanType.values()) {
-            if (value.level == level){
+            if (value.getLevel() == level){
                 return value;
             }
         }
@@ -65,7 +65,7 @@ public enum WateringCanType implements Tool {
 
     @Override
     public int getLevel(){
-         return level;
+         return this.level;
     }
 
     @Override

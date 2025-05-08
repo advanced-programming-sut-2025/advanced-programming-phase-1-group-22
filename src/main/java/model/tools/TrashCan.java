@@ -46,7 +46,7 @@ public enum TrashCan implements Tool {
     @Override
     public Tool getToolByLevel(int level) {
         for (TrashCan value : TrashCan.values()) {
-            if (value.level == level){
+            if (value.getLevel() == level){
                 return value;
             }
         }
@@ -60,7 +60,7 @@ public enum TrashCan implements Tool {
 
     @Override
     public int getLevel(){
-        return level;
+        return this.level;
     }
 
     @Override
