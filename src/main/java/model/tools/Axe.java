@@ -41,7 +41,7 @@ public enum Axe implements Tool{
     @Override
     public Tool getToolByLevel(int level) {
         for (Axe value : Axe.values()) {
-            if (value.level == level){
+            if (value.getLevel() == level){
                 return value;
             }
         }
@@ -60,7 +60,7 @@ public enum Axe implements Tool{
 
     @Override
     public int getLevel() {
-        return level;
+        return this.level;
     }
 
     @Override

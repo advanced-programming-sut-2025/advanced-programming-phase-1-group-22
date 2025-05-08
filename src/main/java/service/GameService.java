@@ -812,12 +812,13 @@ public class GameService {
             return false;
         }
         for (Map.Entry<Salable, Integer> productIntegerEntry : blackSmithUpgrade.getIngredients().entrySet()) {
-            if (player.getInventory().getProducts().containsKey(productIntegerEntry.getKey())) {
-                if (player.getInventory().getProducts().get(productIntegerEntry.getKey()) < productIntegerEntry.getValue()) {
-                    return false;
-                }
+            Salable salable = player.getInventory().getProductFromBackPack(productIntegerEntry.getKey().getName());
+            if (salable == null){
+                return false;
             }
-            return false;
+            if (player.getInventory().getProducts().get(salable) < productIntegerEntry.getValue()) {
+                return false;
+            }
         }
         return true;
     }
@@ -826,10 +827,9 @@ public class GameService {
         int oldGold = player.getAccount().getGolds();
         player.getAccount().setGolds(oldGold - blackSmithUpgrade.getCost());
 
-        for (Map.Entry<Salable, Integer> productIntegerEntry : blackSmithUpgrade.getIngredient().entrySet()) {
-            if (player.getInventory().getProducts().containsKey(productIntegerEntry.getKey())) {
-                player.getInventory().deleteProductFromBackPack(productIntegerEntry.getKey(), player, productIntegerEntry.getValue());
-            }
+        for (Map.Entry<Salable, Integer> productIntegerEntry : blackSmithUpgrade.getIngredients().entrySet()) {
+            Salable salable = player.getInventory().getProductFromBackPack(productIntegerEntry.getKey().getName());
+            player.getInventory().deleteProductFromBackPack(salable, player, productIntegerEntry.getValue());
         }
         if (oldtool instanceof WateringCan) {
             ((WateringCan) oldtool).setWateringCanType((WateringCanType) upgradeTool);
@@ -918,13 +918,12 @@ public class GameService {
             return false;
         }
         for (Map.Entry<Product, Integer> productIntegerEntry : carpenterShopFarmBuildings.getCost().entrySet()) {
-            for (Map.Entry<Salable, Integer> salableIntegerEntry : player.getInventory().getProducts().entrySet()) {
-                if (salableIntegerEntry.getKey().getName().equalsIgnoreCase(productIntegerEntry.getKey().getName())){
-                    Salable salable = player.getInventory().getProductFromBackPack(productIntegerEntry.getKey().getName());
-                    if (player.getInventory().getProducts().get(salable) < productIntegerEntry.getValue()) {
-                        return false;
-                    }
-                }
+            Salable salable = player.getInventory().getProductFromBackPack(productIntegerEntry.getKey().getName());
+            if (salable == null){
+                return false;
+            }
+            if (player.getInventory().getProducts().get(salable) < productIntegerEntry.getValue()) {
+                return false;
             }
         }
         return true;
