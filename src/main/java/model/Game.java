@@ -196,7 +196,7 @@ public class Game {
         animal.setPet(false);
     }
 
-    private void automaticWatering(Weather weather) {
+    public void automaticWatering(Weather weather) {
         if (weather.equals(Weather.RAINY) || weather.equals(Weather.STORMY)) {
             for (Farm farm : App.getInstance().getCurrentGame().getVillage().getFarms()) {
                 for (Structure structure : farm.getStructures()) {
