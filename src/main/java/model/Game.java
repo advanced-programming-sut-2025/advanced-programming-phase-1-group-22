@@ -184,21 +184,16 @@ public class Game {
 
     private void calculateAnimalFriendShip(Animal animal) {
         if (!animal.getIsFeed()) {
-            changeFriendShip(animal, -20);
+            animal.changeFriendShip(-20);
         }
         if (animal.getIsAnimalStayOutAllNight()) {
-            changeFriendShip(animal, -20);
+            animal.changeFriendShip(-20);
         }
         if (!animal.getPet()) {
-            changeFriendShip(animal, -10);
+            animal.changeFriendShip(-10);
         }
         animal.setIsFeed(false);
         animal.setPet(false);
-    }
-
-    private void changeFriendShip(Animal animal, int value) {
-        int oldValue = animal.getRelationShipQuality();
-        animal.setRelationShipQuality(oldValue + value);
     }
 
     private void automaticWatering(Weather weather) {
