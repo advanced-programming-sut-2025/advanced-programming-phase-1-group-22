@@ -1568,6 +1568,9 @@ public class GameService {
     }
 
     public Response artisanUse(String name, String item1, String item2) {
+        if ("honey".equalsIgnoreCase(item1)) {
+            int b = 5;
+        }
         Player player = app.getCurrentGame().getCurrentPlayer();
         Craft craft = findCraft(name);
         if (craft == null) {
