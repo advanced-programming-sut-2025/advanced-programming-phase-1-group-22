@@ -122,4 +122,7 @@ public enum FishingPole implements Tool {
         }
         return fishType;
     }
+
+    @Override
+    public Integer getContainingEnergy() {return 0;}
 }

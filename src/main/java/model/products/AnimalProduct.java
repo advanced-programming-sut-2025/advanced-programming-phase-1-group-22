@@ -24,4 +24,7 @@ public class AnimalProduct extends Structure implements Salable {
     public int getSellPrice() {
         return (int) (animalProductType.getSellPrice() * productQuality.getPriceCoefficient());
     }
+
+    @Override
+    public Integer getContainingEnergy() {return animalProductType.getEnergy();}
 }

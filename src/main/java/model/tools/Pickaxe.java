@@ -148,4 +148,7 @@ public enum Pickaxe implements Tool {
         player.changeEnergy(-Math.max(0,this.getEnergy(player) - 1));
         return  "your inventory is full so you can not break " + mineral.getName();
     }
+
+    @Override
+    public Integer getContainingEnergy() {return 0;}
 }

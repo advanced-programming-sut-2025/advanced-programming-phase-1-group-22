@@ -67,4 +67,7 @@ public enum FruitType implements Harvestable {
 		token += "Can Become Giant: \n";
 		return token;
 	}
+
+	@Override
+	public Integer getContainingEnergy() {return getEnergy();}
 }

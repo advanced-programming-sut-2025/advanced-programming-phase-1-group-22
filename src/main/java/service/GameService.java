@@ -11,9 +11,7 @@ import model.enums.Season;
 import model.animal.FishType;
 import model.cook.FoodType;
 import model.craft.Craft;
-import model.craft.CraftType;
 import model.enums.Weather;
-import model.exception.InvalidInputException;
 import model.gameSundry.Sundry;
 import model.gameSundry.SundryType;
 import model.products.*;
@@ -49,7 +47,6 @@ import variables.Session;
 import view.Menu;
 import view.ViewRender;
 
-import javax.tools.JavaCompiler;
 import java.util.*;
 
 public class GameService {
@@ -1257,7 +1254,7 @@ public class GameService {
         BackPack inventory = app.getCurrentGame().getCurrentPlayer().getInventory();
         Salable salable = null;
         for (FishType value : FishType.values()) {
-            if (name.equalsIgnoreCase(value.getName())) salable = new Fish(value);
+            if (name.equalsIgnoreCase(value.getName())) salable = new Fish(value, ProductQuality.NORMAL);
         }
         if (salable == null) {
             for (FoodType value : FoodType.values()) {
@@ -1766,19 +1763,27 @@ public class GameService {
         Player player = app.getCurrentGame().getCurrentPlayer();
         Salable food = player.getInventory().findProductInBackPackByNAme(foodName);
         if (food == null) return new Response(foodName + " not found in your backpack.");
-        if (((Product) food).getEnergy() == 0) return new Response(foodName + " is not edible");
+        if (food.getContainingEnergy() == 0) return new Response(foodName + " is not edible");
         player.getInventory().deleteProductFromBackPack(food, player, 1);
-        player.changeEnergy(((Product) food).getEnergy());
-        if (food instanceof FoodType) {
-            if (((FoodType) food).getBuff() != null) {
+        player.changeEnergy(food.getContainingEnergy());
+        if (food instanceof Food) {
+            if (((Food) food).getFoodType().getBuff() != null) {
                 if (player.getBuff() != null) {
                     player.getBuff().defectBuff(player);
                 }
-                player.setBuff((Buff) ((FoodType) food).getBuff().clone());
+                player.setBuff((Buff) ((Food) food).getFoodType().getBuff().clone());
                 player.getBuff().affectBuff(player);
             }
         }
-        return new Response(foodName + " is eaten now");
+        return new Response(foodName + " is eaten now.");
+    }
+
+    public Response buffShow() {
+        Player player = app.getCurrentGame().getCurrentPlayer();
+        Buff buff = player.getBuff();
+        if (buff == null) return new Response ("no buff " + player.getMaxEnergy(), true);
+        return new Response("" + buff.getBuffImpact() + " " + buff.getMaxPower() + " " + buff.getAbility()
+                + " " + player.getMaxEnergy(), true);
     }
 
     private void updateRecipes() {
@@ -1893,6 +1898,11 @@ public class GameService {
         return new Response("Picked up.");
     }
 
+    public Response fridgeShow() {
+        Fridge fridge = app.getCurrentGame().findFarm().getFridge();
+        return new Response(fridge.showInventory(), true);
+    }
+
 
     public Response cookingRefrigeratorPut(String name) {
         Player player = app.getCurrentGame().getCurrentPlayer();
@@ -1901,7 +1911,7 @@ public class GameService {
         if (product == null) {
             return new Response(name + " not found in the backpack");
         }
-        if (((Product) product).getEnergy() == 0) {
+        if (product.getContainingEnergy() == 0) {
             return new Response("Can't put the inedible items in the refrigerator.");
         }
         fridge.addProduct(product, player.getInventory().countProductFromBackPack(product.getName()));
@@ -1914,15 +1924,15 @@ public class GameService {
         updateRecipes();
         Player player = app.getCurrentGame().getCurrentPlayer();
         Fridge fridge = app.getCurrentGame().findFarm().getFridge();
-        CookingRecipe recipe = player.findCookingRecipe(name);
+        CookingRecipe recipe = player.findCookingRecipe(name + " recipe");
         if (recipe == null) return new Response("You've not learnt to cook " + name);
-        boolean isPossible = recipe.getIngredients().isValidIngredient(fridge);
+        boolean isPossible = recipe.getIngredients().isValidIngredient(fridge, player);
         if (!isPossible) return new Response("Ingredients not found in the refrigerator.");
         if (!player.getInventory().isInventoryHaveCapacity(recipe.getIngredients())) {
-            return new Response("You don't have enough space in your backpack");
+            return new Response("You don't have enough space in your backpack or fridge");
         }
         player.removeEnergy(3);
-        recipe.getIngredients().removeIngredients(fridge);
+        recipe.getIngredients().removeIngredients(fridge, player);
         player.getInventory().addProductToBackPack(new Food(recipe.getIngredients()), 1);
         return new Response(recipe.getIngredients().getName() + " cooked successfully.");
     }

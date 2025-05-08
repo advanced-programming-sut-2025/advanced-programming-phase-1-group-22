@@ -14,7 +14,7 @@ import java.util.List;
 public abstract class HarvestAbleProduct extends Structure implements Salable {
     public abstract String getName();
     public abstract int getSellPrice();
-    public abstract int getContainingEnergy();
+    public abstract Integer getContainingEnergy();
     public abstract void setStartPlanting(TimeAndDate startPlanting);
     public abstract int calculateRegrowthLevel();
     public abstract int remainDaysUntilCanHarvest();

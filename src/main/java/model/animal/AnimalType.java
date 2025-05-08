@@ -50,5 +50,8 @@ public enum AnimalType implements Product {
     public String getName() {
         return this.name.toLowerCase();
     }
+
+    @Override
+    public Integer getContainingEnergy() {return 0;}
 }
 

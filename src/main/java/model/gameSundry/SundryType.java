@@ -32,4 +32,6 @@ public enum SundryType implements SalableIntegration {
         return this.price;
     }
 
+    @Override
+    public Integer getContainingEnergy() {return 0;}
 }

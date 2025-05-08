@@ -84,4 +84,6 @@ public class WateringCan implements Tool{
 	}
 
 
+	@Override
+	public Integer getContainingEnergy() {return 0;}
 }
