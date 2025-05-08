@@ -73,4 +73,8 @@ public enum TrashCan implements Tool {
         int oldGold = player.getAccount().getGolds();
         player.getAccount().setGolds(oldGold + price);
     }
+
+
+    @Override
+    public Integer getContainingEnergy() {return 0;}
 }

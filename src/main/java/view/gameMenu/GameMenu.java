@@ -76,6 +76,7 @@ public abstract class GameMenu implements CommandProcessor {
         commandsFunctionMap.put(sellAll, controller::sellAll);
         commandsFunctionMap.put(questsFinish, controller::questsFinish);
         commandsFunctionMap.put(eat, controller::eat);
+        commandsFunctionMap.put(buffShow, controller::buffShow);
         commandsFunctionMap.put(questsList, controller::questsList);
         commandsFunctionMap.put(SHOW_CURRENT_MENU, mainMenuController::showCurrentMenu);
         commandsFunctionMap.put(ENTER_MENU, mainMenuController::switchMenu);

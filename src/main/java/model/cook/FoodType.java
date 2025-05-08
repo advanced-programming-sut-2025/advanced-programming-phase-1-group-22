@@ -8,6 +8,7 @@ import model.Buff;
 import model.Fridge;
 import model.Salable;
 import model.abilitiy.Ability;
+import model.animal.Fish;
 import model.animal.FishType;
 import model.gameSundry.SundryType;
 import model.products.AnimalProductType;
@@ -121,10 +122,10 @@ public enum FoodType implements Product {
             if (!checkProduct(fridge, player, MineralType.FIBER, 1)) return false;
 
             for (Salable salable : fridge.getProducts().keySet()) {
-                if (salable instanceof FishType) return true;
+                if (salable instanceof Fish) return true;
             }
             for (Salable salable : player.getInventory().getProducts().keySet()) {
-                if (salable instanceof FishType) return true;
+                if (salable instanceof Fish) return true;
             }
             return false;
         }
@@ -139,14 +140,14 @@ public enum FoodType implements Product {
             removeProduct(fridge, player, SundryType.RICE, 1);
             removeProduct(fridge, player, MineralType.FIBER, 1);
             for (Salable salable : fridge.getProducts().keySet()) {
-                if (salable instanceof FishType) {
+                if (salable instanceof Fish) {
                     fridge.deleteProduct(salable, 1);
                     return;
                 }
             }
             for (Salable salable : player.getInventory().getProducts().keySet()) {
-                if (salable instanceof FishType) {
-                    fridge.deleteProduct(salable, 1);
+                if (salable instanceof Fish) {
+                    player.getInventory().deleteProductFromBackPack(salable, player, 1);
                     return;
                 }
             }
@@ -207,7 +208,7 @@ public enum FoodType implements Product {
     BREAD("bread", ()->Map.of(SundryType.WHEAT_FLOUR, 1), 50, 60, StoreType.STARDROPSALON),
     SALMON_DINNER("salmon dinner", ()->Map.of(FishType.SALMON, 1, CropType.KALE, 1, CropType.AMARANTH, 1), 125, 300, StoreType.STARDROPSALON),
     VEGETABLE_MEDLEY("vegetable medley", ()->Map.of(CropType.TOMATO, 1, CropType.BEET, 1), 165, 120, StoreType.STARDROPSALON),
-    FORMER_LUNCH("former lunch", ()->Map.of(CropType.PARSNIP, 1, FoodType.OMELET, 1), 200, 150, new Buff(5, Ability.FARMING), Ability.FARMING, 1),
+    FORMER_LUNCH("farmer's lunch", ()->Map.of(CropType.PARSNIP, 1, FoodType.OMELET, 1), 200, 150, new Buff(5, Ability.FARMING), Ability.FARMING, 1),
     SURVIVAL_BURGER("survival burger", ()->Map.of(CropType.EGGPLANT, 1, CropType.CARROT, 1, FoodType.BREAD, 1), 125, 180, new Buff(5, Ability.FORAGING), Ability.FORAGING, 3),
     DISH_O_THE_SEA("dish o the sea", ()->Map.of(FoodType.HASH_BROWNS, 1, FishType.SARDINE, 2), 150, 220, new Buff(5, Ability.FISHING), Ability.FISHING, 2),
     SEA_FORM_PUDDING("sea from pudding", ()->Map.of(FishType.FLOUNDER, 1, FishType.MIDNIGHT_CARP, 1), 175, 300, new Buff(10, Ability.FISHING), Ability.FISHING, 3),
@@ -381,5 +382,10 @@ public enum FoodType implements Product {
             salable = player.getInventory().findProductInBackPackByNAme(salable.getName());
             player.getInventory().deleteProductFromBackPack(salable, player, 1);
         }
+    }
+
+    @Override
+    public Integer getContainingEnergy() {
+        return energy;
     }
 }

@@ -192,4 +192,8 @@ public enum CropType implements Harvestable {
         token.append("Can Become Giant: ").append(this.canBecomeGiant).append("\n");
         return token.toString();
     }
+
+
+    @Override
+    public Integer getContainingEnergy() {return getEnergy();}
 }

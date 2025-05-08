@@ -19,6 +19,7 @@ public class CottageMenu extends GameMenu {
         commandsFunctionMap.put(craftingShowRecipes, controller::craftingShowRecipes);
         commandsFunctionMap.put(cookingShowRecipes, controller::cookingShowRecipes);
         commandsFunctionMap.put(cookingRefrigeratorPick, controller::cookingRefrigeratorPick);
+        commandsFunctionMap.put(cookingRefrigeratorShow, controller::cookingRefrigeratorShow);
         commandsFunctionMap.put(craftingCraft, controller::craftingCraft);
         commandsFunctionMap.put(cookingRefrigeratorPut, controller::cookingRefrigeratorPut);
         commandsFunctionMap.put(cookingPrepare, controller::cookingPrepare);

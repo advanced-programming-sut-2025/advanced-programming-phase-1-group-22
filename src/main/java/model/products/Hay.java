@@ -15,4 +15,7 @@ public class Hay implements Salable {
     public int getSellPrice() {
         return price;
     }
+
+    @Override
+    public Integer getContainingEnergy() {return 0;}
 }

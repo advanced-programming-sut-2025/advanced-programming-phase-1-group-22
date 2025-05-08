@@ -80,4 +80,7 @@ public enum CookingRecipe implements Recipe {
                                                                 "You don't have required ingredients" + "\n";
         return res;
     }
+
+    @Override
+    public Integer getContainingEnergy() {return 0;}
 }
