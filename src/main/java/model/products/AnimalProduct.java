@@ -9,7 +9,7 @@ import model.structure.Structure;
 @Setter
 public class AnimalProduct extends Structure implements Salable {
     private AnimalProductType animalProductType;
-    private ProductQuality productQuality;
+    private ProductQuality productQuality = ProductQuality.NORMAL;
 
     public AnimalProduct(AnimalProductType animalProductType) {
         this.animalProductType = animalProductType;

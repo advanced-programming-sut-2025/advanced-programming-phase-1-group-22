@@ -15,7 +15,7 @@ public class MadeProduct implements Salable {
     public MadeProduct(MadeProductType madeProductType, Salable product) {
         this.madeProductType = madeProductType;
         this.product = product;
-        price = madeProductType.calcPrice((Product) product);
+        price = madeProductType.calcPrice(product);
     }
 
     public MadeProduct(MadeProductType value) {

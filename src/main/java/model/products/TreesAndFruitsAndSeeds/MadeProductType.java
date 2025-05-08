@@ -337,13 +337,13 @@ public enum MadeProductType implements Product {
         }
 
         for (Salable ingredient : this.getIngredients().keySet()) {
-            if (product.equals(ingredient)) {
+            if (product.getName().equalsIgnoreCase(ingredient.getName())) {
                 if (amount >= this.getIngredients().get(ingredient)) return new Response("", true);
                 return new Response("Amount is not enough");
             }
-            return new Response("Ingredient not found.");
+            return new Response("", true);
         }
-        return new Response("", true);
+        return new Response("Ingredient not found.");
     }
 
     public Integer countIngredient() {
