@@ -1,101 +1,118 @@
 package model.relations;
 
 import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
 import model.Actor;
 import model.Salable;
 import model.enums.Season;
-import model.products.Product;
 
 import java.util.Collections;
 import java.util.Map;
+import java.util.Objects;
+import java.util.function.Supplier;
 
 @Getter
-@Setter
 @ToString
 public class Mission {
     private Integer id;
     private Actor doer;
-    private NPCType requester;
+    private final NPCType requester;
     private Integer requiredLevel;
     private Season requiredSeason;
-    private final SalableMapSupplier requestSupplier;
-    private final SalableMapSupplier rewardSupplier;
+    private final Supplier<Map<Salable, Integer>> requestSupplier;
+    private final Supplier<Map<Salable, Integer>> rewardSupplier;
     private transient volatile Map<Salable, Integer> resolvedRequest;
     private transient volatile Map<Salable, Integer> resolvedReward;
 
-    @FunctionalInterface
-    public interface SalableMapSupplier {
-        Map<Salable, Integer> get();
+    public Mission(Supplier<Map<Salable, Integer>> requestSupplier,
+                   Supplier<Map<Salable, Integer>> rewardSupplier,
+                   Integer requiredLevel) {
+        this(null, requestSupplier, rewardSupplier, requiredLevel, null);
     }
 
-    public Mission(NPCType requester, SalableMapSupplier requestSupplier,
-                   SalableMapSupplier rewardSupplier, Integer requiredLevel) {
+    public Mission(Supplier<Map<Salable, Integer>> requestSupplier,
+                   Supplier<Map<Salable, Integer>> rewardSupplier,
+                   Season requiredSeason) {
+        this(null, requestSupplier, rewardSupplier, null, requiredSeason);
+    }
+
+    public Mission(NPCType requester,
+                   Supplier<Map<Salable, Integer>> requestSupplier,
+                   Supplier<Map<Salable, Integer>> rewardSupplier,
+                   Integer requiredLevel) {
+        this(requester, requestSupplier, rewardSupplier, requiredLevel, null);
+    }
+
+    public Mission(NPCType requester,
+                   Supplier<Map<Salable, Integer>> requestSupplier,
+                   Supplier<Map<Salable, Integer>> rewardSupplier,
+                   Season requiredSeason) {
+        this(requester, requestSupplier, rewardSupplier, null, requiredSeason);
+    }
+
+    private Mission(NPCType requester,
+                    Supplier<Map<Salable, Integer>> requestSupplier,
+                    Supplier<Map<Salable, Integer>> rewardSupplier,
+                    Integer requiredLevel,
+                    Season requiredSeason) {
         this.requester = requester;
-        this.requestSupplier = requestSupplier;
-        this.rewardSupplier = rewardSupplier;
+        this.requestSupplier = Objects.requireNonNull(requestSupplier);
+        this.rewardSupplier = Objects.requireNonNull(rewardSupplier);
         this.requiredLevel = requiredLevel;
-    }
-
-    public Mission(NPCType requester, SalableMapSupplier requestSupplier,
-                   SalableMapSupplier rewardSupplier, Season requiredSeason) {
-        this.requester = requester;
-        this.requestSupplier = requestSupplier;
-        this.rewardSupplier = rewardSupplier;
         this.requiredSeason = requiredSeason;
     }
 
-
-    /**
-     * Thread-safe lazy initialization getter that maintains backward compatibility
-     * while preventing circular dependency issues during initialization.
-     */
     public Map<Salable, Integer> getRequest() {
-        // First check (no synchronization)
-        Map<Salable, Integer> result = this.resolvedRequest;
+        Map<Salable, Integer> result = resolvedRequest;
         if (result == null) {
             synchronized (this) {
-                // Second check (with synchronization)
-                result = this.resolvedRequest;
+                result = resolvedRequest;
                 if (result == null) {
-                    // Initialize with empty map if null to maintain backward compatibility
-                    this.resolvedRequest = Collections.emptyMap();
-                    result = this.resolvedRequest;
+                    resolvedRequest = Collections.unmodifiableMap(requestSupplier.get());
+                    result = resolvedRequest;
                 }
             }
         }
         return result;
     }
 
-    /**
-     * Alternative version that works with the supplier pattern
-     * while being backward compatible
-     */
     public Map<Salable, Integer> getReward() {
-        // Return directly if already resolved
-        if (this.resolvedReward != null) {
-            return this.resolvedReward;
-        }
-
-        // Handle lazy initialization
-        synchronized (this) {
-            if (this.resolvedReward == null) {
-                if (this.rewardSupplier != null) {
-                    this.resolvedReward = Collections.unmodifiableMap(rewardSupplier.get());
-                } else {
-                    this.resolvedReward = Collections.emptyMap();
+        Map<Salable, Integer> result = resolvedReward;
+        if (result == null) {
+            synchronized (this) {
+                result = resolvedReward;
+                if (result == null) {
+                    resolvedReward = Collections.unmodifiableMap(rewardSupplier.get());
+                    result = resolvedReward;
                 }
             }
         }
-        return this.resolvedReward;
+        return result;
     }
 
-    public void giveMission() {
-
+    public void setDoer(Actor doer) {
+        this.doer = doer;
     }
 
-    public void getMission() {
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
+    public boolean isAvailable(int currentLevel, Season currentSeason) {
+        if (requiredLevel != null && currentLevel < requiredLevel) {
+            return false;
+        }
+        if (requiredSeason != null && requiredSeason != currentSeason) {
+            return false;
+        }
+        return true;
+    }
+
+    public void complete() {
+        // Implementation for mission completion
+        if (doer != null) {
+            // Transfer items from doer to requester (if needed)
+            // Give rewards to doer
+        }
     }
 }

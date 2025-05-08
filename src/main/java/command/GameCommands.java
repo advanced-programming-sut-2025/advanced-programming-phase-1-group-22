@@ -43,7 +43,6 @@ public class GameCommands extends CommandClass {
     public static final GameCommands respond = new GameCommands("^\\s*respond\\s+(?<respond>\\b" + "accept|reject)\\s+-u\\s+(?<username>.+)\\s*$");
     public static final GameCommands startTrade = new GameCommands("^\\s*start\\s+trade\\s*$");
     public static final GameCommands meetNPC = new GameCommands("^\\s*meet\\s+NPC\\s+(?<npcName>.+)\\s*$");
-    public static final GameCommands giftNPC = new GameCommands("^\\s*gift\\s+NPC\\s+(?<npcName>.+)\\s+-i\\s+(?<item>.+)\\s*$");
     public static final GameCommands friendshipNPCList = new GameCommands("^\\s*friendship\\s+NPC\\s+list\\s*$");
     public static final GameCommands questsList = new GameCommands("^\\s*quests\\s+list\\s*$");
     public static final GameCommands questsFinish = new GameCommands("^\\s*quests\\s+finish\\s+-i\\s+(?<index>\\d+)\\s*$");

@@ -26,6 +26,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import static model.source.MineralType.WOOD;
+
 @Getter
 @Setter
 @ToString
@@ -144,6 +146,7 @@ public class Player extends Actor {
     private void addBasicTools() {
         this.getAccount().setGolds(10);
         inventory.getProducts().put(new Flower(), 1);
+        inventory.getProducts().put(WOOD, 100);
         inventory.getProducts().put(new Sundry(SundryType.WEDDING_RING), 1);
         inventory.getProducts().put(Hoe.NORMAL, 1);
         inventory.getProducts().put(Pickaxe.NORMAL, 1);

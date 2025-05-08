@@ -9,6 +9,6 @@ import java.util.List;
 @Getter
 @Setter
 public abstract class Structure {
-    List<Tile> tiles = new ArrayList<Tile>();
+    List<Tile> tiles = new ArrayList<>();
     Boolean isPickable;
 }

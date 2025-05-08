@@ -37,6 +37,7 @@ public class RelationShipMenu extends GameMenu {
         commandsFunctionMap.put(NPC_FRIENDSHIP, controller::showNpcFriendship);
         commandsFunctionMap.put(QUESTS_LIST, controller::questsList);
         commandsFunctionMap.put(DO_MISSION, controller::doMission);
+        commandsFunctionMap.put(CHANGE_FRIENDSHIP, controller::changeFriendship);
         commandsFunctionMap.putAll(super.getFunctionsMap());
     }
 

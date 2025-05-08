@@ -17,16 +17,16 @@ public class InitialGame {
         game.start();
         Village village = new Village();
         game.setVillage(village);
-        for (NPCType npc : NPCType.values()) {
-            npc.setMissions();
-            game.addNPC(new NPC(npc));
-        }
+//        for (NPCType npc : NPCType.values()) {
+//            npc.setMissions();
+//            game.addNPC(new NPC(npc));
+//        }
         for (int i = 0; i < users.size(); i++) {
             Player player = new Player(users.get(i));
             game.addPlayer(player);
 
         }
-        game.setCurrentPlayer(game.getPlayers().get(0));
+        game.setCurrentPlayer(game.getPlayers().getFirst());
         Session.setCurrentMenu(Menu.MAP_SELECTION);
     }
 }

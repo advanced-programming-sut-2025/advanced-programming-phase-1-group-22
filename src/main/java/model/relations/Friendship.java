@@ -22,7 +22,7 @@ public class Friendship {
     private Integer xp;
     private Map<String, Actor> dialogs;
     private TimeAndDate lastSeen = new TimeAndDate(1, 9, Season.SPRING, 0);
-    private TimeAndDate timeFromGettingFirstLevel;
+    private TimeAndDate timeFromGettingFirstLevel = new TimeAndDate(1, 9, Season.SPRING, 0);
 
     public Friendship(Integer id, Actor firstPlayer, Actor secondPlayer) {
         this.id = id;

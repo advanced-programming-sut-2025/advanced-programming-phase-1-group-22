@@ -18,16 +18,55 @@ import model.tools.WateringCanType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 @Getter
 @ToString
 public enum NPCType {
-    SEBASTIAN("sebastian", "", () -> List.of(AnimalProductType.SHEEP_WOOL, FoodType.PUMPKIN_PIE, FoodType.PIZZA), 1),
-    EBIGIL("ebigel", "", () -> List.of(MineralType.IRON_ORE, MineralType.STONE, MadeProductType.COFFE), 2),
-    HARVEY("harvey", "", () -> List.of(MadeProductType.PICKLES, MadeProductType.WINE, MadeProductType.COFFE), 3),
-    LIA("lia", "", () -> List.of(MadeProductType.WINE, CropType.GRAPE, FoodType.SALAD), 4),
-    RABIN("rabin", "", () -> List.of(FoodType.SPAGHETTI, MineralType.WOOD, MadeProductType.IRON_BAR), 5);
+    SEBASTIAN("sebastian", "",
+            () -> List.of(AnimalProductType.SHEEP_WOOL, FoodType.PUMPKIN_PIE, FoodType.PIZZA),
+            () -> List.of(
+                    new Mission(() -> Map.of(MineralType.IRON, 50), () -> Map.of(MineralType.DIAMOND, 2), 0),
+                    new Mission(() -> Map.of(FoodType.PUMPKIN_PIE, 1), () -> Map.of(MineralType.GOLD, 5000), 0),
+                    new Mission(() -> Map.of(MineralType.STONE, 150), () -> Map.of(MineralType.QUARTZ, 50), Season.FALL)
+            ),
+            1),
 
+    EBIGIL("ebigel", "",
+            () -> List.of(MineralType.IRON_ORE, MineralType.STONE, MadeProductType.COFFE),
+            () -> List.of(
+                    new Mission(() -> Map.of(MadeProductType.GOLD_BAR, 1), () -> Map.of(MineralType.GOLD, 1), 0),
+                    new Mission(() -> Map.of(CropType.PUMPKIN, 1), () -> Map.of(MineralType.GOLD, 500), 1),
+                    new Mission(() -> Map.of(CropType.WHEAT, 50), () -> Map.of(WateringCanType.IRIDIUM, 1), Season.WINTER)
+            ),
+            2),
+
+    HARVEY("harvey", "",
+            () -> List.of(MadeProductType.PICKLES, MadeProductType.WINE, MadeProductType.COFFE),
+            () -> List.of(
+                    new Mission(() -> Map.of(MineralType.GOLD, 12), () -> Map.of(MineralType.GOLD, 750), 0),
+                    new Mission(() -> Map.of(FishType.SALMON, 1), () -> Map.of(MineralType.GOLD, 1), 1),
+                    new Mission(() -> Map.of(MadeProductType.WINE, 1), () -> Map.of(FoodType.SALAD, 5), Season.WINTER)
+            ),
+            3),
+
+    LIA("lia", "",
+            () -> List.of(MadeProductType.WINE, CropType.GRAPE, FoodType.SALAD),
+            () -> List.of(
+                    new Mission(() -> Map.of(MineralType.HARD_WOOD, 10), () -> Map.of(MineralType.GOLD, 500), 0),
+                    new Mission(() -> Map.of(FishType.SALMON, 1), () -> Map.of(CookingRecipe.SALMON_DINNER_RECIPE, 1), 1),
+                    new Mission(() -> Map.of(MineralType.WOOD, 200), () -> Map.of(CraftType.DELUXE_SCARECROW, 3), Season.SUMMER)
+            ),
+            4),
+
+    RABIN("rabin", "",
+            () -> List.of(FoodType.SPAGHETTI, MineralType.WOOD, MadeProductType.IRON_BAR),
+            () -> List.of(
+                    new Mission(() -> Map.of(MineralType.WOOD, 80), () -> Map.of(MineralType.GOLD, 1000), 0),
+                    new Mission(() -> Map.of(MadeProductType.IRON_BAR, 10), () -> Map.of(CraftType.BEE_HOUSE, 3), 1),
+                    new Mission(() -> Map.of(MineralType.WOOD, 1000), () -> Map.of(MineralType.GOLD, 25_000), Season.WINTER)
+            ),
+            5);
 
     private Integer id;
     private final String name;
@@ -42,8 +81,14 @@ public enum NPCType {
         List<Salable> get();
     }
 
+    @FunctionalInterface
+    private interface MissionsSupplier {
+        List<Mission> get();
+    }
+
     private transient volatile List<Salable> resolvedIngredients;
-    private final NPCType.IngredientsSupplier ingredientsSupplier;
+    private final IngredientsSupplier ingredientsSupplier;
+    private final MissionsSupplier missionsSupplier;
 
     public List<Salable> getFavorites() {
         if (resolvedIngredients == null) {
@@ -52,61 +97,19 @@ public enum NPCType {
         return resolvedIngredients;
     }
 
-    NPCType(String name, String job, IngredientsSupplier ingredientsSupplier, int missionSeasonDis) {
+    public List<Mission> getMissions() {
+        if (missions.isEmpty()) {
+            missions.addAll(missionsSupplier.get());
+        }
+        return missions;
+    }
+
+    NPCType(String name, String job, IngredientsSupplier ingredientsSupplier,
+            MissionsSupplier missionsSupplier, int missionSeasonDis) {
         this.name = name;
         this.job = job;
         this.ingredientsSupplier = ingredientsSupplier;
+        this.missionsSupplier = missionsSupplier;
         this.missionSeasonDis = missionSeasonDis;
-    }
-
-    public void setMissions() {
-        switch (this) {
-            case SEBASTIAN -> missions.addAll(List.of(new Mission(NPCType.valueOf("SEBASTIAN"),
-                            ()->Map.of(MineralType.IRON, 50),
-                            ()->Map.of(MineralType.DIAMOND, 2), 0),
-                    new Mission(NPCType.valueOf("SEBASTIAN"),
-                            ()->Map.of(FoodType.PUMPKIN_PIE, 1),
-                            ()->Map.of(MineralType.GOLD, 5000), 0),
-                    new Mission(NPCType.valueOf("SEBASTIAN"),
-                            ()->Map.of(MineralType.STONE, 150),
-                            ()->Map.of(MineralType.QUARTZ, 50), Season.FALL)));
-            case LIA -> missions.addAll(List.of(new Mission(NPCType.valueOf("LIA"),
-                            ()->Map.of(MineralType.HARD_WOOD, 10),
-                            ()->Map.of(MineralType.GOLD, 500), 0),
-                    new Mission(NPCType.valueOf("LIA"),
-                            ()->Map.of(FishType.SALMON, 1),
-                            ()->Map.of(CookingRecipe.SALMON_DINNER_RECIPE, 1), 1),
-                    new Mission(NPCType.valueOf("LIA"),
-                            ()->Map.of(MineralType.WOOD, 200),
-                            ()->Map.of(CraftType.DELUXE_SCARECROW, 3), Season.SUMMER)));
-            case RABIN -> missions.addAll(List.of(new Mission(NPCType.valueOf("RABIN"),
-                            ()->Map.of(MineralType.WOOD, 80),
-                            ()->Map.of(MineralType.GOLD, 1000), 0),
-                    new Mission(NPCType.valueOf("RABIN"),
-                            ()->Map.of(MadeProductType.IRON_BAR, 10),
-                            ()->Map.of(CraftType.BEE_HOUSE, 3), 1),
-                    new Mission(NPCType.valueOf("RABIN"),
-                            ()->Map.of(MineralType.WOOD, 1000),
-                            ()->Map.of(MineralType.GOLD, 25_000), Season.WINTER)));
-            case EBIGIL -> missions.addAll(List.of(new Mission(NPCType.valueOf("EBIGIL"),
-                            ()->Map.of(MadeProductType.GOLD_BAR, 1),
-                            ()->Map.of(MineralType.GOLD, 1), 0),//TODO
-                    new Mission(NPCType.valueOf("EBIGIL"),
-                            ()->Map.of(CropType.PUMPKIN, 1),
-                            ()->Map.of(MineralType.GOLD, 500), 1),
-                    new Mission(NPCType.valueOf("EBIGIL"),
-                            ()->Map.of(CropType.WHEAT, 50),
-                            ()->Map.of(WateringCanType.IRIDIUM, 1), Season.WINTER)));
-            case HARVEY -> missions.addAll(List.of(new Mission(NPCType.valueOf("HARVEY"),
-                            ()->Map.of(MineralType.GOLD, 12),//TODO
-                            ()->Map.of(MineralType.GOLD, 750), 0),
-                    new Mission(NPCType.valueOf("HARVEY"),
-                            ()->Map.of(FishType.SALMON, 1),
-                            ()->Map.of(MineralType.GOLD, 1), 1),//TODO
-                    new Mission(NPCType.valueOf("HARVEY"),
-                            ()->Map.of(MadeProductType.WINE, 1),
-                            ()->Map.of(FoodType.SALAD, 5), Season.WINTER)));
-        }
-
     }
 }
