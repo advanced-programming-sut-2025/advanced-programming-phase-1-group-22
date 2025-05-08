@@ -43,7 +43,7 @@ public enum CookingRecipe implements Recipe {
     }
 
     private final CookingRecipe.IngredientsSupplier ingredientsSupplier;
-    private transient AtomicReference<FoodType> foodType;
+    private transient AtomicReference<FoodType> foodType = new AtomicReference<>();
 
     private CookingRecipe(String name, String description, Integer price, IngredientsSupplier foodType) {
         this.name = name;
@@ -71,11 +71,13 @@ public enum CookingRecipe implements Recipe {
     @Override
     public String toString() {
         Fridge fridge = App.getInstance().getCurrentGame().findFarm().getFridge();
-        String res = this.getIngredients().getName() + ":\n\n" + this.getIngredients().toString() + "\n\nIngredients:\n";
+        String res = this.getIngredients().getName() + ":\nIngredients:\n";
         res += this.getIngredients().getProductsString();
-        res += "\nEnergy: " + this.getIngredients().getEnergy() + "$\n";
+        res += "Energy: " + this.getIngredients().getEnergy();
         res += "\nPrice: " + this.getIngredients().getSellPrice() + "$\n";
-        res += this.getIngredients().isValidIngredient(fridge) + "\n";
+        res += this.getIngredients().isValidIngredient(fridge, App.getInstance().getCurrentGame().getCurrentPlayer()) ?
+                                                                "You can cook it" :
+                                                                "You don't have required ingredients" + "\n";
         return res;
     }
 }
