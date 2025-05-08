@@ -156,6 +156,7 @@ public class Village {
     }
 
     public void addNPC(NPCType NPCType, int xStart, int yStart, boolean vertical) {
+//        NPCType.setMissions();
         NPC npc = new NPC(NPCType);
         NPCHouse npcHouse = new NPCHouse(npc);
         if (vertical) {
@@ -164,7 +165,7 @@ public class Village {
             setTileOfNPCHouse(npcHouse, xStart, yStart, xStart + 6, yStart + 4);
         }
         App.getInstance().getCurrentGame().getNpcs().add(npc);
-        Tile tileByXAndY = getTileByXAndY(npcHouse.getTiles().get(0).getX(), npcHouse.getTiles().get(0).getY() - 1);
+        Tile tileByXAndY = getTileByXAndY(npcHouse.getTiles().getFirst().getX(), npcHouse.getTiles().getFirst().getY() - 1);
         tileByXAndY.setIsFilled(true);
         tileByXAndY.setIsPassable(false);
         npc.getTiles().add(tileByXAndY);

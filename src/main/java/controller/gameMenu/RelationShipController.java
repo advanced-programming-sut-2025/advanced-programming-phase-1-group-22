@@ -35,7 +35,7 @@ public class RelationShipController {
     }
 
     public Response rateGift(String... params) {
-      int item = Integer.parseInt(params[0]);
+        int item = Integer.parseInt(params[0]);
         int rate = Integer.parseInt(params[1]);
         return relationService.rateGift(item, rate);
     }
@@ -97,5 +97,9 @@ public class RelationShipController {
     public Response doMission(String... params) {
         int missionId = Integer.parseInt(params[0]);
         return relationService.doMission(missionId);
+    }
+
+    public Response changeFriendship(String... params) {
+        return relationService.friendShip_CH();
     }
 }

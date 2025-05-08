@@ -94,10 +94,12 @@ public class RelationService {
     }
 
     boolean twoActorsAreNeighbors(Actor currentPlayer, Actor anotherPlayer, int dis) {
-        Tile tile = currentPlayer.getTiles().get(0);
-        Tile anotherTile = anotherPlayer.getTiles().get(0);
-        return (((tile.getX() == anotherTile.getX() + dis || tile.getX() == anotherTile.getX() - dis)
-                && (tile.getY() == anotherTile.getY() + dis || tile.getY() == anotherTile.getY() - dis)));
+        game = App.getInstance().getCurrentGame();
+        currentPlayer = game.getCurrentPlayer();
+        Tile tile = currentPlayer.getTiles().getFirst();
+        Tile anotherTile = anotherPlayer.getTiles().getFirst();
+        return (((tile.getX() <= anotherTile.getX() + dis && tile.getX() >= anotherTile.getX() - dis)
+                && (tile.getY() <= anotherTile.getY() + dis || tile.getY() >= anotherTile.getY() - dis)));
     }
 
     Player getPlayer(String username) {
@@ -302,7 +304,12 @@ public class RelationService {
     public Response meetNpc(String npcName) {
         game = App.getInstance().getCurrentGame();
         currentPlayer = game.getCurrentPlayer();
-        NPCType npcType = NPCType.valueOf(npcName);
+        NPCType npcType = null;
+        for (NPCType value : NPCType.values()) {
+            if (value.getName().equals(npcName)) {
+                npcType = value;
+            }
+        }
         NPC npc1 = null;
         for (NPC npc : game.getNpcs()) {
             if (npc.getType().equals(npcType)) {
@@ -312,11 +319,11 @@ public class RelationService {
         if (npc1 == null) {
             return new Response("npc not found");
         }
-        lastTalkedNPC = npc1;
         boolean areNeighbors = twoActorsAreNeighbors(currentPlayer, npc1, 2);
         if (!areNeighbors) {
             return new Response("the other player is not next You");
         }
+        lastTalkedNPC = npc1;
         Friendship friendShipBetweenTwoActors = getFriendShipBetweenTwoActors(npc1);
         Dialog dialog = Dialog.getDialog(game.getTimeAndDate(), friendShipBetweenTwoActors.getFriendShipLevel());
         changeFriendShipLevelUp(friendShipBetweenTwoActors, 20);
@@ -365,7 +372,12 @@ public class RelationService {
     public Response giftNPC(String npcName, String item) {
         game = App.getInstance().getCurrentGame();
         currentPlayer = game.getCurrentPlayer();
-        NPCType npcType = NPCType.valueOf(npcName);
+        NPCType npcType = null;
+        for (NPCType value : NPCType.values()) {
+            if (value.getName().equals(npcName)) {
+                npcType = value;
+            }
+        }
         NPC npc1 = null;
         for (NPC npc : game.getNpcs()) {
             if (npc.getType().equals(npcType)) {
@@ -385,6 +397,9 @@ public class RelationService {
             return new Response("item not found");
         }
         Salable gift = itemFromInventory.getKey();
+        if (itemFromInventory.getValue() < 1) {
+            return new Response("you don't have this gift");
+        }
         if (gift instanceof Tool) {
             return new Response("gift can not be tool!");
         }
@@ -398,7 +413,8 @@ public class RelationService {
         if (isFavorite) {
             changeFriendShipLevelUp(friendShipBetweenTwoActors, 50);
         }
-        return null;
+        currentPlayer.getInventory().deleteProductFromBackPack(itemFromInventory.getKey(), currentPlayer, 1);
+        return new Response("gift gived successfully");
     }
 
     public Response showNpcFriendship() {
@@ -419,8 +435,11 @@ public class RelationService {
         StringBuilder stringBuilder = new StringBuilder();
         Friendship friendShipBetweenTwoActors = getFriendShipBetweenTwoActors(lastTalkedNPC);
         int level = friendShipBetweenTwoActors.getFriendShipLevel();
+        if (lastTalkedNPC.getType().getMissions().isEmpty()) {
+            return new Response("you have no missions");
+        }
         if (level < 1) {
-            stringBuilder.append(lastTalkedNPC.getType().getMissions().get(0));
+            stringBuilder.append(lastTalkedNPC.getType().getMissions().getFirst());
         }
         if (level < 2) {
             stringBuilder.append(lastTalkedNPC.getType().getMissions().get(1));
@@ -431,7 +450,14 @@ public class RelationService {
         if (level >= 2) {
             stringBuilder.append(lastTalkedNPC.getType().getMissions());
         }
+
         return new Response(stringBuilder.toString());
+    }
+
+    public Response friendShip_CH() {
+        Friendship friendShipBetweenTwoActors = getFriendShipBetweenTwoActors(lastTalkedNPC);
+        friendShipBetweenTwoActors.setFriendShipLevel(3);
+        return new Response("friendship changed to 3");
     }
 
     public Response doMission(int missionId) {
@@ -457,7 +483,7 @@ public class RelationService {
                 canPrepare = false;
                 break;
             }
-            if (currentPlayer.getInventory().getProducts().get(salableIntegerEntry.getValue()) < salableIntegerEntry.getValue()) {
+            if (currentPlayer.getInventory().getProducts().get(salableIntegerEntry.getKey()) < salableIntegerEntry.getValue()) {
                 canPrepare = false;
                 break;
             }
