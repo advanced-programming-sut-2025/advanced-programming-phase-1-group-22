@@ -79,4 +79,7 @@ public enum Hoe implements Tool {
         player.changeEnergy(-this.getEnergy(player));
         return "you use this tool in a wrong way";
     }
+
+    @Override
+    public Integer getContainingEnergy() {return 0;}
 }

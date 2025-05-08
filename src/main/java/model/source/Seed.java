@@ -26,4 +26,7 @@ public class Seed extends Structure implements Salable {
     public void burn() {
         //TODO
     }
+
+    @Override
+    public Integer getContainingEnergy() {return seedType.getContainingEnergy();}
 }

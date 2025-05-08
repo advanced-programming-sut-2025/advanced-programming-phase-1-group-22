@@ -135,7 +135,7 @@ public class Tree extends HarvestAbleProduct {
     }
 
     @Override
-    public int getContainingEnergy() {
+    public Integer getContainingEnergy() {
         return treeType.getFruit().getFruitEnergy();
     }
 

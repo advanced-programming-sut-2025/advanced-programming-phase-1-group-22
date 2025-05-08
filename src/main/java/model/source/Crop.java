@@ -48,7 +48,7 @@ public class Crop extends HarvestAbleProduct implements Source {
 	}
 
 	@Override
-	public int getContainingEnergy() {
+	public Integer getContainingEnergy() {
 		return cropType.getEnergy();
 	}
 

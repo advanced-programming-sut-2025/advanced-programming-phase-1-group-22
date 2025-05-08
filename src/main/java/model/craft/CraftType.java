@@ -200,4 +200,7 @@ public enum CraftType implements Product {
     private static Tile getTileByDiff(Pair origin, int diffX, int diffY, Tile[][] tiles) {
         return tiles[origin.getX() + diffX][origin.getY() + diffY];
     }
+
+    @Override
+    public Integer getContainingEnergy() {return 0;}
 }

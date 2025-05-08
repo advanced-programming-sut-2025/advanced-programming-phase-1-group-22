@@ -34,6 +34,9 @@ public class Animal extends Structure implements Salable {
     }
 
     @Override
+    public Integer getContainingEnergy() {return 0;}
+
+    @Override
     public int getSellPrice() {
         return this.animalType.getSellPrice();
     }

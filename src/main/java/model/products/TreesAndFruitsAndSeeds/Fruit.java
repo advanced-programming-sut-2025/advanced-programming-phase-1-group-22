@@ -28,4 +28,7 @@ public class Fruit implements Salable{
     public int getSellPrice() {
         return fruitType.getSellPrice();
     }
+
+    @Override
+    public Integer getContainingEnergy() {return fruitType.getEnergy();}
 }

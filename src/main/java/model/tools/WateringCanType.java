@@ -72,4 +72,8 @@ public enum WateringCanType implements Tool {
     public String useTool(Player player, Tile tile) {
         return "";
     }
+
+
+    @Override
+    public Integer getContainingEnergy() {return 0;}
 }

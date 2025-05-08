@@ -326,6 +326,9 @@ public class GameMenuController extends MenuController {
     public Response eat(String[] params) {
         return gameService.eat(params[0]);
     }
+    public Response buffShow(String[] params) {
+        return gameService.buffShow();
+    }
 
     public Response questsList(String[] params) {
         return null;
@@ -345,6 +348,10 @@ public class GameMenuController extends MenuController {
 
     public Response cookingRefrigeratorPick(String[] strings) {
         return gameService.cookingRefrigeratorPick(strings[0]);
+    }
+
+    public Response cookingRefrigeratorShow(String[] strings) {
+        return gameService.fridgeShow();
     }
 
     public Response craftingCraft(String[] strings) {

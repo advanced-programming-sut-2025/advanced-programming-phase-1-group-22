@@ -85,4 +85,7 @@ public enum Shear implements Tool {
         }
         return "you use this tool in a wrong way";
     }
+
+    @Override
+    public Integer getContainingEnergy() {return 0;}
 }
