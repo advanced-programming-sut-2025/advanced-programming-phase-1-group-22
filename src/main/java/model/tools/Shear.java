@@ -10,17 +10,21 @@ import model.products.AnimalProduct;
 import model.structure.Structure;
 import utils.App;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Getter
-public enum Shear implements Tool {
+public enum Shear implements Tool, Serializable {
     SHEAR("shear",4, 1000);
 
-    private final String name;
-    private final Integer energyCost;
-    private final Integer price;
+    private String name;
+    private Integer energyCost;
+    private Integer price;
 
-    Shear(String name,Integer energyCost, Integer price) {
+    Shear() {
+    }
+
+    Shear(String name, Integer energyCost, Integer price) {
         this.name = name;
         this.energyCost = energyCost;
         this.price = price;

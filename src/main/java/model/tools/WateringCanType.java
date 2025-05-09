@@ -8,22 +8,27 @@ import model.structure.Structure;
 import model.structure.farmInitialElements.Lake;
 import utils.App;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Getter
 
-public enum WateringCanType implements Tool {
+public enum WateringCanType implements Tool , Serializable {
     NORMAL("normal wateringCan",0,40,5),
     CUPPER("cupper wateringCan",1,55,4),
     IRON("iron wateringCan",2,70,3),
     GOLD("gold wateringCan",3,85,2),
     IRIDIUM("iridium wateringCan",4,100,1);
 
-    private final String name;
-    private final Integer level;
-    private final Integer capacity;
-    private final Integer energyCost;
-     WateringCanType(String name, Integer level, Integer capacity, Integer energyCost) {
+    private String name;
+    private Integer level;
+    private Integer capacity;
+    private Integer energyCost;
+
+    WateringCanType() {
+    }
+
+    WateringCanType(String name, Integer level, Integer capacity, Integer energyCost) {
         this.name = name;
          this.level = level;
         this.capacity = capacity;

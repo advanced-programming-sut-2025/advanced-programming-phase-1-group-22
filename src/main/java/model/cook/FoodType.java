@@ -25,12 +25,13 @@ import model.tools.FishingPole;
 
 import javax.swing.*;
 import javax.xml.transform.sax.SAXResult;
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.Map;
 
 @Getter
 @ToString
-public enum FoodType implements Product {
+public enum FoodType implements Product , Serializable {
     FRIED_EGG("fried egg", null, 50, 35) {
         @Override
         public Boolean isValidIngredient(Fridge fridge, Player player) {
@@ -238,14 +239,17 @@ public enum FoodType implements Product {
 
         }
     };
-    private final String name;
+    private String name;
     private int energy;
     private int sellPrice;
     private Buff buff;
     private Object source;
     private Integer[] level;
-    private final IngredientsSupplier ingredientsSupplier;
+    private IngredientsSupplier ingredientsSupplier;
     private transient volatile Map<Salable, Integer> resolvedIngredients;
+
+    FoodType() {
+    }
 
     @FunctionalInterface
     private interface IngredientsSupplier {

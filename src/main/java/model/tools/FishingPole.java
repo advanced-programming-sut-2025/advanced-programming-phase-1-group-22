@@ -10,24 +10,28 @@ import model.Tile;
 import model.abilitiy.Ability;
 import utils.App;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Random;
 
 @Getter
-public enum FishingPole implements Tool {
+public enum FishingPole implements Tool, Serializable {
     TRAINING("training fishingPole",25,0,0,8,0.1),
     BAMBOO("bamboo fishingPole",500,1,0,8,0.5),
     FIBER_GLASS("fiber glass fishingPole",1_8000,2,2,6,0.9),
     IRIDIUM("iridium fishingPole",7_500,3,4,4,1.2);
 
-    private final String name;
-    private final Integer price;
-    private final Integer level;
-    private final Integer abilityLevel;
-    private final Integer energyCost;
-    private final Double qualityPercent;
+    private String name;
+    private Integer price;
+    private Integer level;
+    private Integer abilityLevel;
+    private Integer energyCost;
+    private Double qualityPercent;
 
-    FishingPole(String name,Integer price,Integer level, Integer abilityLevel, Integer energyCost, Double qualityPercent) {
+    FishingPole() {
+    }
+
+    FishingPole(String name, Integer price, Integer level, Integer abilityLevel, Integer energyCost, Double qualityPercent) {
         this.name = name;
         this.price = price;
         this.level = level;

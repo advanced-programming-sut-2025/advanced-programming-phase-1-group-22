@@ -7,6 +7,7 @@ import model.relations.Player;
 import model.Salable;
 import model.exception.InvalidInputException;
 
+import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,9 +15,12 @@ import java.util.Objects;
 
 @Getter
 @Setter
-public class BackPack {
+public class BackPack implements Serializable {
     private BackPackType backPackType;
     private Map<Salable, Integer> products = new HashMap<>();
+
+    public BackPack() {
+    }
 
     public BackPack(BackPackType backPackType) {
         this.backPackType = backPackType;
