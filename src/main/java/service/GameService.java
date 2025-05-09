@@ -83,19 +83,24 @@ public class GameService {
     }
 
     public Response terminateGame() {
-        app.getCurrentGame().addTermination();
-        if (app.getCurrentGame().getPlayersInFavorTermination() == app.getCurrentGame().getPlayers().size()) {
-            App.getInstance().getGames().remove(app.getCurrentGame());
-            Session.setCurrentMenu(Menu.MAIN);
-            for (Player player : app.getCurrentGame().getPlayers()) {
-                player.getUser().setIsPlaying(false);
+        for (int i = 1; i < App.getInstance().getCurrentGame().getPlayers().size(); i++) {
+            switch (ViewRender.getResponse().message()) {
+                case "Y": break;
+                case "n": return new Response("Termination failed!");
+                default: System.out.println("Are you in favor termination? Y/n");
             }
-
-            //TODO remove app.getCurrentGame() from databases
-            return new Response("The game is terminated", true);
-        } else {
-            return new Response("Do you agree on Termination? Either Enter \"no\" or \"terminate game\"");
         }
+        App.getInstance().getGames().remove(app.getCurrentGame());
+        Session.setCurrentMenu(Menu.MAIN);
+        for (Player player : app.getCurrentGame().getPlayers()) {
+            player.getUser().setIsPlaying(false);
+            player.getUser().setNumberOfPlayedGames(player.getUser().getNumberOfPlayedGames() + 1);
+            player.getUser().setHighestMoneyEarned(
+                    Math.max(player.getUser().getHighestMoneyEarned(), player.getAccount().getGolds())
+            );
+        }
+        //TODO remove app.getCurrentGame() from databases
+        return new Response("The game is terminated", true);
     }
 
     public Response nextTurn() {

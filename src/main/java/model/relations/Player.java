@@ -307,16 +307,15 @@ public class Player extends Actor implements JsonPreparable {
 		int y1 = cottage.getTiles().getFirst().getY();
 
 		WalkingStrategy walkingStrategy = new WalkingStrategy();
-		Player player = App.getInstance().getCurrentGame().getCurrentPlayer();
 		int energy = walkingStrategy.calculateEnergy(
-				new Pair(player.getTiles().get(0).getX(), player.getTiles().get(0).getY()), new Pair(x1, y1)
+				new Pair(this.getTiles().get(0).getX(), this.getTiles().get(0).getY()), new Pair(x1, y1)
 		);
-		if (player.getEnergy() < energy || energy == -1) {
-			player.faint();
+		if (this.getEnergy() < energy || energy == -1) {
+			this.faint();
 		}
-		player.getTiles().clear();
-		player.getTiles().add(App.getInstance().getCurrentGame().tiles[x1][y1]);
-		player.setCurrentMenu(Menu.COTTAGE);
+		this.getTiles().clear();
+		this.getTiles().add(App.getInstance().getCurrentGame().tiles[x1][y1]);
+		this.setCurrentMenu(Menu.COTTAGE);
 		Session.setCurrentMenu(Menu.COTTAGE);
 	}
 }
