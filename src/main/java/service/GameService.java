@@ -25,6 +25,7 @@ import model.receipe.CraftingRecipe;
 import model.records.Response;
 import model.relations.Player;
 import model.shelter.FarmBuilding;
+import model.shelter.FarmBuildingType;
 import model.source.*;
 import model.shelter.ShippingBin;
 import model.source.CropType;
@@ -418,7 +419,11 @@ public class GameService {
         if (currentStructure == null) {
             return new Response("there is nothing to pick on the floor");
         }
-        return new Response(tryToPickUp(currentPlayer, currentStructure, currentTile), true);
+        boolean flag = tryToPickUp(currentPlayer, currentStructure);
+        if (!flag){
+            return new Response("your backpack is full");
+        }
+        return new Response("you picked up a " + ((Salable) currentStructure).getName(), true);
     }
 
     public Response fishing(String name) {
@@ -454,13 +459,21 @@ public class GameService {
         } else if (!playerHaveEnoughResourceToBuild(currentPlayer, carpenterShopFarmBuildings)) {
             return new Response("you do not have enough resource to build");
         }
-        FarmBuilding farmBuilding = new FarmBuilding(carpenterShopFarmBuildings.getFarmBuildingType());
-
+        Structure structure;
+        if (carpenterShopFarmBuildings.getFarmBuildingType().equals(FarmBuildingType.SHIPPING_BIN)){
+            structure = new ShippingBin();
+        }
+        else {
+            structure = new FarmBuilding(carpenterShopFarmBuildings.getFarmBuildingType());;
+        }
         String message = buildStructureInAPlace(carpenterShopFarmBuildings,
-                currentFarm, farmBuilding, farmBuilding.getFarmBuildingType().getHeight(),
-                farmBuilding.getFarmBuildingType().getWidth(), x, y);
+                currentFarm, structure, carpenterShopFarmBuildings.getFarmBuildingType().getHeight(),
+                carpenterShopFarmBuildings.getFarmBuildingType().getWidth(), x, y);
         if (message.contains("not")){
             return new Response(message);
+        }
+        if (structure instanceof ShippingBin){
+            currentPlayer.getShippingBinList().add((ShippingBin) structure);
         }
         payForBuild(carpenterShopFarmBuildings,currentPlayer);
         return new Response(message, true);
@@ -856,15 +869,16 @@ public class GameService {
         return null;
     }
 
-    private String tryToPickUp(Player player, Structure structure, Tile tile) {
+    private boolean tryToPickUp(Player player, Structure structure) {
         if (player.getInventory().isInventoryHaveCapacity((Salable) structure)) {
             player.getInventory().addProductToBackPack((Salable) structure, 1);
-            tile.setIsFilled(false);
+            for (Tile structureTile : structure.getTiles()) {
+                structureTile.setIsFilled(false);
+            }
             App.getInstance().getCurrentGame().getVillage().removeStructure(structure);
-            player.upgradeAbility(Ability.FORAGING);
-            return "you picked up a " + ((Salable) structure).getName();
+            return true;
         }
-        return "your backpack is full";
+        return false;
     }
 
     private Tile isThereAnyLakeAround(Player player) {
@@ -1740,7 +1754,7 @@ public class GameService {
         List<Structure> structures = App.getInstance().getCurrentGame().getVillage().findStructuresByTile(tile);
         for (Structure structure : structures) {
             if (structure instanceof GreenHouse) {
-                return !((GreenHouse) structure).getPool().getTiles().contains(tile);
+                return !((GreenHouse) structure).getPool().getTiles().contains(tile) && ((GreenHouse) structure).isBuilt();
             }
         }
         return false;

@@ -110,7 +110,7 @@ public class BackPack {
 
     public Salable getProductFromBackPack(String name) {
         for (Map.Entry<Salable, Integer> salableIntegerEntry : products.entrySet()) {
-            if (salableIntegerEntry.getKey().getName().equals(name)) {
+            if (salableIntegerEntry.getKey().getName().equalsIgnoreCase(name)) {
                 return salableIntegerEntry.getKey();
             }
         }

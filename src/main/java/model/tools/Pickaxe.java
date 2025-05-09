@@ -64,10 +64,14 @@ public enum Pickaxe implements Tool {
 
     @Override
     public int getEnergy(Player player) {
+        int minus = 0;
         if (player.getAbilityLevel(Ability.MINING) == 4){
-            return (int) (App.getInstance().getCurrentGame().getWeatherCoefficient() * energyCost - 1);
+            minus += 1;
         }
-        return (int) (App.getInstance().getCurrentGame().getWeatherCoefficient() * energyCost);
+        if (player.getBuffAbility() != null && player.getBuffAbility().equals(Ability.MINING)){
+            minus += 1;
+        }
+        return (int) (App.getInstance().getCurrentGame().getWeatherCoefficient() * energyCost - minus);
     }
 
     @Override
