@@ -100,6 +100,7 @@ public class RelationShipController {
     }
 
     public Response changeFriendship(String... params) {
-        return relationService.friendShip_CH();
+        int friendshipLevel = Integer.parseInt(params[0]);
+        return relationService.friendShip_CH(friendshipLevel);
     }
 }
