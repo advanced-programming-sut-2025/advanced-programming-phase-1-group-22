@@ -57,12 +57,12 @@ public enum StoreType {
     public Response purchase(String name, Integer count) {
         Response response = null;
         try {
-            response = (Response) shop1.getMethod("purchase").invoke(null, name, count);
+            response = (Response) shop1.getMethod("purchase", String.class, Integer.class).invoke(null, name, count);
         } catch (Exception ignored) {}
         if (response != null) return response;
         if (shop2 != null) {
             try {
-                response = (Response) shop2.getMethod("purchase").invoke(null, name, count);
+                response = (Response) shop2.getMethod("purchase", String.class, Integer.class).invoke(null, name, count);
             } catch (Exception ignored) {}
         }
         return response;

@@ -62,7 +62,7 @@ public class GameCommands extends CommandClass {
     public static final GameCommands showAllProducts = new GameCommands("^\\s*show\\s+all\\s+products\\s*$");
     public static final GameCommands showAllAvailableProducts = new GameCommands("^\\s*show\\s+all\\s+available\\s+products\\s*$");
     public static final GameCommands purchase = new GameCommands("^\\s*purchase\\s+(?<name>.+)\\s+-n\\s+(?<count>\\d+)\\s*$");
-    public static final GameCommands purchase1 = new GameCommands("^\\s*purchase\\s+(?<name>.+)\\s*$");
+    public static final GameCommands purchase1 = new GameCommands("^(?!.*-n)\\s*purchase\\s+(?<name>.+)\\s*$");
 
     public static final GameCommands SHOW_ENERGY = new GameCommands("show\\s+energy");
     public static final GameCommands ENERGY_SET = new GameCommands("set\\s+energy\\s+-v\\s+(\\d+)");

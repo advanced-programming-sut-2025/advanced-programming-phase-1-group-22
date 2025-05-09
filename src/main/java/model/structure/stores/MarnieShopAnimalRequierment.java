@@ -9,6 +9,8 @@ import model.tools.MilkPail;
 import model.tools.Shear;
 import utils.App;
 
+import java.util.Objects;
+
 @Getter
 public enum MarnieShopAnimalRequierment  implements Shop{
     HAY(new Hay(),50,-1),MILK_pAIL(MilkPail.getInstance(),1000,1)
@@ -24,6 +26,9 @@ public enum MarnieShopAnimalRequierment  implements Shop{
         this.price = price;
         this.dailyLimit = dailyLimit;
     }
+    public boolean isAvailable() {
+        return !Objects.equals(this.dailyLimit, this.dailySold);
+    }
     public static String showAllProducts() {
         StringBuilder res = new StringBuilder();
         for (MarnieShopAnimalRequierment value : MarnieShopAnimalRequierment.values()) {
@@ -34,7 +39,7 @@ public enum MarnieShopAnimalRequierment  implements Shop{
     public static String showAvailableProducts() {
         StringBuilder res = new StringBuilder();
         for (MarnieShopAnimalRequierment value : MarnieShopAnimalRequierment.values()) {
-            if (value.dailyLimit != value.dailySold) {
+            if (value.isAvailable()) {
                 res.append(value.toString()).append(" ").append(value.getPrice()).append("$\n");
             }
         }
@@ -43,11 +48,14 @@ public enum MarnieShopAnimalRequierment  implements Shop{
     public static Response purchase(String name, Integer count) {
         MarnieShopAnimalRequierment salable = null;
         for (MarnieShopAnimalRequierment value : MarnieShopAnimalRequierment.values()) {
-            if(value.getProduct().getName().equals(name)) {
+            if(value.getProduct().getName().equalsIgnoreCase(name)) {
                 salable = value;
             }
         }
         if (salable == null) return new Response("Item not found");
+        if (!salable.isAvailable()) {
+            return new Response("This product isn't available now. Come back later.");
+        }
         if (salable.dailyLimit != -1 && salable.dailyLimit < salable.dailySold + count) {
             return new Response("Not enough in stock");
         }

@@ -56,7 +56,7 @@ public enum FishShopStuff  implements Shop{
 	}
 	public static Response purchase(String name, Integer count) {
 		FishShopStuff salable = null;
-		if (name.equals("fish smoker recipe")) {
+		if (name.equalsIgnoreCase("fish smoker recipe")) {
 			salable = FishShopStuff.FISH_SMOKER_RECIPE;
 			if (salable.dailyLimit != -1 && salable.dailyLimit < salable.dailySold + count) {
 				return new Response("Not enough in stock");
@@ -74,7 +74,7 @@ public enum FishShopStuff  implements Shop{
 			return new Response("Bought successfully", true);
 		}
 		for (FishShopStuff value : FishShopStuff.values()) {
-			if(value.getFishingPole().getName().equals(name)) {
+			if(value.getFishingPole().getName().equalsIgnoreCase(name)) {
 				salable = value;
 			}
 		}

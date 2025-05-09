@@ -41,7 +41,7 @@ public enum CarpenterShopMineralStuff implements Shop {
 	public static Response purchase(String name, Integer count) {
 		CarpenterShopMineralStuff salable = null;
 		for (CarpenterShopMineralStuff value : CarpenterShopMineralStuff.values()) {
-			if(value.getMineralType().getName().equals(name)) {
+			if(value.getMineralType().getName().equalsIgnoreCase(name)) {
 				salable = value;
 			}
 		}
