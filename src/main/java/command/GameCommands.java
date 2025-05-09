@@ -46,12 +46,14 @@ public class GameCommands extends CommandClass {
     public static final GameCommands friendshipNPCList = new GameCommands("^\\s*friendship\\s+NPC\\s+list\\s*$");
     public static final GameCommands questsList = new GameCommands("^\\s*quests\\s+list\\s*$");
     public static final GameCommands questsFinish = new GameCommands("^\\s*quests\\s+finish\\s+-i\\s+(?<index>\\d+)\\s*$");
-    public static final GameCommands eat = new GameCommands("^\\s*eat\\s+(?<foodName>)\\s*$");
+    public static final GameCommands eat = new GameCommands("^\\s*eat\\s+(?<foodName>.+)\\s*$");
+    public static final GameCommands buffShow = new GameCommands("^\\s*buff\\s+show\\s*$");
 
     public static final GameCommands craftingShowRecipes = new GameCommands("crafting show recipes");
     public static final GameCommands craftingCraft = new GameCommands("^\\s*crafting\\s+craft\\s+(?<itemName>.+)\\s*$");
     public static final GameCommands cookingRefrigeratorPut = new GameCommands("^\\s*cooking\\s+refrigerator\\s+put\\s+(?<itemName>.+)\\s*$");
     public static final GameCommands cookingRefrigeratorPick = new GameCommands("^\\s*cooking\\s+refrigerator\\s+pick\\s+(?<itemName>.+)\\s*$");
+    public static final GameCommands cookingRefrigeratorShow = new GameCommands("^\\s*cooking\\s+refrigerator\\s+show\\s*$");
     public static final GameCommands cookingPrepare = new GameCommands("^\\s*cooking\\s+prepare\\s+(?<recipeName>.+)\\s*$");
     public static final GameCommands cookingShowRecipes = new GameCommands("^\\s*cooking\\s+show\\s+recipes\\s*$");
 
@@ -76,7 +78,7 @@ public class GameCommands extends CommandClass {
 
     public static final GameCommands FISHING = new GameCommands("fishing\\s+-p\\s+(.+)\\s+-d\\s+(\\S+)");
 
-    public static final GameCommands BUILD_FARM_BUILDING = new GameCommands("build\\s+-a\\s+(.+)\\s+-l\\s+<\\s*(\\d+)\\s*,\\s*(\\d+)\\s*>");
+    public static final GameCommands BUILD_FARM_BUILDING = new GameCommands("build\\s+-a\\s+(.+)\\s+-l\\s+(\\d+)\\s*,\\s*(\\d+)");
     public static final GameCommands BUY_ANIMAL = new GameCommands("^\\s*buy\\s+animal\\s+-a\\s+(?<animal>.+)\\s+-n\\s+(?<name>.+)\\s*$");
     public static final GameCommands PET = new GameCommands("^\\s*pet\\s+-n\\s+(?<name>.+)\\s*$");
     public static final GameCommands CHEAT_SET_FRIENDSHIP_WITH_ANIMAL = new GameCommands("^\\s*cheat\\s+set\\s+friendship\\s+-n\\s+(?<name>.+)\\s+-c\\s+" +
@@ -84,8 +86,8 @@ public class GameCommands extends CommandClass {
     public static final GameCommands SHOW_ANIMALS = new GameCommands("^\\s*animals\\s*$");
     public static final GameCommands FEED_HAY = new GameCommands("^\\s*feed\\s+hay\\s+-n\\s+(?<name>.+)\\s*$");
     public static final GameCommands COLLECT_PRODUCE = new GameCommands("^\\s*collect\\s+produce\\s+-n\\s+(?<name>.+)\\s*$");
-    public static final GameCommands SELL_ANIMAL = new GameCommands("^\\s*sell\\s+animal\\s+-n\\s+(?<name>.+)\\s*$");
-    public static final GameCommands SHEPHERD_ANIMALS = new GameCommands("^\\s*shepherd\\s+animals\\s+-n\\s+(?<name>.+)\\s+-l\\s+<\\s*(\\d+)\\s*,\\s*(\\d+)\\s*>\\s*$");
+    public static final GameCommands SELL_ANIMAL = new GameCommands("^\\s*animals\\s+sell\\s+-n\\s+(?<name>.+)\\s*$");
+    public static final GameCommands SHEPHERD_ANIMALS = new GameCommands("^\\s*shepherd\\s+animals\\s+-n\\s+(?<name>.+)\\s+-l\\s+(\\d+)\\s*,\\s*(\\d+)\\s*$");
     public static final GameCommands PRODUCES = new GameCommands("^\\s*produces\\s*$");
 
     public static final GameCommands CRAFT_INFO = new GameCommands("^\\s*craft\\s+info\\s+-n\\s+(?<craftName>.+)\\s*$");

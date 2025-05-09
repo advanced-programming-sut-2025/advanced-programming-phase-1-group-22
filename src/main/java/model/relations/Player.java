@@ -206,7 +206,7 @@ public class Player extends Actor {
 
     public CookingRecipe findCookingRecipe(String string) {
         for (CookingRecipe cookingRecipe : cookingRecipes.keySet()) {
-            if (cookingRecipe.getName().equals(string)) {
+            if (cookingRecipe.getName().equalsIgnoreCase(string)) {
                 if (cookingRecipes.get(cookingRecipe)) return cookingRecipe;
                 return null;
             }

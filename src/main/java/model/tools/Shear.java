@@ -74,8 +74,7 @@ public enum Shear implements Tool {
                         if (player.getInventory().isInventoryHaveCapacity(animalProduct)){
                             player.getInventory().addProductToBackPack(animalProduct,1);
                             currentAnimal.setTodayProduct(null);
-                            int oldFriendShip = currentAnimal.getRelationShipQuality();
-                            currentAnimal.setRelationShipQuality(oldFriendShip + 5);
+                            currentAnimal.changeFriendShip(5);
                             return "you collect produce of " + currentAnimal.getName() + ": " + animalProduct.getName() +
                                     " with quality: " + animalProduct.getProductQuality();
                         }
@@ -86,4 +85,7 @@ public enum Shear implements Tool {
         }
         return "you use this tool in a wrong way";
     }
+
+    @Override
+    public Integer getContainingEnergy() {return 0;}
 }

@@ -43,7 +43,7 @@ public enum Hoe implements Tool {
     @Override
     public Tool getToolByLevel(int level) {
         for (Hoe value : Hoe.values()) {
-            if (value.level == level){
+            if (value.getLevel() == level){
                 return value;
             }
         }
@@ -52,7 +52,7 @@ public enum Hoe implements Tool {
 
     @Override
     public int getLevel(){
-        return 0;
+        return this.level;
     }
 
     @Override
@@ -79,4 +79,7 @@ public enum Hoe implements Tool {
         player.changeEnergy(-this.getEnergy(player));
         return "you use this tool in a wrong way";
     }
+
+    @Override
+    public Integer getContainingEnergy() {return 0;}
 }

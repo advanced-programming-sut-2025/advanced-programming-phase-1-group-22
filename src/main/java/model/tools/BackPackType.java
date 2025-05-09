@@ -34,7 +34,7 @@ public enum BackPackType implements Tool {
     @Override
     public Tool getToolByLevel(int level) {
         for (BackPackType value : BackPackType.values()) {
-            if (value.level == level){
+            if (value.getLevel() == level){
                 return value;
             }
         }
@@ -43,7 +43,7 @@ public enum BackPackType implements Tool {
 
     @Override
     public int getLevel() {
-        return level;
+        return this.level;
     }
 
     @Override
@@ -65,4 +65,8 @@ public enum BackPackType implements Tool {
     public int getSellPrice() {
         return 0;
     }
+
+
+    @Override
+    public Integer getContainingEnergy() {return 0;}
 }

@@ -22,4 +22,7 @@ public class Food implements Salable {
     public int getSellPrice() {
         return foodType.getSellPrice();
     }
+
+    @Override
+    public Integer getContainingEnergy() {return foodType.getContainingEnergy();}
 }

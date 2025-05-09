@@ -24,6 +24,10 @@ public class Fish extends Structure implements Salable {
 	public Fish(FishType fishType) {
 		this.fishType = fishType;
 	}
+	public Fish(FishType fishType, ProductQuality productQuality) {
+		this.fishType = fishType;
+		this.productQuality = productQuality;
+	}
 
 	@Override
 	public String getName() {
