@@ -367,7 +367,7 @@ public class GameService {
             return new Response("upgrade is not available");
         }
 
-        if (!isPlayerInStore()) {
+        if (!isPlayerInStore(StoreType.BLACK_SMITH)) {
             return new Response("you have to be in blackSmith store to upgrade tools");
         }
 
@@ -379,6 +379,10 @@ public class GameService {
 
         if (!playerHaveEnoughResourceToUpgrade(currentPlayer, blackSmithUpgrade)) {
             return new Response("you do not have enough resource to upgrade tool");
+        }
+
+        if(blackSmithUpgrade.getDailySold() == blackSmithUpgrade.getDailyLimit()) {
+            return new Response("Not enough in stock!");
         }
         upgradeTool(currentPlayer, blackSmithUpgrade, currentTool, upgradeTool);
         return new Response("the tool upgrade to " + upgradeTool.getName(), true);
@@ -445,7 +449,7 @@ public class GameService {
         if (carpenterShopFarmBuildings == null) {
             return new Response("there is no farm building with this name");
         }
-        if (!isPlayerInStore()) {
+        if (!isPlayerInStore(StoreType.CARPENTER_SHOP)) {
             return new Response("you have to be in Carpenter store to build");
         }
         Farm currentFarm = getPlayerMainFarm(currentPlayer);
@@ -453,6 +457,9 @@ public class GameService {
             return new Response("you have to chose a place in your farm");
         } else if (!playerHaveEnoughResourceToBuild(currentPlayer, carpenterShopFarmBuildings)) {
             return new Response("you do not have enough resource to build");
+        }
+        if(carpenterShopFarmBuildings.getDailySold() == carpenterShopFarmBuildings.getDailyLimit()) {
+            return new Response("Not enough in stock!");
         }
         FarmBuilding farmBuilding = new FarmBuilding(carpenterShopFarmBuildings.getFarmBuildingType());
 
@@ -466,8 +473,11 @@ public class GameService {
         MarnieShopAnimal marnieShopAnimal = MarnieShopAnimal.getFromName(animalType);
         if (marnieShopAnimal == null) {
             return new Response("there is no such animal");
-        } else if (!isPlayerInStore()) {
+        } else if (!isPlayerInStore(StoreType.MARNIE_SHOP)) {
             return new Response("you have to be in Marnie Shop Animal to buy animals");
+        }
+        if(marnieShopAnimal.getDailySold() == marnieShopAnimal.getDailyLimit()) {
+            return new Response("Not enough in stock!");
         }
         Farm currentFarm = getPlayerMainFarm(currentPlayer);
         if (!isAnimalNameUnique(currentFarm, name)) {
@@ -793,8 +803,8 @@ public class GameService {
         return token.toString();
     }
 
-    private Boolean isPlayerInStore() {
-        return false;
+    private Boolean isPlayerInStore(StoreType storeType) {
+        return App.getInstance().getCurrentGame().getCurrentPlayer().getStoreType() == storeType;
     }
 
     private Boolean playerHaveEnoughResourceToUpgrade(Player player, BlackSmithUpgrade blackSmithUpgrade) {

@@ -97,9 +97,11 @@ public enum JojaMartShopSeed implements Shop {
 		for (JojaMartShopSeed value : JojaMartShopSeed.values()) {
 			if(value.getSalable().getName().equalsIgnoreCase(name)) {
 				salable = value;
+				break;
 			}
 		}
 		if (salable == null) return new Response("Item not found");
+		if (!salable.isAvailable()) return new Response("This product isn't available at the moment. Come back later.");
 		if (salable.dailyLimit != -1 && salable.dailyLimit < salable.dailySold + count) {
 			return new Response("Not enough in stock");
 		}

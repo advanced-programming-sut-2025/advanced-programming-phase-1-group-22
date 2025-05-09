@@ -53,6 +53,7 @@ public enum FoodType implements Product {
         }
     },
     BACKED_FISH("backed fish", ()->Map.of(FishType.SARDINE, 1, FishType.SALMON, 1, CropType.WHEAT, 1), 75, 100),
+    TROUT_SOUP("trout soup", ()->Map.of(), 50, 250/2),
     SALAD("salad", ()->Map.of(CropType.DANDELION, 1, CropType.LEEK, 1), 113, 110),
     OMELET("omelet", null, 100, 115, StoreType.STARDROPSALON) {
         @Override
