@@ -24,42 +24,42 @@ import java.util.Map;
 @ToString
 public enum CraftType implements Product {
     CHERRY_BOMB("cherry_bomb", "هرچیز در شعاع ۳ تایلی را نابود میکند", () -> Map.of(MineralType.COPPER_ORE, 4, MineralType.COAL, 1), 50, Map.of(Ability.MINING, 1)) {
-        public List<Tile> getAffectedTiles(Tile origin) {
+        public List<Tile> getTilesAffected(Tile origin) {
             Pair current = new Pair(origin.getX(), origin.getY());
             Tile[][] tiles = App.getInstance().getCurrentGame().tiles;
             return getTilesInRadius(current, 3, tiles);
         }
     },
     BOMB("bomb", "هرچیز در شعاع  ۵ تایلی را نابود میکند", () -> Map.of(MineralType.IRON_ORE, 4, MineralType.COAL, 1), 50, Map.of(Ability.MINING, 2)) {
-        public List<Tile> getAffectedTiles(Tile origin) {
+        public List<Tile> getTilesAffected(Tile origin) {
             Pair current = new Pair(origin.getX(), origin.getY());
             Tile[][] tiles = App.getInstance().getCurrentGame().tiles;
             return getTilesInRadius(current, 5, tiles);
         }
     },
     MEGA_BOMB("mega_bomb", "هرچیز در شعاع ۷ تایلی را نابود میکند", () -> Map.of(MineralType.GOLD_ORE, 4, MineralType.COAL, 1), 50, Map.of(Ability.MINING, 3)) {
-        public List<Tile> getAffectedTiles(Tile origin) {
+        public List<Tile> getTilesAffected(Tile origin) {
             Pair current = new Pair(origin.getX(), origin.getY());
             Tile[][] tiles = App.getInstance().getCurrentGame().tiles;
             return getTilesInRadius(current, 7, tiles);
         }
     },
     SPRINKLER("sprinklers", "به ۴ تایل مجاور آب میدهد", () -> Map.of(MadeProductType.IRON_BAR, 1, MadeProductType.COPPER_BAR, 1), 0, Map.of(Ability.FARMING, 1)) {
-        public List<Tile> getAffectedTiles(Tile origin) {
+        public List<Tile> getTilesAffected(Tile origin) {
             Pair current = new Pair(origin.getX(), origin.getY());
             Tile[][] tiles = App.getInstance().getCurrentGame().tiles;
             return getTilesInRadius(current, 4, tiles);
         }
     },
     QUALITY_SPRINKLER("quality_sprinklers", "به ۸ تایل مجاور آب میدهد", () -> Map.of(MadeProductType.IRON_BAR, 1, MadeProductType.GOLD_BAR, 1), 0, Map.of(Ability.FARMING, 2)) {
-        public List<Tile> getAffectedTiles(Tile origin) {
+        public List<Tile> getTilesAffected(Tile origin) {
             Pair current = new Pair(origin.getX(), origin.getY());
             Tile[][] tiles = App.getInstance().getCurrentGame().tiles;
             return getTilesInRadius(current, 8, tiles);
         }
     },
     IRIDIUM_SPRINKLER("iridium_sprinklers", "به ۲۴ تایل مجاور آب میدهد", () -> Map.of(MadeProductType.IRIDIUM_BAR, 1, MadeProductType.GOLD_BAR, 1), 0, Map.of(Ability.FARMING, 3)) {
-        public List<Tile> getAffectedTiles(Tile origin) {
+        public List<Tile> getTilesAffected(Tile origin) {
             Pair current = new Pair(origin.getX(), origin.getY());
             Tile[][] tiles = App.getInstance().getCurrentGame().tiles;
             return getTilesInRadius(current, 24, tiles);
@@ -68,14 +68,14 @@ public enum CraftType implements Product {
     CHARCOAL_KLIN("charcoal_klin", "۱۰ چوب را تبدیل به ۱ ذغال میکند", () -> Map.of(MineralType.WOOD, 20, MadeProductType.COPPER_BAR, 2), 0, Map.of(Ability.FORAGING, 1)),
     FURNACE("furnace", "کانی ها و ذغال را تبدیل به شمش میکند", () -> Map.of(MineralType.COPPER_ORE, 20, MineralType.STONE, 25), 0, Map.of()),
     SCARE_CROW("scare_crow", "از حمله کلاغ ها تا شعاع ۸ تایلی جلوگیری میکند", () -> Map.of(MineralType.COAL, 1, MineralType.WOOD, 50, MineralType.FIBER, 20), 0, Map.of()) {
-        public List<Tile> getAffectedTiles(Tile origin) {
+        public List<Tile> getTilesAffected(Tile origin) {
             Pair current = new Pair(origin.getX(), origin.getY());
             Tile[][] tiles = App.getInstance().getCurrentGame().tiles;
             return getTilesInRadius(current, 8, tiles);
         }
     },
     DELUXE_SCARECROW("deluxe_scarecrow", "از حمله کلاغ ها تا شعاع 12 تایلی جلوگیری میکند", () -> Map.of(MineralType.WOOD, 50, MineralType.COAL, 1, MineralType.FIBER, 20, MineralType.IRIDIUM_ORE, 1), 0, Map.of(Ability.FARMING, 2)) {
-        public List<Tile> getAffectedTiles(Tile origin) {
+        public List<Tile> getTilesAffected(Tile origin) {
             Pair current = new Pair(origin.getX(), origin.getY());
             Tile[][] tiles = App.getInstance().getCurrentGame().tiles;
             return getTilesInRadius(current, 12, tiles);
