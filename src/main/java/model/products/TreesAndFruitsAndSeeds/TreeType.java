@@ -3,6 +3,7 @@ package model.products.TreesAndFruitsAndSeeds;
 import lombok.Getter;
 import lombok.ToString;
 import model.enums.Season;
+import model.products.Harvestable;
 import model.source.SeedType;
 import model.source.Source;
 
@@ -10,7 +11,7 @@ import java.util.List;
 
 @Getter
 @ToString
-public enum TreeType {
+public enum TreeType implements Harvestable {
       ACORNS(null, Season.SPECIAL, "Acorns", SeedType.ACORNS, true, null, 0),
      MAPLE_SEEDS(null, Season.SPECIAL, "Maple Seeds", SeedType.MAPLE_SEEDS, true, null, 0),
       PINE_CONES(null, Season.SPECIAL, "Pine cones", SeedType.PINE_CONES, true, null, 0),
@@ -49,5 +50,50 @@ public enum TreeType {
         this.IsForaging = IsForaging;
         this.harvestStages = harvestStages;
         this.harvestCycle = harvestCycle;
+    }
+
+    @Override
+    public String craftInfo() {
+        String token = "";
+        token += "Name: " + this.name + "\n";
+        token += "Source: " + this.source.getName() + "\n";
+        if (this.harvestStages == null){
+            token += "Stages: \n";
+            token += "Total Harvest Time: \n";
+        }
+        else {
+            token += "Stages: " + "[7 ,7 ,7 ,7]\n";
+            token += "Total Harvest Time: " + "28\n";
+        }
+        token += "One Time: " + "False\n";
+        token += "Regrowth Time: " + this.harvestCycle + "\n";
+        if (this.fruit != null){
+            token += "Base Sell Price: " + this.fruit.getBaseSellPrice() + "\n";
+            token += "IsEdible: " + this.fruit.getIsEdible() + "\n";
+            token += "Base Energy: " + this.fruit.getEnergy() + "\n";
+        }else {
+            token += "Base Sell Price: \n";
+            token += "IsEdible: \n";
+            token += "Base Energy: \n";
+        }
+        token += "Base Health: \n";
+        token += "Season: " + this.season.toString().toLowerCase() + "\n";
+        token += "Can Become Giant: false\n";
+        return token;
+    }
+
+    @Override
+    public int getSellPrice() {
+        return 0;
+    }
+
+    @Override
+    public Integer getContainingEnergy() {
+        return Harvestable.super.getContainingEnergy();
+    }
+
+    @Override
+    public int getEnergy() {
+        return 0;
     }
 }
