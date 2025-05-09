@@ -1,11 +1,15 @@
 package model.tools;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import lombok.Setter;
 import model.products.ProductQuality;
 import model.relations.Player;
 import model.Salable;
 import model.exception.InvalidInputException;
+import save3.JsonPreparable;
+import save3.ObjectMapWrapper;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -14,7 +18,7 @@ import java.util.Objects;
 
 @Getter
 @Setter
-public class BackPack {
+public class BackPack implements JsonPreparable {
     private BackPackType backPackType;
     private Map<Salable, Integer> products = new HashMap<>();
 
@@ -163,5 +167,17 @@ public class BackPack {
 //        }
 //        return null;
 
+    }
+    @JsonProperty("productsWrapper")
+    private ObjectMapWrapper productsWrapper;
+
+    @Override
+    public void prepareForSave(ObjectMapper mapper) {
+        this.productsWrapper = new ObjectMapWrapper((Map<Object, Integer>)(Map<?, ?>) products, mapper);
+    }
+
+    @Override
+    public void unpackAfterLoad(ObjectMapper mapper) {
+        this.products = (Map<Salable, Integer>) (Map<?, ?>) productsWrapper.toMap(mapper);
     }
 }

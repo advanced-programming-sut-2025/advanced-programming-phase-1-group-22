@@ -1,5 +1,7 @@
 package model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import lombok.ToString;
 import model.animal.Animal;
@@ -14,20 +16,24 @@ import model.relations.Player;
 import model.shelter.ShippingBin;
 import model.structure.Structure;
 import model.structure.stores.*;
+import save3.JsonPreparable;
 import utils.App;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 @Getter
 @ToString
-public class Game {
+public class Game implements Serializable, JsonPreparable {
+    @JsonManagedReference
     private Village village;
     private final List<Player> players = new ArrayList<>();
     private Player currentPlayer;
     private final List<NPC> npcs = new ArrayList<>();
     private final List<Friendship> friendships = new ArrayList<>();
+    @JsonManagedReference
     private TimeAndDate timeAndDate;
     private Double weatherCoefficient = 1.0;
     private final Integer length = 160;
@@ -346,5 +352,22 @@ public class Game {
 
     public void setTiles(Tile[][] tiles) {
         this.tiles = tiles;
+    }
+    @Override
+    public void prepareForSave(ObjectMapper mapper) {
+        if (village instanceof JsonPreparable prep) prep.prepareForSave(mapper);
+        for (Player p : players) if (p instanceof JsonPreparable prep) prep.prepareForSave(mapper);
+        for (NPC npc : npcs) npc.getType().getMissions().forEach(m -> {
+            if (m instanceof JsonPreparable prep) prep.prepareForSave(mapper);
+        });
+    }
+
+    @Override
+    public void unpackAfterLoad(ObjectMapper mapper) {
+        if (village instanceof JsonPreparable prep) prep.unpackAfterLoad(mapper);
+        for (Player p : players) if (p instanceof JsonPreparable prep) prep.unpackAfterLoad(mapper);
+        for (NPC npc : npcs) npc.getType().getMissions().forEach(m -> {
+            if (m instanceof JsonPreparable prep) prep.unpackAfterLoad(mapper);
+        });
     }
 }
