@@ -56,12 +56,17 @@ public enum FishingPole implements Tool {
 
     @Override
     public Tool getToolByLevel(int level) {
+        for (FishingPole value : FishingPole.values()) {
+            if (value.getLevel() == level){
+                return value;
+            }
+        }
         return null;
     }
 
     @Override
     public int getLevel() {
-        return 0;
+        return this.level;
     }
 
     @Override
@@ -117,4 +122,7 @@ public enum FishingPole implements Tool {
         }
         return fishType;
     }
+
+    @Override
+    public Integer getContainingEnergy() {return 0;}
 }

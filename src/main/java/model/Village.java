@@ -297,7 +297,41 @@ public class Village {
             }
             System.out.println();
         }
+       // printMa(0,0,2000);
     }
+
+//    public void printMa(int x, int y, int size) {
+//        Game game = app.getCurrentGame();
+//        Character[][] str = new Character[160][120];
+//        Tile[][] tiles = game.tiles;
+//        for (int i = 0; i < 160; i++) {
+//            for (int i1 = 0; i1 < 120; i1++) {
+//                if (tiles[i][i1].getIsFilled()){
+//                    str[i][i1] = '1';
+//                }
+//                else {
+//                    str[i][i1] = ' ';
+//                }
+//            }
+//        }
+//
+//        int xStart = x - size / 2;
+//        int xEnd = x + size / 2;
+//        int yStart = y - size / 2;
+//        int yEnd = y + size / 2;
+//        if (xStart < 0) xStart = 0;
+//        if (yStart < 0) yStart = 0;
+//        if (xEnd >= 160) xEnd = 160;
+//        if (yEnd >= 120) yEnd = 120;
+//
+//
+//        for (int i = yEnd - 1; i >= yStart; i--) {
+//            for (int j1 = xStart; j1 < xEnd; j1++) {
+//                System.out.print(str[j1][i]);
+//            }
+//            System.out.println();
+//        }
+//    }
 
     public void removeStructure(Structure structure) {
         this.getStructures().remove(structure);
@@ -306,14 +340,6 @@ public class Village {
         }
         for (Tile tile : structure.getTiles()) {
             tile.setIsFilled(false);
-        }
-    }
-
-    public void addStructureToPlayerFarmByPlayerTile(Player player, Structure structure) {
-        for (Farm farm : this.getFarms()) {
-            if (farm.getTiles().contains(player.getTiles().get(0))) {
-                farm.getStructures().add(structure);
-            }
         }
     }
 }

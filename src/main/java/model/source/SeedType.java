@@ -91,4 +91,7 @@ public enum SeedType implements Source {
         }
         throw new InvalidInputException("there is no seed with this name");
     }
+
+    @Override
+    public Integer getContainingEnergy() {return 0;}
 }

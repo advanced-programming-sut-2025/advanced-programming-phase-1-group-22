@@ -40,4 +40,8 @@ public class MadeProduct implements Salable {
     public int getSellPrice() {
         return madeProductType.getSellPrice();
     }
+
+
+    @Override
+    public Integer getContainingEnergy() {return getEnergy();}
 }

@@ -12,4 +12,7 @@ public class Flower implements Salable {
     public int getSellPrice() {
         return 10;
     }
+
+    @Override
+    public Integer getContainingEnergy() {return 0;}
 }

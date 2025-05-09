@@ -21,4 +21,7 @@ public class Sundry implements Salable {
     public int getSellPrice() {
         return sundryType.getPrice();
     }
+
+    @Override
+    public Integer getContainingEnergy() {return sundryType.getContainingEnergy();}
 }

@@ -31,8 +31,9 @@ public class BackPack {
     }
 
     public void deleteProductFromBackPack(Salable product, Player player, int itemNumber) {
-        if (product == null)
-            throw new InvalidInputException("Product wanted to be deleted is not available in backpack");
+        if (product == null) {
+            return;
+        }
         TrashCan trashCan = getPlayerTrashCan(player);
         if (trashCan != null) {
             trashCan.givePlayerProductPrice(player, product, itemNumber);

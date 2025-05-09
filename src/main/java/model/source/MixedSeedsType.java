@@ -76,4 +76,7 @@ public enum MixedSeedsType implements Source{
     public int getSellPrice(){
         return 0;
     }
+
+    @Override
+    public Integer getContainingEnergy() {return 0;}
 }

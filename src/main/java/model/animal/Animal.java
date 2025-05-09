@@ -16,20 +16,25 @@ import java.util.Random;
 public class Animal extends Structure implements Salable {
     private AnimalType animalType;
     private AnimalProduct todayProduct;
-    private Integer relationShipQuality;
+    private Integer relationShipQuality = 0;
     private Boolean isFeed = false;
     private Boolean pet = false;
+    private final String name;
     private Boolean isAnimalStayOutAllNight = false;
     private Player owner;
 
-    public Animal(AnimalType animalType) {
+    public Animal(AnimalType animalType,String name) {
         this.animalType = animalType;
+        this.name = name;
     }
 
     @Override
     public String getName() {
-        return this.animalType.getName();
+        return this.name;
     }
+
+    @Override
+    public Integer getContainingEnergy() {return 0;}
 
     @Override
     public int getSellPrice() {
@@ -39,6 +44,7 @@ public class Animal extends Structure implements Salable {
     public void produceAnimalProduct(){
         if (!this.isFeed){
             this.todayProduct = null;
+            return;
         }
         double quality = generateQuality();
         AnimalProductType animalProductType = this.animalType.getProductList().get(0);
@@ -48,6 +54,11 @@ public class Animal extends Structure implements Salable {
         AnimalProduct animalProduct = new AnimalProduct(animalProductType);
         animalProduct.setProductQuality(ProductQuality.getQualityByDouble(quality));
         this.todayProduct = animalProduct;
+    }
+
+    public void changeFriendShip(int value) {
+        int oldValue = this.relationShipQuality;
+        this.setRelationShipQuality(Math.min(1000,Math.max(0,oldValue + value)));
     }
 
     private double generateQuality(){
