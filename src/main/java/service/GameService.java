@@ -161,7 +161,6 @@ public class GameService {
             return new Response("Weather not found!");
         }
         app.getCurrentGame().getVillage().setTomorrowWeather(weather);
-        App.getInstance().getCurrentGame().automaticWatering(weather);
         return new Response("Weather set to " + type + " successfully.", true);
     }
 
@@ -636,7 +635,7 @@ public class GameService {
                 currentPlayer.getTiles().get(0).getY() + currentDirection.getYTransmit());
         if (currentTile == null) {
             return new Response("out of bound");
-        } else if (currentTile.getIsFilled() && !isThereGreenHouseForHarvest(currentTile)) {
+        } else if (currentTile.getIsFilled()) {
             return new Response("this tile is not available for farming");
         } else if (!currentTile.getTileType().equals(TileType.PLOWED)) {
             return new Response("you should plow the tile first");
