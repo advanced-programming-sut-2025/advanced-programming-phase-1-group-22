@@ -32,7 +32,9 @@ import model.source.CropType;
 import model.source.MineralType;
 import model.source.MixedSeedsType;
 import model.source.SeedType;
+import model.structure.Stone;
 import model.structure.Structure;
+import model.structure.Trunk;
 import model.structure.farmInitialElements.Cottage;
 import model.structure.farmInitialElements.GreenHouse;
 import model.structure.farmInitialElements.Lake;
@@ -1245,25 +1247,47 @@ public class GameService {
         player.getInventory().deleteProductFromBackPack(product, player, 1);
         ((Structure) product).getTiles().add(tile);
         Farm currentFarm = getPlayerInWitchFarm(player);
+        if (currentFarm == null) return new Response("You can only place something in a farm");
         if (product instanceof Craft) {
             switch (((Craft) product).getCraftType()) {
                 case BOMB:
                 case CHERRY_BOMB:
                 case MEGA_BOMB: {
-                    for (Tile tile1 : ((Craft) product).getAffectedTiles()) {
-                        //TODO BURN;
+                    List<Tile> affectedTiles = ((Craft) product).getAffectedTiles();
+                    for (Tile tile1 : affectedTiles) {
+                        tile1.setIsPassable(true);
+                        tile1.setIsFilled(false);
                     }
+                    List<Structure>  farmStructures = new ArrayList<>(currentFarm.getStructures());
+                    for (Structure structure : farmStructures) {
+                        boolean flag = false;
+                        for (Tile structureTile : structure.getTiles()) {
+                            if (affectedTiles.contains(structureTile)) {
+                                flag = true;
+                                break;
+                            }
+                        }
+                        if (!flag) continue;
+                        if (structure instanceof Tree) currentFarm.getStructures().remove(structure);
+                        if (structure instanceof Crop) currentFarm.getStructures().remove(structure);
+                        if (structure instanceof Stone) currentFarm.getStructures().remove(structure);
+                        if (structure instanceof Mineral) currentFarm.getStructures().remove(structure);
+                        if (structure instanceof Seed) currentFarm.getStructures().remove(structure);
+                        if (structure instanceof MixedSeeds) currentFarm.getStructures().remove(structure);
+                        if (structure instanceof Trunk) currentFarm.getStructures().remove(structure);
+                        if (structure instanceof FarmBuilding) currentFarm.getStructures().remove(structure);
+                        if (structure instanceof Animal) currentFarm.getStructures().remove(structure);
+                        if (structure instanceof ShippingBin) currentFarm.getStructures().remove(structure);
+                    }
+                    return new Response("Bombing completed.");
                 }
-                break;
                 case GRASS_STARTER: {
                     ((Craft) product).getTiles().get(0).setTileType(TileType.GRASS);
                     return new Response(itemName + " is put on the ground.", true);
                 }
             }
         }
-        if (currentFarm != null) {
-            currentFarm.getStructures().add((Structure) product);
-        }
+        currentFarm.getStructures().add((Structure) product);
         setScareCrowAndSprinklerForAll();
         tile.setIsFilled(true); //TODO not always is filled;
         return new Response(itemName + " is put on the ground.", true);
@@ -1915,9 +1939,15 @@ public class GameService {
         if (!player.getInventory().isInventoryHaveCapacity(new Craft(recipe.getCraft(), null, null))) {
             return new Response("You don't have enough space in your backpack");
         }
+        if (player.getEnergy() < 2) {
+            player.faint();
+            nextTurn();
+            return new Response("Not enough energy; you fainted");
+        }
         player.removeEnergy(2);
         recipe.getCraft().removeIngredients(player);
         player.getInventory().addProductToBackPack(new Craft(recipe.getCraft(), null, null), 1);
+        if (player.getEnergyPerTurn() <= 0) nextTurn();
         return new Response(recipe.getCraft().getName() + " crafted successfully.");
     }
 
@@ -1969,9 +1999,15 @@ public class GameService {
         if (!player.getInventory().isInventoryHaveCapacity(recipe.getIngredients())) {
             return new Response("You don't have enough space in your backpack or fridge");
         }
+        if (player.getEnergy() < 3) {
+            player.faint();
+            nextTurn();
+            return new Response("Not enough energy; you fainted");
+        }
         player.removeEnergy(3);
         recipe.getIngredients().removeIngredients(fridge, player);
         player.getInventory().addProductToBackPack(new Food(recipe.getIngredients()), 1);
+        if (player.getEnergyPerTurn() <= 0) nextTurn();
         return new Response(recipe.getIngredients().getName() + " cooked successfully.");
     }
 

@@ -43,7 +43,7 @@ public class Craft extends Structure implements Salable {
     }
 
     public List<Tile> getAffectedTiles() {
-        return null;
+        return craftType.getTilesAffected(getTiles().getFirst());
     }
 
     @Override
