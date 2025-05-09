@@ -219,7 +219,7 @@ public class Player extends Actor {
 
     public Craft findCraft(Salable craftType) {
         for (Craft craft : crafts) {
-            if (craft.getCraftType().equals(craftType)) return craft;
+            if (craft.equals(craftType)) return craft;
         }
         return null;
     }
