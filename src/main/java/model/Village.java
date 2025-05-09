@@ -1,5 +1,9 @@
 package model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -26,23 +30,28 @@ import model.structure.farmInitialElements.Quarry;
 import model.structure.stores.Store;
 import model.structure.stores.StoreType;
 import model.tools.Tool;
+import save3.JsonPreparable;
+import save3.ObjectMapWrapper;
+import save3.ObjectWrapper;
 import utils.App;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 @Getter
 @Setter
 @ToString
-public class Village {
+public class Village implements JsonPreparable {
     private List<Tile> tiles;
+    @JsonManagedReference
     private List<Farm> farms = new ArrayList<>();
     private List<Structure> structures = new ArrayList<>();
     private Weather weather = Weather.SUNNY;
     private Weather tomorrowWeather = Weather.SUNNY;
-    private App app = App.getInstance();
-
+    @JsonProperty("structureWrappers")
+    private List<ObjectWrapper> structureWrappers;
     public Village() {
         fillStructures();
     }
@@ -122,8 +131,8 @@ public class Village {
         Fountain fountain = new Fountain();
         for (int i = 57; i < 63; i++) {
             for (int j = 77; j < 83; j++) {
-                fountain.getTiles().add(app.getCurrentGame().tiles[j][i]);
-                app.getCurrentGame().tiles[j][i].setIsFilled(true);
+                fountain.getTiles().add(App.getInstance().getCurrentGame().tiles[j][i]);
+                App.getInstance().getCurrentGame().tiles[j][i].setIsFilled(true);
             }
         }
         structures.add(fountain);
@@ -133,13 +142,13 @@ public class Village {
     private void setPath() {
         for (int i = 57; i < 63; i++) {
             for (int j = 0; j < 160; j++) {
-                Tile tile = app.getCurrentGame().tiles[j][i];
+                Tile tile = App.getInstance().getCurrentGame().tiles[j][i];
                 tile.setTileType(TileType.PATH);
             }
         }
         for (int i = 0; i < 120; i++) {
             for (int j = 77; j < 83; j++) {
-                Tile tile = app.getCurrentGame().tiles[j][i];
+                Tile tile = App.getInstance().getCurrentGame().tiles[j][i];
                 tile.setTileType(TileType.PATH);
             }
         }
@@ -193,8 +202,8 @@ public class Village {
     public void setTileOfStore(Store store, int xStart, int yStart, int xEnd, int yEnd) {
         for (int i = xStart; i < xEnd; i++) {
             for (int j = yStart; j < yEnd; j++) {
-                store.getTiles().add(app.getCurrentGame().tiles[i][j]);
-                app.getCurrentGame().tiles[i][j].setIsFilled(true);
+                store.getTiles().add(App.getInstance().getCurrentGame().tiles[i][j]);
+                App.getInstance().getCurrentGame().tiles[i][j].setIsFilled(true);
             }
         }
     }
@@ -202,9 +211,9 @@ public class Village {
     public void setTileOfNPCHouse(NPCHouse npcHouse, int xStart, int yStart, int xEnd, int yEnd) {
         for (int i = xStart; i < xEnd; i++) {
             for (int j = yStart; j < yEnd; j++) {
-                npcHouse.getTiles().add(app.getCurrentGame().tiles[i][j]);
-                app.getCurrentGame().tiles[i][j].setIsFilled(true);
-                app.getCurrentGame().tiles[i][j].setIsPassable(false);
+                npcHouse.getTiles().add(App.getInstance().getCurrentGame().tiles[i][j]);
+                App.getInstance().getCurrentGame().tiles[i][j].setIsFilled(true);
+                App.getInstance().getCurrentGame().tiles[i][j].setIsPassable(false);
             }
         }
     }
@@ -223,7 +232,7 @@ public class Village {
     }
 
     public void printMap(int x, int y, int size) {
-        Game game = app.getCurrentGame();
+        Game game = App.getInstance().getCurrentGame();
         Character[][] str = new Character[160][120];
         Tile[][] tiles = game.tiles;
         for (int i = 0; i < 160; i++) {
@@ -278,7 +287,7 @@ public class Village {
                 }
             }
         }
-        Player player = app.getCurrentGame().getCurrentPlayer();
+        Player player = App.getInstance().getCurrentGame().getCurrentPlayer();
         str[player.getTiles().get(0).getX()][player.getTiles().get(0).getY()] = '@';
 
         int xStart = x - size / 2;
@@ -342,4 +351,26 @@ public class Village {
             tile.setIsFilled(false);
         }
     }
+    @Override
+    public void prepareForSave(ObjectMapper mapper) {
+        structureWrappers = new ArrayList<>();
+        for (Structure s : structures) {
+            structureWrappers.add(new ObjectWrapper(s, mapper));
+        }
+        for (Farm farm : farms) {
+            farm.prepareForSave(mapper);
+        }
+    }
+
+    @Override
+    public void unpackAfterLoad(ObjectMapper mapper) {
+        structures = new ArrayList<>();
+        for (ObjectWrapper wrapper : structureWrappers) {
+            structures.add((Structure) wrapper.toObject(mapper));
+        }
+        for (Farm farm : farms) {
+            farm.unpackAfterLoad(mapper);
+        }
+    }
+
 }

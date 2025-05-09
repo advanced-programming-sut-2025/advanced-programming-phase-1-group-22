@@ -1,5 +1,9 @@
 package model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import lombok.Setter;
 import model.products.TreesAndFruitsAndSeeds.Tree;
@@ -11,6 +15,8 @@ import model.structure.farmInitialElements.Cottage;
 import model.structure.farmInitialElements.GreenHouse;
 import model.structure.farmInitialElements.HardCodeFarmElements;
 import model.structure.farmInitialElements.Lake;
+import save3.JsonPreparable;
+import save3.ObjectWrapper;
 import utils.App;
 
 import java.util.ArrayList;
@@ -20,21 +26,56 @@ import java.util.Random;
 
 @Getter
 @Setter
-public class Farm {
-
+public class Farm implements JsonPreparable {
+    @JsonManagedReference
     private List<Tile> tiles = new ArrayList<>();
+    @JsonManagedReference
     private List<Player> players = new ArrayList<>();
+    @JsonManagedReference
     private List<Structure> structures = new ArrayList<>();
     private Integer xCenter;
     private Integer yCenter;
+    @JsonManagedReference
     private FarmType farmType;
-    private App app = App.getInstance();
     private Integer farmXStart;
     private Integer farmYStart;
     private Integer farmXEnd;
     private Integer farmYEnd;
     private Integer farmIndex = 0;
+    @JsonManagedReference
     private Fridge fridge = new Fridge();
+
+
+    // برای ذخیره ساختارها
+    @JsonProperty("structureWrappers")
+    private List<ObjectWrapper> structureWrappers;
+
+    @Override
+    public void prepareForSave(ObjectMapper mapper) {
+        structureWrappers = new ArrayList<>();
+        for (Structure s : structures) {
+            structureWrappers.add(new ObjectWrapper(s, mapper));
+        }
+
+        if (fridge != null && fridge instanceof JsonPreparable preparableFridge) {
+            preparableFridge.prepareForSave(mapper);
+        }
+
+        // حذف شده: farmType نیاز به prepare/unpack نداره
+    }
+
+    @Override
+    public void unpackAfterLoad(ObjectMapper mapper) {
+        structures = new ArrayList<>();
+        for (ObjectWrapper wrapper : structureWrappers) {
+            structures.add((Structure) wrapper.toObject(mapper));
+        }
+
+        if (fridge != null && fridge instanceof JsonPreparable preparableFridge) {
+            preparableFridge.unpackAfterLoad(mapper);
+        }
+    }
+
 
     public Farm(Player player, FarmType farmType) {
         if (null != player) {
@@ -75,7 +116,7 @@ public class Farm {
 
     public void setFarmTiles() {
         for (int i = farmXStart; i < farmXEnd; i++) {
-            tiles.addAll(Arrays.asList(app.getCurrentGame().tiles[i]).subList(farmYStart, farmYEnd));
+            tiles.addAll(Arrays.asList(App.getInstance().getCurrentGame().tiles[i]).subList(farmYStart, farmYEnd));
         }
     }
 
@@ -89,7 +130,7 @@ public class Farm {
 
     public void transmission(HardCodeFarmElements farmElements) {
         for (Pair pair : farmElements.getTilePairList()) {
-            Tile tile = app.getCurrentGame().tiles[pair.getX() + farmXStart][pair.getY() + farmYStart];
+            Tile tile = App.getInstance().getCurrentGame().tiles[pair.getX() + farmXStart][pair.getY() + farmYStart];
             tile.setIsFilled(true);
             if (farmElements instanceof Lake) {
                 tile.setIsPassable(false);
@@ -100,16 +141,16 @@ public class Farm {
 
     public void setFence() {
         for (int i = farmXStart; i < farmXEnd; i++) {
-            app.getCurrentGame().getTiles()[i][farmYStart].setTileType(TileType.FENCE);
-            app.getCurrentGame().getTiles()[i][farmYStart].setIsFilled(true);
-            app.getCurrentGame().getTiles()[i][farmYEnd].setTileType(TileType.FENCE);
-            app.getCurrentGame().getTiles()[i][farmYEnd].setIsFilled(true);
+            App.getInstance().getCurrentGame().getTiles()[i][farmYStart].setTileType(TileType.FENCE);
+            App.getInstance().getCurrentGame().getTiles()[i][farmYStart].setIsFilled(true);
+            App.getInstance().getCurrentGame().getTiles()[i][farmYEnd].setTileType(TileType.FENCE);
+            App.getInstance().getCurrentGame().getTiles()[i][farmYEnd].setIsFilled(true);
         }
         for (int i = farmYStart; i < farmYEnd; i++) {
-            app.getCurrentGame().getTiles()[farmXStart][i].setTileType(TileType.FENCE);
-            app.getCurrentGame().getTiles()[farmXStart][i].setIsFilled(true);
-            app.getCurrentGame().getTiles()[farmXEnd][i].setTileType(TileType.FENCE);
-            app.getCurrentGame().getTiles()[farmXEnd][i].setIsFilled(true);
+            App.getInstance().getCurrentGame().getTiles()[farmXStart][i].setTileType(TileType.FENCE);
+            App.getInstance().getCurrentGame().getTiles()[farmXStart][i].setIsFilled(true);
+            App.getInstance().getCurrentGame().getTiles()[farmXEnd][i].setTileType(TileType.FENCE);
+            App.getInstance().getCurrentGame().getTiles()[farmXEnd][i].setIsFilled(true);
         }
     }
 
@@ -137,8 +178,8 @@ public class Farm {
                 yConst = farmYStart;
             }
         }
-        app.getCurrentGame().getTiles()[xRand][yConst].setTileType(TileType.DOOR);
-        app.getCurrentGame().getTiles()[xConst][yRand].setTileType(TileType.DOOR);
+        App.getInstance().getCurrentGame().getTiles()[xRand][yConst].setTileType(TileType.DOOR);
+        App.getInstance().getCurrentGame().getTiles()[xConst][yRand].setTileType(TileType.DOOR);
     }
 
     public void generateRandomStructures() {
@@ -202,7 +243,7 @@ public class Farm {
     }
 
     public void setStructurePlace(Structure structure, int length, int width, boolean isFilled, boolean isPassible) {
-        Tile[][] tiles1 = app.getCurrentGame().tiles;
+        Tile[][] tiles1 = App.getInstance().getCurrentGame().tiles;
         List<Tile> tiles2 = new ArrayList<>();
         boolean flag = true;
         Random random = new Random();
@@ -269,7 +310,7 @@ public class Farm {
     }
 
     private void setForagingPlace(Structure structure, int length, int width) {
-        Tile[][] tiles1 = app.getCurrentGame().tiles;
+        Tile[][] tiles1 = App.getInstance().getCurrentGame().tiles;
         List<Tile> tiles2 = new ArrayList<>();
         boolean flag = true;
         Random random = new Random();
