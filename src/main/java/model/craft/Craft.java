@@ -10,16 +10,20 @@ import model.products.TreesAndFruitsAndSeeds.MadeProduct;
 import model.products.TreesAndFruitsAndSeeds.MadeProductType;
 import model.structure.Structure;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Getter
 @Setter
 @ToString
-public class Craft extends Structure implements Salable {
+public class Craft extends Structure implements Salable, Serializable {
     private Integer id;
     private CraftType craftType;
     private MadeProduct madeProduct;
     private TimeAndDate ETA;
+
+    public Craft() {
+    }
 
     public Craft(CraftType craftType, MadeProduct madeProduct, TimeAndDate ETA) {
         this.craftType = craftType;

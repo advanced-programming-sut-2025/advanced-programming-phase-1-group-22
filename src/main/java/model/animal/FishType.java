@@ -6,9 +6,11 @@ import lombok.ToString;
 import model.enums.Season;
 import model.products.Product;
 
+import java.io.Serializable;
+
 @Getter
 @ToString
-public enum FishType implements Product {
+public enum FishType implements Product, Serializable {
 	SALMON("Salmon", 75, Season.FALL, false),
 	SARDINE("Sardine", 40, Season.FALL, false),
 	SHAD("Shad", 60, Season.FALL, false),
@@ -28,10 +30,13 @@ public enum FishType implements Product {
 	ANGLER("Angler", 900, Season.FALL, true),
 	CRIMSONFISH("Crimsonfish", 1500, Season.SUMMER, true);
 
-	private final String name;
-	private final Integer price;
-	private final Season season;
-	private final Boolean isLegendary;
+	private String name;
+	private Integer price;
+	private Season season;
+	private Boolean isLegendary;
+
+	FishType() {
+	}
 
 	FishType(String name, int price, Season season, Boolean isLegendary) {
 		this.name = name;

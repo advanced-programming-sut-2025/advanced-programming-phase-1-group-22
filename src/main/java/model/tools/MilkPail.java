@@ -10,10 +10,11 @@ import model.products.AnimalProduct;
 import model.structure.Structure;
 import utils.App;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Getter
-public class MilkPail implements Tool {
+public class MilkPail implements Tool, Serializable {
     private static MilkPail instance;
 
     private MilkPail() {

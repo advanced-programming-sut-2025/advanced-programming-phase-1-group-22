@@ -3,8 +3,11 @@ package model.source;
 import lombok.Getter;
 import lombok.Setter;
 import model.products.Product;
+
+import java.io.Serializable;
+
 @Getter
-public enum MineralType implements Product{
+public enum MineralType implements Product, Serializable {
     QUARTZ("quartz","A clear crystal commonly found in caves and mines.", 25),
     EARTH_CRYSTAL("earth crystal","A resinous substance found near the surface.", 50),
     FROZEN_TEAR("frozen tear","A crystal fabled to be the frozen tears of a yeti.", 75),
@@ -31,11 +34,14 @@ public enum MineralType implements Product{
     STONE("stone","",0),
     HARD_WOOD("hard wood","",0);
 
-    private final String name;
-    private final String description;
-    private final Integer price;
+    private String name;
+    private String description;
+    private Integer price;
 
-    MineralType(String name,String description, Integer price) {
+    MineralType() {
+    }
+
+    MineralType(String name, String description, Integer price) {
         this.name = name;
         this.description = description;
         this.price = price;

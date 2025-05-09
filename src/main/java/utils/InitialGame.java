@@ -4,15 +4,18 @@ import model.*;
 import model.relations.NPC;
 import model.relations.NPCType;
 import model.relations.Player;
+import save.GameSaver;
 import variables.Session;
 import view.Menu;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class InitialGame {
     public void initial(ArrayList<User> users) {
-        Game game = new Game();
+//   Game game = new Game();
         App app = App.getInstance();
+        Game game = GameSaver.load("saved_game");
         app.setCurrentGame(game);
         game.start();
         Village village = new Village();

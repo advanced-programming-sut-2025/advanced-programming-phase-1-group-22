@@ -1,9 +1,13 @@
 package view;
 
+import model.Game;
 import model.records.Response;
+import save.GameSaver;
+import utils.App;
 import variables.Session;
 import view.mainMenu.ExitMenu;
 
+import java.io.IOException;
 import java.util.Scanner;
 
 public class ViewRender {
@@ -18,11 +22,13 @@ public class ViewRender {
         System.out.println(response.message());
     }
 
-    public void run() {
+    public void run() throws IOException {
 
         Menu menu;
         while ((menu = Session.getCurrentMenu()) != Menu.EXIT) {
             menu.checkCommand(input);
         }
+//        GameSaver.save(App.getInstance().getCurrentGame(), "saved_game");
+
     }
 }

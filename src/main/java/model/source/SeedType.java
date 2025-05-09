@@ -4,8 +4,10 @@ import lombok.Getter;
 import model.enums.Season;
 import model.exception.InvalidInputException;
 
+import java.io.Serializable;
+
 @Getter
-public enum SeedType implements Source {
+public enum SeedType implements Source, Serializable {
     JAZZ_SEEDS("Jazz Seeds", Season.SPRING, true),
     CARROT_SEEDS("Carrot Seeds", Season.SPRING, true),
     CAULIFLOWER_SEEDS("Cauliflower Seeds", Season.SPRING, true),
@@ -63,9 +65,12 @@ public enum SeedType implements Source {
     MUSHROOM_TREE_SEEDS("Mushroom Tree Seeds", Season.SPECIAL, false),
     MYSTIC_TREE_SEEDS("Mystic Tree Seeds", Season.SPECIAL, false);
 
-    private final String name;
-    private final Season season;
-    private final boolean isForaging;
+    private String name;
+    private Season season;
+    private boolean isForaging;
+
+    SeedType() {
+    }
 
     SeedType(String name, Season season, boolean isForaging) {
         this.name = name;

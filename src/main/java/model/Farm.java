@@ -1,5 +1,6 @@
 package model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import model.products.TreesAndFruitsAndSeeds.Tree;
@@ -13,6 +14,7 @@ import model.structure.farmInitialElements.HardCodeFarmElements;
 import model.structure.farmInitialElements.Lake;
 import utils.App;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -20,7 +22,7 @@ import java.util.Random;
 
 @Getter
 @Setter
-public class Farm {
+public class Farm implements Serializable {
 
     private List<Tile> tiles = new ArrayList<>();
     private List<Player> players = new ArrayList<>();
@@ -28,13 +30,18 @@ public class Farm {
     private Integer xCenter;
     private Integer yCenter;
     private FarmType farmType;
+    @JsonIgnore
     private App app = App.getInstance();
+
     private Integer farmXStart;
     private Integer farmYStart;
     private Integer farmXEnd;
     private Integer farmYEnd;
     private Integer farmIndex = 0;
     private Fridge fridge = new Fridge();
+
+    public Farm() {
+    }
 
     public Farm(Player player, FarmType farmType) {
         if (null != player) {

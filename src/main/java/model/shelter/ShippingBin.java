@@ -6,6 +6,7 @@ import lombok.ToString;
 import model.Salable;
 import model.structure.farmInitialElements.HardCodeFarmElements;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,7 +15,7 @@ import java.util.Map;
 @Getter
 @Setter
 @ToString
-public class ShippingBin extends HardCodeFarmElements {
+public class ShippingBin extends HardCodeFarmElements implements Serializable {
     private final FarmBuildingType farmBuildingType = FarmBuildingType.SHIPPING_BIN;
     private Map<Salable,Integer> salable = new HashMap<>();
 

@@ -16,12 +16,13 @@ import model.source.MineralType;
 import model.source.SeedType;
 import utils.App;
 
+import java.io.Serializable;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Getter
 @ToString
-public enum MadeProductType implements Product {
+public enum MadeProductType implements Product, Serializable {
 
     HONEY("honey", () -> CraftType.BEE_HOUSE, "It's a sweet syrup produced by bees.", 75, new TimeAndDate(4, 0), () -> Map.of(), 350, true),
     CHEESE("cheese", () -> CraftType.CHEESE_PRESS, "It's your basic cheese.", 100, new TimeAndDate(0, 3), () -> Map.of(AnimalProductType.MILK, 1, AnimalProductType.BIG_MILK, 1), 230, true) {
@@ -230,14 +231,16 @@ public enum MadeProductType implements Product {
     COPPER_BAR("copper bar", ()->CraftType.FURNACE, "Turns ore and coal into metal bars.", 0, new TimeAndDate(0, 4), () -> Map.of(MineralType.COPPER_ORE, 5), 750, false, true),
     GOLD_BAR("gold bar",()-> CraftType.FURNACE, "Turns ore and coal into metal bars.", 0, new TimeAndDate(0, 4), () -> Map.of(MineralType.GOLD_ORE, 5), 4000, false, true),
     IRIDIUM_BAR("iridium bar",()-> CraftType.FURNACE, "Turns ore and coal into metal bars.", 0, new TimeAndDate(0, 4), () -> Map.of(MineralType.IRIDIUM_ORE, 5), 10000, false, true); //TODO SellPrice not found
-    private final String name;
+    private String name;
     private String description;
     private int energy;
     private TimeAndDate processingTime;
-    private final Integer sellPrice;
+    private Integer sellPrice;
     private boolean isEdible;
     private boolean isCoalNeeded;
 
+    MadeProductType() {
+    }
 
     @FunctionalInterface
     private interface IngredientsSupplier {
@@ -249,8 +252,8 @@ public enum MadeProductType implements Product {
         CraftType get();
     }
 
-    private final IngredientsSupplier ingredientsSupplier;
-    private final CraftTypeSupplier craftTypeSupplier;
+    private IngredientsSupplier ingredientsSupplier;
+    private CraftTypeSupplier craftTypeSupplier;
     private transient final AtomicReference<Map<Salable, Integer>> ingredientsCache = new AtomicReference<>();
     private transient final AtomicReference<CraftType> craftType = new AtomicReference<>();
 

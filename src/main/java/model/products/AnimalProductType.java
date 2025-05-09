@@ -1,6 +1,8 @@
 package model.products;
 
-public enum AnimalProductType implements Product {
+import java.io.Serializable;
+
+public enum AnimalProductType implements Product, Serializable {
     HEN_EGG("hen egg",50),
     HEN_BIG_EGG("big hen egg",95),
     DUCK_EGG("duck egg",95),
@@ -15,10 +17,13 @@ public enum AnimalProductType implements Product {
     SHEEP_WOOL("sheep wool",340),
     TRUFFLE("truffle",625);
 
-    private final String name;
-    private final Integer price;
+    private String name;
+    private Integer price;
 
-    AnimalProductType(String name,Integer price) {
+    AnimalProductType() {
+    }
+
+    AnimalProductType(String name, Integer price) {
         this.name = name;
         this.price = price;
     }

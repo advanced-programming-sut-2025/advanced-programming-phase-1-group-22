@@ -10,13 +10,17 @@ import model.structure.farmInitialElements.GreenHouse;
 import model.structure.farmInitialElements.Lake;
 import utils.App;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Getter
 @Setter
-public class WateringCan implements Tool{
+public class WateringCan implements Tool, Serializable {
 	private WateringCanType wateringCanType;
 	private Integer remain;
+
+	public WateringCan() {
+	}
 
 	public WateringCan(WateringCanType wateringCanType) {
 		this.wateringCanType = wateringCanType;
