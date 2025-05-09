@@ -1,5 +1,8 @@
 package model.relations;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -18,6 +21,9 @@ import model.source.*;
 import model.structure.stores.PierreShop;
 import model.structure.stores.StoreType;
 import model.tools.*;
+import save3.JsonPreparable;
+import save3.ObjectMapWrapper;
+import save3.ObjectWrapper;
 import view.Menu;
 
 import java.util.ArrayList;
@@ -31,7 +37,7 @@ import static model.source.MineralType.WOOD;
 @Getter
 @Setter
 @ToString
-public class Player extends Actor {
+public class Player extends Actor implements JsonPreparable {
     private Integer id;
     private User user;
     private Integer energy;
@@ -56,6 +62,18 @@ public class Player extends Actor {
     private Map<CraftingRecipe, Boolean> craftingRecipes = new HashMap<>();
     private StoreType storeType;
     private Menu currentMenu = Menu.COTTAGE;
+    @JsonProperty("abilitiesMap")
+    private ObjectMapWrapper abilitiesWrapper;
+
+    @JsonProperty("cookingRecipesMap")
+    private ObjectMapWrapper cookingRecipesWrapper;
+
+    @JsonProperty("craftingRecipesMap")
+    private ObjectMapWrapper craftingRecipesWrapper;
+
+    @JsonProperty("currentCarryingWrapper")
+    private ObjectWrapper currentCarryingWrapper;
+
 
     public Player(User user) {
         this.user = user;
@@ -146,10 +164,11 @@ public class Player extends Actor {
     private void addBasicTools() {
         this.getAccount().setGolds(10);
         inventory.getProducts().put(new Flower(), 1);
+        inventory.getProducts().put(WOOD, 100);
         inventory.getProducts().put(new Sundry(SundryType.WEDDING_RING), 1);
         inventory.getProducts().put(Hoe.NORMAL, 1);
         inventory.getProducts().put(Pickaxe.NORMAL, 1);
-        inventory.getProducts().put(Axe.NORMAL, 1);
+        inventory.getProducts().put(Axe.NORMAL_AXE, 1);
         inventory.getProducts().put(new WateringCan(WateringCanType.NORMAL), 1);
         inventory.getProducts().put(TrashCan.NORMAL, 1);
         inventory.getProducts().put(new Scythe(), 1);
@@ -223,4 +242,43 @@ public class Player extends Actor {
         }
         return null;
     }
-}
+        @Override
+        public void prepareForSave(ObjectMapper mapper) {
+            this.abilitiesWrapper = new ObjectMapWrapper((Map<Object, Integer>) (Map<?, ?>) abilities, mapper);
+
+            // Boolean map رو هم با همین wrapper ذخیره می‌کنیم
+            Map<Object, Integer> cookingAsInt = new HashMap<>();
+            cookingRecipes.forEach((k, v) -> cookingAsInt.put(k, v ? 1 : 0));
+            this.cookingRecipesWrapper = new ObjectMapWrapper(cookingAsInt, mapper);
+
+            Map<Object, Integer> craftingAsInt = new HashMap<>();
+            craftingRecipes.forEach((k, v) -> craftingAsInt.put(k, v ? 1 : 0));
+            this.craftingRecipesWrapper = new ObjectMapWrapper(craftingAsInt, mapper);
+
+            if (currentCarrying != null)
+                this.currentCarryingWrapper = new ObjectWrapper(currentCarrying, mapper);
+
+            // آماده‌سازی inventory هم اگه JsonPreparable هست
+            if (inventory instanceof JsonPreparable prep)
+                prep.prepareForSave(mapper);
+        }
+
+        @Override
+        public void unpackAfterLoad(ObjectMapper mapper) {
+            this.abilities = (Map<Ability, Integer>) (Map<?, ?>) abilitiesWrapper.toMap(mapper);
+
+            Map<Object, Integer> cookMap = cookingRecipesWrapper.toMap(mapper);
+            this.cookingRecipes = new HashMap<>();
+            cookMap.forEach((k, v) -> cookingRecipes.put((CookingRecipe) k, v == 1));
+
+            Map<Object, Integer> craftMap = craftingRecipesWrapper.toMap(mapper);
+            this.craftingRecipes = new HashMap<>();
+            craftMap.forEach((k, v) -> craftingRecipes.put((CraftingRecipe) k, v == 1));
+
+            if (currentCarryingWrapper != null)
+                this.currentCarrying = (Salable) currentCarryingWrapper.toObject(mapper);
+
+            if (inventory instanceof JsonPreparable prep)
+                prep.unpackAfterLoad(mapper);
+        }
+    }

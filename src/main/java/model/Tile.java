@@ -1,5 +1,6 @@
 package model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -15,7 +16,6 @@ public class Tile {
     private Boolean isFilled = false;
     private Boolean isPassable = true;
     private TileType tileType = TileType.FLAT;
-    private App app = App.getInstance();
 
     public Boolean isPassable() {
         if (!isPassable) return false;
@@ -29,7 +29,7 @@ public class Tile {
     }
 
     private boolean checkDoor() {
-        Game currentGame = app.getCurrentGame();
+        Game currentGame = App.getInstance().getCurrentGame();
         for (Farm farm : currentGame.getVillage().getFarms()) {
             if (farm.isPairInFarm(new Pair(x, y))) {
                 return currentGame.getPlayers().contains(currentGame.getCurrentPlayer());
