@@ -134,9 +134,9 @@ public class TimeAndDate {
         int day = this.day;
         int year = this.year;
         Season season = this.season;
-        if (hour >= 21) {
+        if (hour >= 24) {
             day++;
-            hour = 9;
+            hour = 0;
         }
         if (day >= 29) {
             day = 1;

@@ -32,7 +32,7 @@ public class Tile {
         Game currentGame = App.getInstance().getCurrentGame();
         for (Farm farm : currentGame.getVillage().getFarms()) {
             if (farm.isPairInFarm(new Pair(x, y))) {
-                return currentGame.getPlayers().contains(currentGame.getCurrentPlayer());
+                return farm.getPlayers().contains(currentGame.getCurrentPlayer());
             }
 
         }
