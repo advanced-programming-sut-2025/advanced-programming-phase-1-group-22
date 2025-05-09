@@ -9,11 +9,16 @@ import model.products.HarvestAbleProduct;
 import model.products.Harvestable;
 import model.structure.Structure;
 
+import java.io.Serializable;
+
 @Getter
 @Setter
 @ToString
-public class Fruit implements Salable{
+public class Fruit implements Salable, Serializable {
     FruitType fruitType;
+
+    public Fruit() {
+    }
 
     public Fruit(FruitType fruitType) {
         this.fruitType = fruitType;

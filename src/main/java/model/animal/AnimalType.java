@@ -7,11 +7,12 @@ import model.products.Product;
 import model.structure.Structure;
 import model.Salable;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Getter
 @ToString
-public enum AnimalType implements Product {
+public enum AnimalType implements Product, Serializable {
     COW("cow",1_500, List.of(AnimalProductType.BIG_MILK, AnimalProductType.MILK), 1, true),
     DINOSAUR("dinosaur",1_400, List.of(AnimalProductType.DINOSAUR_EGG), 7, false),
     DUCK("duck",1_200, List.of(AnimalProductType.DUCK_EGG, AnimalProductType.DUCK_FEATHER), 2, false),
@@ -21,14 +22,17 @@ public enum AnimalType implements Product {
     RABBIT("rabbit",8_000, List.of(AnimalProductType.RABBIT_LEG, AnimalProductType.RABBIT_WOOL), 4, false),
     SHEEP("sheep",8_000, List.of(AnimalProductType.SHEEP_WOOL), 3, true);
 
-    private final String name;
-    private final Integer productPeriod;
-    private final Integer price;
-    private final List<AnimalProductType> productList;
+    private String name;
+    private Integer productPeriod;
+    private Integer price;
+    private List<AnimalProductType> productList;
     private final Hay food = new Hay();
-    private final Boolean isBarnAnimal;
+    private Boolean isBarnAnimal;
 
-    AnimalType(String name,int price, List<AnimalProductType> productList, int productPeriod, boolean isBarnAnimal) {
+    AnimalType() {
+    }
+
+    AnimalType(String name, int price, List<AnimalProductType> productList, int productPeriod, boolean isBarnAnimal) {
         this.name = name;
         this.price = price;
         this.productList = productList;

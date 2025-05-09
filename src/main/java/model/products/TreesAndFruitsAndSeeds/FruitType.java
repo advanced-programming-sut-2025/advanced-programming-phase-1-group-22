@@ -6,9 +6,11 @@ import model.enums.Season;
 import model.products.Harvestable;
 import model.products.Product;
 
+import java.io.Serializable;
+
 @Getter
 @ToString
-public enum FruitType implements Harvestable {
+public enum FruitType implements Harvestable , Serializable {
 	APRICOT("Apricot", 59, true, 38, Season.SPRING, TreeType.APRICOT_TREE),
 	CHERRY("Cherry", 80, true, 38, Season.SPRING, TreeType.CHERRY_TREE),
 	BANANA("Banana", 150, true, 75, Season.SUMMER, TreeType.BANANA_TREE),
@@ -24,12 +26,15 @@ public enum FruitType implements Harvestable {
 	COMMON_MUSHROOM("Common Mushroom", 40, true, 38, Season.SPECIAL, TreeType.MUSHROOM_TREE),
 	MYSTIC_SYRUP("Mystic Syrup", 1000, true, 500, Season.SPECIAL, TreeType.MYSTIC_TREE),
 	;
-	private final TreeType treeType;
-	private final String name;
-	private final Integer baseSellPrice;
-	private final Boolean isEdible;
-	private final Integer fruitEnergy;
-	private final Season season;
+	private TreeType treeType;
+	private String name;
+	private Integer baseSellPrice;
+	private Boolean isEdible;
+	private Integer fruitEnergy;
+	private Season season;
+
+	FruitType() {
+	}
 
 	FruitType(String name, Integer baseSellPrice, Boolean isEdible, Integer fruitEnergy, Season season, TreeType treeType) {
 		this.name = name;

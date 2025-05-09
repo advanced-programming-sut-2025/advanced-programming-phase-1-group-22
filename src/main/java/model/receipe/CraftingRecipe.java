@@ -4,10 +4,11 @@ import lombok.Getter;
 import model.craft.CraftType;
 import utils.App;
 
+import java.io.Serializable;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Getter
-public enum CraftingRecipe implements Recipe {
+public enum CraftingRecipe implements Recipe, Serializable {
     CHERRY_BOMB_RECIPE("Cherry Bomb recipe", "A recipe to make Cherry Bomb", 50, () -> CraftType.CHERRY_BOMB),
     BOMB_RECIPE("Bomb recipe", "A recipe to make Bomb", 50, () -> CraftType.BOMB),
     MEGA_BOMB_RECIPE("Mega Bomb recipe", "A recipe to make Mega Bomb", 50, () -> CraftType.MEGA_BOMB),
@@ -35,13 +36,16 @@ public enum CraftingRecipe implements Recipe {
     private String description;
     private Integer price;
 
+    CraftingRecipe() {
+    }
+
     @FunctionalInterface
     private interface CraftTypeSupplier {
         CraftType get();
     }
 
     private transient final AtomicReference<CraftType> craftType = new AtomicReference<>();
-    private final CraftingRecipe.CraftTypeSupplier craftTypeSupplier;
+    private CraftingRecipe.CraftTypeSupplier craftTypeSupplier;
 
     public CraftType getCraft() {
         return craftType.updateAndGet(cache ->
