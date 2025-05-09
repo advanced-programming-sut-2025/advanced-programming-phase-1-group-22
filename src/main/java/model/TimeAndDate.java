@@ -1,5 +1,6 @@
 package model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
 import lombok.Setter;
 import model.enums.Season;
@@ -12,6 +13,7 @@ import utils.App;
 @Getter
 @Setter
 public class TimeAndDate {
+    @JsonBackReference
     private Game currentGame = App.getInstance().getCurrentGame();
     private Integer hour = 9;
     private Integer minute = 0;
@@ -111,7 +113,7 @@ public class TimeAndDate {
         res += "\nTime: " + hour + ":" + minute + "'";
         return res;
     }
-
+    @JsonBackReference
     public TimeAndDate getNextMorning() {
         int day = this.day + 1;
         int year = this.year;

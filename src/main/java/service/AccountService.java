@@ -12,11 +12,14 @@ import utils.GenerateQuestion;
 import variables.Session;
 import view.Menu;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.Optional;
 import java.util.Random;
 
 import static command.UserCommands.EMAIL;
 import static command.UserCommands.USERNAME;
+import static utils.PasswordHasher.hashPassword;
+import static utils.PasswordHasher.verifyPassword;
 import static view.ViewRender.getResponse;
 import static view.ViewRender.showResponse;
 
@@ -40,8 +43,12 @@ public class AccountService {
         if (user.isEmpty()) {
             return new Response("User not found");
         }
-        if (!user.get().getPassword().equals(password)) {
-            return new Response("Wrong password");
+        try {
+            if (!user.get().getPassword().equals(password) && !verifyPassword(password, user.get().getPassword())) {
+                return new Response("Wrong password");
+            }
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
         }
         Session.setCurrentUser(user.get());
         response = new Response("Logged in successfully");
@@ -87,6 +94,15 @@ public class AccountService {
         }
         if (!UserCommands.EMAIL.matches(email)) {
             return new Response("invalid email");
+        }
+        String hashedPassword = null;
+        try {
+            hashedPassword = hashPassword(password);
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+        if (hashedPassword != null) {
+            password = hashedPassword;
         }
         Optional<User> user = userRepository.save(new User(username, password, email, nickName, Gender.valueOf(gender)));
 

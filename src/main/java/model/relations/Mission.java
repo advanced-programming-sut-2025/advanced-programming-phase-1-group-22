@@ -1,12 +1,17 @@
 package model.relations;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import lombok.ToString;
 import model.Actor;
 import model.Salable;
 import model.enums.Season;
+import save3.ObjectMapWrapper;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Supplier;
@@ -114,5 +119,18 @@ public class Mission {
             // Transfer items from doer to requester (if needed)
             // Give rewards to doer
         }
+    }
+    @JsonIgnore
+    private Map<Salable, Integer> reward = new HashMap<>();
+
+    @JsonProperty("reward")
+    private ObjectMapWrapper rewardWrapper;
+
+    public void prepareForSave(ObjectMapper mapper) {
+        this.rewardWrapper = new ObjectMapWrapper((Map<Object, Integer>)(Map<?, ?>) reward, mapper);
+    }
+
+    public void unpackAfterLoad(ObjectMapper mapper) {
+        this.reward = (Map<Salable, Integer>)(Map<?, ?>) rewardWrapper.toMap(mapper);
     }
 }
