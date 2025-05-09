@@ -25,6 +25,7 @@ import model.tools.*;
 import save3.JsonPreparable;
 import save3.ObjectMapWrapper;
 import save3.ObjectWrapper;
+import service.GameService;
 import utils.App;
 import variables.Session;
 import view.Menu;
@@ -121,6 +122,14 @@ public class Player extends Actor implements JsonPreparable {
 		} else {
 			energyPerTurn += currentEnergy;
 			energy = Math.min(Math.max(0, energy + currentEnergy), maxEnergy);
+		}
+		if (energy <= 0){
+			faint();
+			GameService.getInstance().nextTurn();
+			return;
+		}
+		if (energyPerTurn <= 0){
+			GameService.getInstance().nextTurn();
 		}
 	}
 
