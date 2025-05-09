@@ -6,7 +6,6 @@ import model.Actor;
 import model.TimeAndDate;
 import model.enums.Season;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,7 +13,7 @@ import java.util.Map;
 
 @Getter
 @Setter
-public class Friendship implements Serializable {
+public class Friendship {
     private Integer id;
     private Actor firstPlayer;
     private Actor secondPlayer;
@@ -24,9 +23,6 @@ public class Friendship implements Serializable {
     private Map<String, Actor> dialogs;
     private TimeAndDate lastSeen = new TimeAndDate(1, 9, Season.SPRING, 0);
     private TimeAndDate timeFromGettingFirstLevel = new TimeAndDate(1, 9, Season.SPRING, 0);
-
-    public Friendship() {
-    }
 
     public Friendship(Integer id, Actor firstPlayer, Actor secondPlayer) {
         this.id = id;

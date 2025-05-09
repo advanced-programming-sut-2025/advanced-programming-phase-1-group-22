@@ -5,15 +5,10 @@ import lombok.Setter;
 import model.Salable;
 import model.structure.Structure;
 
-import java.io.Serializable;
-
 @Getter
 @Setter
-public class MixedSeeds extends Structure implements Salable, Serializable {
+public class MixedSeeds extends Structure implements Salable {
     private MixedSeedsType mixedSeedsType;
-
-    public MixedSeeds() {
-    }
 
     public MixedSeeds(MixedSeedsType mixedSeedsType) {
         this.mixedSeedsType = mixedSeedsType;

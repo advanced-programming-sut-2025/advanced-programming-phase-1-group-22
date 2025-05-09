@@ -1,6 +1,5 @@
 package model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -29,7 +28,6 @@ import model.structure.stores.StoreType;
 import model.tools.Tool;
 import utils.App;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -37,13 +35,12 @@ import java.util.Random;
 @Getter
 @Setter
 @ToString
-public class Village implements Serializable {
+public class Village {
     private List<Tile> tiles;
     private List<Farm> farms = new ArrayList<>();
     private List<Structure> structures = new ArrayList<>();
     private Weather weather = Weather.SUNNY;
     private Weather tomorrowWeather = Weather.SUNNY;
-    @JsonIgnore
     private App app = App.getInstance();
 
     public Village() {

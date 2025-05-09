@@ -16,14 +16,13 @@ import model.structure.stores.StoreType;
 import model.tools.BackPack;
 import utils.App;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 @Getter
 @ToString
-public enum CraftType implements Product, Serializable {
+public enum CraftType implements Product {
     CHERRY_BOMB("cherry_bomb", "هرچیز در شعاع ۳ تایلی را نابود میکند", () -> Map.of(MineralType.COPPER_ORE, 4, MineralType.COAL, 1), 50, Map.of(Ability.MINING, 1)) {
         public List<Tile> getAffectedTiles(Tile origin) {
             Pair current = new Pair(origin.getX(), origin.getY());
@@ -100,16 +99,13 @@ public enum CraftType implements Product, Serializable {
     }
 
     private transient volatile Map<Salable, Integer> resolvedIngredients;
-    private CraftType.IngredientsSupplier ingredientsSupplier;
+    private final CraftType.IngredientsSupplier ingredientsSupplier;
 
     public Map<Salable, Integer> getIngredients() {
         if (resolvedIngredients == null) {
             resolvedIngredients = ingredientsSupplier.get();
         }
         return resolvedIngredients;
-    }
-
-    CraftType() {
     }
 
     CraftType(String name, String description, IngredientsSupplier ingredientsSupplier, Integer sellPrice, Map<Ability, Integer> abilities) {
@@ -128,9 +124,9 @@ public enum CraftType implements Product, Serializable {
         this.storeType = storeType;
     }
 
-    private String name;
-    private String description;
-    private Integer sellPrice;
+    private final String name;
+    private final String description;
+    private final Integer sellPrice;
     private Map<Ability, Integer> abilities;
     private StoreType storeType;
 

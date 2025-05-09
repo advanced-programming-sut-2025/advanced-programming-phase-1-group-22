@@ -13,25 +13,21 @@ import model.structure.Trunk;
 import model.structure.TrunkType;
 import utils.App;
 
-import java.io.Serializable;
 import java.util.List;
 
 @Getter
-public enum Axe implements Tool, Serializable {
-    NORMAL_AXE("normal axe",0, 5),
+public enum Axe implements Tool{
+    NORMAL("normal axe",0, 5),
     COPPER("copper axe",1, 4),
     IRON("iron axe",2, 3),
     GOLD("gold axe",3, 2),
     IRIDIUM("iridium axe",4, 1);
 
-    private String name;
-    private int level;
-    private int energyCost;
+    private final String name;
+    private final int level;
+    private final int energyCost;
 
-    Axe() {
-    }
-
-    Axe(String name, int level1, int energyUse1) {
+    Axe(String name,int level1, int energyUse1) {
         this.name = name;
         this.level = level1;
         this.energyCost = energyUse1;

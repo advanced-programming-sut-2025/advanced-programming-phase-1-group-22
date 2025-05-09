@@ -5,18 +5,13 @@ import lombok.Setter;
 import model.Salable;
 import model.structure.Structure;
 
-import java.io.Serializable;
-
 @Getter
 @Setter
-public class Mineral extends Structure implements Salable , Serializable {
+public class Mineral extends Structure implements Salable {
     private MineralType foragingMineralType;
 
     public Mineral(MineralType foragingMineralType) {
         this.foragingMineralType = foragingMineralType;
-    }
-
-    public Mineral() {
     }
 
     @Override

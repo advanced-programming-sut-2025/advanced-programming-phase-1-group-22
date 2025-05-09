@@ -7,24 +7,19 @@ import model.TileType;
 import model.abilitiy.Ability;
 import utils.App;
 
-import java.io.Serializable;
-
 @Getter
-public enum Hoe implements Tool, Serializable {
+public enum Hoe implements Tool {
     NORMAL("normal hoe",0, 5),
     COPPER("copper hoe",1, 4),
     IRON("iron hoe",2, 3),
     GOLD("gold hoe",3, 2),
     IRIDIUM("iridium hoe",4, 1);
 
-    private String name;
-    private int level;
-    private int energyCost;
+    private final String name;
+    private final int level;
+    private final int energyCost;
 
-    Hoe() {
-    }
-
-    Hoe(String name, int level1, int energyUse1) {
+    Hoe(String name,int level1, int energyUse1) {
         this.name = name;
         this.level = level1;
         this.energyCost = energyUse1;

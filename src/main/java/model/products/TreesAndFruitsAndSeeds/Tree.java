@@ -8,14 +8,13 @@ import model.gameSundry.SundryType;
 import model.products.HarvestAbleProduct;
 import utils.App;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 @Setter
 @ToString
-public class Tree extends HarvestAbleProduct implements Serializable {
+public class Tree extends HarvestAbleProduct {
     private TreeType treeType;
     private TimeAndDate startPlanting;
     private TimeAndDate lastHarvest;
@@ -30,9 +29,6 @@ public class Tree extends HarvestAbleProduct implements Serializable {
     private List<SundryType> fertilizes = new ArrayList<>();
     private Integer numberOfWithoutWaterDays = 0;
     private Integer numberOfStages = 0;
-
-    public Tree() {
-    }
 
     public Tree(TreeType treeType) {
         this.treeType = treeType;
@@ -135,17 +131,11 @@ public class Tree extends HarvestAbleProduct implements Serializable {
 
     @Override
     public int getSellPrice() {
-        if (treeType.getFruit() == null){
-            return 0;
-        }
         return treeType.getFruit().getSellPrice();
     }
 
     @Override
     public Integer getContainingEnergy() {
-        if (treeType.getFruit() == null){
-            return 0;
-        }
         return treeType.getFruit().getFruitEnergy();
     }
 
