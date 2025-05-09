@@ -94,7 +94,7 @@ public enum BlackSmithUpgrade implements Shop {
     public static Response purchase(String name, Integer count) {
         BlackSmithUpgrade salable = null;
         for (BlackSmithUpgrade value : BlackSmithUpgrade.values()) {
-            if (value.getTool().getName().equals(name)) {
+            if (value.getTool().getName().equalsIgnoreCase(name)) {
                 salable = value;
             }
         }

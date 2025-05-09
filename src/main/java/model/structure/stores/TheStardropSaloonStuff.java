@@ -84,8 +84,8 @@ public enum TheStardropSaloonStuff implements Shop {
     public static Response purchase(String name, Integer count) {
         TheStardropSaloonStuff salable = null;
         for (TheStardropSaloonStuff value : TheStardropSaloonStuff.values()) {
-            if (value.getProduct() instanceof Recipe) continue;
-            if (value.getProduct().getName().equals(name)) {
+            if (value.getSalable() instanceof Recipe) continue;
+            if (value.getSalable().getName().equalsIgnoreCase(name)) {
                 salable = value;
             }
         }
@@ -94,7 +94,7 @@ public enum TheStardropSaloonStuff implements Shop {
                 return new Response("Not enough in stock");
             }
             Player player = App.getInstance().getCurrentGame().getCurrentPlayer();
-            if (!player.getInventory().isInventoryHaveCapacity(salable.getProduct())) {
+            if (!player.getInventory().isInventoryHaveCapacity(salable.getSalable())) {
                 return new Response("Not enough space in your backpack.");
             }
             if (player.getAccount().getGolds() < salable.getPrice()) {
@@ -103,17 +103,17 @@ public enum TheStardropSaloonStuff implements Shop {
             player.getAccount().removeGolds(salable.getPrice());
             salable.dailySold += count;
             Salable item = null;
-            if (salable.getProduct() instanceof MadeProductType)
+            if (salable.getSalable() instanceof MadeProductType)
                 item = new MadeProduct((MadeProductType) salable.product);
-            if (salable.getProduct() instanceof FoodType) item = new Food((FoodType) salable.product);
+            if (salable.getSalable() instanceof FoodType) item = new Food((FoodType) salable.product);
             if (item == null) throw new InvalidInputException("Item not found in Star drop Saloon");
 
             player.getInventory().addProductToBackPack(item, count);
             return new Response("Bought successfully", true);
         }
         for (TheStardropSaloonStuff value : TheStardropSaloonStuff.values()) {
-            if (!(value.getProduct() instanceof Recipe)) continue;
-            if (value.getProduct().getName().equals(name)) {
+            if (!(value.getSalable() instanceof Recipe)) continue;
+            if (value.getSalable().getName().equals(name)) {
                 salable = value;
             }
         }

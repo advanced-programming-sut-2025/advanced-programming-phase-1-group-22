@@ -311,7 +311,8 @@ public class GameService {
     }
 
     public Response showPlayerInventory() {
-        return new Response(getCurrentPlayer().getInventory().showInventory(), true);
+        return new Response("Account: " + getCurrentPlayer().getAccount().getGolds() + "\n\n" +
+                getCurrentPlayer().getInventory().showInventory(), true);
     }
 
     public Response removeFromPlayerInventory(String itemName, boolean haveItemNumber, int... itemNumbers) {
@@ -1943,8 +1944,8 @@ public class GameService {
 
     private Response isStoreOpen() {
         StoreType storeType = app.getCurrentGame().getCurrentPlayer().getStoreType();
-        if (new TimeAndDate(0, storeType.getOpenDoorTime()).compareDailyTime(app.getCurrentGame().getTimeAndDate()) > 0 &&
-                new TimeAndDate(0, storeType.getCloseDoorTime()).compareDailyTime(app.getCurrentGame().getTimeAndDate()) < 0) {
+        if (new TimeAndDate(0, storeType.getOpenDoorTime()).compareDailyTime(app.getCurrentGame().getTimeAndDate()) < 0 ||
+                new TimeAndDate(0, storeType.getCloseDoorTime()).compareDailyTime(app.getCurrentGame().getTimeAndDate()) > 0) {
             return new Response("Store closed.");
         }
         return new Response("", true);

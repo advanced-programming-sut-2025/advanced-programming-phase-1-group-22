@@ -9,6 +9,8 @@ import model.source.SeedType;
 import utils.App;
 
 import java.util.List;
+import java.util.Objects;
+
 @Getter
 public enum JojaMartShopSeed implements Shop {
 	PARSNIP_SEEDS(SeedType.PARSNIP_SEEDS,List.of(Season.SPRING),25,5),
@@ -69,16 +71,20 @@ public enum JojaMartShopSeed implements Shop {
 	public static String showAvailableProducts() {
 		StringBuilder res = new StringBuilder();
 		for (JojaMartShopSeed value : JojaMartShopSeed.values()) {
-			if (value.dailyLimit != value.dailySold) {
+			if (value.isAvailable()) {
 				res.append(value.toString()).append(" ").append(value.getPrice()).append("$\n");
 			}
 		}
 		return res.toString();
 	}
+	public boolean isAvailable() {
+		if (Objects.equals(this.dailyLimit, this.dailySold)) return false;
+		return this.getSeasons().contains(App.getInstance().getCurrentGame().getTimeAndDate().getSeason());
+	}
 	public static Response purchase(String name, Integer count) {
 		JojaMartShopSeed salable = null;
 		for (JojaMartShopSeed value : JojaMartShopSeed.values()) {
-			if(value.getSeedType().getName().equals(name)) {
+			if(value.getSeedType().getName().equalsIgnoreCase(name)) {
 				salable = value;
 			}
 		}
