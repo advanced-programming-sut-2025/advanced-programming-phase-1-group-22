@@ -16,16 +16,13 @@ import model.structure.Structure;
 import model.structure.stores.*;
 import utils.App;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.UUID;
 
 @Getter
 @ToString
-public class Game implements Serializable {
-    private final UUID id =  UUID.randomUUID();
+public class Game {
     private Village village;
     private final List<Player> players = new ArrayList<>();
     private Player currentPlayer;
@@ -37,9 +34,6 @@ public class Game implements Serializable {
     private final Integer width = 120;
     private int playersInFavorTermination = 0;
     public Tile[][] tiles = new Tile[length][width];
-
-    public Game() {
-    }
 
     public void start() {
         timeAndDate = new TimeAndDate(1, 8);
@@ -182,7 +176,7 @@ public class Game implements Serializable {
         }
         i = (i == players.size() - 1) ? 0 : i + 1;
         currentPlayer = players.get(i);
-        timeAndDate.moveTimeForward(this);
+        timeAndDate.moveTimeForward();
     }
 
     public Farm findFarm() {

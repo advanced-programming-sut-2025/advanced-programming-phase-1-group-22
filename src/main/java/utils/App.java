@@ -1,16 +1,12 @@
 package utils;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Getter;
 import model.Game;
 import model.User;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-@Getter
-public class App implements Serializable {
+public class App {
     private static App instance;
 
     private App() {
@@ -30,5 +26,17 @@ public class App implements Serializable {
 
     public void setCurrentGame(Game currentGame) {
         this.currentGame = currentGame;
+    }
+
+    public List<User> getUsers() {
+        return this.users;
+    }
+
+    public List<Game> getGames() {
+        return this.games;
+    }
+
+    public Game getCurrentGame() {
+        return this.currentGame;
     }
 }

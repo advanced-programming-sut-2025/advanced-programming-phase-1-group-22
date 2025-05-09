@@ -4,10 +4,8 @@ import lombok.Getter;
 import model.Salable;
 import model.products.Product;
 
-import java.io.Serializable;
-
 @Getter
-public enum SundryType implements SalableIntegration , Serializable {
+public enum SundryType implements SalableIntegration {
     RICE("Rice",200 / 2),
     WHEAT_FLOUR("Wheat Flour",100 / 2),
     BOUQUET("Bouquet",1000 / 2),
@@ -23,9 +21,6 @@ public enum SundryType implements SalableIntegration , Serializable {
     ;
     private String name;
     private Integer price;
-
-    SundryType() {
-    }
 
     SundryType(String name, Integer price) {
         this.name = name;

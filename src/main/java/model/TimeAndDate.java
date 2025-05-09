@@ -1,6 +1,5 @@
 package model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import model.enums.Season;
@@ -10,11 +9,10 @@ import model.relations.NPC;
 import model.relations.Player;
 import utils.App;
 
-import java.io.Serializable;
-
 @Getter
 @Setter
-public class TimeAndDate implements Serializable {
+public class TimeAndDate {
+    private Game currentGame = App.getInstance().getCurrentGame();
     private Integer hour = 9;
     private Integer minute = 0;
     private Season season = Season.SPRING;
@@ -47,7 +45,7 @@ public class TimeAndDate implements Serializable {
 //    public void moveTimeForward(TimeAndDate timeAndDate)) {
 //    }
 
-    public void moveTimeForward(Game game) {
+    public void moveTimeForward() {
         boolean nextDay = false;
         int numberOfPlayers = App.getInstance().getCurrentGame().getPlayers().size();
         minute += 60/numberOfPlayers;
@@ -69,7 +67,7 @@ public class TimeAndDate implements Serializable {
             season = Season.SPRING;
         }
         if (nextDay) {
-            game.startDay();
+            App.getInstance().getCurrentGame().startDay();
         }
     }
 
@@ -114,7 +112,6 @@ public class TimeAndDate implements Serializable {
         return res;
     }
 
-    @JsonIgnore
     public TimeAndDate getNextMorning() {
         int day = this.day + 1;
         int year = this.year;

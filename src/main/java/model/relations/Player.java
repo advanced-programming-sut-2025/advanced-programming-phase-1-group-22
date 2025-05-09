@@ -20,7 +20,6 @@ import model.structure.stores.StoreType;
 import model.tools.*;
 import view.Menu;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,7 +31,7 @@ import static model.source.MineralType.WOOD;
 @Getter
 @Setter
 @ToString
-public class Player extends Actor implements Serializable {
+public class Player extends Actor {
     private Integer id;
     private User user;
     private Integer energy;
@@ -147,14 +146,14 @@ public class Player extends Actor implements Serializable {
     private void addBasicTools() {
         this.getAccount().setGolds(10);
         inventory.getProducts().put(new Flower(), 1);
-//        inventory.getProducts().put(WOOD, 100);
-//        inventory.getProducts().put(new Sundry(SundryType.WEDDING_RING), 1);
-//        inventory.getProducts().put(Hoe.NORMAL, 1);
-//        inventory.getProducts().put(Pickaxe.NORMAL, 1);
-//        inventory.getProducts().put(Axe.NORMAL_AXE, 1);
-//        inventory.getProducts().put(new WateringCan(WateringCanType.NORMAL), 1);
-//        inventory.getProducts().put(TrashCan.NORMAL, 1);
-//        inventory.getProducts().put(new Scythe(), 1);
+        inventory.getProducts().put(WOOD, 100);
+        inventory.getProducts().put(new Sundry(SundryType.WEDDING_RING), 1);
+        inventory.getProducts().put(Hoe.NORMAL, 1);
+        inventory.getProducts().put(Pickaxe.NORMAL, 1);
+        inventory.getProducts().put(Axe.NORMAL, 1);
+        inventory.getProducts().put(new WateringCan(WateringCanType.NORMAL), 1);
+        inventory.getProducts().put(TrashCan.NORMAL, 1);
+        inventory.getProducts().put(new Scythe(), 1);
     }
 
     private Salable generateRandomElement() {

@@ -1,28 +1,21 @@
 package model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import utils.App;
 
-import java.io.Serializable;
-
 @Getter
 @Setter
 @ToString
-public class Tile implements Serializable {
+public class Tile {
     private Integer id;
     private Integer x;
     private Integer y;
     private Boolean isFilled = false;
     private Boolean isPassable = true;
     private TileType tileType = TileType.FLAT;
-    @JsonIgnore
     private App app = App.getInstance();
-
-    public Tile() {
-    }
 
     public Boolean isPassable() {
         if (!isPassable) return false;

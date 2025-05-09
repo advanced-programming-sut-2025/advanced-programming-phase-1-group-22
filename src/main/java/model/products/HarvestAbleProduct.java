@@ -7,15 +7,11 @@ import model.TimeAndDate;
 import model.gameSundry.SundryType;
 import model.structure.Structure;
 
-import java.io.Serializable;
 import java.util.List;
 
 @Getter
 @Setter
-public abstract class HarvestAbleProduct extends Structure implements Salable, Serializable {
-    public HarvestAbleProduct() {
-    }
-
+public abstract class HarvestAbleProduct extends Structure implements Salable {
     public abstract String getName();
     public abstract int getSellPrice();
     public abstract Integer getContainingEnergy();

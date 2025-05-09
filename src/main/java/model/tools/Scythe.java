@@ -13,20 +13,16 @@ import model.source.Crop;
 import model.structure.Structure;
 import utils.App;
 
-import java.io.Serializable;
 import java.sql.Time;
 import java.util.List;
 
 @Getter
-public class Scythe implements Tool, Serializable {
+public class Scythe implements Tool {
     private final Integer energyCost = 2;
 
     @Override
     public void addToolEfficiency(double efficiency) {
 
-    }
-
-    public Scythe() {
     }
 
     @Override
