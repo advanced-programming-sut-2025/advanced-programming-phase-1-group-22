@@ -13,13 +13,13 @@ public interface CommandProcessor {
             CommandClass commandProcessor = pair.getKey();
             if (commandProcessor.matches(command)) {
                 Function<String[], Response> function = pair.getValue();
-//               try {
+               try {
                     Response response = function.apply(commandProcessor.getParameters(command));
                     if (response.message() != null && !response.message().isEmpty())
                         System.out.println(response.message());
-//                } catch (Exception e) {
-//                    System.out.println(e.getMessage());
-//                }
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
                 return;
             }
         }
