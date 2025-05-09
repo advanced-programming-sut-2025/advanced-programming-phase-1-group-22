@@ -7,11 +7,12 @@ import model.cook.FoodType;
 import model.products.TreesAndFruitsAndSeeds.MadeProductType;
 import utils.App;
 
+import java.io.Serializable;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Getter
-public enum CookingRecipe implements Recipe {
+public enum CookingRecipe implements Recipe, Serializable {
     FRIED_EGG_RECIPE("fried egg recipe", "A recipe to make fried egg", 0, () -> FoodType.FRIED_EGG),
     BAKED_FISH_RECIPE("backed fish recipe", "A recipe to make backed fish", 0, () -> FoodType.BACKED_FISH),
     SALAD_RECIPE("salad recipe", "A recipe to make Salad", 0, () -> FoodType.SALAD),
@@ -37,12 +38,15 @@ public enum CookingRecipe implements Recipe {
     private String description;
     private Integer price;
 
+    CookingRecipe() {
+    }
+
     @FunctionalInterface
     private interface IngredientsSupplier {
         FoodType get();
     }
 
-    private final CookingRecipe.IngredientsSupplier ingredientsSupplier;
+    private CookingRecipe.IngredientsSupplier ingredientsSupplier;
     private transient AtomicReference<FoodType> foodType = new AtomicReference<>();
 
     private CookingRecipe(String name, String description, Integer price, IngredientsSupplier foodType) {

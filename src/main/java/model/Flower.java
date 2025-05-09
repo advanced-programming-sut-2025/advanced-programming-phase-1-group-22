@@ -1,7 +1,12 @@
 package model;
 
-public class Flower implements Salable {
+import java.io.Serializable;
+
+public class Flower implements Salable, Serializable {
     private String name = "flower";
+
+    public Flower() {
+    }
 
     @Override
     public String getName() {

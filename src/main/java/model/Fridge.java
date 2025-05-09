@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Getter
-public class Fridge extends Structure {
+public class Fridge extends Structure implements Serializable {
     private Map<Salable, Integer> products = new HashMap<>();
 
 
