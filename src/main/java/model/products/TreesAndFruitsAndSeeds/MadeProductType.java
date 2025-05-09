@@ -97,7 +97,7 @@ public enum MadeProductType implements Product {
             return 1;
         }
     },
-        DRIED_MUSHROOMS("dried mushrooms", () -> CraftType.DEHYDRATOR, "A package of gourmet mushrooms.", 50, null, () -> Map.of(FruitType.COMMON_MUSHROOM, 5, CropType.RED_MUSHROOM, 5, CropType.PURPLE_MUSHROOM, 5), null, true) {
+        DRIED_MUSHROOMS("dried mushrooms", () -> CraftType.DEHYDRATOR, "A package of gourmet mushrooms.", 50, null, () -> Map.of(FruitType.COMMON_MUSHROOM, 5, CropType.RED_MUSHROOM, 5, CropType.PURPLE_MUSHROOM, 5), 25, true) {
         @Override
         public Integer calcPrice(Salable product) {
             return (int) (7.5 * (double) product.getSellPrice()) + 25;
