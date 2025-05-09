@@ -31,22 +31,22 @@ public class GameSaver {
 //	}
 
 	public static void save(Game game, String directoryPath) throws IOException {
-		SimpleModule module = new SimpleModule();
-		module.addDeserializer(Salable.class, new SalableDeserializer());
-		mapper.registerModule(module);
-		try {
-			// اطمینان از وجود مسیر
-			new File(directoryPath).mkdirs();
-
-			// استفاده از ID بازی در نام فایل
-			String fileName = "game_" + game.getId() + ".json";
-			File file = new File(directoryPath, fileName);
-
-			mapper.writeValue(file, game);
-			System.out.println("Game saved successfully to " + file.getAbsolutePath());
-		} catch (IOException e) {
-			System.err.println("Error saving game: " + e.getMessage());
-		}
+//		SimpleModule module = new SimpleModule();
+//		module.addDeserializer(Salable.class, new SalableDeserializer());
+//		mapper.registerModule(module);
+//		try {
+//			// اطمینان از وجود مسیر
+//			new File(directoryPath).mkdirs();
+//
+//			// استفاده از ID بازی در نام فایل
+//			//String fileName = "game_" + game.getId() + ".json";
+//			File file = new File(directoryPath, fileName);
+//
+//			mapper.writeValue(file, game);
+//			System.out.println("Game saved successfully to " + file.getAbsolutePath());
+//		} catch (IOException e) {
+//			System.err.println("Error saving game: " + e.getMessage());
+//		}
 	}
 
 //

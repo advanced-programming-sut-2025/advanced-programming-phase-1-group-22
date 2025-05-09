@@ -45,6 +45,13 @@ public class Game {
     }
 
     public void startDay() {
+        for (Farm farm : this.village.getFarms()) {
+            for (Tile tile : farm.getTiles()) {
+                if (tile.getTileType().equals(TileType.THUNDERED)){
+                    tile.setTileType(TileType.FLAT);
+                }
+            }
+        }
         for (Friendship friendship : this.getFriendships()) {
             if (friendship.getLastSeen().getDay().equals(this.getTimeAndDate().getDay())) {
                 friendship.setXp(friendship.getXp() + -10);
