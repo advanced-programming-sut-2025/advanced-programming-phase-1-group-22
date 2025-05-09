@@ -254,7 +254,7 @@ public class RelationService {
         }
         player.notify(new Response("Do you marry to %s".formatted(currentPlayer.getUser().getUsername())));
 
-        return new Response("Happy marriage");
+        return new Response("request sent");
     }
 
     public Response Respond(boolean accept, String username) {
@@ -454,9 +454,9 @@ public class RelationService {
         return new Response(stringBuilder.toString());
     }
 
-    public Response friendShip_CH() {
+    public Response friendShip_CH(int n) {
         Friendship friendShipBetweenTwoActors = getFriendShipBetweenTwoActors(lastTalkedNPC);
-        friendShipBetweenTwoActors.setFriendShipLevel(3);
+        friendShipBetweenTwoActors.setFriendShipLevel(n);
         return new Response("friendship changed to 3");
     }
 

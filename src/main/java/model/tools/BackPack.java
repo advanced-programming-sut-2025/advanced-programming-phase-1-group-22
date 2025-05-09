@@ -93,7 +93,7 @@ public class BackPack {
                 } else if (!Objects.equals(value1, value2)) {
                     return false;
                 }
-                if (product1 instanceof Tool && field.getName().equals("level")){
+                if (product1 instanceof Tool && field.getName().equals("level")) {
                     field.setAccessible(true);
                     int level1 = (int) field.get(product1);
                     int level2 = (int) field.get(product2);
@@ -126,7 +126,16 @@ public class BackPack {
     public Boolean isInventoryHaveCapacity(Salable product) {
         if (!(product instanceof Tool)) product = findProductInBackPackByNAme(product.getName());
         return backPackType.getIsInfinite() || (backPackType.getCapacity() > products.size()) ||
-                products.containsKey(product);
+                productsAreEquivalent(product);
+    }
+
+    private boolean productsAreEquivalent(Salable product) {
+        for (Map.Entry<Salable, Integer> salableIntegerEntry : products.entrySet()) {
+            if (areProductsEquivalent(product, salableIntegerEntry.getKey())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private TrashCan getPlayerTrashCan(Player player) {
