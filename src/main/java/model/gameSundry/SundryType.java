@@ -17,8 +17,7 @@ public enum SundryType implements SalableIntegration {
     BASIC_RETAINING_SOIL("Basic Retaining Soil",100 / 2),
     GRASS_STARTER("Grass Starter",100 / 2),
     SPEED_GROW("Speed Grow",100 / 2),
-
-    ;
+    JOJA_COLA("Joja Cola", 75/2 );
     private String name;
     private Integer price;
 

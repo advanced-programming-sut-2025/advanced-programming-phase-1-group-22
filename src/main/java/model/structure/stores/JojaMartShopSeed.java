@@ -1,7 +1,12 @@
 package model.structure.stores;
 
 import lombok.Getter;
+import model.Salable;
+import model.craft.Craft;
+import model.craft.CraftType;
 import model.enums.Season;
+import model.gameSundry.Sundry;
+import model.gameSundry.SundryType;
 import model.records.Response;
 import model.relations.Player;
 import model.source.Seed;
@@ -13,6 +18,12 @@ import java.util.Objects;
 
 @Getter
 public enum JojaMartShopSeed implements Shop {
+	JOJA_COLA(SundryType.JOJA_COLA,List.of(Season.SPRING, Season.FALL, Season.SUMMER, Season.WINTER),75,-1),
+	ANCIENT_SEED(SeedType.ANCIENT_SEEDS,List.of(Season.SPRING, Season.FALL, Season.SUMMER, Season.WINTER),500,1),
+	GRASS_STARTER(CraftType.GRASS_STARTER,List.of(Season.SPRING, Season.FALL, Season.SUMMER, Season.WINTER),125,-1),
+	SUGAR(SundryType.SUGAR,List.of(Season.SPRING, Season.FALL, Season.SUMMER, Season.WINTER),125,-1),
+	WHEAT_FLOUR(SundryType.WHEAT_FLOUR,List.of(Season.SPRING, Season.FALL, Season.SUMMER, Season.WINTER),125,-1),
+	Rice(SundryType.RICE,List.of(Season.SPRING, Season.FALL, Season.SUMMER, Season.WINTER),250,-1),
 	PARSNIP_SEEDS(SeedType.PARSNIP_SEEDS,List.of(Season.SPRING),25,5),
 	BEAN_STARTER(SeedType.BEAN_STARTER,List.of(Season.SPRING),75,5),
 	CAULIFLOWER_SEEDS(SeedType.CAULIFLOWER_SEEDS,List.of(Season.SPRING),100,5),
@@ -49,14 +60,14 @@ public enum JojaMartShopSeed implements Shop {
 	RARE_SEED(SeedType.RARE_SEED, List.of(Season.FALL), 1000, 1),
 	POWDERMELON_SEEDS(SeedType.POWDER_MELON_SEEDS, List.of(Season.WINTER), 20, 10);
 
-	private final SeedType seedType;
+	private final Salable salable;
 	private final List<Season> seasons;
 	private final Integer price;
 	private final Integer dailyLimit;
 	private Integer dailySold = 0;
 
-	JojaMartShopSeed(SeedType seedType, List<Season> seasons, Integer price, Integer dailyLimit) {
-		this.seedType = seedType;
+	JojaMartShopSeed(Salable salable, List<Season> seasons, Integer price, Integer dailyLimit) {
+		this.salable = salable;
 		this.seasons = seasons;
 		this.price = price;
 		this.dailyLimit = dailyLimit;
@@ -84,7 +95,7 @@ public enum JojaMartShopSeed implements Shop {
 	public static Response purchase(String name, Integer count) {
 		JojaMartShopSeed salable = null;
 		for (JojaMartShopSeed value : JojaMartShopSeed.values()) {
-			if(value.getSeedType().getName().equalsIgnoreCase(name)) {
+			if(value.getSalable().getName().equalsIgnoreCase(name)) {
 				salable = value;
 			}
 		}
@@ -93,7 +104,11 @@ public enum JojaMartShopSeed implements Shop {
 			return new Response("Not enough in stock");
 		}
 		Player player = App.getInstance().getCurrentGame().getCurrentPlayer();
-		if (!player.getInventory().isInventoryHaveCapacity(new Seed(salable.getSeedType()))) {
+		Salable salable1 = null;
+		if (salable.getSalable() instanceof SeedType) salable1 = new Seed((SeedType) salable.getSalable());
+		if (salable.getSalable() instanceof CraftType) salable1 = new Craft((CraftType) salable.getSalable(), null, null);
+		if (salable.getSalable() instanceof SundryType) salable1 = new Sundry((SundryType) salable.getSalable());
+		if (!player.getInventory().isInventoryHaveCapacity(salable1)) {
 			return new Response("Not enough space in your backpack.");
 		}
 		if (player.getAccount().getGolds() < salable.getPrice()) {
@@ -101,7 +116,7 @@ public enum JojaMartShopSeed implements Shop {
 		}
 		player.getAccount().removeGolds(salable.getPrice());
 		salable.dailySold += count;
-		player.getInventory().addProductToBackPack(new Seed(salable.getSeedType()), count);
+		player.getInventory().addProductToBackPack(salable1, count);
 		return new Response("Bought successfully", true);
 	}
 
