@@ -46,7 +46,6 @@ public class Farm implements JsonPreparable {
     private Fridge fridge = new Fridge();
 
 
-    // برای ذخیره ساختارها
     @JsonProperty("structureWrappers")
     private List<ObjectWrapper> structureWrappers;
 
@@ -61,7 +60,6 @@ public class Farm implements JsonPreparable {
             preparableFridge.prepareForSave(mapper);
         }
 
-        // حذف شده: farmType نیاز به prepare/unpack نداره
     }
 
     @Override
