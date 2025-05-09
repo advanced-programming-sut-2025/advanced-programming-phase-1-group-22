@@ -136,6 +136,13 @@ public class Game {
         for (TheStardropSaloonStuff value : TheStardropSaloonStuff.values()) {
             value.resetDailySold();
         }
+        for (Player player : this.getPlayers()) {
+            if (player.getDaysOfSadness() > 0) {
+                player.setEnergy(player.getEnergy() / 2);
+            } else {
+                player.setDaysOfSadness(player.getDaysOfSadness() - 1);
+            }
+        }
     }
 
     public void addGoldToPlayerForShippingBin(int price, Player player) {

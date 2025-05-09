@@ -60,6 +60,8 @@ public class RelationService {
                 changeFriendShipLevelUp(friendship, 20);
             }
         }
+        currentPlayer.changeEnergy(50);
+        anotherPlayer.changeEnergy(50);
         anotherPlayer.notify(new Response("%s called you!".formatted(currentPlayer.getUser().getUsername())));
         return new Response("message sent successfully");
     }
@@ -144,7 +146,8 @@ public class RelationService {
                 friendShipBetweenTwoActors.setFriendShipLevel(friendShipBetweenTwoActors.getFriendShipLevel() + 1);
             }
         }
-
+        currentPlayer.changeEnergy(50);
+        player.changeEnergy(50);
         return new Response("gift gived successfully");
     }
 
@@ -220,6 +223,8 @@ public class RelationService {
             return new Response("you are not in that level of friendship");
         }
         changeFriendShipLevelUp(friendShipBetweenTwoActors, 60);
+        currentPlayer.changeEnergy(50);
+        player.changeEnergy(50);
         return Response.empty();
     }
 
