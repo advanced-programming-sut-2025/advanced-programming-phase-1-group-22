@@ -45,7 +45,7 @@ public enum BlackSmithStuff implements Shop {
     public static Response purchase(String name, Integer count) {
         BlackSmithStuff salable = null;
         for (BlackSmithStuff value : BlackSmithStuff.values()) {
-            if(value.getMineralType().getName().equals(name)) {
+            if(value.getMineralType().getName().equalsIgnoreCase(name)) {
                 salable = value;
             }
         }

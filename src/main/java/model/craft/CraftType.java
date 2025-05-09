@@ -85,7 +85,7 @@ public enum CraftType implements Product {
     CHEESE_PRESS("cheese_press", "شیر را به پنیر تبدیل میکند", () -> Map.of(MineralType.WOOD, 45, MineralType.STONE, 45, MadeProductType.COPPER_BAR, 1), 0, Map.of(Ability.FARMING, 2)),
     KEG("keg", "میوه و سبزیجات را به نوشیدنی تبدیل میکند", () -> Map.of(MineralType.WOOD, 30, MadeProductType.COPPER_BAR, 1, MadeProductType.IRON_BAR, 1), 0, Map.of(Ability.FARMING, 3)),
     LOOM("loom", "پشم را به پارچه تبدیل میکند", () -> Map.of(MineralType.WOOD, 60, MineralType.FIBER, 30), 0, Map.of(Ability.FARMING, 3)),
-    MAYONNAISE_MACHINE("mayonnaise machine", "تخم مرغ را به سس مایونز تبدیل میکند", () -> Map.of(MineralType.WOOD, 15, MineralType.STONE, 15, MadeProductType.COPPER_BAR, 1), 0, Map.of()),
+    MAYONNAISE_MACHINE("mayonnaise_machine", "تخم مرغ را به سس مایونز تبدیل میکند", () -> Map.of(MineralType.WOOD, 15, MineralType.STONE, 15, MadeProductType.COPPER_BAR, 1), 0, Map.of()),
     OIL_MAKER("oil_maker", "truffle را به روغن تبدیل میکند", () -> Map.of(MineralType.WOOD, 100, MadeProductType.IRON_BAR, 1, MadeProductType.GOLD_BAR, 1), 0, Map.of(Ability.FARMING, 3)),
     PRESERVES_JAR("preserves_jar", "سبزیجات را به ترشی و میوه ها را به مربا تبدیل میکند", () -> Map.of(MineralType.WOOD, 50, MineralType.STONE, 40, MineralType.COAL, 8), 0, Map.of(Ability.FARMING, 2)),
     DEHYDRATOR("dehydrator", "میوه یا قارچ را خشک میکند", () -> Map.of(MineralType.WOOD, 30, MineralType.STONE, 20, MineralType.FIBER, 30), 0, StoreType.PIERRE_SHOP),

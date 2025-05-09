@@ -25,6 +25,7 @@ public class Craft extends Structure implements Salable {
         this.craftType = craftType;
         this.madeProduct = madeProduct;
         this.ETA = ETA;
+        setIsPickable(true);
     }
 
     public List<Tile> getRange() {

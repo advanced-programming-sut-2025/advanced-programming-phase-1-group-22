@@ -46,12 +46,12 @@ public enum MarnieShopAnimal {
 		return res.toString();
 	}
 	public static Response purchase(String name, Integer count) {
-		return new Response("Invalid command.");
+		return null;
 	}
 
 	public static MarnieShopAnimal getFromName(String name){
 		for (MarnieShopAnimal value : MarnieShopAnimal.values()) {
-			if (value.name.equals(name.toLowerCase())){
+			if (value.name.equalsIgnoreCase(name)){
 				return value;
 			}
 		}

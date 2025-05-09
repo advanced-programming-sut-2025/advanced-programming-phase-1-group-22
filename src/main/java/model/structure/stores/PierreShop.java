@@ -10,6 +10,8 @@ import model.products.TreesAndFruitsAndSeeds.MadeProduct;
 import model.products.TreesAndFruitsAndSeeds.MadeProductType;
 import model.receipe.CraftingRecipe;
 import model.records.Response;
+import model.relations.Friendship;
+import model.relations.NPC;
 import model.relations.Player;
 import model.source.Seed;
 import model.source.SeedType;
@@ -18,9 +20,7 @@ import model.tools.BackPackType;
 import model.tools.Tool;
 import utils.App;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Getter
@@ -40,10 +40,34 @@ public enum PierreShop implements Shop {
             SundryType.WHEAT_FLOUR.getPrice() * 2, -1),
     BOUQUET(() -> SundryType.BOUQUET, SundryType.BOUQUET.getName(),
             "A lovely arrangement of flowers.",
-            SundryType.BOUQUET.getPrice() * 2, 2),
+            SundryType.BOUQUET.getPrice() * 2, 2) {
+        @Override
+        public boolean isAvailable() {
+            List<Friendship> friendships = App.getInstance().getCurrentGame().getFriendships();
+            Player player = App.getInstance().getCurrentGame().getCurrentPlayer();
+            for (Friendship friendship : friendships) {
+                if (!player.equals(friendship.getFirstPlayer()) && !player.equals(friendship.getSecondPlayer())) continue;
+                if (friendship.getFirstPlayer() instanceof NPC || friendship.getSecondPlayer() instanceof NPC) continue;
+                if (friendship.getFriendShipLevel() >= 2) return true;
+            }
+            return false;
+        }
+    },
     WEDDING_RING(() -> SundryType.WEDDING_RING, SundryType.WEDDING_RING.getName(),
             "A symbol of eternal love.",
-            SundryType.WEDDING_RING.getPrice() * 2, 2),
+            SundryType.WEDDING_RING.getPrice() * 2, 2) {
+        @Override
+        public boolean isAvailable() {
+            List<Friendship> friendships = App.getInstance().getCurrentGame().getFriendships();
+            Player player = App.getInstance().getCurrentGame().getCurrentPlayer();
+            for (Friendship friendship : friendships) {
+                if (!player.equals(friendship.getFirstPlayer()) && !player.equals(friendship.getSecondPlayer())) continue;
+                if (friendship.getFirstPlayer() instanceof NPC || friendship.getSecondPlayer() instanceof NPC) continue;
+                if (friendship.getFriendShipLevel() >= 3) return true;
+            }
+            return false;
+        }
+    },
     SUGAR(() -> SundryType.SUGAR, SundryType.SUGAR.getName(),
             "Sweet crystalline substance.",
             SundryType.SUGAR.getPrice() * 2, 1),
@@ -71,9 +95,16 @@ public enum PierreShop implements Shop {
     LARGE_PACK(() -> BackPackType.BIG_BACKPACK, BackPackType.BIG_BACKPACK.getName(),
             "Increases inventory capacity.",
             2000, 1),
-    DELUXE_PACK(() -> BackPackType.BIG_BACKPACK, BackPackType.BIG_BACKPACK.getName(),
+    DELUXE_PACK(() -> BackPackType.DELUXE_BACKPACK, BackPackType.DELUXE_BACKPACK.getName(),
             "Maximizes inventory capacity.",
-            10000, 1),
+            10000, 1) {
+        @Override
+        public boolean isAvailable() {
+            if (App.getInstance().getCurrentGame().getCurrentPlayer().getInventory().getBackPackType()
+                    == BackPackType.NORMAL_BACKPACK) return false;
+            return super.isAvailable();
+        }
+    },
 
     // Fruit Trees
     APPLE_SAPLING(() -> SeedType.APPLE_SAPLING, "Apple Sapling",
@@ -256,7 +287,7 @@ public enum PierreShop implements Shop {
     public static String showAvailableProducts() {
         StringBuilder res = new StringBuilder();
         for (PierreShop value : PierreShop.values()) {
-            if (value.dailyLimit != value.dailySold) {
+            if (value.isAvailable()) {
                 res.append(value.toString()).append(" ").append(value.getPrice()).append("$\n");
             }
         }
@@ -270,15 +301,29 @@ public enum PierreShop implements Shop {
     public static Response purchase(String name, Integer count) {
         PierreShop salable = null;
         for (PierreShop value : PierreShop.values()) {
-            if (value.getName().equals(name)) {
+            if (value.getName().equalsIgnoreCase(name)) {
                 salable = value;
             }
         }
         if (salable == null) return new Response("Item not found");
+        if (!salable.isAvailable()) return new Response("This product isn't available now, Come back later.");
         if (salable.dailyLimit != -1 && salable.dailyLimit < salable.dailySold + count) {
             return new Response("Not enough in stock");
         }
         Player player = App.getInstance().getCurrentGame().getCurrentPlayer();
+        if (salable.getSalable() instanceof BackPackType) {
+            if (player.getAccount().getGolds() < salable.getPrice()) {
+                return new Response("Not enough golds");
+            }
+            player.getAccount().removeGolds(salable.getPrice());
+            player.getInventory().setBackPackType((BackPackType) salable.getSalable());
+            return new Response(salable.getSalable().getName() + " bought successfully");
+        }
+
+        if (salable.getSalable() instanceof CraftingRecipe) {
+            player.getCraftingRecipes().put((CraftingRecipe) salable.salable, true);
+            return new Response("Bought successfully", true);
+        }
         if (!player.getInventory().isInventoryHaveCapacity(salable.getSalable())) {
             return new Response("Not enough space in your backpack.");
         }
@@ -288,17 +333,19 @@ public enum PierreShop implements Shop {
         player.getAccount().removeGolds(salable.getPrice());
         salable.dailySold += count;
         Salable item = null;
-        if (salable.getSalable() instanceof CraftingRecipe) {
-            player.getCraftingRecipes().put((CraftingRecipe) salable.salable, true);
-            return new Response("Bought successfully", true);
-        }
         if (salable.getSalable() instanceof SundryType) item = new Sundry((SundryType) salable.salable);
         if (salable.getSalable() instanceof MadeProductType) item = new MadeProduct((MadeProductType) salable.salable);
         if (salable.getSalable() instanceof SeedType) item = new Seed((SeedType) salable.salable);
-        if (salable.getSalable() instanceof Tool) item = salable.salable;
+        if (salable.getSalable() instanceof Tool) {
+            item = salable.salable;
+        }
         if (item == null) throw new InvalidInputException("Item not found in pierreShop");
         player.getInventory().addProductToBackPack(item, count);
-        return new Response("Bought successfully", true);
+        return new Response(item.getName() + " bought successfully", true);
+    }
+
+    public boolean isAvailable() {
+        return !Objects.equals(this.dailyLimit, this.dailySold);
     }
 
     public void resetDailySold() {
