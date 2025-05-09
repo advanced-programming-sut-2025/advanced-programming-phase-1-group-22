@@ -58,7 +58,9 @@ public enum StoreType {
         Response response = null;
         try {
             response = (Response) shop1.getMethod("purchase", String.class, Integer.class).invoke(null, name, count);
-        } catch (Exception ignored) {}
+        } catch (Exception e) {
+            int b = 5;
+        }
         if (response != null) return response;
         if (shop2 != null) {
             try {

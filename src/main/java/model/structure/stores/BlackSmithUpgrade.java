@@ -91,35 +91,35 @@ public enum BlackSmithUpgrade implements Shop {
         return res.toString();
     }
 
-    public static Response purchase(String name, Integer count) {
-        BlackSmithUpgrade salable = null;
-        for (BlackSmithUpgrade value : BlackSmithUpgrade.values()) {
-            if (value.getTool().getName().equalsIgnoreCase(name)) {
-                salable = value;
-            }
-        }
-        if (salable == null) return new Response("Item not found");
-        if (salable.dailyLimit != -1 && salable.dailyLimit < salable.dailySold + count) {
-            return new Response("Not enough in stock");
-        }
-        Player player = App.getInstance().getCurrentGame().getCurrentPlayer();
-        for (Map.Entry<Salable,Integer> productIntegerEntry : salable.getIngredients().entrySet()) {
-            if (!player.getInventory().checkProductAvailabilityInBackPack(productIntegerEntry.getKey().getName(),
-                    productIntegerEntry.getValue())) {
-                return new Response("Ingredients not found.");
-            }
-        }
-
-        if (!player.getInventory().checkProductAvailabilityInBackPack(null, 1)) {
-            return new Response("Not enough space in your backpack."); //TODO checking the last level tool
-        }
-        if (player.getAccount().getGolds() < salable.getCost()) {
-            return new Response("Not enough golds");
-        }
-        player.getAccount().removeGolds(salable.getCost());
-        salable.dailySold += count;
-        player.getInventory().addProductToBackPack(salable.tool, count);
-        return new Response("Bought successfully", true);
+    public static Response purchase(String name, Integer count) { return null;
+//        BlackSmithUpgrade salable = null;
+//        for (BlackSmithUpgrade value : BlackSmithUpgrade.values()) {
+//            if (value.getTool().getName().equalsIgnoreCase(name)) {
+//                salable = value;
+//            }
+//        }
+//        if (salable == null) return new Response("Item not found");
+//        if (salable.dailyLimit != -1 && salable.dailyLimit < salable.dailySold + count) {
+//            return new Response("Not enough in stock");
+//        }
+//        Player player = App.getInstance().getCurrentGame().getCurrentPlayer();
+//        for (Map.Entry<Salable,Integer> productIntegerEntry : salable.getIngredients().entrySet()) {
+//            if (!player.getInventory().checkProductAvailabilityInBackPack(productIntegerEntry.getKey().getName(),
+//                    productIntegerEntry.getValue())) {
+//                return new Response("Ingredients not found.");
+//            }
+//        }
+//
+//        if (!player.getInventory().checkProductAvailabilityInBackPack(null, 1)) {
+//            return new Response("Not enough space in your backpack."); //TODO checking the last level tool
+//        }
+//        if (player.getAccount().getGolds() < salable.getCost()) {
+//            return new Response("Not enough golds");
+//        }
+//        player.getAccount().removeGolds(salable.getCost());
+//        salable.dailySold += count;
+//        player.getInventory().addProductToBackPack(salable.tool, count);
+//        return new Response("Bought successfully", true);
     }
 
     public void resetDailySold() {

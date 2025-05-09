@@ -60,7 +60,7 @@ public enum CarpenterShopFarmBuildings {
 		return res.toString();
 	}
 	public static Response purchase(String name, Integer count) {
-		return new Response("Invalid command.");
+		return null;
 	}
 
 	public void resetDailySold() {
