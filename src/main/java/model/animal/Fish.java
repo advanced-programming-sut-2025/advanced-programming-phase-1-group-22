@@ -9,18 +9,13 @@ import model.products.Product;
 import model.products.ProductQuality;
 import model.structure.Structure;
 
-import java.io.Serializable;
-
 @Getter
 @Setter
 @ToString
-public class Fish extends Structure implements Salable, Serializable {
+public class Fish extends Structure implements Salable {
 	private FishType fishType;
 	private Integer containingEnergy = 20; //TODO Energy not found
 	private ProductQuality productQuality;
-
-	public Fish() {
-	}
 
 	public int getSellPrice() {
 		return (int) (this.fishType.getSellPrice() * productQuality.getPriceCoefficient());

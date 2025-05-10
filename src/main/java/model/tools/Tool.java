@@ -4,9 +4,7 @@ import model.relations.Player;
 import model.Salable;
 import model.Tile;
 
-import java.io.Serializable;
-
-public interface Tool extends Salable, Serializable {
+public interface Tool extends Salable {
     void addToolEfficiency(double efficiency);
     Tool getToolByLevel(int level);
     int getLevel();

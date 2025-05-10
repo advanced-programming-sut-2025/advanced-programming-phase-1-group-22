@@ -9,25 +9,21 @@ import model.Salable;
 import model.products.AnimalProduct;
 import model.structure.Structure;
 
-import java.io.Serializable;
 import java.util.Random;
 
 @Getter
 @Setter
-public class Animal extends Structure implements Salable, Serializable {
+public class Animal extends Structure implements Salable {
     private AnimalType animalType;
     private AnimalProduct todayProduct;
     private Integer relationShipQuality = 0;
     private Boolean isFeed = false;
     private Boolean pet = false;
-    private String name;
+    private final String name;
     private Boolean isAnimalStayOutAllNight = false;
     private Player owner;
 
-    public Animal() {
-    }
-
-    public Animal(AnimalType animalType, String name) {
+    public Animal(AnimalType animalType,String name) {
         this.animalType = animalType;
         this.name = name;
     }

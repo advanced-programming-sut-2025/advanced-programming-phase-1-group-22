@@ -37,7 +37,7 @@ public enum CarpenterShopFarmBuildings {
 
 	public static CarpenterShopFarmBuildings getFromName(String name){
 		for (CarpenterShopFarmBuildings value : CarpenterShopFarmBuildings.values()) {
-			if (value.name.equals(name.toLowerCase())){
+			if (value.name.equalsIgnoreCase(name)){
 				return value;
 			}
 		}
@@ -60,7 +60,7 @@ public enum CarpenterShopFarmBuildings {
 		return res.toString();
 	}
 	public static Response purchase(String name, Integer count) {
-		return new Response("Invalid command.");
+		return null;
 	}
 
 	public void resetDailySold() {

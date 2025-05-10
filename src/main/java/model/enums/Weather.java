@@ -2,6 +2,7 @@ package model.enums;
 
 import lombok.Getter;
 import model.Game;
+import model.TileType;
 import model.products.TreesAndFruitsAndSeeds.Tree;
 import model.source.Crop;
 import model.source.Seed;
@@ -29,6 +30,7 @@ public enum Weather {
 
     public void thunderBolt(int x, int y) {
         Game game = App.getInstance().getCurrentGame();
+        game.tiles[x][y].setTileType(TileType.THUNDERED);
         ArrayList<Structure> structures = game.getVillage().findStructuresByTile(game.tiles[x][y]);
         for (Structure structure : structures) {
             if (structure instanceof Tree && !((Tree)structure).getInGreenHouse()) {

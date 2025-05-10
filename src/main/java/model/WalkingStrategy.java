@@ -32,6 +32,7 @@ public class WalkingStrategy {
         Pair newPair;
         boolean flag = true;
         while (flag) {
+//            if (distance % 10 == 0) printMap();
             flag = false;
             Set<Pair> set = new HashSet<>(distances.keySet());
             for (Pair pair : set) {
@@ -44,7 +45,7 @@ public class WalkingStrategy {
                         if (!app.getCurrentGame().getTiles()[newPair.getX()][newPair.getY()].isPassable()) continue;
                         boolean flag2 = false;
                         for (Pair pair1 : distances.keySet()) {
-                            if (pair1.getX() == newPair.getX() && pair1.getY() == newPair.getY()) {
+                            if (Objects.equals(pair1.getX(), newPair.getX()) && Objects.equals(pair1.getY(), newPair.getY())) {
                                 flag2 = true;
                                 break;
                             }
@@ -82,5 +83,6 @@ public class WalkingStrategy {
             }
             System.out.println();
         }
+        System.out.println("==================================================================================================================");
     }
 }

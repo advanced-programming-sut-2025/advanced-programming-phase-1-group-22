@@ -5,12 +5,10 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.io.Serializable;
-
 @Getter
 @Setter
 @ToString
-public class Trade implements Serializable {
+public class Trade {
     private Integer id;
     private Player customer;
     private Player trader;

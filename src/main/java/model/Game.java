@@ -51,6 +51,13 @@ public class Game implements Serializable, JsonPreparable {
     }
 
     public void startDay() {
+        for (Farm farm : this.village.getFarms()) {
+            for (Tile tile : farm.getTiles()) {
+                if (tile.getTileType().equals(TileType.THUNDERED)){
+                    tile.setTileType(TileType.FLAT);
+                }
+            }
+        }
         for (Friendship friendship : this.getFriendships()) {
             if (friendship.getLastSeen().getDay().equals(this.getTimeAndDate().getDay())) {
                 friendship.setXp(friendship.getXp() + -10);
@@ -89,8 +96,8 @@ public class Game implements Serializable, JsonPreparable {
             crowAttack(farm);
         }
         for (Player player : players) {
+            player.goToCottage();
             player.resetEnergy();
-
             int total = player.getShippingBinList().stream()
                     .mapToInt(ShippingBin::CalculatePriceOfShippingBinProducts)
                     .sum();

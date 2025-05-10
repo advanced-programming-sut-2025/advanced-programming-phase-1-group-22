@@ -25,7 +25,8 @@ public class GameCommands extends CommandClass {
     public static final GameCommands C_AddItem = new GameCommands("^\\s*cheat\\s+add\\s+item\\s+-n\\s+(?<name>.+)\\s+-c\\s+" +
             "(?<count>\\d+)\\s*$");
 
-    public static final GameCommands artisanUse = new GameCommands("^\\s*artisan\\s+use\\s+(?<name>\\S+)\\s+(?<item1>\\S+)\\s*(?<item2>\\S*)\\s*$"); //TODO Might be incorrect
+    public static final GameCommands artisanUseHoney = new GameCommands("^\\s*artisan\\s+use\\s+bee_house\\s*$");
+    public static final GameCommands artisanUse = new GameCommands("^\\s*artisan\\s+use\\s+(?<name>\\S+)\\s+(?<item1>.+)(\\s+(?<item2>\\S+))?\\s*$");  //TODO Might be incorrect
     public static final GameCommands artisanGet = new GameCommands("^\\s*artisan\\s+get\\s+(?<name>.+)\\s*$");
     public static final GameCommands C_AddDollars = new GameCommands("^\\s*cheat\\s+add\\s+(?<count>\\d+)\\s+dollars\\s*$");
     public static final GameCommands sell = new GameCommands("^\\s*sell\\s+(?<name>.+)\\s+-n\\s+(?<count>\\d+)\\s*$");
@@ -60,7 +61,7 @@ public class GameCommands extends CommandClass {
     public static final GameCommands showAllProducts = new GameCommands("^\\s*show\\s+all\\s+products\\s*$");
     public static final GameCommands showAllAvailableProducts = new GameCommands("^\\s*show\\s+all\\s+available\\s+products\\s*$");
     public static final GameCommands purchase = new GameCommands("^\\s*purchase\\s+(?<name>.+)\\s+-n\\s+(?<count>\\d+)\\s*$");
-    public static final GameCommands purchase1 = new GameCommands("^\\s*purchase\\s+(?<name>.+)\\s*$");
+    public static final GameCommands purchase1 = new GameCommands("^(?!.*-n)\\s*purchase\\s+(?<name>.+)\\s*$");
 
     public static final GameCommands SHOW_ENERGY = new GameCommands("show\\s+energy");
     public static final GameCommands ENERGY_SET = new GameCommands("set\\s+energy\\s+-v\\s+(\\d+)");
@@ -68,7 +69,7 @@ public class GameCommands extends CommandClass {
 
     public static final GameCommands SHOW_INVENTORY = new GameCommands("inventory\\s+show");
     public static final GameCommands REMOVE_FROM_INVENTORY = new GameCommands("inventory\\s+trash\\s+-i\\s+([a-zA-Z ]+)(\\s+-n\\s*(\\d+))?");
-    public static final GameCommands PICK_PRODUCT = new GameCommands("pick\\s+up");
+    public static final GameCommands PICK_PRODUCT = new GameCommands("pick\\s+up\\s+-d\\s+(\\S+)");
 
     public static final GameCommands TOOL_EQUIP = new GameCommands("tools\\s+equip\\s+(.+)");
     public static final GameCommands SHOW_CURRENT_TOOL = new GameCommands("tools\\s+show\\s+current");
@@ -97,6 +98,7 @@ public class GameCommands extends CommandClass {
     public static final GameCommands FERTILIZE = new GameCommands("^\\s*fertilize\\s+-f\\s+(?<fertilizer>.+)\\s+-d\\s+(\\S+)\\s*$");
     public static final GameCommands HOW_MUCH_WATER = new GameCommands("^\\s*howmuch\\s+water\\s*$");
 
+    public static final GameCommands SHOW_ABILITY = new GameCommands("show\\s+ability");
     GameCommands(String regex) {
         super(regex);
     }

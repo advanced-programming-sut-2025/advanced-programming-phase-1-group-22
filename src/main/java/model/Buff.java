@@ -6,19 +6,14 @@ import lombok.ToString;
 import model.abilitiy.Ability;
 import model.relations.Player;
 
-import java.io.Serializable;
-
 @Getter
 @Setter
 @ToString
-public class Buff implements Serializable {
+public class Buff {
     private Integer id;
     private Integer maxPower;
     private Ability ability;
     private TimeAndDate buffImpact;
-
-    public Buff() {
-    }
 
     private Buff(Integer maxPower, Ability ability, TimeAndDate buffImpact) {
         this.maxPower = maxPower;
