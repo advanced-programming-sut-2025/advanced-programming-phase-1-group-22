@@ -2,17 +2,18 @@ package repository;
 
 import jakarta.persistence.*;
 import model.User;
-import utils.HibernateUtil;
 
 import java.util.Optional;
 
 public class UserRepositoryImpl implements UserRepository {
-    public static final EntityManagerFactory emf = HibernateUtil.getEntityManagerFactory();
-    private final EntityManager entityManager = emf.createEntityManager();
+    private final EntityManager entityManager;
+
+    public UserRepositoryImpl(EntityManager entityManager) {
+        this.entityManager = entityManager;
+    }
 
     @Override
     public Optional<User> save(User user) {
-        EntityManager entityManager = emf.createEntityManager();
         EntityTransaction transaction = null;
         try {
             transaction = entityManager.getTransaction();
@@ -47,7 +48,6 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public Optional<User> findByUsername(String username) {
-        EntityManager entityManager = emf.createEntityManager();
         try {
             TypedQuery<User> query = entityManager.createQuery(
                     "SELECT u FROM User u WHERE u.username = ?1", User.class);
@@ -64,7 +64,6 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public Optional<User> deleteById(int id) {
-        EntityManager entityManager = emf.createEntityManager();
         try {
             entityManager.getTransaction().begin();
             User person = entityManager.find(User.class, id);
@@ -82,7 +81,6 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public Optional changePassword(String username, String newPassword) {
-        EntityManager entityManager = emf.createEntityManager();
         try {
             entityManager.getTransaction().begin();
             Optional<User> byUsername = findByUsername(username);
@@ -104,7 +102,6 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public Optional changeEmail(String username, String newEmail) {
-        EntityManager entityManager = emf.createEntityManager();
         try {
             entityManager.getTransaction().begin();
             Optional<User> byUsername = findByUsername(username);
@@ -126,7 +123,6 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public Optional changeUsername(String username, String newUsername) {
-        EntityManager entityManager = emf.createEntityManager();
         try {
             entityManager.getTransaction().begin();
             Optional<User> byUsername = findByUsername(username);
@@ -148,7 +144,6 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public Optional changeNickname(String username, String newNickname) {
-        EntityManager entityManager = emf.createEntityManager();
         try {
             entityManager.getTransaction().begin();
             Optional<User> byUsername = findByUsername(username);

@@ -6,11 +6,12 @@ import model.dto.UserDto;
 import model.enums.Gender;
 import model.records.Response;
 import repository.UserRepository;
-import repository.UserRepositoryImpl;
 import utils.GeneratePassword;
 import utils.GenerateQuestion;
+import utils.PasswordHasher;
 import variables.Session;
 import view.Menu;
+import view.ViewRender;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.Optional;
@@ -18,45 +19,16 @@ import java.util.Random;
 
 import static command.UserCommands.EMAIL;
 import static command.UserCommands.USERNAME;
-import static utils.PasswordHasher.hashPassword;
-import static utils.PasswordHasher.verifyPassword;
-import static view.ViewRender.getResponse;
-import static view.ViewRender.showResponse;
 
 public class AccountService {
-    private final UserRepository userRepository = new UserRepositoryImpl();
     private static AccountService instance;
-
-    private AccountService() {
-    }
-
-    public static AccountService getInstance() {
-        if (instance == null) {
-            instance = new AccountService();
-        }
-        return instance;
-    }
-
-    public Response loginUser(String username, String password, String stayedLoggedIn) {
-        Response response = null;
-        Optional<User> user = userRepository.findByUsername(username);
-        if (user.isEmpty()) {
-            return new Response("User not found");
-        }
-        try {
-            if (!user.get().getPassword().equals(password) && !verifyPassword(password, user.get().getPassword())) {
-                return new Response("Wrong password");
-            }
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        }
-        Session.setCurrentUser(user.get());
-        response = new Response("Logged in successfully");
-        if (stayedLoggedIn != null && stayedLoggedIn.contains("stay-logged-in")) {
-            Session.setStayedLoggedIn(true);
-        }
-        Session.setCurrentMenu(Menu.MAIN);
-        return response;
+    private final ViewRender viewRender;
+    private final UserRepository<User> userRepository;
+    private final PasswordHasher passwordHasher;
+    public AccountService(UserRepository<User> userRepository, ViewRender viewRender, PasswordHasher passwordHasher) {
+        this.userRepository = userRepository;
+        this.viewRender = viewRender;
+        this.passwordHasher = passwordHasher;
     }
 
     public Response registerUser(UserDto dto) {
@@ -69,8 +41,8 @@ public class AccountService {
         String passwordRepeat = dto.passwordConfirmation();
         Optional<User> byUsername = userRepository.findByUsername(username);
         if (byUsername.isPresent()) {
-            showResponse(new Response("does this username is ok (yes):(no) ? " + username + "-", true));
-            Response response1 = getResponse();
+            viewRender.showResponse(new Response("does this username is ok (yes):(no) ? " + username + "-", true));
+            Response response1 = viewRender.getResponse();
             if (response1.message().equals("no")) {
                 return Response.empty();
             }
@@ -86,8 +58,8 @@ public class AccountService {
             return new Response("weak password");
         }
         if (!password.equals(passwordRepeat)) {
-            showResponse(new Response("enter password again or be back in register menu", true));
-            Response response1 = getResponse();
+            viewRender.showResponse(new Response("enter password again or be back in register menu", true));
+            Response response1 = viewRender.getResponse();
             if (!UserCommands.PASSWORD.matches(response1.message())) {
                 return Response.empty();
             }
@@ -97,7 +69,7 @@ public class AccountService {
         }
         String hashedPassword = null;
         try {
-            hashedPassword = hashPassword(password);
+            hashedPassword = passwordHasher.hashPassword(password);
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
@@ -114,6 +86,29 @@ public class AccountService {
         }
         return response;
     }
+
+    public Response loginUser(String username, String password, String stayedLoggedIn) {
+        Response response = null;
+        Optional<User> user = userRepository.findByUsername(username);
+        if (user.isEmpty()) {
+            return new Response("User not found");
+        }
+        try {
+            if (!user.get().getPassword().equals(password) && !passwordHasher.verifyPassword(password, user.get().getPassword())) {
+                return new Response("Wrong password");
+            }
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+        Session.setCurrentUser(user.get());
+        response = new Response("Logged in successfully");
+        if (stayedLoggedIn != null && stayedLoggedIn.contains("stay-logged-in")) {
+            Session.setStayedLoggedIn(true);
+        }
+        Session.setCurrentMenu(Menu.MAIN);
+        return response;
+    }
+
 
     public Response changeUsername(String username) {
         if (Session.getCurrentUser() == null) {
@@ -192,15 +187,15 @@ public class AccountService {
 //        }
 //        if (GenerateQuestion.values()[Integer.parseInt(questionNumber) - 1].getAnswer().equals(answer)) {
 //            String password = GeneratePassword.generatePassword();
-//            showResponse(new Response("do you like this password %s ? (yes):(no)" + password, true));
-//            Response response1 = getResponse();
+//            viewRender.showResponse(new Response("do you like this password %s ? (yes):(no)" + password, true));
+//            Response response1 = viewRender.getResponse();
 //            if (response1.message().equals("no")) {
-//                showResponse(new Response("do you want to see another password ? (yes):(no)", true));
-//                Response response2 = getResponse();
+//                viewRender.showResponse(new Response("do you want to see another password ? (yes):(no)", true));
+//                Response response2 = viewRender.getResponse();
 //                while (!response2.message().equals("no")) {
 //                    password = GeneratePassword.generatePassword();
-//                    showResponse(new Response("do you like this password %s? (yes):(no)" + password, true));
-//                    response2 = getResponse();
+//                    viewRender.showResponse(new Response("do you like this password %s? (yes):(no)" + password, true));
+//                    response2 = viewRender.getResponse();
 //                }
 //            }
 //
@@ -218,22 +213,22 @@ public class AccountService {
         Random random = new Random();
         int randQuestion = random.nextInt(GenerateQuestion.values().length);
         GenerateQuestion question = GenerateQuestion.values()[randQuestion];
-        showResponse(new Response(question.getQuestion()));
-        Response response = getResponse();
+        viewRender.showResponse(new Response(question.getQuestion()));
+        Response response = viewRender.getResponse();
         if (!response.message().equals(question.getAnswer())) {
             return new Response("answer is not correct");
         }
-        showResponse(new Response("Dou you want to enter new password or we generate a password? (1):(2)", true));
-        Response response1 = getResponse();
+        viewRender.showResponse(new Response("Dou you want to enter new password or we generate a password? (1):(2)", true));
+        Response response1 = viewRender.getResponse();
         if (response1.message().equals("1")) {
-            showResponse(new Response("enter new password", true));
-            response1 = getResponse();
+            viewRender.showResponse(new Response("enter new password", true));
+            response1 = viewRender.getResponse();
             User user = (User) userRepository.findByUsername(username).get();
             Session.setCurrentUser(user);
             return changePassword(response1.message(), Session.getCurrentUser().getPassword());
         } else if (response1.message().equals("2")) {
             String newPassword = GeneratePassword.generatePassword();
-            showResponse(new Response("your password is : " + newPassword, true));
+            viewRender.showResponse(new Response("your password is : " + newPassword, true));
             User user = (User) userRepository.findByUsername(username).get();
             Session.setCurrentUser(user);
             return changePassword(newPassword, Session.getCurrentUser().getPassword());
@@ -278,14 +273,14 @@ public class AccountService {
         Random random = new Random();
         int randQuestion = random.nextInt(GenerateQuestion.values().length);
         GenerateQuestion question = GenerateQuestion.values()[randQuestion];
-        showResponse(new Response(question.getQuestion()));
-        Response response = getResponse();
+        viewRender.showResponse(new Response(question.getQuestion()));
+        Response response = viewRender.getResponse();
         if (!response.message().equals(question.getAnswer())) {
             return new Response("answer is not correct");
         }
         String password = GeneratePassword.generatePassword();
-        showResponse(new Response("Do you want to set {%s} as your password? (yes):(no)".formatted(password), true));
-        Response response1 = getResponse();
+        viewRender.showResponse(new Response("Do you want to set {%s} as your password? (yes):(no)".formatted(password), true));
+        Response response1 = viewRender.getResponse();
         if (response1.message().equals("no")) {
             return Response.empty();
         }
