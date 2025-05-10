@@ -45,9 +45,13 @@ import model.structure.stores.Store;
 import model.structure.stores.StoreType;
 import model.tools.BackPack;
 import model.tools.Tool;
+import repository.UserRepository;
+import repository.UserRepositoryImpl;
 import saveGame.GameSaver;
 import saveGame.GameSerializer;
 import utils.App;
+import utils.HibernateUtil;
+import utils.PasswordHasher;
 import variables.Session;
 import view.Menu;
 import view.ViewRender;
@@ -57,9 +61,11 @@ import java.util.*;
 public class GameService {
     private static volatile GameService instance;
     App app = App.getInstance();
+    UserRepository<User> userRepository;
     private ViewRender viewRender;
 
     public GameService() {
+        userRepository = new UserRepositoryImpl(HibernateUtil.getEntityManagerFactory().createEntityManager());
     }
 
     public static GameService getInstance() {
@@ -75,14 +81,16 @@ public class GameService {
             return new Response("You are not allowed to exit; the player who has started the app.getCurrentGame() can" +
                     " end it");
         }
-        GameSerializer.saveGame(App.getInstance().getCurrentGame(), "game.bin");
+        String filePath = Session.getCurrentUser().getUsername();
+        filePath += ".bin";
+        GameSerializer.saveGame(App.getInstance().getCurrentGame(), filePath);
+        for (Player player : App.getInstance().getCurrentGame().getPlayers()) {
+            User user = player.getUser();
+            user.setIsPlaying(filePath);
+            userRepository.save(player.getUser());
+        }
         Session.setCurrentMenu(Menu.MAIN);
         return new Response("Exited from game.", true);
-    }
-
-    public Response undoTermination() {
-        app.getCurrentGame().setPlayersInFavorTermination(0);
-        return new Response("Termination unsuccessful");
     }
 
     public Response terminateGame() {
@@ -99,13 +107,14 @@ public class GameService {
         App.getInstance().getGames().remove(app.getCurrentGame());
         Session.setCurrentMenu(Menu.MAIN);
         for (Player player : app.getCurrentGame().getPlayers()) {
-            player.getUser().setIsPlaying(false);
+            player.getUser().setIsPlaying(null);
             player.getUser().setNumberOfPlayedGames(player.getUser().getNumberOfPlayedGames() + 1);
             player.getUser().setHighestMoneyEarned(
                     Math.max(player.getUser().getHighestMoneyEarned(), player.getAccount().getGolds())
             );
+            userRepository.save(player.getUser());
         }
-        //TODO remove app.getCurrentGame() from databases
+
         return new Response("The game is terminated", true);
     }
 
@@ -256,7 +265,7 @@ public class GameService {
             if (confirmation.equals("n")) return new Response("You didn't moved");
         }
         if (player.getEnergy() < energy) {
-            player.walkTillFaint(walkingStrategy.getDistances(), new Pair(x1,y1));
+            player.walkTillFaint(walkingStrategy.getDistances(), new Pair(x1, y1));
             player.faint();
             walkingStrategy.getDistances().clear();
             nextTurn();
