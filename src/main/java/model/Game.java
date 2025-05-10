@@ -96,7 +96,7 @@ public class Game implements Serializable, JsonPreparable {
             crowAttack(farm);
         }
         for (Player player : players) {
-            player.goToCottage();
+            if (!player.getIsFainted()) player.goToCottage();
             player.resetEnergy();
             int total = player.getShippingBinList().stream()
                     .mapToInt(ShippingBin::CalculatePriceOfShippingBinProducts)

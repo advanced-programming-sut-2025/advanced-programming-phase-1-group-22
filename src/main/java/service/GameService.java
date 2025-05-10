@@ -250,10 +250,13 @@ public class GameService {
             if (confirmation.equals("n")) return new Response("You didn't moved");
         }
         if (player.getEnergy() < energy) {
+            player.walkTillFaint(walkingStrategy.getDistances(), new Pair(x1,y1));
             player.faint();
+            walkingStrategy.getDistances().clear();
             nextTurn();
             return new Response("Not enough energy; you fainted");
         }
+        walkingStrategy.getDistances().clear();
         player.removeEnergy(energy);
         player.getTiles().clear();
         player.getTiles().add(app.getCurrentGame().tiles[x1][y1]);
