@@ -274,42 +274,39 @@ public class GameService {
     }
 
     public Response helpReadingMap() {
-        String resp = "@\tYou\n\nTile Types:\n" +
-                "!\tOther Players\n\nTile Types:\n" +
-                "?\tNPC\n\nTile Types:\n" +
-                "G\tGrass\n" +
-                "F\tFlower\n" +
-                "S\tSnow\n" +
-                "M\tMud\n" +
-                ".\tFlat\n" +
-                "+\tPath\n" +
-                "C\tFence\n" +
-                "D\tDoor\n" +
-                "P\tPlowed\n" +
-                "\nBuildings:\n" +
-                "S\tStore\n" +
-                "N\tNPC House\n" +
-                "f\tFountain\n" +
-                "c\tCottage\n" +
-                "L\tLake\n" +
-                "Q\tQuarry\n" +
-                "g\tGreenhouse\n" +
-                "-\tBuilt Greenhouse\n" +
-                "#\tFarm Building\n" +
-                "\nOther Structures\n" +
-                "t\tTrunk\n" +
-                "T\tTree\n" +
-                "*\tStone\n" +
-                "a\tAnimal\n" +
-                "x\tFish\n" +
-                "&\tCraft\n" +
-                "^\tAnimalProduct\n" +
-                "O\tShipping Bin\n" +
-                "r\tCrop\n" +
-                "=\tMineral\n" +
-                "$\tMixed Seed\n" +
-                "z\tSeed\n" +
-                "\\\tTool\n";
+        String resp = "" +
+                "\uD83E\uDDCD\tYou\n" +
+                "👴\tNPC\n\nTile Types:\n" +
+                "🌿\tGrass\n" +
+                "🌸\tFlower\n" +
+                "❄️\uFE0F\tSnow\n" +
+                "▫️\uFE0F\tFlat\n" +
+                "\uD83E\uDDF1\tPath\n" +
+                "🚧\tFence\n" +
+                "🚪\tDoor\n" +
+                "\uD83D\uDFEB️\tPlowed\n" +
+                "\uD83C\uDF29️\tthundered\n" +
+                "Buildings:\n" +
+                "\uD83C\uDFEC\tStore\n" +
+                "\uD83C\uDFE1\ttNPC House\n" +
+                "\uD83C\uDF0A\tFountain\n" +
+                "\uD83C\uDFE1\ttCottage\n" +
+                "\uD83C\uDF0A\ttLake\n" +
+                "\uD83D\uDDFF\tQuarry\n" +
+                "🚧\tGreenhouse\n" +
+                "🏢\tBuilt Greenhouse\n" +
+                "\uD83C\uDFDA️\tFarm Building\n" +
+                "\uD83C\uDF33\tTrunk\n" +
+                "🌲\tTree\n" +
+                "🗿\tStone\n" +
+                "🐄\tAnimal\n" +
+                "🔨\tCraft\n" +
+                "🥚\tAnimalProduct\n" +
+                "\uD83D\uDDF3️\tShipping Bin\n" +
+                "🌾\tCrop\n" +
+                "🔷\tMineral\n" +
+                "🌱\tMixed Seed\n" +
+                "🫘\tSeed\n";
         return new Response(resp, true);
     }
 
