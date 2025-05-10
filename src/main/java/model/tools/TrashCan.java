@@ -6,24 +6,19 @@ import model.Salable;
 import model.Tile;
 import model.products.Product;
 
-import java.io.Serializable;
-
 @Getter
-public enum TrashCan implements Tool, Serializable {
+public enum TrashCan implements Tool {
     NORMAL("normal trashcan",0,0),
     COPPER("copper trashcan",1,15),
     IRON("iron trashcan",2,30),
     GOLD("gold trashcan",3,45),
     IRIDIUM("iridium trashcan",4,60);
 
-    private String name;
-    private Integer level;
-    private Integer prunedValue;
+    private final String name;
+    private final Integer level;
+    private final Integer prunedValue;
 
-    TrashCan() {
-    }
-
-    TrashCan(String name, int level, int prunedValue) {
+    TrashCan(String name,int level,int prunedValue) {
         this.name = name;
         this.level = level;
         this.prunedValue = prunedValue;

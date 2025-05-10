@@ -4,11 +4,10 @@ import lombok.Getter;
 import model.enums.Season;
 import model.products.Harvestable;
 
-import java.io.Serializable;
 import java.util.List;
 
 @Getter
-public enum CropType implements Harvestable , Serializable {
+public enum CropType implements Harvestable {
     BLUE_JAZZ("Blue Jazz", (SeedType.JAZZ_SEEDS),
             List.of(1, 2, 2, 2), true, 0, 50, true, 45, List.of(Season.SPRING), false, false),
     CARROT("Carrot", (SeedType.CARROT_SEEDS),
@@ -114,20 +113,17 @@ public enum CropType implements Harvestable , Serializable {
     SNOW_YAM("Snow Yam", null, null, true, 0, 100, true, 30, List.of(Season.WINTER), false, true),
     WINTER_ROOT("Winter Root", null, null, true, 0, 70, true, 25, List.of(Season.WINTER), false, true);
 
-    private String name;
-    private Source source;
-    private List<Integer> harvestStages;
-    private boolean oneTime;
-    private int regrowthTime;
-    private int baseSellPrice;
-    private boolean isEdible;
-    private int energy;
-    private List<Season> seasons;
-    private boolean canBecomeGiant;
-    private boolean isForaging;
-
-    CropType() {
-    }
+    private final String name;
+    private final Source source;
+    private final List<Integer> harvestStages;
+    private final boolean oneTime;
+    private final int regrowthTime;
+    private final int baseSellPrice;
+    private final boolean isEdible;
+    private final int energy;
+    private final List<Season> seasons;
+    private final boolean canBecomeGiant;
+    private final boolean isForaging;
 
     CropType(String name, Source source, List<Integer> harvestStages, boolean oneTime, int regrowthTime,
              int baseSellPrice, boolean isEdible, int energy, List<Season> seasons, boolean canBecomeGiant,

@@ -21,13 +21,8 @@ public class Tile {
         if (!isPassable) return false;
         boolean flag = switch (tileType) {
             case MUD, FENCE -> false;
-            case FLAT -> true;
-            case PATH -> true;
-            case SNOW -> true;
-            case GRASS -> true;
-            case FLOWER -> true;
-            case PLOWED -> true;
-            case DOOR -> checkDoor();
+            case FLAT, PATH, GRASS, FLOWER, SNOW, PLOWED, THUNDERED -> true;
+			case DOOR -> checkDoor();
         };
 
         return flag;
@@ -37,7 +32,7 @@ public class Tile {
         Game currentGame = App.getInstance().getCurrentGame();
         for (Farm farm : currentGame.getVillage().getFarms()) {
             if (farm.isPairInFarm(new Pair(x, y))) {
-                return currentGame.getPlayers().contains(currentGame.getCurrentPlayer());
+                return farm.getPlayers().contains(currentGame.getCurrentPlayer());
             }
 
         }

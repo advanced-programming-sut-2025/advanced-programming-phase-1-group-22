@@ -8,27 +8,22 @@ import model.structure.Structure;
 import model.structure.farmInitialElements.Lake;
 import utils.App;
 
-import java.io.Serializable;
 import java.util.List;
 
 @Getter
 
-public enum WateringCanType implements Tool , Serializable {
+public enum WateringCanType implements Tool {
     NORMAL("normal wateringCan",0,40,5),
     CUPPER("cupper wateringCan",1,55,4),
     IRON("iron wateringCan",2,70,3),
     GOLD("gold wateringCan",3,85,2),
     IRIDIUM("iridium wateringCan",4,100,1);
 
-    private String name;
-    private Integer level;
-    private Integer capacity;
-    private Integer energyCost;
-
-    WateringCanType() {
-    }
-
-    WateringCanType(String name, Integer level, Integer capacity, Integer energyCost) {
+    private final String name;
+    private final Integer level;
+    private final Integer capacity;
+    private final Integer energyCost;
+     WateringCanType(String name, Integer level, Integer capacity, Integer energyCost) {
         this.name = name;
          this.level = level;
         this.capacity = capacity;
@@ -62,10 +57,14 @@ public enum WateringCanType implements Tool , Serializable {
 
     @Override
     public int getEnergy(Player player) {
+        int minus = 0;
         if (player.getAbilityLevel(Ability.FARMING) == 4){
-            return (int) (App.getInstance().getCurrentGame().getWeatherCoefficient() * energyCost - 1);
+            minus += 1;
         }
-        return (int) (App.getInstance().getCurrentGame().getWeatherCoefficient() * energyCost);
+        if (player.getBuffAbility() != null && player.getBuffAbility().equals(Ability.FARMING)){
+            minus += 1;
+        }
+        return (int) (App.getInstance().getCurrentGame().getWeatherCoefficient() * energyCost - minus);
     }
 
     @Override

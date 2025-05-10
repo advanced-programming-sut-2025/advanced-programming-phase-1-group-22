@@ -16,13 +16,12 @@ import model.source.MineralType;
 import model.source.SeedType;
 import utils.App;
 
-import java.io.Serializable;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Getter
 @ToString
-public enum MadeProductType implements Product, Serializable {
+public enum MadeProductType implements Product {
 
     HONEY("honey", () -> CraftType.BEE_HOUSE, "It's a sweet syrup produced by bees.", 75, new TimeAndDate(4, 0), () -> Map.of(), 350, true),
     CHEESE("cheese", () -> CraftType.CHEESE_PRESS, "It's your basic cheese.", 100, new TimeAndDate(0, 3), () -> Map.of(AnimalProductType.MILK, 1, AnimalProductType.BIG_MILK, 1), 230, true) {
@@ -43,6 +42,8 @@ public enum MadeProductType implements Product, Serializable {
             return 600;
         }
     },
+    PALE_ALE("pale ale", () -> CraftType.KEG, "Drink in moderation.", 50, new TimeAndDate(3, 0), () -> Map.of(CropType.HOPS, 1), 300, true),
+    MEAD("mead", () -> CraftType.KEG, "A fermented beverage made from honey. Drink in moderation.", 100, new TimeAndDate(0, 10), () -> Map.of(MadeProductType.HONEY, 1), 300, true),
     BEER("beer", () -> CraftType.KEG, "Drink in moderation.", 50, new TimeAndDate(1, 0), () -> Map.of(CropType.WHEAT, 1), 200, true),
     VINEGAR("vinegar", () -> CraftType.KEG, "An aged fermented liquid used in many cooking recipes.", 13, new TimeAndDate(0, 10), () -> Map.of(CropType.UNMILLED_RICE, 1), 100, true),
     COFFE("coffee", () -> CraftType.KEG, "It smells delicious. This is sure to give you a boost.", 75, new TimeAndDate(0, 2), () -> Map.of(CropType.COFFEE_BEAN, 5), 150, true),
@@ -65,9 +66,12 @@ public enum MadeProductType implements Product, Serializable {
             }
             return new Response("Ingredient is not a vegetable");
         }
+
+        @Override
+        public Integer countIngredient() {
+            return 1;
+        }
     },
-    MEAD("mead", () -> CraftType.KEG, "A fermented beverage made from honey. Drink in moderation.", 100, new TimeAndDate(0, 10), () -> Map.of(MadeProductType.HONEY, 1), 300, true),
-    PALE_ALE("pale ale", () -> CraftType.KEG, "Drink in moderation.", 50, new TimeAndDate(3, 0), () -> Map.of(CropType.HOPS, 1), 300, true),
     WINE("wine", () -> CraftType.KEG, "Drink in moderation.", 0, new TimeAndDate(7, 0), null, 0, true) {
         @Override
         public Integer calcEnergy(Salable product) {
@@ -87,32 +91,22 @@ public enum MadeProductType implements Product, Serializable {
             }
             return new Response("Ingredient is not a fruit");
         }
+
+        @Override
+        public Integer countIngredient() {
+            return 1;
+        }
     },
-    //    DRIED_MUSHROOMS("dried mushrooms", CraftType.DEHYDRATOR, "A package of gourmet mushrooms.", 50, null, null, null, true) {
-//        @Override
-//        public Integer calcPrice(Salable product) {
-//            return (int) (7.5 * (double) product.getSellPrice()) + 25;
-//        }
-//
-//        @Override
-//        public Response isIngredientsValid(Salable ingredient, Integer amount, boolean coal) {
-//            if (ingredient instanceof HarvestAbleProduct && ((HarvestAbleProduct)ingredient).isMushroom()) {
-//                if (amount > 4) return true;
-//                return new Response("Not enough ingredients.");
-//            }
-//            return new Response("Ingredient is not a mushroom");
-//        }
-//
-//        @Override
-//        public TimeAndDate calcProccesingTime(Salable product) {
-//            return calcNextMorning();
-//        }
-//
-//    @Override
-//    public Integer countIngredient() {
-//        return 5);
-//    }
-//    },
+        DRIED_MUSHROOMS("dried mushrooms", () -> CraftType.DEHYDRATOR, "A package of gourmet mushrooms.", 50, null, () -> Map.of(FruitType.COMMON_MUSHROOM, 5, CropType.RED_MUSHROOM, 5, CropType.PURPLE_MUSHROOM, 5), 25, true) {
+        @Override
+        public Integer calcPrice(Salable product) {
+            return (int) (7.5 * (double) product.getSellPrice()) + 25;
+        }
+        @Override
+        public TimeAndDate calcProccesingTime(Salable product) {
+            return calcNextMorning();
+        }
+    },
     DRIED_FRUIT("dried fruit",()-> CraftType.DEHYDRATOR, "Chewy pieces of dried fruit.", 75, null, null, 0, true) {
         @Override
         public Integer calcPrice(Salable product) {
@@ -130,6 +124,7 @@ public enum MadeProductType implements Product, Serializable {
             }
             return new Response("Ingredient is not a food");
         }
+
 
         @Override
         public TimeAndDate calcProccesingTime(Salable product) {
@@ -185,6 +180,11 @@ public enum MadeProductType implements Product, Serializable {
             }
             return new Response("Ingredient is not a vegetables");
         }
+
+        @Override
+        public Integer countIngredient() {
+            return 1;
+        }
     },
     JELLY("jelly",()-> CraftType.PRESERVES_JAR, "Gooey.", 0, new TimeAndDate(3, 0), null, 50, true) {
         @Override
@@ -204,6 +204,11 @@ public enum MadeProductType implements Product, Serializable {
                 return new Response("Not enough ingredients.");
             }
             return new Response("Ingredient is not a fruit");
+        }
+
+        @Override
+        public Integer countIngredient() {
+            return 1;
         }
     },
     SMOKED_FISH("smoked fish", ()->CraftType.FISH_SMOKER, "A whole fish, smoked to perfection.", 0, new TimeAndDate(0, 1), null, 50, true) {
@@ -226,21 +231,24 @@ public enum MadeProductType implements Product, Serializable {
             }
             return new Response("Ingredient is not a fish");
         }
+
+        @Override
+        public Integer countIngredient() {
+            return 1;
+        }
     },
     IRON_BAR("iron bar", ()->CraftType.FURNACE, "Turns ore and coal into metal bars.", 0, new TimeAndDate(0, 4), () -> Map.of(MineralType.IRON_ORE, 5), 1500, false, true),
     COPPER_BAR("copper bar", ()->CraftType.FURNACE, "Turns ore and coal into metal bars.", 0, new TimeAndDate(0, 4), () -> Map.of(MineralType.COPPER_ORE, 5), 750, false, true),
     GOLD_BAR("gold bar",()-> CraftType.FURNACE, "Turns ore and coal into metal bars.", 0, new TimeAndDate(0, 4), () -> Map.of(MineralType.GOLD_ORE, 5), 4000, false, true),
     IRIDIUM_BAR("iridium bar",()-> CraftType.FURNACE, "Turns ore and coal into metal bars.", 0, new TimeAndDate(0, 4), () -> Map.of(MineralType.IRIDIUM_ORE, 5), 10000, false, true); //TODO SellPrice not found
-    private String name;
+    private final String name;
     private String description;
     private int energy;
     private TimeAndDate processingTime;
-    private Integer sellPrice;
+    private final Integer sellPrice;
     private boolean isEdible;
     private boolean isCoalNeeded;
 
-    MadeProductType() {
-    }
 
     @FunctionalInterface
     private interface IngredientsSupplier {
@@ -252,8 +260,8 @@ public enum MadeProductType implements Product, Serializable {
         CraftType get();
     }
 
-    private IngredientsSupplier ingredientsSupplier;
-    private CraftTypeSupplier craftTypeSupplier;
+    private final IngredientsSupplier ingredientsSupplier;
+    private final CraftTypeSupplier craftTypeSupplier;
     private transient final AtomicReference<Map<Salable, Integer>> ingredientsCache = new AtomicReference<>();
     private transient final AtomicReference<CraftType> craftType = new AtomicReference<>();
 
@@ -324,8 +332,8 @@ public enum MadeProductType implements Product, Serializable {
         if (processing == null) {
             return now.getNextMorning();
         } else {
-            now = now.getNextXHour(processing.getHour());
-            return now.getNextXDay(processing.getDay());
+            now = now.getNextXDay(processing.getDay());
+            return now.getNextXHour(processing.getHour());
         }
     }
 
@@ -340,13 +348,13 @@ public enum MadeProductType implements Product, Serializable {
         }
 
         for (Salable ingredient : this.getIngredients().keySet()) {
-            if (product.equals(ingredient)) {
+            if (product.getName().equalsIgnoreCase(ingredient.getName())) {
                 if (amount >= this.getIngredients().get(ingredient)) return new Response("", true);
                 return new Response("Amount is not enough");
             }
-            return new Response("Ingredient not found.");
+//            return new Response("", true);
         }
-        return new Response("", true);
+        return new Response("Ingredient not found.");
     }
 
     public Integer countIngredient() {

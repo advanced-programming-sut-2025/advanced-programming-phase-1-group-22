@@ -5,22 +5,17 @@ import lombok.Setter;
 import model.Salable;
 import model.products.Product;
 
-import java.io.Serializable;
-
 @Getter
 @Setter
-public class MadeProduct implements Salable, Serializable {
+public class MadeProduct implements Salable {
     private MadeProductType madeProductType;
     private Salable product;
     private Integer price;
 
-    public MadeProduct() {
-    }
-
     public MadeProduct(MadeProductType madeProductType, Salable product) {
         this.madeProductType = madeProductType;
         this.product = product;
-        price = madeProductType.calcPrice((Product) product);
+        price = madeProductType.calcPrice(product);
     }
 
     public MadeProduct(MadeProductType value) {

@@ -12,25 +12,21 @@ import model.structure.StoneType;
 import model.structure.Structure;
 import utils.App;
 
-import java.io.Serializable;
 import java.util.List;
 
 @Getter
-public enum Pickaxe implements Tool, Serializable {
+public enum Pickaxe implements Tool {
     NORMAL("normal pickaxe",0, 5),
     COPPER("copper pickaxe",1, 4),
     IRON("iron pickaxe",2, 3),
     GOLD("gold pickaxe",3, 2),
     IRIDIUM("iridium pickaxe",4, 1);
 
-    private String name;
-    private int level;
-    private int energyCost;
+    private final String name;
+    private final int level;
+    private final int energyCost;
 
-    Pickaxe() {
-    }
-
-    Pickaxe(String name, int level1, int energyUse1) {
+    Pickaxe(String name,int level1, int energyUse1) {
         this.name = name;
         this.level = level1;
         this.energyCost = energyUse1;
@@ -68,10 +64,14 @@ public enum Pickaxe implements Tool, Serializable {
 
     @Override
     public int getEnergy(Player player) {
+        int minus = 0;
         if (player.getAbilityLevel(Ability.MINING) == 4){
-            return (int) (App.getInstance().getCurrentGame().getWeatherCoefficient() * energyCost - 1);
+            minus += 1;
         }
-        return (int) (App.getInstance().getCurrentGame().getWeatherCoefficient() * energyCost);
+        if (player.getBuffAbility() != null && player.getBuffAbility().equals(Ability.MINING)){
+            minus += 1;
+        }
+        return (int) (App.getInstance().getCurrentGame().getWeatherCoefficient() * energyCost - minus);
     }
 
     @Override
