@@ -20,7 +20,7 @@ public class Tile {
     public Boolean isPassable() {
         if (!isPassable) return false;
         boolean flag = switch (tileType) {
-            case MUD, FENCE -> false;
+            case FENCE -> false;
             case FLAT, PATH, GRASS, FLOWER, SNOW, PLOWED, THUNDERED -> true;
 			case DOOR -> checkDoor();
         };

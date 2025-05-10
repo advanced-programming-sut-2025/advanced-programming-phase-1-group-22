@@ -4,16 +4,16 @@ import lombok.Getter;
 
 @Getter
 public enum TileType {
-    GRASS('G'), FLOWER('F'), SNOW('S'), MUD('M'), FLAT('.'),
-    PATH('+'), FENCE('C'), DOOR('D'),PLOWED('P'), THUNDERED('B');
-    private final Character name;
+    GRASS("🌿"), FLOWER("🌸"), SNOW("❄️"), FLAT("▫️"),
+    PATH("🧱"), FENCE("🚧"), DOOR("🚪"),PLOWED("🟫"), THUNDERED("🌩️");
+    private final String name;
 
-    TileType(Character name) {
+    TileType(String name) {
         this.name = name;
     }
 
 
-    public Character StringToCharacter() {
+    public String StringToCharacter() {
         return name;
     }
 }
