@@ -1,0 +1,76 @@
+register -u amirreza -p tU>(13sEeO     tU>(13sEeO -n amir   -e  amir@gmail.com  -g MALE
+register -u  zahra -p   random   -n zahraa     -e zahra@outlook.com -g  FEMALE
+login -u amirreza -p      tU>(13sEeO2
+forget    password -u amirreza
+menu enter MAIN
+show current menu
+change password -p tU>(13sEeO23 -o tU>(13sEeO2
+tU>(13sEeO
+
+login -u beta1 -p Bet&pas3
+game      new -u beta2 beta3 beta4
+game map 2
+game map 1
+game map 3
+game map 5
+walk -l 32,48
+print map -l 0,0 -s 2000
+menu enter RELATION_MENU
+ask marriage -u beta2 -r Wedding Ring
+next turn
+menu enter RELATION_MENU
+respond accept -u beta1
+next turn
+next turn
+next turn
+walk -l 135,30
+meet npc sebastian
+meet npc rabin
+meet npc lia
+meet npc harvey
+meet npc ebigil
+gift NPC RABIN -i flower
+quests finish -i 2
+meet npc SEBASTIAN
+trade -u beta2  -t offer -i flower -a 1 -p 12
+trade -u beta2  -t offer -i flower -a 2 -p 12
+trade -u beta2  -t request -i flower -a 1 -ti normal axe -ta 1
+trade -u beta2  -t request -i flower -a 1 -ti normal axe -ta 2
+trade -u beta2  -t offer -i flower -a 2 -ti normal axe -ta 8
+trade -u beta2  -t offer -i flower -a 1 -ti normal axe -ta 2
+trade -u beta2  -t request -i flower -a 1 -p 9
+trade -u beta2  -t request -i flower -a 1 -p 12
+trade -u beta2  -t offer -i flower -a 1 -p 12
+trade -u beta2  -t offer -i flower -a 2 -p 12
+next turn
+menu enter TRADE_MENU
+trade list
+ask marriage -u beta2 -r Wedding Ring
+menu enter RELATION_MENU
+gift -u beta2 -i normal axe -m 1
+menu enter TRADE_MENU
+
+@
+walk -l 32,48
+talk -u beta1 -m salam
+crafting show recipes
+
+dateTime
+dateTime
+day of the wek
+season
+cheat advance time 13h
+dateTime
+cheat advance date 40d
+dateTime
+cheat advance date 50d
+dateTime
+cheat add item -n wood -c 1200
+cheat add 2000 dollars
+greenhouse build
+
+
+walk -l 60,90
+walk -l 30,120
+walk -l 75,30
+ask marriage -u beta2 -r Wedding Ring
