@@ -13,11 +13,11 @@ import java.util.List;
 @Getter
 @ToString
 public enum TreeType implements Harvestable {
-//      ACORNS(null, Season.SPECIAL, "Acorns", SeedType.ACORNS, true, null, 0),
-//     MAPLE_SEEDS(null, Season.SPECIAL, "Maple Seeds", SeedType.MAPLE_SEEDS, true, null, 0),
-//      PINE_CONES(null, Season.SPECIAL, "Pine cones", SeedType.PINE_CONES, true, null, 0),
-//     MAHOGANY_SEEDS(null, Season.SPECIAL, "Mahogany Seeds", SeedType.MAHOGANY_SEEDS, true, null, 0),
-//     MUSHROOM_TREE_SEEDS(null, Season.SPECIAL, "Mushroom Tree Seeds", SeedType.MUSHROOM_TREE_SEEDS, true, null, 0),
+      ACORNS(null, Season.SPECIAL, "Acorns", SeedType.ACORNS, true, null, 0),
+     MAPLE_SEEDS(null, Season.SPECIAL, "Maple Seeds", SeedType.MAPLE_SEEDS, true, null, 0),
+      PINE_CONES(null, Season.SPECIAL, "Pine cones", SeedType.PINE_CONES, true, null, 0),
+     MAHOGANY_SEEDS(null, Season.SPECIAL, "Mahogany Seeds", SeedType.MAHOGANY_SEEDS, true, null, 0),
+     MUSHROOM_TREE_SEEDS(null, Season.SPECIAL, "Mushroom Tree Seeds", SeedType.MUSHROOM_TREE_SEEDS, true, null, 0),
     APRICOT_TREE((FruitType.APRICOT), Season.SPRING, "Apricot Tree", SeedType.APRICOT_SAPLING, false, List.of(7, 7, 7, 7), 1),
     CHERRY_TREE((FruitType.CHERRY), Season.SPRING, "Cherry Tree", SeedType.CHERRY_SAPLING, false, List.of(7, 7, 7, 7), 1),
     BANANA_TREE((FruitType.BANANA), Season.SUMMER, "Banana Tree", SeedType.BANANA_SAPLING, false, List.of(7, 7, 7, 7), 1),
