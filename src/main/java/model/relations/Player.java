@@ -78,6 +78,8 @@ public class Player extends Actor implements JsonPreparable {
 	@JsonProperty("currentCarryingWrapper")
 	private ObjectWrapper currentCarryingWrapper;
 
+	public Player() {
+	}
 
 	public Player(User user) {
 		this.user = user;
