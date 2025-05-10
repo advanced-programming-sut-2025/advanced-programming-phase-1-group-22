@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import model.animal.Animal;
@@ -35,6 +36,8 @@ import save3.ObjectMapWrapper;
 import save3.ObjectWrapper;
 import utils.App;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -53,9 +56,12 @@ public class Village implements JsonPreparable {
     @JsonProperty("structureWrappers")
     private List<ObjectWrapper> structureWrappers;
     public Village() {
-        fillStructures();
     }
 
+
+    public void initAfterLoad() {
+        fillStructures();
+    }
     public void shuffleFarms() {
         Random random = new Random();
         for (int i = 3; i > 0; i--) {

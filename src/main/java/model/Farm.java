@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import model.products.TreesAndFruitsAndSeeds.Tree;
 import model.products.TreesAndFruitsAndSeeds.TreeType;
@@ -26,6 +27,7 @@ import java.util.Random;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class Farm implements JsonPreparable {
     @JsonManagedReference
     private List<Tile> tiles = new ArrayList<>();
