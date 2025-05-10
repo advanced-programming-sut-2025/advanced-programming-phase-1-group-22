@@ -457,6 +457,7 @@ public class GameService {
         if (!flag) {
             return new Response("your backpack is full");
         }
+        currentTile.setIsPassable(true);
         return new Response("you picked up a " + ((Salable) currentStructure).getName(), true);
     }
 
@@ -1335,11 +1336,18 @@ public class GameService {
         }
         currentFarm.getStructures().add((Structure) product);
         setScareCrowAndSprinklerForAll();
-        tile.setIsFilled(true); //TODO not always is filled;
+        tile.setIsFilled(true);
+        tile.setIsPassable(false);
         return new Response(itemName + " is put on the ground.", true);
     }
 
-    public Response C_AddItem(String name, String count) { //TODO conflict of product and productType
+    public Response C_AddItem(String name, String count) {
+        try {
+            int a = Integer.parseInt(count);
+            if (a <= 0) return new Response("Invalid count.");
+        } catch (Exception e) {
+            return new Response("Invalid count.");
+        }
         BackPack inventory = app.getCurrentGame().getCurrentPlayer().getInventory();
         Salable salable = null;
         for (FishType value : FishType.values()) {
@@ -1673,11 +1681,12 @@ public class GameService {
     }
 
     public Response artisanUse(String name, String item1, String item2) {
-        if ("honey".equalsIgnoreCase(item1)) {
-            int b = 5;
-        }
         Player player = app.getCurrentGame().getCurrentPlayer();
-        Craft craft = findCraft(name);
+        FlagWraper resp = new FlagWraper(true);
+        Craft craft = findCraft(name, resp);
+        if (resp.isFlag()) {
+            return new Response("No artisan called " + name + " in the farm.");
+        }
         if (craft == null) {
             return new Response("No artisan called " + name + " nearby.");
         }
@@ -1702,16 +1711,20 @@ public class GameService {
         }
 
         MadeProductType madeProductType = null;
-        for (MadeProductType value : MadeProductType.values()) {
-            if (value.getCraft() == craft.getCraftType()) {
-                Response isArtisanValid = product1 == null ? new Response("", true) : value.isIngredientsValid(product1,
-                        player.getInventory().countProductFromBackPack(product1.getName()),
-                        product2 != null);
-                if (isArtisanValid.shouldBeBack()) {
-                    madeProductType = value;
-                    break;
+        try {
+            for (MadeProductType value : MadeProductType.values()) {
+                if (value.getCraft() == craft.getCraftType()) {
+                    Response isArtisanValid = product1 == null ? new Response("", true) : value.isIngredientsValid(product1,
+                            player.getInventory().countProductFromBackPack(product1.getName()),
+                            product2 != null);
+                    if (isArtisanValid.shouldBeBack()) {
+                        madeProductType = value;
+                        break;
+                    }
                 }
             }
+        } catch (Exception e) {
+            return new Response(e.getMessage());
         }
         if (madeProductType == null) return new Response("Items given are not suitable for the craft");
         if (craft.getMadeProduct() != null) return new Response("Craft already in queue.");
@@ -1730,7 +1743,11 @@ public class GameService {
 
     public Response artisanGet(String name) {
         Player player = app.getCurrentGame().getCurrentPlayer();
-        Craft craft = findCraft(name);
+        FlagWraper resp = new FlagWraper(true);
+        Craft craft = findCraft(name, resp);
+        if (resp.isFlag()) {
+            return new Response("No artisan called " + name + " in the farm.");
+        }
         if (craft == null) {
             return new Response("No artisan called " + name + " nearby.");
         }
@@ -1980,7 +1997,8 @@ public class GameService {
         updateRecipes();
         Player player = app.getCurrentGame().getCurrentPlayer();
         CraftingRecipe recipe = player.findCraftingRecipe(name);
-        if (recipe == null) return new Response("You've not learnt to craft " + name);
+        if (recipe == null) return new Response(name + " is not a valid recipe.");
+        if (!player.getCraftingRecipes().get(recipe)) return new Response("You've not learnt to craft " + name);
         Response isPossible = recipe.getCraft().isCraftingPossible(player);
         if (!isPossible.shouldBeBack()) return isPossible;
         if (!player.getInventory().isInventoryHaveCapacity(new Craft(recipe.getCraft(), null, null))) {
@@ -2040,7 +2058,8 @@ public class GameService {
         Player player = app.getCurrentGame().getCurrentPlayer();
         Fridge fridge = app.getCurrentGame().findFarm().getFridge();
         CookingRecipe recipe = player.findCookingRecipe(name + " recipe");
-        if (recipe == null) return new Response("You've not learnt to cook " + name);
+        if (recipe == null) return new Response(name + " is not a valid recipe.");
+        if (!player.getCookingRecipes().get(recipe)) return new Response("You've not learnt to cook " + name);
         boolean isPossible = recipe.getIngredients().isValidIngredient(fridge, player);
         if (!isPossible) return new Response("Ingredients not found in the refrigerator.");
         if (!player.getInventory().isInventoryHaveCapacity(recipe.getIngredients())) {
@@ -2088,12 +2107,13 @@ public class GameService {
         return player.getStoreType().purchase(name, Integer.parseInt(count));
     }
 
-    private Craft findCraft(String name) {
+    private Craft findCraft(String name, FlagWraper resp) {
         Player player = app.getCurrentGame().getCurrentPlayer();
         Farm farm = app.getCurrentGame().findFarm();
         for (Structure structure : farm.getStructures()) {
             if (structure instanceof Craft) {
                 if (((Craft) structure).getName().equalsIgnoreCase(name)) {
+                    resp.setFlag(false);
                     Pair pair = new Pair(structure.getTiles().getFirst().getX(), structure.getTiles().getFirst().getY());
                     Pair origin = new Pair(player.getTiles().getFirst().getX(), player.getTiles().getFirst().getY());
                     if (Math.abs(pair.getX() - origin.getX()) <= 1 && Math.abs(pair.getY() - origin.getY()) <= 1) {

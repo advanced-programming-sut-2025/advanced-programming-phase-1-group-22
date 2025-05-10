@@ -220,8 +220,7 @@ public class Player extends Actor implements JsonPreparable {
 	public CraftingRecipe findCraftingRecipe(String string) {
 		for (CraftingRecipe craftingRecipe : craftingRecipes.keySet()) {
 			if (craftingRecipe.getName().equalsIgnoreCase(string + " recipe")) {
-				if (craftingRecipes.get(craftingRecipe)) return craftingRecipe;
-				return null;
+				return craftingRecipe;
 			}
 		}
 		return null;
@@ -230,8 +229,7 @@ public class Player extends Actor implements JsonPreparable {
 	public CookingRecipe findCookingRecipe(String string) {
 		for (CookingRecipe cookingRecipe : cookingRecipes.keySet()) {
 			if (cookingRecipe.getName().equalsIgnoreCase(string)) {
-				if (cookingRecipes.get(cookingRecipe)) return cookingRecipe;
-				return null;
+				return cookingRecipe;
 			}
 		}
 		return null;
