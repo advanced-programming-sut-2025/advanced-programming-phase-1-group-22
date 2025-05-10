@@ -1,11 +1,9 @@
 package model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import model.animal.Animal;
@@ -31,16 +29,12 @@ import model.structure.farmInitialElements.Quarry;
 import model.structure.stores.Store;
 import model.structure.stores.StoreType;
 import model.tools.Tool;
-import save3.JsonPreparable;
-import save3.ObjectMapWrapper;
-import save3.ObjectWrapper;
+import saveGame.JsonPreparable;
+import saveGame.ObjectWrapper;
 import utils.App;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 @Getter

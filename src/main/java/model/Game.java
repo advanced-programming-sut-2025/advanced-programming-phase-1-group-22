@@ -1,7 +1,6 @@
 package model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -17,7 +16,6 @@ import model.relations.Player;
 import model.shelter.ShippingBin;
 import model.structure.Structure;
 import model.structure.stores.*;
-import save3.JsonPreparable;
 import utils.App;
 
 import java.io.Serializable;

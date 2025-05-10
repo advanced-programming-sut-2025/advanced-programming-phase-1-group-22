@@ -1,11 +1,10 @@
-package save3;
+package saveGame;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import model.Game;
 
 import java.io.File;
-import java.io.IOException;
 
 public class GameSaver {
 

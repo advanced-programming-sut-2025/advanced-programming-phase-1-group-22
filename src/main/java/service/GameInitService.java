@@ -6,6 +6,7 @@ import model.records.Response;
 import model.relations.Player;
 import repository.UserRepository;
 import repository.UserRepositoryImpl;
+import saveGame.GameSerializer;
 import utils.App;
 import utils.HibernateUtil;
 import utils.InitialGame;
@@ -109,7 +110,8 @@ public class GameInitService {
     }
 
     public Response loadGame() {
-        //TODO not mine to do
+        Game game = null;
+        game = GameSerializer.loadGame("game.bin");
         return null;
     }
 
