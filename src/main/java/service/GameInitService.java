@@ -1,11 +1,14 @@
 package service;
 
+import jakarta.persistence.EntityManager;
 import model.*;
 import model.records.Response;
 import model.relations.Player;
 import repository.UserRepository;
 import repository.UserRepositoryImpl;
+import saveGame.GameSerializer;
 import utils.App;
+import utils.HibernateUtil;
 import utils.InitialGame;
 import variables.Session;
 import view.Menu;
@@ -17,7 +20,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class GameInitService {
-    UserRepository userRepository = new UserRepositoryImpl();
+    EntityManager em = HibernateUtil.getEntityManagerFactory().createEntityManager();
+    UserRepository userRepository = new UserRepositoryImpl(em);
     private static GameInitService instance;
     App app = App.getInstance();
 
@@ -106,7 +110,8 @@ public class GameInitService {
     }
 
     public Response loadGame() {
-        //TODO not mine to do
+        Game game = null;
+        game = GameSerializer.loadGame("game.bin");
         return null;
     }
 

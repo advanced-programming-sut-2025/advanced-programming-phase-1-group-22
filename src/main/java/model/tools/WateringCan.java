@@ -1,6 +1,7 @@
 package model.tools;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import model.products.HarvestAbleProduct;
 import model.relations.Player;
@@ -14,6 +15,7 @@ import java.util.List;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class WateringCan implements Tool{
 	private WateringCanType wateringCanType;
 	private Integer remain;

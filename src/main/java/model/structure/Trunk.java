@@ -1,10 +1,12 @@
 package model.structure;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
 public class Trunk extends Structure {
-    private final TrunkType trunkType;
+    private  TrunkType trunkType;
     private Boolean isBurn = false;
 
     public Trunk(TrunkType trunkType) {

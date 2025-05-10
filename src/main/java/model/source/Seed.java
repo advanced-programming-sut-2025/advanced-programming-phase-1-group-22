@@ -1,12 +1,14 @@
 package model.source;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import model.Salable;
 import model.structure.Structure;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class Seed extends Structure implements Salable {
     private SeedType seedType;
 

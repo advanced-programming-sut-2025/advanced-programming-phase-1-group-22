@@ -3,13 +3,13 @@ package model.tools;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import model.products.ProductQuality;
 import model.relations.Player;
 import model.Salable;
-import model.exception.InvalidInputException;
-import save3.JsonPreparable;
-import save3.ObjectMapWrapper;
+import saveGame.JsonPreparable;
+import saveGame.ObjectMapWrapper;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -18,6 +18,7 @@ import java.util.Objects;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class BackPack implements JsonPreparable {
     private BackPackType backPackType;
     private Map<Salable, Integer> products = new HashMap<>();
