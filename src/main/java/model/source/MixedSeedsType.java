@@ -3,11 +3,10 @@ package model.source;
 import lombok.Getter;
 import model.enums.Season;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 @Getter
-public enum MixedSeedsType implements Source, Serializable {
+public enum MixedSeedsType implements Source{
     SPRING ("spring mixed seed",Season.SPRING){
         @Override
         protected void initialize() {
@@ -57,14 +56,11 @@ public enum MixedSeedsType implements Source, Serializable {
         }
     };
 
-    private String name;
-    private Season season;
-    protected List<SeedType> seedTypeList;
+    private final String name;
+    private final Season season;
+    protected final List<SeedType> seedTypeList;
 
-    MixedSeedsType() {
-    }
-
-    MixedSeedsType(String name, Season season) {
+    MixedSeedsType(String name,Season season) {
         this.name = name;
         this.season = season;
         this.seedTypeList = new ArrayList<>();

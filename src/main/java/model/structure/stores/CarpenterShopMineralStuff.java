@@ -23,14 +23,14 @@ public enum CarpenterShopMineralStuff implements Shop {
 		this.dailyLimit = dailyLimit;
 	}
 	public static String showAllProducts() {
-		StringBuilder res = new StringBuilder("Black Smith:\n");
+		StringBuilder res = new StringBuilder();
 		for (CarpenterShopMineralStuff value : CarpenterShopMineralStuff.values()) {
 			res.append(value.toString()).append(" ").append(value.getPrice()).append("$\n");
 		}
 		return res.toString();
 	}
 	public static String showAvailableProducts() {
-		StringBuilder res = new StringBuilder("Black Smith:\n");
+		StringBuilder res = new StringBuilder();
 		for (CarpenterShopMineralStuff value : CarpenterShopMineralStuff.values()) {
 			if (value.dailyLimit != value.dailySold) {
 				res.append(value.toString()).append(" ").append(value.getPrice()).append("$\n");
@@ -41,7 +41,7 @@ public enum CarpenterShopMineralStuff implements Shop {
 	public static Response purchase(String name, Integer count) {
 		CarpenterShopMineralStuff salable = null;
 		for (CarpenterShopMineralStuff value : CarpenterShopMineralStuff.values()) {
-			if(value.getMineralType().getName().equals(name)) {
+			if(value.getMineralType().getName().equalsIgnoreCase(name)) {
 				salable = value;
 			}
 		}

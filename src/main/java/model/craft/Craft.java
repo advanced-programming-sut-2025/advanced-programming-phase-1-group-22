@@ -10,25 +10,22 @@ import model.products.TreesAndFruitsAndSeeds.MadeProduct;
 import model.products.TreesAndFruitsAndSeeds.MadeProductType;
 import model.structure.Structure;
 
-import java.io.Serializable;
 import java.util.List;
 
 @Getter
 @Setter
 @ToString
-public class Craft extends Structure implements Salable, Serializable {
+public class Craft extends Structure implements Salable {
     private Integer id;
     private CraftType craftType;
     private MadeProduct madeProduct;
     private TimeAndDate ETA;
 
-    public Craft() {
-    }
-
     public Craft(CraftType craftType, MadeProduct madeProduct, TimeAndDate ETA) {
         this.craftType = craftType;
         this.madeProduct = madeProduct;
         this.ETA = ETA;
+        setIsPickable(true);
     }
 
     public List<Tile> getRange() {
@@ -46,7 +43,7 @@ public class Craft extends Structure implements Salable, Serializable {
     }
 
     public List<Tile> getAffectedTiles() {
-        return null;
+        return craftType.getTilesAffected(getTiles().getFirst());
     }
 
     @Override

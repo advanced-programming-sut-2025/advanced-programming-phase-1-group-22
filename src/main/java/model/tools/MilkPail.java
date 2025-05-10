@@ -10,11 +10,10 @@ import model.products.AnimalProduct;
 import model.structure.Structure;
 import utils.App;
 
-import java.io.Serializable;
 import java.util.List;
 
 @Getter
-public class MilkPail implements Tool, Serializable {
+public class MilkPail implements Tool {
     private static MilkPail instance;
 
     private MilkPail() {
@@ -57,10 +56,14 @@ public class MilkPail implements Tool, Serializable {
 
     @Override
     public int getEnergy(Player player) {
+        int minus = 0;
         if (player.getAbilityLevel(Ability.FARMING) == 4){
-            return (int) (App.getInstance().getCurrentGame().getWeatherCoefficient() * energyCost - 1);
+            minus += 1;
         }
-        return (int) (App.getInstance().getCurrentGame().getWeatherCoefficient() * energyCost);
+        if (player.getBuffAbility() != null && player.getBuffAbility().equals(Ability.FARMING)){
+            minus += 1;
+        }
+        return (int) (App.getInstance().getCurrentGame().getWeatherCoefficient() * energyCost - minus);
     }
 
     @Override

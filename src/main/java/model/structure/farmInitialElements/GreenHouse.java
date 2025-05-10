@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import model.Farm;
 import model.Salable;
+import model.Tile;
 import model.relations.Player;
 import model.shelter.FarmBuildingType;
 import model.source.MineralType;
@@ -42,8 +43,12 @@ public class GreenHouse extends HardCodeFarmElements {
 
     public void build(Farm farm) {
         isBuilt = true;
+        for (Tile tile : this.getTiles()) {
+            tile.setIsFilled(false);
+        }
         pool = new Lake();
         for (int i = 0; i <8; i++) {
+            this.getTiles().get(i).setIsFilled(true);
             pool.getTiles().add(this.getTiles().get(i));
         }
         farm.getStructures().add(pool);
