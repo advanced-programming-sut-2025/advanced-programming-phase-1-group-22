@@ -129,7 +129,14 @@ public class BackPack implements JsonPreparable {
     }
 
     public Boolean isInventoryHaveCapacity(Salable product) {
-        if (!(product instanceof Tool)) product = findProductInBackPackByNAme(product.getName());
+        Salable product1;
+        if (!(product instanceof Tool)) {
+            product1 = findProductInBackPackByNAme(product.getName());
+            if (product1 == null) {
+                return backPackType.getIsInfinite() || (backPackType.getCapacity() > products.size());
+            }
+            product = product1;
+        }
         return backPackType.getIsInfinite() || (backPackType.getCapacity() > products.size()) ||
                 productsAreEquivalent(product);
     }

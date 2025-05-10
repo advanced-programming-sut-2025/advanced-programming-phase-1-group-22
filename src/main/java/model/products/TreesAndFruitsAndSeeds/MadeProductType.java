@@ -6,6 +6,7 @@ import model.Salable;
 import model.TimeAndDate;
 import model.animal.Fish;
 import model.craft.CraftType;
+import model.exception.InvalidInputException;
 import model.products.AnimalProductType;
 import model.products.HarvestAbleProduct;
 import model.products.Product;
@@ -120,7 +121,8 @@ public enum MadeProductType implements Product {
             }
             if (ingredient instanceof Fruit) {
                 if (amount > 4) return new Response("", true);
-                return new Response("Not enough ingredients.");
+                throw new InvalidInputException("Amount is not enough"); // UNCHECKED
+//                return new Response("Not enough ingredients.");
             }
             return new Response("Ingredient is not a food");
         }
@@ -176,7 +178,8 @@ public enum MadeProductType implements Product {
         public Response isIngredientsValid(Salable ingredient, Integer amount, boolean coal) {
             if (ingredient instanceof Crop) {
                 if (amount > 0) return new Response("", true);
-                return new Response("Not enough ingredients.");
+//                return new Response("Not enough ingredients.");
+                throw new InvalidInputException("Amount is not enough"); // UNCHECKED
             }
             return new Response("Ingredient is not a vegetables");
         }
@@ -224,7 +227,10 @@ public enum MadeProductType implements Product {
 
         @Override
         public Response isIngredientsValid(Salable ingredient, Integer amount, boolean coal) {
-            if (!coal) return new Response("No coal is given");
+            if (!coal) {
+                throw new InvalidInputException("No coal given!"); // UNCHECKED
+//                return new Response("No coal is given");
+            }
             if (ingredient instanceof Fish) {
                 if (amount > 0) return new Response("", true);
                 return new Response("Not enough ingredients.");
@@ -344,13 +350,15 @@ public enum MadeProductType implements Product {
 
     public Response isIngredientsValid(Salable product, Integer amount, boolean coal) {
         if (isCoalNeeded && !coal) {
-            return new Response("No coal given!");
+//            return new Response("No coal given!");
+            throw new InvalidInputException("No coal given!"); // UNCHECKED
         }
 
         for (Salable ingredient : this.getIngredients().keySet()) {
             if (product.getName().equalsIgnoreCase(ingredient.getName())) {
                 if (amount >= this.getIngredients().get(ingredient)) return new Response("", true);
-                return new Response("Amount is not enough");
+                throw new InvalidInputException("Amount is not enough"); // UNCHECKED
+//                return new Response("Amount is not enough");
             }
 //            return new Response("", true);
         }

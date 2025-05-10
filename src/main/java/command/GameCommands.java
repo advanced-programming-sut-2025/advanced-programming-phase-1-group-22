@@ -23,7 +23,7 @@ public class GameCommands extends CommandClass {
     public static final GameCommands helpReadingMap = new GameCommands("^\\s*help\\s+reading\\s+map\\s*$");
     public static final GameCommands placeItem = new GameCommands("^\\s*place\\s+item\\s+-n\\s+(?<itemName>.+)\\s+-d\\s+(?<direction>\\S+)\\s*$");
     public static final GameCommands C_AddItem = new GameCommands("^\\s*cheat\\s+add\\s+item\\s+-n\\s+(?<name>.+)\\s+-c\\s+" +
-            "(?<count>\\d+)\\s*$");
+            "(?<count>\\S+)\\s*$");
 
     public static final GameCommands artisanUseHoney = new GameCommands("^\\s*artisan\\s+use\\s+bee_house\\s*$");
     public static final GameCommands artisanUse = new GameCommands("^\\s*artisan\\s+use\\s+(?<name>\\S+)\\s+(?<item1>.+)(\\s+(?<item2>\\S+))?\\s*$");  //TODO Might be incorrect
