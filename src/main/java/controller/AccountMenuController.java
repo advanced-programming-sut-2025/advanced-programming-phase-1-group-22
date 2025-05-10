@@ -1,11 +1,17 @@
 package controller;
 
+import jakarta.persistence.EntityManager;
 import model.dto.UserDto;
 import model.records.Response;
+import repository.UserRepositoryImpl;
 import service.AccountService;
+import utils.HibernateUtil;
+import utils.PasswordHasher;
+import view.ViewRender;
 
 public class AccountMenuController extends MenuController {
-    private final AccountService accountService = AccountService.getInstance();
+    EntityManager em = HibernateUtil.getEntityManagerFactory().createEntityManager();
+    private final AccountService accountService = new AccountService(new UserRepositoryImpl(em),new ViewRender(),new PasswordHasher());
 
     public Response loginUser(String... params) {
         String username = params[0];
