@@ -30,11 +30,7 @@ import utils.App;
 import variables.Session;
 import view.Menu;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 import static model.source.MineralType.WOOD;
 
@@ -259,7 +255,6 @@ public class Player extends Actor implements JsonPreparable {
 	public void prepareForSave(ObjectMapper mapper) {
 		this.abilitiesWrapper = new ObjectMapWrapper((Map<Object, Integer>) (Map<?, ?>) abilities, mapper);
 
-		// Boolean map رو هم با همین wrapper ذخیره می‌کنیم
 		Map<Object, Integer> cookingAsInt = new HashMap<>();
 		cookingRecipes.forEach((k, v) -> cookingAsInt.put(k, v ? 1:0));
 		this.cookingRecipesWrapper = new ObjectMapWrapper(cookingAsInt, mapper);
@@ -271,7 +266,6 @@ public class Player extends Actor implements JsonPreparable {
 		if (currentCarrying!=null)
 			this.currentCarryingWrapper = new ObjectWrapper(currentCarrying, mapper);
 
-		// آماده‌سازی inventory هم اگه JsonPreparable هست
 		if (inventory instanceof JsonPreparable prep)
 			prep.prepareForSave(mapper);
 	}
@@ -299,6 +293,9 @@ public class Player extends Actor implements JsonPreparable {
 		Cottage cottage = null;
 		for (Farm farm : App.getInstance().getCurrentGame().getVillage().getFarms()) {
 			if (!farm.getPlayers().isEmpty() && farm.getPlayers().getFirst() == this) {
+				if (getUser().getUsername().equals("beta2")) {
+					int b= 5;
+				}
 				cottage = farm.getCottage();
 			}
 		}
@@ -311,11 +308,50 @@ public class Player extends Actor implements JsonPreparable {
 				new Pair(this.getTiles().get(0).getX(), this.getTiles().get(0).getY()), new Pair(x1, y1)
 		);
 		if (this.getEnergy() < energy || energy == -1) {
+			this.walkTillFaint(walkingStrategy.getDistances(), new Pair(x1, y1));
 			this.faint();
+			walkingStrategy.getDistances().clear();
+			return;
 		}
 		this.getTiles().clear();
+		walkingStrategy.getDistances().clear();
 		this.getTiles().add(App.getInstance().getCurrentGame().tiles[x1][y1]);
 		this.setCurrentMenu(Menu.COTTAGE);
 		Session.setCurrentMenu(Menu.COTTAGE);
+	}
+
+	public void walkTillFaint(Map<Pair, Integer> distances, Pair dest) {
+		boolean flag = true;
+		for (Pair pair : distances.keySet()) {
+			if (pair.getX() == dest.getX() && pair.getY() == dest.getY()) {
+				dest = pair;
+				flag = false;
+				break;
+			}
+		}
+		if (flag) return;
+		ArrayList<Pair> path = new ArrayList<>(Collections.nCopies(distances.get(dest) + 1, null));
+		path.set(distances.get(dest), dest);
+		Integer length = distances.get(dest);
+		int[] xs = {1, 0, -1, 0, 1, 1, -1, -1};
+		int[] ys = {0, 1, 0, -1, 1, -1, 1, -1};
+		while (length >= 1) {
+			length --;
+			boolean flag1 = true;
+			for (int i = 0; flag1 && i < 8; i++) {
+				for (Pair pair : distances.keySet()) {
+					if (pair.getX() == dest.getX() + xs[i] && pair.getY() == dest.getY() + ys[i] &&
+                            Objects.equals(distances.get(pair), length)) {
+						path.set(length, pair);
+						dest = pair;
+						flag1 = false;
+						break;
+					}
+				}
+			}
+		}
+		int max = (energy)*20;
+		getTiles().clear();
+		getTiles().add(App.getInstance().getCurrentGame().getTiles()[path.get(max).getX()][path.get(max).getY()]);
 	}
 }

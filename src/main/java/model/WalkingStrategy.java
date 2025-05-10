@@ -1,10 +1,12 @@
 package model;
 
+import lombok.Getter;
 import utils.App;
 
 import java.util.*;
 
 public class WalkingStrategy {
+    @Getter
     private final Map<Pair, Integer> distances = new HashMap<>();
     private int distance = 0;
     private final App app = App.getInstance();
@@ -16,7 +18,6 @@ public class WalkingStrategy {
             distances.clear();
             return -1;
         }
-        distances.clear();
         return (int) Math.ceil(((double) distance) / 20);
     }
 
@@ -27,8 +28,8 @@ public class WalkingStrategy {
             this.distance = distance;
             return true;
         }
-        int[] xs = {1, 1, 0, -1, -1, -1, 0, 1};
-        int[] ys = {0, 1, 1, 1, 0, -1, -1, -1};
+        int[] xs = {1, 0, -1, 0, 1, 1, -1, -1};
+        int[] ys = {0, 1, 0, -1, 1, -1, 1, -1};
         Pair newPair;
         boolean flag = true;
         while (flag) {
