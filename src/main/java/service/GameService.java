@@ -45,6 +45,8 @@ import model.structure.stores.Store;
 import model.structure.stores.StoreType;
 import model.tools.BackPack;
 import model.tools.Tool;
+import saveGame.GameSaver;
+import saveGame.GameSerializer;
 import utils.App;
 import variables.Session;
 import view.Menu;
@@ -73,7 +75,12 @@ public class GameService {
             return new Response("You are not allowed to exit; the player who has started the app.getCurrentGame() can" +
                     " end it");
         }
-        //TODO save app.getCurrentGame() not mine to do
+        GameSerializer.saveGame(App.getInstance().getCurrentGame(), "game.bin");
+        try {
+            GameSaver.saveGame(App.getInstance().getCurrentGame(), "game.json");
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         Session.setCurrentMenu(Menu.MAIN);
         return new Response("Exited from game.", true);
     }
@@ -86,9 +93,12 @@ public class GameService {
     public Response terminateGame() {
         for (int i = 1; i < App.getInstance().getCurrentGame().getPlayers().size(); i++) {
             switch (viewRender.getResponse().message()) {
-                case "Y": break;
-                case "n": return new Response("Termination failed!");
-                default: System.out.println("Are you in favor termination? Y/n");
+                case "Y":
+                    break;
+                case "n":
+                    return new Response("Termination failed!");
+                default:
+                    System.out.println("Are you in favor termination? Y/n");
             }
         }
         App.getInstance().getGames().remove(app.getCurrentGame());
@@ -390,7 +400,7 @@ public class GameService {
             return new Response("you do not have enough resource to upgrade tool");
         }
 
-        if(blackSmithUpgrade.getDailySold() == blackSmithUpgrade.getDailyLimit()) {
+        if (blackSmithUpgrade.getDailySold() == blackSmithUpgrade.getDailyLimit()) {
             return new Response("Not enough in stock!");
         }
         upgradeTool(currentPlayer, blackSmithUpgrade, currentTool, upgradeTool);
@@ -400,7 +410,7 @@ public class GameService {
     public Response useTool(String direction) {
         Player currentPlayer = getCurrentPlayer();
         Direction currentDirection = Direction.getByName(direction);
-        if (currentDirection == null){
+        if (currentDirection == null) {
             return new Response("use valid direction");
         }
         Tool currentTool = getCurrentTool(currentPlayer);
@@ -420,12 +430,12 @@ public class GameService {
     public Response pickFromFloor(String direction) {
         Player currentPlayer = getCurrentPlayer();
         Direction currentDirection = Direction.getByName(direction);
-        if (currentDirection == null){
+        if (currentDirection == null) {
             return new Response("wrong direction");
         }
         Tile currentTile = getTileByXAndY(currentPlayer.getTiles().getFirst().getX() + currentDirection.getXTransmit(),
                 currentPlayer.getTiles().getFirst().getY() + currentDirection.getYTransmit());
-        if (currentTile == null){
+        if (currentTile == null) {
             return new Response("out of bound");
         }
         List<Structure> structures = App.getInstance().getCurrentGame().getVillage().findStructuresByTile(currentTile);
@@ -439,7 +449,7 @@ public class GameService {
             return new Response("there is nothing to pick on the floor");
         }
         boolean flag = tryToPickUp(currentPlayer, currentStructure);
-        if (!flag){
+        if (!flag) {
             return new Response("your backpack is full");
         }
         return new Response("you picked up a " + ((Salable) currentStructure).getName(), true);
@@ -478,26 +488,26 @@ public class GameService {
         } else if (!playerHaveEnoughResourceToBuild(currentPlayer, carpenterShopFarmBuildings)) {
             return new Response("you do not have enough resource to build");
         }
-		if(carpenterShopFarmBuildings.getDailySold() == carpenterShopFarmBuildings.getDailyLimit()) {
-			return new Response("Not enough in stock!");
-		}
-        Structure structure;
-        if (carpenterShopFarmBuildings.getFarmBuildingType().equals(FarmBuildingType.SHIPPING_BIN)){
-            structure = new ShippingBin();
+        if (carpenterShopFarmBuildings.getDailySold() == carpenterShopFarmBuildings.getDailyLimit()) {
+            return new Response("Not enough in stock!");
         }
-        else {
-            structure = new FarmBuilding(carpenterShopFarmBuildings.getFarmBuildingType());;
+        Structure structure;
+        if (carpenterShopFarmBuildings.getFarmBuildingType().equals(FarmBuildingType.SHIPPING_BIN)) {
+            structure = new ShippingBin();
+        } else {
+            structure = new FarmBuilding(carpenterShopFarmBuildings.getFarmBuildingType());
+            ;
         }
         String message = buildStructureInAPlace(carpenterShopFarmBuildings,
                 currentFarm, structure, carpenterShopFarmBuildings.getFarmBuildingType().getHeight(),
                 carpenterShopFarmBuildings.getFarmBuildingType().getWidth(), x, y);
-        if (message.contains("not")){
+        if (message.contains("not")) {
             return new Response(message);
         }
-        if (structure instanceof ShippingBin){
+        if (structure instanceof ShippingBin) {
             currentPlayer.getShippingBinList().add((ShippingBin) structure);
         }
-        payForBuild(carpenterShopFarmBuildings,currentPlayer);
+        payForBuild(carpenterShopFarmBuildings, currentPlayer);
         return new Response(message, true);
     }
 
@@ -509,7 +519,7 @@ public class GameService {
         } else if (!isPlayerInStore(StoreType.MARNIE_SHOP)) {
             return new Response("you have to be in Marnie Shop Animal to buy animals");
         }
-        if(marnieShopAnimal.getDailySold() == marnieShopAnimal.getDailyLimit()) {
+        if (marnieShopAnimal.getDailySold() == marnieShopAnimal.getDailyLimit()) {
             return new Response("Not enough in stock!");
         }
         Farm currentFarm = getPlayerMainFarm(currentPlayer);
@@ -518,7 +528,7 @@ public class GameService {
         } else if (!playerHaveEnoughResourceToBuyAnimal(marnieShopAnimal, currentPlayer)) {
             return new Response("you do not have enough resource to buy animal");
         }
-        Animal animal = new Animal(marnieShopAnimal.getAnimalType(),name);
+        Animal animal = new Animal(marnieShopAnimal.getAnimalType(), name);
         animal.setOwner(currentPlayer);
         if (animal.getAnimalType().getIsBarnAnimal()) {
             return new Response(addNewBarnAnimal(currentFarm, animal, currentPlayer, marnieShopAnimal));
@@ -641,7 +651,7 @@ public class GameService {
     public Response plantSeed(String name, String direction) {
         Player currentPlayer = getCurrentPlayer();
         Direction currentDirection = Direction.getByName(direction);
-        if (currentDirection == null){
+        if (currentDirection == null) {
             return new Response("use valid direction");
         }
         Tile currentTile = getTileByXAndY(currentPlayer.getTiles().get(0).getX() + currentDirection.getXTransmit(),
@@ -655,30 +665,29 @@ public class GameService {
         }
         Salable salable = getProductFromInventory(currentPlayer, name);
         Seed seed;
-        if (salable == null){
+        if (salable == null) {
             return new Response("you do not have this seed in your inventory");
         }
         if (salable instanceof MixedSeeds) {
             MixedSeeds mixedSeeds = (MixedSeeds) salable;
             if (!isThereGreenHouseForHarvest(currentTile) &&
                     !mixedSeeds.getMixedSeedsType().getSeason().equals(App.getInstance().getCurrentGame().getTimeAndDate().getSeason()) &&
-            !mixedSeeds.getMixedSeedsType().getSeason().equals(Season.SPECIAL)) {
+                    !mixedSeeds.getMixedSeedsType().getSeason().equals(Season.SPECIAL)) {
                 return new Response("you should use this seed in " + mixedSeeds.getMixedSeedsType().getSeason());
             }
             seed = generateSeedOfMixedSeed(mixedSeeds.getMixedSeedsType());
         } else if (salable instanceof Craft && name.equalsIgnoreCase("mystic tree seeds")) {
             seed = new Seed(SeedType.MYSTIC_TREE_SEEDS);
-        } else if (salable instanceof Seed){
+        } else if (salable instanceof Seed) {
             seed = (Seed) getProductFromInventory(currentPlayer, name);
-        }
-        else {
+        } else {
             return new Response("you do not have this seed in your inventory");
         }
-		if (!isThereGreenHouseForHarvest(currentTile) &&
-				!seed.getSeedType().getSeason().equals(App.getInstance().getCurrentGame().getTimeAndDate().getSeason())
-        && !seed.getSeedType().getSeason().equals(Season.SPECIAL)) {
-			return new Response("you should use this seed in " + seed.getSeedType().getSeason());
-		}
+        if (!isThereGreenHouseForHarvest(currentTile) &&
+                !seed.getSeedType().getSeason().equals(App.getInstance().getCurrentGame().getTimeAndDate().getSeason())
+                && !seed.getSeedType().getSeason().equals(Season.SPECIAL)) {
+            return new Response("you should use this seed in " + seed.getSeedType().getSeason());
+        }
         HarvestAbleProduct harvestableProduct = getHarvestableFromSeed(seed.getSeedType());
         if (harvestableProduct == null) {
             return new Response("this seed is not valid");
@@ -689,8 +698,8 @@ public class GameService {
         }
         currentTile.setIsFilled(true);
         harvestableProduct.setTiles(List.of(currentTile));
-		TimeAndDate timeAndDate = new TimeAndDate();
-		timeAndDate.setDay(App.getInstance().getCurrentGame().getTimeAndDate().getDay());
+        TimeAndDate timeAndDate = new TimeAndDate();
+        timeAndDate.setDay(App.getInstance().getCurrentGame().getTimeAndDate().getDay());
         harvestableProduct.setStartPlanting(timeAndDate);
         currentFarm.getStructures().add(harvestableProduct);
         if (isThereGreenHouseForHarvest(currentTile)) {
@@ -734,7 +743,7 @@ public class GameService {
             return new Response("there is no fertilize with this name");
         }
         Direction currentDirection = Direction.getByName(direction);
-        if (currentDirection == null){
+        if (currentDirection == null) {
             return new Response("use valid direction");
         }
         Tile currentTile = getTileByXAndY(currentPlayer.getTiles().get(0).getX() + currentDirection.getXTransmit(),
@@ -747,7 +756,7 @@ public class GameService {
             return new Response("there is no harvestable in this tile");
         }
         harvestAbleProduct.setFertilized(true);
-        currentPlayer.getInventory().deleteProductFromBackPack(currentFertilize,currentPlayer,1);
+        currentPlayer.getInventory().deleteProductFromBackPack(currentFertilize, currentPlayer, 1);
         harvestAbleProduct.getFertilizes().add(currentFertilize.getSundryType());
         return new Response("you successfully fertilize " + harvestAbleProduct.getName(), true);
     }
@@ -761,12 +770,12 @@ public class GameService {
         return new Response("remain water: " + ((WateringCan) currentTool).getRemain(), true);
     }
 
-    public Response showAbility(){
+    public Response showAbility() {
         Player currentPlayer = getCurrentPlayer();
-        return new Response(makeStringTokenAbility(currentPlayer),true);
+        return new Response(makeStringTokenAbility(currentPlayer), true);
     }
 
-    private String makeStringTokenAbility(Player player){
+    private String makeStringTokenAbility(Player player) {
         StringBuilder token = new StringBuilder();
         for (Map.Entry<Ability, Integer> abilityIntegerEntry : player.getAbilities().entrySet()) {
             token.append(abilityIntegerEntry.getKey().toString().toLowerCase()).append(" :\n").
@@ -858,7 +867,7 @@ public class GameService {
         }
         for (Map.Entry<Salable, Integer> productIntegerEntry : blackSmithUpgrade.getIngredients().entrySet()) {
             Salable salable = player.getInventory().getProductFromBackPack(productIntegerEntry.getKey().getName());
-            if (salable == null){
+            if (salable == null) {
                 return false;
             }
             if (player.getInventory().getProducts().get(salable) < productIntegerEntry.getValue()) {
@@ -965,7 +974,7 @@ public class GameService {
         }
         for (Map.Entry<Product, Integer> productIntegerEntry : carpenterShopFarmBuildings.getCost().entrySet()) {
             Salable salable = player.getInventory().getProductFromBackPack(productIntegerEntry.getKey().getName());
-            if (salable == null){
+            if (salable == null) {
                 return false;
             }
             if (player.getInventory().getProducts().get(salable) < productIntegerEntry.getValue()) {
@@ -992,7 +1001,7 @@ public class GameService {
             for (Tile tile : tiles2) {
                 tile.setIsFilled(true);
                 if (!carpenterShopFarmBuildings.equals(CarpenterShopFarmBuildings.SHIPPING_BIN) &&
-                        !carpenterShopFarmBuildings.equals(CarpenterShopFarmBuildings.WELL)){
+                        !carpenterShopFarmBuildings.equals(CarpenterShopFarmBuildings.WELL)) {
                     tile.setIsPassable(true);
                 }
             }
@@ -1015,7 +1024,7 @@ public class GameService {
 
     private boolean isAnimalNameUnique(Player player, String name) {
         for (Animal animal : player.getAnimals()) {
-            if (animal.getName().equals(name)){
+            if (animal.getName().equals(name)) {
                 return false;
             }
         }
@@ -1258,7 +1267,7 @@ public class GameService {
             }
         }
         for (TreeType value : TreeType.values()) {
-            if (value.getName().equalsIgnoreCase(name)){
+            if (value.getName().equalsIgnoreCase(name)) {
                 return value;
             }
         }
@@ -1290,7 +1299,7 @@ public class GameService {
                         tile1.setIsPassable(true);
                         tile1.setIsFilled(false);
                     }
-                    List<Structure>  farmStructures = new ArrayList<>(currentFarm.getStructures());
+                    List<Structure> farmStructures = new ArrayList<>(currentFarm.getStructures());
                     for (Structure structure : farmStructures) {
                         boolean flag = false;
                         for (Tile structureTile : structure.getTiles()) {
@@ -1360,10 +1369,11 @@ public class GameService {
                 if (name.equalsIgnoreCase(value.getName())) salable = new AnimalProduct(value);
             }
         }
-		if (salable == null){
-			for (SundryType value : SundryType.values()) {
-				if (name.equalsIgnoreCase(value.getName())) salable = new Sundry(value);			}
-		}
+        if (salable == null) {
+            for (SundryType value : SundryType.values()) {
+                if (name.equalsIgnoreCase(value.getName())) salable = new Sundry(value);
+            }
+        }
         if (salable == null) {
             for (CropType value : CropType.values()) {
                 if (name.equalsIgnoreCase(value.getName())) salable = new Crop(value);
@@ -1875,7 +1885,7 @@ public class GameService {
     public Response buffShow() {
         Player player = app.getCurrentGame().getCurrentPlayer();
         Buff buff = player.getBuff();
-        if (buff == null) return new Response ("no buff " + player.getMaxEnergy(), true);
+        if (buff == null) return new Response("no buff " + player.getMaxEnergy(), true);
         return new Response("" + buff.getBuffImpact() + " " + buff.getMaxPower() + " " + buff.getAbility()
                 + " " + player.getMaxEnergy(), true);
     }

@@ -1,4 +1,4 @@
-package save3;
+package saveGame;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
@@ -15,7 +15,6 @@ import model.products.TreesAndFruitsAndSeeds.TreeType;
 import model.receipe.CookingRecipe;
 import model.receipe.CraftingRecipe;
 import model.relations.*;
-import model.shelter.FarmBuilding;
 import model.shelter.FarmBuildingType;
 import model.source.*;
 import model.structure.*;
@@ -27,7 +26,6 @@ import model.structure.stores.*;
 import model.tools.*;
 import view.Menu;
 
-import javax.swing.text.View;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;

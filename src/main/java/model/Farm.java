@@ -1,6 +1,5 @@
 package model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -16,8 +15,8 @@ import model.structure.farmInitialElements.Cottage;
 import model.structure.farmInitialElements.GreenHouse;
 import model.structure.farmInitialElements.HardCodeFarmElements;
 import model.structure.farmInitialElements.Lake;
-import save3.JsonPreparable;
-import save3.ObjectWrapper;
+import saveGame.JsonPreparable;
+import saveGame.ObjectWrapper;
 import utils.App;
 
 import java.util.ArrayList;

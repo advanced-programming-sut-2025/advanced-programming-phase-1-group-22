@@ -1,6 +1,5 @@
 package model.relations;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
@@ -19,12 +18,11 @@ import model.records.Response;
 import model.shelter.ShippingBin;
 import model.source.*;
 import model.structure.farmInitialElements.Cottage;
-import model.structure.stores.PierreShop;
 import model.structure.stores.StoreType;
 import model.tools.*;
-import save3.JsonPreparable;
-import save3.ObjectMapWrapper;
-import save3.ObjectWrapper;
+import saveGame.JsonPreparable;
+import saveGame.ObjectMapWrapper;
+import saveGame.ObjectWrapper;
 import service.GameService;
 import utils.App;
 import variables.Session;
@@ -35,8 +33,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-
-import static model.source.MineralType.WOOD;
 
 @Getter
 @Setter

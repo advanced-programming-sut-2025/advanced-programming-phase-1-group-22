@@ -1,13 +1,10 @@
 package view;
 
-import com.esotericsoftware.kryo.Kryo;
-import com.esotericsoftware.kryo.io.Output;
 import model.records.Response;
-import save3.GameSerializer;
+import saveGame.GameSerializer;
 import utils.App;
 import variables.Session;
 
-import java.io.FileOutputStream;
 import java.util.Scanner;
 
 public class ViewRender {
@@ -27,9 +24,6 @@ public class ViewRender {
         while ((menu = Session.getCurrentMenu()) != Menu.EXIT) {
             menu.checkCommand(input);
         }
-
-
-        GameSerializer.saveGame(App.getInstance().getCurrentGame(), "game.bin");
 //        ObjectMapper mapper = new ObjectMapper();
 //        SimpleModule module = new SimpleModule();
 //        module.addKeySerializer(Salable.class, new SalableKeySerializer());

@@ -1,7 +1,6 @@
 package model.relations;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,9 +8,9 @@ import lombok.Setter;
 import model.Actor;
 import model.TimeAndDate;
 import model.enums.Season;
-import save3.JsonPreparable;
-import save3.ObjectMapWrapper;
-import save3.ObjectWrapper;
+import saveGame.JsonPreparable;
+import saveGame.ObjectMapWrapper;
+import saveGame.ObjectWrapper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
