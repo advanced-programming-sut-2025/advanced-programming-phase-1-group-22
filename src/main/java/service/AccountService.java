@@ -25,6 +25,7 @@ public class AccountService {
     private final ViewRender viewRender;
     private final UserRepository<User> userRepository;
     private final PasswordHasher passwordHasher;
+
     public AccountService(UserRepository<User> userRepository, ViewRender viewRender, PasswordHasher passwordHasher) {
         this.userRepository = userRepository;
         this.viewRender = viewRender;
@@ -94,7 +95,8 @@ public class AccountService {
             return new Response("User not found");
         }
         try {
-            if (!user.get().getPassword().equals(password) && !passwordHasher.verifyPassword(password, user.get().getPassword())) {
+            if (!passwordHasher.verifyPassword(password, user.get().getPassword()) && !user.get().getPassword().equals(password))
+            {
                 return new Response("Wrong password");
             }
         } catch (NoSuchAlgorithmException e) {
