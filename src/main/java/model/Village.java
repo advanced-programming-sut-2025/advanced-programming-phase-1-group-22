@@ -35,10 +35,12 @@ import save3.ObjectMapWrapper;
 import save3.ObjectWrapper;
 import utils.App;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.function.UnaryOperator;
 
 @Getter
 @Setter
@@ -231,83 +233,158 @@ public class Village implements JsonPreparable {
         return structures;
     }
 
+//    public void printMap(int x, int y, int size) {
+//        Game game = App.getInstance().getCurrentGame();
+//        String[][] str = new String[160][120];
+//        Tile[][] tiles = game.tiles;
+//        for (int i = 0; i < 160; i++) {
+//            for (int i1 = 0; i1 < 120; i1++) {
+//                str[i][i1] = tiles[i][i1].getTileType().StringToCharacter();
+//            }
+//        }
+//
+//        for (Farm farm : farms) {
+//            for (Structure structure : farm.getStructures()) {
+//                String emoji = "  ";
+//                if (structure instanceof Cottage) emoji = "🏠";
+//                else if (structure instanceof Lake) emoji = "🌊";
+//                else if (structure instanceof Quarry) emoji = "⬛";
+//                else if (structure instanceof GreenHouse)
+//                    emoji = ((GreenHouse) structure).isBuilt() ? "🏡" : "🚧";
+//                else if (structure instanceof Trunk) emoji = "🌳";
+//                else if (structure instanceof Tree) emoji = "🌲";
+//                else if (structure instanceof Stone) emoji = "🪨";
+//                else if (structure instanceof Animal) emoji = "🐄";
+//                else if (structure instanceof Craft) emoji = "🔨";
+//                else if (structure instanceof AnimalProduct) emoji = "🥚";
+//                else if (structure instanceof FarmBuilding) emoji = "🏚️";
+//                else if (structure instanceof ShippingBin) emoji = "📦 ";
+//                else if (structure instanceof Crop) emoji = "🌾";
+//                else if (structure instanceof Mineral) emoji = "🔷";
+//                else if (structure instanceof MixedSeeds) emoji = "🌱";
+//                else if (structure instanceof Seed) emoji = "🫘";
+//                //emoji = String.format("%-2s", emoji);
+//                if (emoji != "  ") {
+//                    for (Tile tile : structure.getTiles()) {
+//                        str[tile.getX()][tile.getY()] = emoji;
+//                    }
+//                }
+//            }
+//        }
+//        for (Structure structure : structures) {
+//            String emoji = "  ";
+//
+//            if (structure instanceof NPC) emoji = "👴";
+//            else if (structure instanceof Player) emoji = "🧍";
+//            else if (structure instanceof Store) emoji = "🏬";
+//            else if (structure instanceof NPCHouse) emoji = "🏘️";
+//            else if (structure instanceof Fountain) emoji = "⛲";
+//            //emoji = String.format("%-2s", emoji);
+//            if (emoji != "  ") {
+//                for (Tile tile : structure.getTiles()) {
+//                    str[tile.getX()][tile.getY()] = emoji;
+//                }
+//            }
+//        }
+//        Player player = App.getInstance().getCurrentGame().getCurrentPlayer();
+//        str[player.getTiles().getFirst().getX()][player.getTiles().getFirst().getY()] = "🧍";
+//
+//        int xStart = x - size / 2;
+//        int xEnd = x + size / 2;
+//        int yStart = y - size / 2;
+//        int yEnd = y + size / 2;
+//        if (xStart < 0) xStart = 0;
+//        if (yStart < 0) yStart = 0;
+//        if (xEnd >= 160) xEnd = 160;
+//        if (yEnd >= 120) yEnd = 120;
+//
+//
+//        for (int i = yEnd - 1; i >= yStart; i--) {
+//            for (int j1 = xStart; j1 < xEnd; j1++) {
+//                System.out.print(str[j1][i]);
+//            }
+//            System.out.println();
+//        }
+//       // printMa(0,0,2000);
+//    }
+
     public void printMap(int x, int y, int size) {
+
         Game game = App.getInstance().getCurrentGame();
-        Character[][] str = new Character[160][120];
+        java.util.function.UnaryOperator<String> pad2 = s ->
+                (s == null ? "  " : String.format("%-2s", s)).substring(0, 2);
+
+        String[][] str = new String[160][120];
         Tile[][] tiles = game.tiles;
         for (int i = 0; i < 160; i++) {
-            for (int i1 = 0; i1 < 120; i1++) {
-                str[i][i1] = tiles[i][i1].getTileType().StringToCharacter();
+            for (int j = 0; j < 120; j++) {
+                str[i][j] = pad2.apply(tiles[i][j].getTileType().StringToCharacter());
             }
         }
 
         for (Farm farm : farms) {
             for (Structure structure : farm.getStructures()) {
-                char symbol = ' ';
-                if (structure instanceof Cottage) symbol = 'c';
-                else if (structure instanceof Lake) symbol = 'L';
-                else if (structure instanceof Quarry) symbol = 'Q';
-                else if (structure instanceof GreenHouse) {
-                    if (((GreenHouse) structure).isBuilt()) symbol = 'g';
-                    else symbol = '-';
-                } else if (structure instanceof Trunk) symbol = 't';
-                else if (structure instanceof Tree) symbol = 'T';
-                else if (structure instanceof Stone) symbol = '*';
-                else if (structure instanceof Animal) symbol = 'a';
-                else if (structure instanceof Fish) symbol = 'x';
-                else if (structure instanceof Craft) symbol = '&';
-                else if (structure instanceof AnimalProduct) symbol = '^';
-                else if (structure instanceof FarmBuilding) symbol = '#';
-                else if (structure instanceof ShippingBin) symbol = 'O';
-                else if (structure instanceof Crop) symbol = 'r';
-                else if (structure instanceof Mineral) symbol = '=';
-                else if (structure instanceof MixedSeeds) symbol = '$';
-                else if (structure instanceof Seed) symbol = 'z';
-                else if (structure instanceof Tool) symbol = '\\';
-
-                if (symbol != ' ') {
+                String emoji = switch (structure) {
+                    case Cottage c          -> "🏡";
+                    case Lake l             -> "🌊";
+                    case Quarry q           ->  "🗿";
+                    case GreenHouse g       -> g.isBuilt() ?  "🏢" : "🚧";
+                    case Trunk t            -> "🌳";
+                    case Tree t             -> "🌲";
+                    case Stone s            -> "🗿";
+                    case Animal a           -> "🐄";
+                    case Craft c            -> "🔨";
+                    case AnimalProduct ap   -> "🥚";
+                    case FarmBuilding fb    -> "🏚️";
+                    case ShippingBin sb     -> "🗳️";
+                    case Crop c             -> "🌾";
+                    case Mineral m          -> "🔷";
+                    case MixedSeeds ms      -> "🌱";
+                    case Seed s             -> "🫘";
+                    default                 -> "  ";
+                };
+                emoji = pad2.apply(emoji);
+                if (!emoji.isBlank()) {
                     for (Tile tile : structure.getTiles()) {
-                        str[tile.getX()][tile.getY()] = symbol;
+                        str[tile.getX()][tile.getY()] = emoji;
                     }
                 }
             }
         }
+
         for (Structure structure : structures) {
-            char symbol = ' ';
-
-            if (structure instanceof NPC) symbol = '?';
-            else if (structure instanceof Player) symbol = '!';
-            else if (structure instanceof Store) symbol = 's';
-            else if (structure instanceof NPCHouse) symbol = 'N';
-            else if (structure instanceof Fountain) symbol = 'f';
-
-            if (symbol != ' ') {
+            String emoji = switch (structure) {
+                case NPC n          -> "👴";
+                case Player p       -> "🧍";
+                case Store s        -> "🏬";
+                case NPCHouse h     -> "🏡";
+                case Fountain f     -> "🌊";
+                default             -> "  ";
+            };
+            emoji = pad2.apply(emoji);
+            if (!emoji.isBlank()) {
                 for (Tile tile : structure.getTiles()) {
-                    str[tile.getX()][tile.getY()] = symbol;
+                    str[tile.getX()][tile.getY()] = emoji;
                 }
             }
         }
-        Player player = App.getInstance().getCurrentGame().getCurrentPlayer();
-        str[player.getTiles().get(0).getX()][player.getTiles().get(0).getY()] = '@';
 
-        int xStart = x - size / 2;
-        int xEnd = x + size / 2;
-        int yStart = y - size / 2;
-        int yEnd = y + size / 2;
-        if (xStart < 0) xStart = 0;
-        if (yStart < 0) yStart = 0;
-        if (xEnd >= 160) xEnd = 160;
-        if (yEnd >= 120) yEnd = 120;
+        Player player = game.getCurrentPlayer();
+        str[player.getTiles().getFirst().getX()][player.getTiles().getFirst().getY()] = pad2.apply("🧍");
 
+        int xStart = Math.max(0, x - size / 2);
+        int yStart = Math.max(0, y - size / 2);
+        int xEnd   = Math.min(160, x + size / 2);
+        int yEnd   = Math.min(120, y + size / 2);
 
         for (int i = yEnd - 1; i >= yStart; i--) {
-            for (int j1 = xStart; j1 < xEnd; j1++) {
-                System.out.print(str[j1][i]);
+            for (int j = xStart; j < xEnd; j++) {
+                System.out.print(str[j][i]);
             }
             System.out.println();
         }
-       // printMa(0,0,2000);
     }
+
 
 //    public void printMa(int x, int y, int size) {
 //        Game game = app.getCurrentGame();

@@ -1,5 +1,4 @@
 package service;
-
 import model.*;
 import model.abilitiy.Ability;
 import model.animal.Animal;
@@ -50,12 +49,13 @@ import variables.Session;
 import view.Menu;
 import view.ViewRender;
 
+import java.io.IOException;
 import java.util.*;
 
 public class GameService {
     private static volatile GameService instance;
     App app = App.getInstance();
-
+    private ViewRender viewRender;
 
     public GameService() {
     }
@@ -63,6 +63,7 @@ public class GameService {
     public static GameService getInstance() {
         if (instance == null) {        // Second check (inside lock)
             instance = new GameService();
+            instance.viewRender = new ViewRender();
         }
         return instance;
     }
@@ -84,7 +85,7 @@ public class GameService {
 
     public Response terminateGame() {
         for (int i = 1; i < App.getInstance().getCurrentGame().getPlayers().size(); i++) {
-            switch (ViewRender.getResponse().message()) {
+            switch (viewRender.getResponse().message()) {
                 case "Y": break;
                 case "n": return new Response("Termination failed!");
                 default: System.out.println("Are you in favor termination? Y/n");
@@ -212,7 +213,7 @@ public class GameService {
         return new Response(app.getCurrentGame().getVillage().getWeather().toString(), true);
     }
 
-    public Response printMap(String x, String y, String size) {
+    public Response printMap(String x, String y, String size){
         int x1 = Integer.parseInt(x);
         int y1 = Integer.parseInt(y);
         if (x1 < 0 || y1 < 0 || x1 >= app.getCurrentGame().getLength() || y1 >= app.getCurrentGame().getWidth()) {
@@ -245,7 +246,7 @@ public class GameService {
         String confirmation;
         while (true) {
             System.out.println("Energy needed: " + energy + "\nY/n");
-            confirmation = ViewRender.getResponse().message();
+            confirmation = viewRender.getResponse().message();
             if (confirmation.equals("Y")) break;
             if (confirmation.equals("n")) return new Response("You didn't moved");
         }
@@ -268,42 +269,39 @@ public class GameService {
     }
 
     public Response helpReadingMap() {
-        String resp = "@\tYou\n\nTile Types:\n" +
-                "!\tOther Players\n\nTile Types:\n" +
-                "?\tNPC\n\nTile Types:\n" +
-                "G\tGrass\n" +
-                "F\tFlower\n" +
-                "S\tSnow\n" +
-                "M\tMud\n" +
-                ".\tFlat\n" +
-                "+\tPath\n" +
-                "C\tFence\n" +
-                "D\tDoor\n" +
-                "P\tPlowed\n" +
-                "\nBuildings:\n" +
-                "S\tStore\n" +
-                "N\tNPC House\n" +
-                "f\tFountain\n" +
-                "c\tCottage\n" +
-                "L\tLake\n" +
-                "Q\tQuarry\n" +
-                "g\tGreenhouse\n" +
-                "-\tBuilt Greenhouse\n" +
-                "#\tFarm Building\n" +
-                "\nOther Structures\n" +
-                "t\tTrunk\n" +
-                "T\tTree\n" +
-                "*\tStone\n" +
-                "a\tAnimal\n" +
-                "x\tFish\n" +
-                "&\tCraft\n" +
-                "^\tAnimalProduct\n" +
-                "O\tShipping Bin\n" +
-                "r\tCrop\n" +
-                "=\tMineral\n" +
-                "$\tMixed Seed\n" +
-                "z\tSeed\n" +
-                "\\\tTool\n";
+        String resp = "" +
+                "\uD83E\uDDCD\tYou\n" +
+                "👴\tNPC\n\nTile Types:\n" +
+                "🌿\tGrass\n" +
+                "🌸\tFlower\n" +
+                "❄\uFE0F\tSnow\n" +
+                "▫\uFE0F\tFlat\n" +
+                "\uD83E\uDDF1\tPath\n" +
+                "🚧\tFence\n" +
+                "🚪\tDoor\n" +
+                "\uD83D\uDFEB️\tPlowed\n" +
+                "\uD83C\uDF29️\tthundered\n" +
+                "Buildings:\n" +
+                "\uD83C\uDFEC\tStore\n" +
+                "\uD83C\uDFE1\ttNPC House\n" +
+                "\uD83C\uDF0A\tFountain\n" +
+                "\uD83C\uDFE1\ttCottage\n" +
+                "\uD83C\uDF0A\ttLake\n" +
+                "\uD83D\uDDFF\tQuarry\n" +
+                "🚧\tGreenhouse\n" +
+                "🏢\tBuilt Greenhouse\n" +
+                "\uD83C\uDFDA️\tFarm Building\n" +
+                "\uD83C\uDF33\tTrunk\n" +
+                "🌲\tTree\n" +
+                "🗿\tStone\n" +
+                "🐄\tAnimal\n" +
+                "🔨\tCraft\n" +
+                "🥚\tAnimalProduct\n" +
+                "\uD83D\uDDF3️\tShipping Bin\n" +
+                "🌾\tCrop\n" +
+                "🔷\tMineral\n" +
+                "🌱\tMixed Seed\n" +
+                "🫘\tSeed\n";
         return new Response(resp, true);
     }
 
@@ -419,12 +417,19 @@ public class GameService {
         return new Response(currentTool.useTool(currentPlayer, currentTile), true);
     }
 
-    public Response pickFromFloor() {
+    public Response pickFromFloor(String direction) {
         Player currentPlayer = getCurrentPlayer();
-        Tile currentTile = currentPlayer.getTiles().get(0);
+        Direction currentDirection = Direction.getByName(direction);
+        if (currentDirection == null){
+            return new Response("wrong direction");
+        }
+        Tile currentTile = getTileByXAndY(currentPlayer.getTiles().getFirst().getX() + currentDirection.getXTransmit(),
+                currentPlayer.getTiles().getFirst().getY() + currentDirection.getYTransmit());
+        if (currentTile == null){
+            return new Response("out of bound");
+        }
         List<Structure> structures = App.getInstance().getCurrentGame().getVillage().findStructuresByTile(currentTile);
         Structure currentStructure = null;
-
         for (Structure structure : structures) {
             if (structure.getIsPickable()) {
                 currentStructure = structure;
@@ -754,6 +759,21 @@ public class GameService {
             return new Response("you do not carrying watering can");
         }
         return new Response("remain water: " + ((WateringCan) currentTool).getRemain(), true);
+    }
+
+    public Response showAbility(){
+        Player currentPlayer = getCurrentPlayer();
+        return new Response(makeStringTokenAbility(currentPlayer),true);
+    }
+
+    private String makeStringTokenAbility(Player player){
+        StringBuilder token = new StringBuilder();
+        for (Map.Entry<Ability, Integer> abilityIntegerEntry : player.getAbilities().entrySet()) {
+            token.append(abilityIntegerEntry.getKey().toString().toLowerCase()).append(" :\n").
+                    append("    xp: ").append(abilityIntegerEntry.getValue()).append("\n").
+                    append("    level: ").append(player.getAbilityLevel(abilityIntegerEntry.getKey())).append("\n");
+        }
+        return token.toString();
     }
 
     private Player getCurrentPlayer() {
@@ -1234,6 +1254,11 @@ public class GameService {
         }
         for (CropType value : CropType.values()) {
             if (value.getName().equalsIgnoreCase(name)) {
+                return value;
+            }
+        }
+        for (TreeType value : TreeType.values()) {
+            if (value.getName().equalsIgnoreCase(name)){
                 return value;
             }
         }
