@@ -27,6 +27,7 @@ public class LoginTest {
 
     @Mock
     private UserDto userDto;
+
     @Before
     public void setUp() {
         userRepository = Mockito.mock(UserRepository.class);
@@ -50,7 +51,6 @@ public class LoginTest {
 
     @Test
     public void shouldReturnWrongPassword_whenPasswordDoesNotMatch() throws NoSuchAlgorithmException {
-        // Arrange
         String username = "validUser";
         String password = "wrongPassword";
         String correctPassword = "correctPassword";
@@ -98,58 +98,45 @@ public class LoginTest {
     }
 
 
-
     @Test
     public void shouldNotSetStayedLoggedIn_whenStayedLoggedInIsNullOrDoesNotContainStayLoggedIn() throws NoSuchAlgorithmException {
-        // Arrange: Prepare the user data
         String username = "validUser";
         String password = "correctPassword";
         User user = new User(username, password, "user@example.com", "nick", null);
         when(userRepository.findByUsername(username)).thenReturn(Optional.of(user));
         when(passwordHasher.verifyPassword(password, password)).thenReturn(true);
 
-        // Start mocking static methods using Mockito.mockStatic
         try (var mockedSession = mockStatic(Session.class)) {
 
-            // Act with stayedLoggedIn == null
             Response result1 = accountService.loginUser(username, password, null);
 
-            // Verify that the static method `Session.setStayedLoggedIn(true)` is NOT called
-            mockedSession.verify(() -> Session.setStayedLoggedIn(true), times(0)); // Verify not called
+            mockedSession.verify(() -> Session.setStayedLoggedIn(true), times(0));
 
-            // Act with stayedLoggedIn = "other-string"
             Response result2 = accountService.loginUser(username, password, "other-string");
 
-            // Verify that the static method `Session.setStayedLoggedIn(true)` is NOT called
-            mockedSession.verify(() -> Session.setStayedLoggedIn(true), times(0)); // Verify not called
+            mockedSession.verify(() -> Session.setStayedLoggedIn(true), times(0));
 
-            // Act with stayedLoggedIn = "stay-logged-in"
             Response result3 = accountService.loginUser(username, password, "stay-logged-in");
 
-            // Verify that the static method `Session.setStayedLoggedIn(true)` is called
-            mockedSession.verify(() -> Session.setStayedLoggedIn(true), times(1)); // Verify called once
+            mockedSession.verify(() -> Session.setStayedLoggedIn(true), times(1));
         }
     }
+
     @Test
     public void shouldThrowRuntimeException_whenPasswordHasherThrowsNoSuchAlgorithmException() throws NoSuchAlgorithmException {
-        // Arrange: Prepare the input data
         String username = "validUser";
         String password = "correctPassword";
-        String stayedLoggedIn = null;  // Assuming this is part of your login logic
+        String stayedLoggedIn = null;
 
-        // Create a mock user with the username and password
         User user = new User(username, password, "user@example.com", "nick", null);
         when(userRepository.findByUsername(username)).thenReturn(Optional.of(user));
 
-        // Mock PasswordHasher to throw NoSuchAlgorithmException during password verification
         PasswordHasher passwordHasher = Mockito.mock(PasswordHasher.class);
         doThrow(new NoSuchAlgorithmException("Algorithm not found"))
                 .when(passwordHasher).verifyPassword(anyString(), anyString());
 
-        // Create AccountService with mocked dependencies
         accountService = new AccountService(userRepository, viewRender, passwordHasher);
 
-        // Act & Assert: Expect a RuntimeException to be thrown
         try {
             accountService.loginUser(username, password, stayedLoggedIn);
             fail("Expected RuntimeException to be thrown");
@@ -159,13 +146,14 @@ public class LoginTest {
             assertEquals("Algorithm not found", e.getCause().getMessage());
         }
     }
+
     @Test
     public void shouldReturnSuccess_whenPasswordMatchesAndVerifyPasswordWorks() throws NoSuchAlgorithmException {
         String username = "validUser";
         String password = "correctPassword";
 
         User user = new User(username, password, "user@example.com", "nick", null);
-        user=Mockito.mock(User.class);
+        user = Mockito.mock(User.class);
         when(userRepository.findByUsername(username)).thenReturn(Optional.of(user));
         PasswordHasher passwordHasher = Mockito.mock(PasswordHasher.class);
         when(passwordHasher.verifyPassword(password, password)).thenReturn(true);

@@ -3,6 +3,7 @@ package model;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 import model.animal.Animal;
 import model.enums.Weather;
@@ -24,9 +25,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+@Setter
 @Getter
 @ToString
-public class Game implements Serializable, JsonPreparable {
+public class Game implements Serializable {
     @JsonManagedReference
     private Village village;
     private final List<Player> players = new ArrayList<>();
@@ -53,7 +55,7 @@ public class Game implements Serializable, JsonPreparable {
     public void startDay() {
         for (Farm farm : this.village.getFarms()) {
             for (Tile tile : farm.getTiles()) {
-                if (tile.getTileType().equals(TileType.THUNDERED)){
+                if (tile.getTileType().equals(TileType.THUNDERED)) {
                     tile.setTileType(TileType.FLAT);
                 }
             }
@@ -337,44 +339,4 @@ public class Game implements Serializable, JsonPreparable {
         }
     }
 
-    public void setVillage(Village village) {
-        this.village = village;
-    }
-
-    public void setCurrentPlayer(Player currentPlayer) {
-        this.currentPlayer = currentPlayer;
-    }
-
-    public void setTimeAndDate(TimeAndDate timeAndDate) {
-        this.timeAndDate = timeAndDate;
-    }
-
-    public void setWeatherCoefficient(Double weatherCoefficient) {
-        this.weatherCoefficient = weatherCoefficient;
-    }
-
-    public void setPlayersInFavorTermination(int playersInFavorTermination) {
-        this.playersInFavorTermination = playersInFavorTermination;
-    }
-
-    public void setTiles(Tile[][] tiles) {
-        this.tiles = tiles;
-    }
-    @Override
-    public void prepareForSave(ObjectMapper mapper) {
-        if (village instanceof JsonPreparable prep) prep.prepareForSave(mapper);
-        for (Player p : players) if (p instanceof JsonPreparable prep) prep.prepareForSave(mapper);
-        for (NPC npc : npcs) npc.getType().getMissions().forEach(m -> {
-            if (m instanceof JsonPreparable prep) prep.prepareForSave(mapper);
-        });
-    }
-
-    @Override
-    public void unpackAfterLoad(ObjectMapper mapper) {
-        if (village instanceof JsonPreparable prep) prep.unpackAfterLoad(mapper);
-        for (Player p : players) if (p instanceof JsonPreparable prep) prep.unpackAfterLoad(mapper);
-        for (NPC npc : npcs) npc.getType().getMissions().forEach(m -> {
-            if (m instanceof JsonPreparable prep) prep.unpackAfterLoad(mapper);
-        });
-    }
 }
