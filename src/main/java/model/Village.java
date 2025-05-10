@@ -29,6 +29,8 @@ import model.structure.farmInitialElements.Quarry;
 import model.structure.stores.Store;
 import model.structure.stores.StoreType;
 import model.tools.Tool;
+import org.jline.terminal.Terminal;
+import org.jline.terminal.TerminalBuilder;
 import saveGame.JsonPreparable;
 import saveGame.ObjectWrapper;
 import utils.App;
@@ -51,6 +53,7 @@ public class Village implements JsonPreparable {
     private Weather tomorrowWeather = Weather.SUNNY;
     @JsonProperty("structureWrappers")
     private List<ObjectWrapper> structureWrappers;
+
     public Village() {
     }
 
@@ -58,10 +61,11 @@ public class Village implements JsonPreparable {
     public void initAfterLoad() {
         fillStructures();
     }
+
     public void shuffleFarms() {
         Random random = new Random();
         for (int i = 3; i > 0; i--) {
-             int j = random.nextInt(i + 1);
+            int j = random.nextInt(i + 1);
             Farm temp = farms.get(i);
             farms.set(i, farms.get(j));
             farms.set(j, temp);
@@ -69,7 +73,7 @@ public class Village implements JsonPreparable {
     }
 
     public void fillFarms() {
-       // shuffleFarms();
+        // shuffleFarms();
         for (int i = 0; i < farms.size(); i++) {
             Farm farm = farms.get(i);
             farm.fillFarmType(i);
@@ -384,8 +388,6 @@ public class Village implements JsonPreparable {
             System.out.println();
         }
     }
-
-
 //    public void printMa(int x, int y, int size) {
 //        Game game = app.getCurrentGame();
 //        Character[][] str = new Character[160][120];
@@ -428,6 +430,7 @@ public class Village implements JsonPreparable {
             tile.setIsFilled(false);
         }
     }
+
     @Override
     public void prepareForSave(ObjectMapper mapper) {
         structureWrappers = new ArrayList<>();

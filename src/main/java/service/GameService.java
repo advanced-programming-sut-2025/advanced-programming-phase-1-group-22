@@ -69,7 +69,7 @@ public class GameService {
     }
 
     public static GameService getInstance() {
-        if (instance == null) {        // Second check (inside lock)
+        if (instance == null) {
             instance = new GameService();
             instance.viewRender = new ViewRender();
         }
@@ -77,7 +77,7 @@ public class GameService {
     }
 
     public Response exitGame() {
-        if (app.getCurrentGame().getCurrentPlayer().getUser() != Session.getCurrentUser()) {
+        if (!app.getCurrentGame().getCurrentPlayer().getUser().getUsername().equals(Session.getCurrentUser().getUsername())) {
             return new Response("You are not allowed to exit; the player who has started the app.getCurrentGame() can" +
                     " end it");
         }
@@ -90,6 +90,7 @@ public class GameService {
             userRepository.save(player.getUser());
         }
         Session.setCurrentMenu(Menu.MAIN);
+        Session.getCurrentUser().setIsPlaying(filePath);
         return new Response("Exited from game.", true);
     }
 
@@ -114,7 +115,7 @@ public class GameService {
             );
             userRepository.save(player.getUser());
         }
-
+        Session.getCurrentUser().setIsPlaying(null);
         return new Response("The game is terminated", true);
     }
 
