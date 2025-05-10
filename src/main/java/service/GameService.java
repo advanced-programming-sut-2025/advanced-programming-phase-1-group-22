@@ -76,11 +76,6 @@ public class GameService {
                     " end it");
         }
         GameSerializer.saveGame(App.getInstance().getCurrentGame(), "game.bin");
-        try {
-            GameSaver.saveGame(App.getInstance().getCurrentGame(), "game.json");
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         Session.setCurrentMenu(Menu.MAIN);
         return new Response("Exited from game.", true);
     }
