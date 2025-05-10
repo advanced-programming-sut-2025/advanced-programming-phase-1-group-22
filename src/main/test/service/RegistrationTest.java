@@ -7,7 +7,6 @@ import model.records.Response;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
 import repository.UserRepository;
 import utils.PasswordHasher;
 import view.ViewRender;
@@ -18,7 +17,6 @@ import java.util.Optional;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
-@PrepareForTest(ViewRender.class)
 public class RegistrationTest {
     private AccountService accountService;
     private UserRepository<User> userRepository;
