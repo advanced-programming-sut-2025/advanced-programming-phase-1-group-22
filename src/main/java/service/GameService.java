@@ -52,7 +52,7 @@ import java.util.*;
 public class GameService {
     private static volatile GameService instance;
     App app = App.getInstance();
-
+    private ViewRender viewRender;
 
     public GameService() {
     }
@@ -60,6 +60,7 @@ public class GameService {
     public static GameService getInstance() {
         if (instance == null) {        // Second check (inside lock)
             instance = new GameService();
+            instance.viewRender = new ViewRender();
         }
         return instance;
     }
@@ -238,7 +239,7 @@ public class GameService {
         String confirmation;
         while (true) {
             System.out.println("Energy needed: " + energy + "\nY/n");
-            confirmation = ViewRender.getResponse().message();
+            confirmation = viewRender.getResponse().message();
             if (confirmation.equals("Y")) break;
             if (confirmation.equals("n")) return new Response("You didn't moved");
         }
