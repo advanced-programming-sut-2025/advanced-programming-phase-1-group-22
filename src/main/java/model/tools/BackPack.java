@@ -3,6 +3,7 @@ package model.tools;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import model.products.ProductQuality;
 import model.relations.Player;
@@ -18,6 +19,7 @@ import java.util.Objects;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class BackPack implements JsonPreparable {
     private BackPackType backPackType;
     private Map<Salable, Integer> products = new HashMap<>();

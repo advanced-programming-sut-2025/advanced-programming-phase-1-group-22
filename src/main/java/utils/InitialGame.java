@@ -32,6 +32,7 @@ public class InitialGame {
         app.setCurrentGame(game);
         game.start();
         Village village = new Village();
+        village.initAfterLoad();
         game.setVillage(village);
         for (int i = 0; i < users.size(); i++) {
             Player player = new Player(users.get(i));

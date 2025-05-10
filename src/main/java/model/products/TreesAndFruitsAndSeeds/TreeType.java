@@ -1,6 +1,7 @@
 package model.products.TreesAndFruitsAndSeeds;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 import model.enums.Season;
 import model.products.Harvestable;

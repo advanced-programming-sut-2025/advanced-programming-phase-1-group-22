@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import model.Actor;
 import model.TimeAndDate;
@@ -19,6 +20,7 @@ import java.util.Map;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class Friendship implements JsonPreparable {
     private Integer id;
     private Actor firstPlayer;
