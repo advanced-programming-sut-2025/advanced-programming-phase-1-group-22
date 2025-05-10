@@ -1,5 +1,4 @@
 package service;
-
 import model.*;
 import model.abilitiy.Ability;
 import model.animal.Animal;
@@ -50,6 +49,7 @@ import variables.Session;
 import view.Menu;
 import view.ViewRender;
 
+import java.io.IOException;
 import java.util.*;
 
 public class GameService {
@@ -212,7 +212,7 @@ public class GameService {
         return new Response(app.getCurrentGame().getVillage().getWeather().toString(), true);
     }
 
-    public Response printMap(String x, String y, String size) {
+    public Response printMap(String x, String y, String size){
         int x1 = Integer.parseInt(x);
         int y1 = Integer.parseInt(y);
         if (x1 < 0 || y1 < 0 || x1 >= app.getCurrentGame().getLength() || y1 >= app.getCurrentGame().getWidth()) {
