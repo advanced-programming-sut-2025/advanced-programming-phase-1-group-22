@@ -1,6 +1,10 @@
 register -u amirreza -p tU>(13sEeO     tU>(13sEeO -n amir   -e  amir@gmail.com  -g MALE
-register -u  zahra -p   random   -n zahraa     -e zahra@outlook.com -g  FEMALE
-login -u amirreza -p      tU>(13sEeO2
+menu enter LOGIN
+register -u  zahra -p  tU>(13sEe1  tU>(13sEe1  -n zahraa     -e zahra@outlook.com -g  FEMALE
+menu enter LOGIN
+register -u  mehdi -p  tU>(13sEe2  tU>(13sEe2  -n mehdii     -e mehdi@outlook.com -g  MALE
+menu enter LOGIN
+register -u  roham -p  tU>(13sEe3  tU>(13sEe3  -n rohamm     -e roham@outlook.com -g  MALE
 forget    password -u amirreza
 menu enter MAIN
 show current menu
@@ -8,13 +12,16 @@ change password -p tU>(13sEeO23 -o tU>(13sEeO2
 tU>(13sEeO
 
 login -u beta1 -p Bet&pas3
-game      new -u beta2 beta3 beta4
+
+
+login -u amirreza -p      tU>(13sEeO
+game      new -u mehdi roham zahra
 game map 2
 game map 1
 game map 3
 game map 5
-walk -l 32,48
 print map -l 0,0 -s 2000
+walk -l 32,48
 menu enter RELATION_MENU
 ask marriage -u beta2 -r Wedding Ring
 next turn
