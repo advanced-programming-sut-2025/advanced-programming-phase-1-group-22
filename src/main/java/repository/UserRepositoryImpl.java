@@ -18,14 +18,14 @@ public class UserRepositoryImpl implements UserRepository {
         try {
             transaction = entityManager.getTransaction();
             transaction.begin();
-            entityManager.persist(user);
+            User savedUser = entityManager.merge(user); // Merges if exists, persists if new
             transaction.commit();
-            return Optional.of(user);
+            return Optional.of(savedUser);
         } catch (Exception e) {
             if (transaction != null && transaction.isActive()) {
                 transaction.rollback();
             }
-            System.err.println("something went wrong in saveUser in UserRepositoryImpl: " + e.getMessage());
+            System.err.println("Error saving user: " + e.getMessage());
             return Optional.empty();
         }
     }

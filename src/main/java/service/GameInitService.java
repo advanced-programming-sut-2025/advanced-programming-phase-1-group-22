@@ -51,7 +51,7 @@ public class GameInitService {
             return 1;
         }
         User user = (User) byUsername.get();
-        if (user.getIsPlaying()) return 2;
+        if (user.getIsPlaying() != null) return 2;
         for (User addedUser : users) {
             if (user.getUsername().equals(addedUser.getUsername())) return 3;
         }
@@ -111,8 +111,14 @@ public class GameInitService {
 
     public Response loadGame() {
         Game game = null;
-        game = GameSerializer.loadGame("game.bin");
-        return null;
+        String savedGamePath = Session.getCurrentUser().getIsPlaying();
+        if (savedGamePath == null) {
+            return new Response("You don't have Saved game!");
+        }
+        game = GameSerializer.loadGame(savedGamePath);
+        App.getInstance().setCurrentGame(game);
+        Session.setCurrentMenu(Menu.GAME_MAIN_MENU);
+        return new Response("The game has been loaded");
     }
 
     public Response gameMap(String number) {
