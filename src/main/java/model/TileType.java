@@ -8,6 +8,7 @@ public enum TileType {
     PATH("🧱"), FENCE("🚧"), DOOR("🚪"),PLOWED("🟫️"), THUNDERED("🌩️");
     private final String name;
 
+
     TileType(String name) {
         this.name = name;
     }
