@@ -2,12 +2,9 @@ package model.structure.stores;
 
 import lombok.Getter;
 import model.Salable;
-import model.products.Product;
 import model.products.TreesAndFruitsAndSeeds.MadeProductType;
 import model.records.Response;
-import model.relations.Player;
 import model.tools.*;
-import utils.App;
 
 import java.util.Map;
 
@@ -17,7 +14,7 @@ public enum BlackSmithUpgrade implements Shop {
     COPPER_HOE(Hoe.COPPER, ()->Map.of(MadeProductType.COPPER_BAR, 5), 2000, 1),
     COPPER_PICKAXE(Pickaxe.COPPER, ()->Map.of(MadeProductType.COPPER_BAR, 5), 2000, 1),
     COPPER_TRASHCAN(TrashCan.COPPER, ()->Map.of(MadeProductType.COPPER_BAR, 5), 2000, 1),
-    COPPER_WATER_CAN(WateringCanType.CUPPER, ()->Map.of(MadeProductType.COPPER_BAR, 5), 2000, 1),
+    COPPER_WATER_CAN(WateringCanType.COPPER, ()->Map.of(MadeProductType.COPPER_BAR, 5), 2000, 1),
     COPPER_TRASH_CAN(TrashCan.COPPER, ()->Map.of(MadeProductType.COPPER_BAR, 5), 1000, 1),
     STEEL_AXE(Axe.IRON, ()->Map.of(MadeProductType.IRON_BAR, 5), 5000, 1),
     STEEL_HOE(Hoe.IRON, ()->Map.of(MadeProductType.IRON_BAR, 5), 5000, 1),

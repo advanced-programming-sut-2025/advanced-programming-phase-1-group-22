@@ -13,7 +13,7 @@ public class Hay implements Salable {
 
     @Override
     public int getSellPrice() {
-        return price;
+        return this.price;
     }
 
     @Override
