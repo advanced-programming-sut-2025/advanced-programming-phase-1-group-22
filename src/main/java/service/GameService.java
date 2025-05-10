@@ -85,7 +85,7 @@ public class GameService {
 
     public Response terminateGame() {
         for (int i = 1; i < App.getInstance().getCurrentGame().getPlayers().size(); i++) {
-            switch (ViewRender.getResponse().message()) {
+            switch (viewRender.getResponse().message()) {
                 case "Y": break;
                 case "n": return new Response("Termination failed!");
                 default: System.out.println("Are you in favor termination? Y/n");
