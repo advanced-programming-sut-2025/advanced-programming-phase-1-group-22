@@ -4,23 +4,18 @@ import lombok.Getter;
 import model.relations.Player;
 import model.Tile;
 
-import java.io.Serializable;
-
 @Getter
-public enum BackPackType implements Tool, Serializable {
+public enum BackPackType implements Tool {
     NORMAL_BACKPACK("normal backpack",0,12),
     BIG_BACKPACK("big backpack",1,24),
     DELUXE_BACKPACK("deluxe backpack",2,true);
 
-    private String name;
+    private final String name;
     private Integer capacity;
     private Integer level;
     private Boolean isInfinite = false;
 
-    BackPackType() {
-    }
-
-    BackPackType(String name, int level, int capacity) {
+    BackPackType(String name,int level,int capacity) {
         this.name = name;
         this.level = level;
         this.capacity = capacity;

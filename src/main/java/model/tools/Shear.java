@@ -10,21 +10,17 @@ import model.products.AnimalProduct;
 import model.structure.Structure;
 import utils.App;
 
-import java.io.Serializable;
 import java.util.List;
 
 @Getter
-public enum Shear implements Tool, Serializable {
+public enum Shear implements Tool {
     SHEAR("shear",4, 1000);
 
-    private String name;
-    private Integer energyCost;
-    private Integer price;
+    private final String name;
+    private final Integer energyCost;
+    private final Integer price;
 
-    Shear() {
-    }
-
-    Shear(String name, Integer energyCost, Integer price) {
+    Shear(String name,Integer energyCost, Integer price) {
         this.name = name;
         this.energyCost = energyCost;
         this.price = price;
@@ -57,10 +53,14 @@ public enum Shear implements Tool, Serializable {
 
     @Override
     public int getEnergy(Player player) {
+        int minus = 0;
         if (player.getAbilityLevel(Ability.FARMING) == 4){
-            return (int) (App.getInstance().getCurrentGame().getWeatherCoefficient() * energyCost - 1);
+            minus += 1;
         }
-        return (int) (App.getInstance().getCurrentGame().getWeatherCoefficient() * energyCost);
+        if (player.getBuffAbility() != null && player.getBuffAbility().equals(Ability.FARMING)){
+            minus += 1;
+        }
+        return (int) (App.getInstance().getCurrentGame().getWeatherCoefficient() * energyCost - minus);
     }
 
     @Override

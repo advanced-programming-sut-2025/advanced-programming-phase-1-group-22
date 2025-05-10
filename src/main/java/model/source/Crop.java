@@ -7,14 +7,13 @@ import model.gameSundry.SundryType;
 import model.products.HarvestAbleProduct;
 import utils.App;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 
 @Getter
 @Setter
-public class Crop extends HarvestAbleProduct implements Source, Serializable {
+public class Crop extends HarvestAbleProduct implements Source {
 	private CropType cropType;
 	private TimeAndDate startPlanting;
 	private TimeAndDate lastHarvest;
@@ -36,9 +35,6 @@ public class Crop extends HarvestAbleProduct implements Source, Serializable {
 		} else {
 			numberOfStages = 0;
 		}
-	}
-
-	public Crop() {
 	}
 
 	@Override

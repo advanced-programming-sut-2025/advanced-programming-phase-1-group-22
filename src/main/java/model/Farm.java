@@ -46,7 +46,6 @@ public class Farm implements JsonPreparable {
     private Fridge fridge = new Fridge();
 
 
-    // برای ذخیره ساختارها
     @JsonProperty("structureWrappers")
     private List<ObjectWrapper> structureWrappers;
 
@@ -61,7 +60,6 @@ public class Farm implements JsonPreparable {
             preparableFridge.prepareForSave(mapper);
         }
 
-        // حذف شده: farmType نیاز به prepare/unpack نداره
     }
 
     @Override
@@ -140,13 +138,13 @@ public class Farm implements JsonPreparable {
     }
 
     public void setFence() {
-        for (int i = farmXStart; i < farmXEnd; i++) {
+        for (int i = farmXStart; i <= farmXEnd; i++) {
             App.getInstance().getCurrentGame().getTiles()[i][farmYStart].setTileType(TileType.FENCE);
             App.getInstance().getCurrentGame().getTiles()[i][farmYStart].setIsFilled(true);
             App.getInstance().getCurrentGame().getTiles()[i][farmYEnd].setTileType(TileType.FENCE);
             App.getInstance().getCurrentGame().getTiles()[i][farmYEnd].setIsFilled(true);
         }
-        for (int i = farmYStart; i < farmYEnd; i++) {
+        for (int i = farmYStart; i <= farmYEnd; i++) {
             App.getInstance().getCurrentGame().getTiles()[farmXStart][i].setTileType(TileType.FENCE);
             App.getInstance().getCurrentGame().getTiles()[farmXStart][i].setIsFilled(true);
             App.getInstance().getCurrentGame().getTiles()[farmXEnd][i].setTileType(TileType.FENCE);

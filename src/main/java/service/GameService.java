@@ -25,13 +25,16 @@ import model.receipe.CraftingRecipe;
 import model.records.Response;
 import model.relations.Player;
 import model.shelter.FarmBuilding;
+import model.shelter.FarmBuildingType;
 import model.source.*;
 import model.shelter.ShippingBin;
 import model.source.CropType;
 import model.source.MineralType;
 import model.source.MixedSeedsType;
 import model.source.SeedType;
+import model.structure.Stone;
 import model.structure.Structure;
+import model.structure.Trunk;
 import model.structure.farmInitialElements.Cottage;
 import model.structure.farmInitialElements.GreenHouse;
 import model.structure.farmInitialElements.Lake;
@@ -81,19 +84,24 @@ public class GameService {
     }
 
     public Response terminateGame() {
-        app.getCurrentGame().addTermination();
-        if (app.getCurrentGame().getPlayersInFavorTermination() == app.getCurrentGame().getPlayers().size()) {
-            App.getInstance().getGames().remove(app.getCurrentGame());
-            Session.setCurrentMenu(Menu.MAIN);
-            for (Player player : app.getCurrentGame().getPlayers()) {
-                player.getUser().setIsPlaying(false);
+        for (int i = 1; i < App.getInstance().getCurrentGame().getPlayers().size(); i++) {
+            switch (ViewRender.getResponse().message()) {
+                case "Y": break;
+                case "n": return new Response("Termination failed!");
+                default: System.out.println("Are you in favor termination? Y/n");
             }
-
-            //TODO remove app.getCurrentGame() from databases
-            return new Response("The game is terminated", true);
-        } else {
-            return new Response("Do you agree on Termination? Either Enter \"no\" or \"terminate game\"");
         }
+        App.getInstance().getGames().remove(app.getCurrentGame());
+        Session.setCurrentMenu(Menu.MAIN);
+        for (Player player : app.getCurrentGame().getPlayers()) {
+            player.getUser().setIsPlaying(false);
+            player.getUser().setNumberOfPlayedGames(player.getUser().getNumberOfPlayedGames() + 1);
+            player.getUser().setHighestMoneyEarned(
+                    Math.max(player.getUser().getHighestMoneyEarned(), player.getAccount().getGolds())
+            );
+        }
+        //TODO remove app.getCurrentGame() from databases
+        return new Response("The game is terminated", true);
     }
 
     public Response nextTurn() {
@@ -159,7 +167,6 @@ public class GameService {
             return new Response("Weather not found!");
         }
         app.getCurrentGame().getVillage().setTomorrowWeather(weather);
-        App.getInstance().getCurrentGame().automaticWatering(weather);
         return new Response("Weather set to " + type + " successfully.", true);
     }
 
@@ -313,7 +320,8 @@ public class GameService {
     }
 
     public Response showPlayerInventory() {
-        return new Response(getCurrentPlayer().getInventory().showInventory(), true);
+        return new Response("Account: " + getCurrentPlayer().getAccount().getGolds() + "\n\n" +
+                getCurrentPlayer().getInventory().showInventory(), true);
     }
 
     public Response removeFromPlayerInventory(String itemName, boolean haveItemNumber, int... itemNumbers) {
@@ -368,7 +376,7 @@ public class GameService {
             return new Response("upgrade is not available");
         }
 
-        if (!isPlayerInStore(currentPlayer.getTiles().getFirst(),StoreType.BLACK_SMITH)) {
+        if (!isPlayerInStore(StoreType.BLACK_SMITH)) {
             return new Response("you have to be in blackSmith store to upgrade tools");
         }
 
@@ -380,6 +388,10 @@ public class GameService {
 
         if (!playerHaveEnoughResourceToUpgrade(currentPlayer, blackSmithUpgrade)) {
             return new Response("you do not have enough resource to upgrade tool");
+        }
+
+        if(blackSmithUpgrade.getDailySold() == blackSmithUpgrade.getDailyLimit()) {
+            return new Response("Not enough in stock!");
         }
         upgradeTool(currentPlayer, blackSmithUpgrade, currentTool, upgradeTool);
         return new Response("the tool upgrade to " + upgradeTool.getName(), true);
@@ -405,12 +417,19 @@ public class GameService {
         return new Response(currentTool.useTool(currentPlayer, currentTile), true);
     }
 
-    public Response pickFromFloor() {
+    public Response pickFromFloor(String direction) {
         Player currentPlayer = getCurrentPlayer();
-        Tile currentTile = currentPlayer.getTiles().get(0);
+        Direction currentDirection = Direction.getByName(direction);
+        if (currentDirection == null){
+            return new Response("wrong direction");
+        }
+        Tile currentTile = getTileByXAndY(currentPlayer.getTiles().getFirst().getX() + currentDirection.getXTransmit(),
+                currentPlayer.getTiles().getFirst().getY() + currentDirection.getYTransmit());
+        if (currentTile == null){
+            return new Response("out of bound");
+        }
         List<Structure> structures = App.getInstance().getCurrentGame().getVillage().findStructuresByTile(currentTile);
         Structure currentStructure = null;
-
         for (Structure structure : structures) {
             if (structure.getIsPickable()) {
                 currentStructure = structure;
@@ -419,7 +438,11 @@ public class GameService {
         if (currentStructure == null) {
             return new Response("there is nothing to pick on the floor");
         }
-        return new Response(tryToPickUp(currentPlayer, currentStructure, currentTile), true);
+        boolean flag = tryToPickUp(currentPlayer, currentStructure);
+        if (!flag){
+            return new Response("your backpack is full");
+        }
+        return new Response("you picked up a " + ((Salable) currentStructure).getName(), true);
     }
 
     public Response fishing(String name) {
@@ -446,7 +469,7 @@ public class GameService {
         if (carpenterShopFarmBuildings == null) {
             return new Response("there is no farm building with this name");
         }
-        if (!isPlayerInStore(currentPlayer.getTiles().getFirst(),StoreType.CARPENTER_SHOP)) {
+        if (!isPlayerInStore(StoreType.CARPENTER_SHOP)) {
             return new Response("you have to be in Carpenter store to build");
         }
         Farm currentFarm = getPlayerMainFarm(currentPlayer);
@@ -455,13 +478,24 @@ public class GameService {
         } else if (!playerHaveEnoughResourceToBuild(currentPlayer, carpenterShopFarmBuildings)) {
             return new Response("you do not have enough resource to build");
         }
-        FarmBuilding farmBuilding = new FarmBuilding(carpenterShopFarmBuildings.getFarmBuildingType());
-
+		if(carpenterShopFarmBuildings.getDailySold() == carpenterShopFarmBuildings.getDailyLimit()) {
+			return new Response("Not enough in stock!");
+		}
+        Structure structure;
+        if (carpenterShopFarmBuildings.getFarmBuildingType().equals(FarmBuildingType.SHIPPING_BIN)){
+            structure = new ShippingBin();
+        }
+        else {
+            structure = new FarmBuilding(carpenterShopFarmBuildings.getFarmBuildingType());;
+        }
         String message = buildStructureInAPlace(carpenterShopFarmBuildings,
-                currentFarm, farmBuilding, farmBuilding.getFarmBuildingType().getHeight(),
-                farmBuilding.getFarmBuildingType().getWidth(), x, y);
+                currentFarm, structure, carpenterShopFarmBuildings.getFarmBuildingType().getHeight(),
+                carpenterShopFarmBuildings.getFarmBuildingType().getWidth(), x, y);
         if (message.contains("not")){
             return new Response(message);
+        }
+        if (structure instanceof ShippingBin){
+            currentPlayer.getShippingBinList().add((ShippingBin) structure);
         }
         payForBuild(carpenterShopFarmBuildings,currentPlayer);
         return new Response(message, true);
@@ -472,8 +506,11 @@ public class GameService {
         MarnieShopAnimal marnieShopAnimal = MarnieShopAnimal.getFromName(animalType);
         if (marnieShopAnimal == null) {
             return new Response("there is no such animal");
-        } else if (!isPlayerInStore(currentPlayer.getTiles().getFirst(),StoreType.MARNIE_SHOP)) {
+        } else if (!isPlayerInStore(StoreType.MARNIE_SHOP)) {
             return new Response("you have to be in Marnie Shop Animal to buy animals");
+        }
+        if(marnieShopAnimal.getDailySold() == marnieShopAnimal.getDailyLimit()) {
+            return new Response("Not enough in stock!");
         }
         Farm currentFarm = getPlayerMainFarm(currentPlayer);
         if (!isAnimalNameUnique(currentPlayer, name)) {
@@ -611,7 +648,7 @@ public class GameService {
                 currentPlayer.getTiles().get(0).getY() + currentDirection.getYTransmit());
         if (currentTile == null) {
             return new Response("out of bound");
-        } else if (currentTile.getIsFilled() && !isThereGreenHouseForHarvest(currentTile)) {
+        } else if (currentTile.getIsFilled()) {
             return new Response("this tile is not available for farming");
         } else if (!currentTile.getTileType().equals(TileType.PLOWED)) {
             return new Response("you should plow the tile first");
@@ -724,6 +761,21 @@ public class GameService {
         return new Response("remain water: " + ((WateringCan) currentTool).getRemain(), true);
     }
 
+    public Response showAbility(){
+        Player currentPlayer = getCurrentPlayer();
+        return new Response(makeStringTokenAbility(currentPlayer),true);
+    }
+
+    private String makeStringTokenAbility(Player player){
+        StringBuilder token = new StringBuilder();
+        for (Map.Entry<Ability, Integer> abilityIntegerEntry : player.getAbilities().entrySet()) {
+            token.append(abilityIntegerEntry.getKey().toString().toLowerCase()).append(" :\n").
+                    append("    xp: ").append(abilityIntegerEntry.getValue()).append("\n").
+                    append("    level: ").append(player.getAbilityLevel(abilityIntegerEntry.getKey())).append("\n");
+        }
+        return token.toString();
+    }
+
     private Player getCurrentPlayer() {
         return App.getInstance().getCurrentGame().getCurrentPlayer();
     }
@@ -796,14 +848,8 @@ public class GameService {
         return token.toString();
     }
 
-    private Boolean isPlayerInStore(Tile tile,StoreType storeType) {
-        List<Structure> structures = App.getInstance().getCurrentGame().getVillage().findStructuresByTile(tile);
-        for (Structure structure : structures) {
-            if (structure instanceof Store){
-                return ((Store)structure).getStoreType().equals(storeType);
-            }
-        }
-        return false;
+    private Boolean isPlayerInStore(StoreType storeType) {
+        return App.getInstance().getCurrentGame().getCurrentPlayer().getStoreType() == storeType;
     }
 
     private Boolean playerHaveEnoughResourceToUpgrade(Player player, BlackSmithUpgrade blackSmithUpgrade) {
@@ -857,15 +903,16 @@ public class GameService {
         return null;
     }
 
-    private String tryToPickUp(Player player, Structure structure, Tile tile) {
+    private boolean tryToPickUp(Player player, Structure structure) {
         if (player.getInventory().isInventoryHaveCapacity((Salable) structure)) {
             player.getInventory().addProductToBackPack((Salable) structure, 1);
-            tile.setIsFilled(false);
+            for (Tile structureTile : structure.getTiles()) {
+                structureTile.setIsFilled(false);
+            }
             App.getInstance().getCurrentGame().getVillage().removeStructure(structure);
-            player.upgradeAbility(Ability.FORAGING);
-            return "you picked up a " + ((Salable) structure).getName();
+            return true;
         }
-        return "your backpack is full";
+        return false;
     }
 
     private Tile isThereAnyLakeAround(Player player) {
@@ -1210,6 +1257,11 @@ public class GameService {
                 return value;
             }
         }
+        for (TreeType value : TreeType.values()) {
+            if (value.getName().equalsIgnoreCase(name)){
+                return value;
+            }
+        }
         return null;
     }
 
@@ -1227,25 +1279,47 @@ public class GameService {
         player.getInventory().deleteProductFromBackPack(product, player, 1);
         ((Structure) product).getTiles().add(tile);
         Farm currentFarm = getPlayerInWitchFarm(player);
+        if (currentFarm == null) return new Response("You can only place something in a farm");
         if (product instanceof Craft) {
             switch (((Craft) product).getCraftType()) {
                 case BOMB:
                 case CHERRY_BOMB:
                 case MEGA_BOMB: {
-                    for (Tile tile1 : ((Craft) product).getAffectedTiles()) {
-                        //TODO BURN;
+                    List<Tile> affectedTiles = ((Craft) product).getAffectedTiles();
+                    for (Tile tile1 : affectedTiles) {
+                        tile1.setIsPassable(true);
+                        tile1.setIsFilled(false);
                     }
+                    List<Structure>  farmStructures = new ArrayList<>(currentFarm.getStructures());
+                    for (Structure structure : farmStructures) {
+                        boolean flag = false;
+                        for (Tile structureTile : structure.getTiles()) {
+                            if (affectedTiles.contains(structureTile)) {
+                                flag = true;
+                                break;
+                            }
+                        }
+                        if (!flag) continue;
+                        if (structure instanceof Tree) currentFarm.getStructures().remove(structure);
+                        if (structure instanceof Crop) currentFarm.getStructures().remove(structure);
+                        if (structure instanceof Stone) currentFarm.getStructures().remove(structure);
+                        if (structure instanceof Mineral) currentFarm.getStructures().remove(structure);
+                        if (structure instanceof Seed) currentFarm.getStructures().remove(structure);
+                        if (structure instanceof MixedSeeds) currentFarm.getStructures().remove(structure);
+                        if (structure instanceof Trunk) currentFarm.getStructures().remove(structure);
+                        if (structure instanceof FarmBuilding) currentFarm.getStructures().remove(structure);
+                        if (structure instanceof Animal) currentFarm.getStructures().remove(structure);
+                        if (structure instanceof ShippingBin) currentFarm.getStructures().remove(structure);
+                    }
+                    return new Response("Bombing completed.");
                 }
-                break;
                 case GRASS_STARTER: {
                     ((Craft) product).getTiles().get(0).setTileType(TileType.GRASS);
                     return new Response(itemName + " is put on the ground.", true);
                 }
             }
         }
-        if (currentFarm != null) {
-            currentFarm.getStructures().add((Structure) product);
-        }
+        currentFarm.getStructures().add((Structure) product);
         setScareCrowAndSprinklerForAll();
         tile.setIsFilled(true); //TODO not always is filled;
         return new Response(itemName + " is put on the ground.", true);
@@ -1584,19 +1658,24 @@ public class GameService {
     }
 
     public Response artisanUse(String name, String item1, String item2) {
+        if ("honey".equalsIgnoreCase(item1)) {
+            int b = 5;
+        }
         Player player = app.getCurrentGame().getCurrentPlayer();
-        Salable craft = player.getInventory().findProductInBackPackByNAme(name);
-        if (!(craft instanceof CraftType)) {
-            return new Response("No artisan called " + name + " found in your backpack.");
+        Craft craft = findCraft(name);
+        if (craft == null) {
+            return new Response("No artisan called " + name + " nearby.");
         }
         Salable product1 = null, product2 = null;
-        for (Salable value : player.getInventory().getProducts().keySet()) {
-            if (item1.equalsIgnoreCase(value.getName())) {
-                product1 = value;
-                break;
+        if (item1 != null && !item1.isEmpty()) {
+            for (Salable value : player.getInventory().getProducts().keySet()) {
+                if (item1.equalsIgnoreCase(value.getName())) {
+                    product1 = value;
+                    break;
+                }
             }
         }
-        if (product1 == null) return new Response(item1 + " not found in your backpack.");
+        if (item1 != null && product1 == null) return new Response(item1 + " not found in your backpack.");
         if (item2 != null && !item2.isEmpty()) {
             for (Salable value : player.getInventory().getProducts().keySet()) {
                 if (item2.equalsIgnoreCase(value.getName())) {
@@ -1606,38 +1685,52 @@ public class GameService {
             }
             if (product2 == null) return new Response(item2 + " not found in your backpack.");
         }
-        MadeProductType madeProductType = MadeProductType.findByCraft((CraftType) craft);
-        if (madeProductType == null) return new Response(name + "is not a valid artisan.");
-        Response isArtisanValid = madeProductType.isIngredientsValid((Product) product1,
-                player.getInventory().countProductFromBackPack(product1.getName()),
-                product2 != null);
-        if (!isArtisanValid.shouldBeBack()) return isArtisanValid;
-        product1 = player.getInventory().findProductInBackPackByNAme(product1.getName());
-        player.getInventory().deleteProductFromBackPack(product1, player, madeProductType.countIngredient());
+
+        MadeProductType madeProductType = null;
+        for (MadeProductType value : MadeProductType.values()) {
+            if (value.getCraft() == craft.getCraftType()) {
+                Response isArtisanValid = product1 == null ? new Response("", true) : value.isIngredientsValid(product1,
+                        player.getInventory().countProductFromBackPack(product1.getName()),
+                        product2 != null);
+                if (isArtisanValid.shouldBeBack()) {
+                    madeProductType = value;
+                    break;
+                }
+            }
+        }
+        if (madeProductType == null) return new Response("Items given are not suitable for the craft");
+        if (craft.getMadeProduct() != null) return new Response("Craft already in queue.");
+        if (product1 != null) {
+            product1 = player.getInventory().findProductInBackPackByNAme(product1.getName());
+            player.getInventory().deleteProductFromBackPack(product1, player, madeProductType.countIngredient());
+        }
         if (product2 != null) {
             product2 = player.getInventory().findProductInBackPackByNAme(MadeProductType.COAL.getName());
             player.getInventory().deleteProductFromBackPack(product2, player, 1);
         }
-        player.addCraft(new Craft(madeProductType.getCraft(), new MadeProduct(madeProductType, product1), madeProductType.calcETA(product1)));
+        craft.setMadeProduct(new MadeProduct(madeProductType, product1));
+        craft.setETA(madeProductType.calcETA(product1));
         return new Response("The item will be ready in due time.");
     }
 
     public Response artisanGet(String name) {
         Player player = app.getCurrentGame().getCurrentPlayer();
-        Salable craftType = player.getInventory().findProductInBackPackByNAme(name);
-        if (!(craftType instanceof CraftType)) {
-            return new Response("No artisan called " + name + " found in your backpack.");
+        Craft craft = findCraft(name);
+        if (craft == null) {
+            return new Response("No artisan called " + name + " nearby.");
         }
-        Craft craft = player.findCraft(craftType);
-        if (craft == null) return new Response("You have not started an artisan of type " + name);
-        if (!player.getInventory().isInventoryHaveCapacity(craft)) {
+        if (craft.getMadeProduct() == null) {
+            return new Response("No queue underway.");
+        }
+        if (!player.getInventory().isInventoryHaveCapacity(craft.getMadeProduct())) {
             return new Response("Backpack is full.");
         }
-        if (craft.getETA().compareTime(app.getCurrentGame().getTimeAndDate()) > 0) {
+        if (craft.getETA().compareTime(app.getCurrentGame().getTimeAndDate()) < 0) {
             return new Response("Still not ready!");
         }
-        player.getInventory().addProductToBackPack(craft, 1);
-        player.getCrafts().remove(craft);
+        player.getInventory().addProductToBackPack(craft.getMadeProduct(), 1);
+        craft.setETA(null);
+        craft.setMadeProduct(null);
         return new Response("The artisan collected", true);
     }
 
@@ -1741,7 +1834,7 @@ public class GameService {
         List<Structure> structures = App.getInstance().getCurrentGame().getVillage().findStructuresByTile(tile);
         for (Structure structure : structures) {
             if (structure instanceof GreenHouse) {
-                return !((GreenHouse) structure).getPool().getTiles().contains(tile);
+                return !((GreenHouse) structure).getPool().getTiles().contains(tile) && ((GreenHouse) structure).isBuilt();
             }
         }
         return false;
@@ -1878,9 +1971,15 @@ public class GameService {
         if (!player.getInventory().isInventoryHaveCapacity(new Craft(recipe.getCraft(), null, null))) {
             return new Response("You don't have enough space in your backpack");
         }
+        if (player.getEnergy() < 2) {
+            player.faint();
+            nextTurn();
+            return new Response("Not enough energy; you fainted");
+        }
         player.removeEnergy(2);
         recipe.getCraft().removeIngredients(player);
         player.getInventory().addProductToBackPack(new Craft(recipe.getCraft(), null, null), 1);
+        if (player.getEnergyPerTurn() <= 0) nextTurn();
         return new Response(recipe.getCraft().getName() + " crafted successfully.");
     }
 
@@ -1932,16 +2031,22 @@ public class GameService {
         if (!player.getInventory().isInventoryHaveCapacity(recipe.getIngredients())) {
             return new Response("You don't have enough space in your backpack or fridge");
         }
+        if (player.getEnergy() < 3) {
+            player.faint();
+            nextTurn();
+            return new Response("Not enough energy; you fainted");
+        }
         player.removeEnergy(3);
         recipe.getIngredients().removeIngredients(fridge, player);
         player.getInventory().addProductToBackPack(new Food(recipe.getIngredients()), 1);
+        if (player.getEnergyPerTurn() <= 0) nextTurn();
         return new Response(recipe.getIngredients().getName() + " cooked successfully.");
     }
 
     private Response isStoreOpen() {
         StoreType storeType = app.getCurrentGame().getCurrentPlayer().getStoreType();
-        if (new TimeAndDate(0, storeType.getOpenDoorTime()).compareDailyTime(app.getCurrentGame().getTimeAndDate()) > 0 &&
-                new TimeAndDate(0, storeType.getCloseDoorTime()).compareDailyTime(app.getCurrentGame().getTimeAndDate()) < 0) {
+        if (new TimeAndDate(0, storeType.getOpenDoorTime()).compareDailyTime(app.getCurrentGame().getTimeAndDate()) < 0 ||
+                new TimeAndDate(0, storeType.getCloseDoorTime()).compareDailyTime(app.getCurrentGame().getTimeAndDate()) > 0) {
             return new Response("Store closed.");
         }
         return new Response("", true);
@@ -1966,5 +2071,22 @@ public class GameService {
         if (!response.shouldBeBack()) return response;
         Player player = app.getCurrentGame().getCurrentPlayer();
         return player.getStoreType().purchase(name, Integer.parseInt(count));
+    }
+
+    private Craft findCraft(String name) {
+        Player player = app.getCurrentGame().getCurrentPlayer();
+        Farm farm = app.getCurrentGame().findFarm();
+        for (Structure structure : farm.getStructures()) {
+            if (structure instanceof Craft) {
+                if (((Craft) structure).getName().equalsIgnoreCase(name)) {
+                    Pair pair = new Pair(structure.getTiles().getFirst().getX(), structure.getTiles().getFirst().getY());
+                    Pair origin = new Pair(player.getTiles().getFirst().getX(), player.getTiles().getFirst().getY());
+                    if (Math.abs(pair.getX() - origin.getX()) <= 1 && Math.abs(pair.getY() - origin.getY()) <= 1) {
+                        return (Craft) structure;
+                    }
+                }
+            }
+        }
+        return null;
     }
 }
