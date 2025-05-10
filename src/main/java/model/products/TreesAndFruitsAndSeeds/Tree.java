@@ -1,6 +1,7 @@
 package model.products.TreesAndFruitsAndSeeds;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import model.TimeAndDate;
@@ -14,6 +15,7 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
 public class Tree extends HarvestAbleProduct {
     private TreeType treeType;
     private TimeAndDate startPlanting;

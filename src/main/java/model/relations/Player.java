@@ -1,6 +1,5 @@
 package model.relations;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
@@ -19,20 +18,17 @@ import model.records.Response;
 import model.shelter.ShippingBin;
 import model.source.*;
 import model.structure.farmInitialElements.Cottage;
-import model.structure.stores.PierreShop;
 import model.structure.stores.StoreType;
 import model.tools.*;
-import save3.JsonPreparable;
-import save3.ObjectMapWrapper;
-import save3.ObjectWrapper;
+import saveGame.JsonPreparable;
+import saveGame.ObjectMapWrapper;
+import saveGame.ObjectWrapper;
 import service.GameService;
 import utils.App;
 import variables.Session;
 import view.Menu;
 
 import java.util.*;
-
-import static model.source.MineralType.WOOD;
 
 @Getter
 @Setter
@@ -74,6 +70,8 @@ public class Player extends Actor implements JsonPreparable {
 	@JsonProperty("currentCarryingWrapper")
 	private ObjectWrapper currentCarryingWrapper;
 
+	public Player() {
+	}
 
 	public Player(User user) {
 		this.user = user;
@@ -172,7 +170,6 @@ public class Player extends Actor implements JsonPreparable {
 	private void addBasicTools() {
 		this.getAccount().setGolds(10);
 		inventory.getProducts().put(new Flower(), 1);
-		inventory.getProducts().put(WOOD, 100);
 		inventory.getProducts().put(new Sundry(SundryType.WEDDING_RING), 1);
 		inventory.getProducts().put(Hoe.NORMAL, 1);
 		inventory.getProducts().put(Pickaxe.NORMAL, 1);

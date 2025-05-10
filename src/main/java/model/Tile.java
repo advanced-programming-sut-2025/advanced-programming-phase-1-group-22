@@ -2,6 +2,7 @@ package model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import utils.App;
@@ -9,6 +10,7 @@ import utils.App;
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
 public class Tile {
     private Integer id;
     private Integer x;

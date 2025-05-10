@@ -1,6 +1,7 @@
 package model.source;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import model.TimeAndDate;
 import model.gameSundry.SundryType;
@@ -13,6 +14,7 @@ import java.util.List;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class Crop extends HarvestAbleProduct implements Source {
 	private CropType cropType;
 	private TimeAndDate startPlanting;
