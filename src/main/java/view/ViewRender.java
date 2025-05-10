@@ -10,19 +10,18 @@ import java.io.IOException;
 import java.util.Scanner;
 
 public class ViewRender {
-    private static Scanner input = new Scanner(System.in);
+    private final Scanner input = new Scanner(System.in);  // Instance variable
 
-    public static Response getResponse() {
+    public Response getResponse() {
         String response = input.nextLine();
         return new Response(response);
     }
 
-    public static void showResponse(Response response) {
+    public void showResponse(Response response) {
         System.out.println(response.message());
     }
 
     public void run() {
-
         Menu menu;
         while ((menu = Session.getCurrentMenu()) != Menu.EXIT) {
             menu.checkCommand(input);
@@ -34,3 +33,4 @@ public class ViewRender {
         }
     }
 }
+

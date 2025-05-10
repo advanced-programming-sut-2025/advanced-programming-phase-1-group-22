@@ -69,7 +69,7 @@ public class GameCommands extends CommandClass {
 
     public static final GameCommands SHOW_INVENTORY = new GameCommands("inventory\\s+show");
     public static final GameCommands REMOVE_FROM_INVENTORY = new GameCommands("inventory\\s+trash\\s+-i\\s+([a-zA-Z ]+)(\\s+-n\\s*(\\d+))?");
-    public static final GameCommands PICK_PRODUCT = new GameCommands("pick\\s+up");
+    public static final GameCommands PICK_PRODUCT = new GameCommands("pick\\s+up\\s+-d\\s+(\\S+)");
 
     public static final GameCommands TOOL_EQUIP = new GameCommands("tools\\s+equip\\s+(.+)");
     public static final GameCommands SHOW_CURRENT_TOOL = new GameCommands("tools\\s+show\\s+current");
@@ -98,6 +98,7 @@ public class GameCommands extends CommandClass {
     public static final GameCommands FERTILIZE = new GameCommands("^\\s*fertilize\\s+-f\\s+(?<fertilizer>.+)\\s+-d\\s+(\\S+)\\s*$");
     public static final GameCommands HOW_MUCH_WATER = new GameCommands("^\\s*howmuch\\s+water\\s*$");
 
+    public static final GameCommands SHOW_ABILITY = new GameCommands("show\\s+ability");
     GameCommands(String regex) {
         super(regex);
     }

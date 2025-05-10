@@ -12,6 +12,7 @@ import service.GameService;
 import utils.App;
 
 import javax.swing.plaf.SpinnerUI;
+import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -142,7 +143,8 @@ public class GameMenuController extends MenuController {
     }
 
     public Response pickFromFloor(String[] params) {
-        return gameService.pickFromFloor();
+        String direction = params[0];
+        return gameService.pickFromFloor(direction);
     }
 
     public Response fishing(String[] parms) {
@@ -231,16 +233,16 @@ public class GameMenuController extends MenuController {
         return gameService.howMuchWater();
     }
 
+    public Response showAbility(String[] parms){
+        return gameService.showAbility();
+    }
+
     public Response placeItem(String[] params) {
         return gameService.placeItem(params[0], params[1]);
     }
 
     public Response C_AddItem(String[] params) {
         return gameService.C_AddItem(params[0].trim(), params[1]);
-    }
-
-    public Response C_SetFriendship(String[] params) {
-        return null;
     }
 
     public Response artisanUse(String[] params) {
@@ -268,66 +270,6 @@ public class GameMenuController extends MenuController {
         return gameService.sellAll(params[0]);
     }
 
-    public Response friendship(String[] params) {
-        return null;
-    }
-
-    public Response talk(String[] params) {
-        return null;
-    }
-
-    public Response talkHistory(String[] params) {
-        return null;
-    }
-
-    public Response gift(String[] params) {
-        return null;
-    }
-
-    public Response giftList(String[] params) {
-        return null;
-    }
-
-    public Response giftRate(String[] params) {
-        return null;
-    }
-
-    public Response giftHistory(String[] params) {
-        return null;
-    }
-
-    public Response hug(String[] params) {
-        return null;
-    }
-
-    public Response flower(String[] params) {
-        return null;
-    }
-
-    public Response askMarriage(String[] params) {
-        return null;
-    }
-
-    public Response respond(String[] params) {
-        return null;
-    }
-
-    public Response startTrade(String[] params) {
-        return null;
-    }
-
-    public Response meetNPC(String[] params) {
-        return null;
-    }
-
-    public Response giftNPC(String[] params) {
-        return null;
-    }
-
-    public Response questsFinish(String[] params) {
-        return null;
-    }
-
     public Response eat(String[] params) {
         return gameService.eat(params[0]);
     }
@@ -336,10 +278,6 @@ public class GameMenuController extends MenuController {
     }
 
     public Response questsList(String[] params) {
-        return null;
-    }
-
-    public Response friendshipNPCList(String[] params) {
         return null;
     }
 
@@ -385,21 +323,5 @@ public class GameMenuController extends MenuController {
 
     public Response purchase1(String[] strings) {
         return gameService.purchase(strings[0], "1");
-    }
-
-    public Response trade(String[] strings) {
-        return null;
-    }
-
-    public Response tradeList(String[] strings) {
-        return null;
-    }
-
-    public Response tradeResponse(String[] strings) {
-        return null;
-    }
-
-    public Response tradeHistory(String[] strings) {
-        return null;
     }
 }
