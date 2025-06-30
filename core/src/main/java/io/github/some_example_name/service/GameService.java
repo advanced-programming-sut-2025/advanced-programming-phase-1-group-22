@@ -45,6 +45,7 @@ import io.github.some_example_name.model.structure.stores.Store;
 import io.github.some_example_name.model.structure.stores.StoreType;
 import io.github.some_example_name.model.tools.BackPack;
 import io.github.some_example_name.model.tools.Tool;
+import io.github.some_example_name.repository.UserRepo;
 import io.github.some_example_name.repository.UserRepository;
 import io.github.some_example_name.repository.UserRepositoryImpl;
 import io.github.some_example_name.saveGame.GameSerializer;
@@ -63,7 +64,8 @@ public class GameService {
     private ViewRender viewRender;
 
     public GameService() {
-        userRepository = new UserRepositoryImpl(HibernateUtil.getEntityManagerFactory().createEntityManager());
+      //  userRepository = new UserRepositoryImpl(HibernateUtil.getEntityManagerFactory().createEntityManager());
+        userRepository = new UserRepo();
     }
 
     public static GameService getInstance() {
