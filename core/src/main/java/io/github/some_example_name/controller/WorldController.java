@@ -7,6 +7,7 @@ import io.github.some_example_name.model.Game;
 import io.github.some_example_name.model.Tile;
 import io.github.some_example_name.model.records.Response;
 import io.github.some_example_name.model.structure.Structure;
+import io.github.some_example_name.model.structure.farmInitialElements.Lake;
 import io.github.some_example_name.utils.App;
 
 public class WorldController {
@@ -40,9 +41,18 @@ public class WorldController {
             for (Structure structure : farm.getStructures()) {
                 if (isStructureInBond(structure)){
                     if (structure.getSprite() != null){
-                        structure.getSprite().setPosition(structure.getTiles().get(0).getX() * App.tileWidth,
-                            structure.getTiles().get(0).getY() * App.tileHeight);
-                        structure.getSprite().draw(MainGradle.getInstance().getBatch());
+                        if (structure instanceof Lake){
+                            for (Tile tile : structure.getTiles()) {
+                                structure.getSprite().setSize(App.tileWidth,App.tileHeight);
+                                structure.getSprite().setPosition(tile.getX() * App.tileWidth,
+                                        tile.getY() * App.tileHeight);
+                                structure.getSprite().draw(MainGradle.getInstance().getBatch());
+                            }
+                        }else {
+                            structure.getSprite().setPosition(structure.getTiles().get(0).getX() * App.tileWidth,
+                                    structure.getTiles().get(0).getY() * App.tileHeight);
+                            structure.getSprite().draw(MainGradle.getInstance().getBatch());
+                        }
                     }
                 }
             }
