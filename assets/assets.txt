@@ -1674,6 +1674,7 @@ Flooring/Flooring_94.png
 Flooring/Flooring_95.png
 Flooring/Flooring_96.png
 Flooring/Flooring_97.png
+Flooring/water.png
 Footwear/Cinderclown_Shoes.png
 Footwear/Combat_Boots.png
 Footwear/Cowboy_Boots.png

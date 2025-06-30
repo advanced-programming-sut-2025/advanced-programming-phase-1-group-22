@@ -3,6 +3,7 @@ package io.github.some_example_name.utils;
 import com.badlogic.gdx.graphics.Texture;
 
 public class GameAsset {
+    public static final Texture WATER = new Texture("Flooring/water.png");
     public static final Texture LIGHT_GREEN_FLOOR = new Texture("Flooring/Flooring_44.png");
     public static final Texture DARK_GREEN_FLOOR = new Texture("Flooring/Flooring_50.png");
     public static final Texture GREEN_FLOOR = new Texture("Flooring/Flooring_28.png");
