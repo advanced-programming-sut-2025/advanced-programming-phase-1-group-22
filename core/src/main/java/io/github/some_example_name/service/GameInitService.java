@@ -1,5 +1,6 @@
 package io.github.some_example_name.service;
 
+import io.github.some_example_name.repository.UserRepo;
 import jakarta.persistence.EntityManager;
 import io.github.some_example_name.model.*;
 import io.github.some_example_name.model.records.Response;
@@ -20,8 +21,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class GameInitService {
-    EntityManager em = HibernateUtil.getEntityManagerFactory().createEntityManager();
-    UserRepository userRepository = new UserRepositoryImpl(em);
+    //EntityManager em = HibernateUtil.getEntityManagerFactory().createEntityManager();
+    //UserRepository userRepository = new UserRepositoryImpl(em);
+    UserRepository userRepository = new UserRepo();
     private static GameInitService instance;
     App app = App.getInstance();
 

@@ -1,6 +1,7 @@
 package io.github.some_example_name.controller.mainMenu;
 
 import io.github.some_example_name.controller.MenuController;
+import io.github.some_example_name.repository.UserRepo;
 import jakarta.persistence.EntityManager;
 import io.github.some_example_name.model.records.Response;
 import io.github.some_example_name.repository.UserRepositoryImpl;
@@ -11,8 +12,8 @@ import io.github.some_example_name.utils.PasswordHasher;
 import io.github.some_example_name.view.ViewRender;
 
 public class MainMenuController extends MenuController {
-    EntityManager em = HibernateUtil.getEntityManagerFactory().createEntityManager();
-    private final AccountService accountService = new AccountService(new UserRepositoryImpl(em),new ViewRender(),new PasswordHasher());
+   // EntityManager em = HibernateUtil.getEntityManagerFactory().createEntityManager();
+    private final AccountService accountService = new AccountService(new UserRepo(),new ViewRender(),new PasswordHasher());
     private final GameInitService gameInitService = GameInitService.getInstance();
 
     public Response logout(String[] params) {
