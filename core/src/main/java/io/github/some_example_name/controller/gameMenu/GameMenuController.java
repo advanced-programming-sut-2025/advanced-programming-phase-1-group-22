@@ -216,7 +216,7 @@ public class GameMenuController extends MenuController {
     public Response plantSeed(String[] params) {
         String name = params[0].trim();
         String direction = params[1];
-        return gameService.plantSeed(name, direction);
+        return Response.empty();
     }
 
     public Response showPlant(String[] params) {
@@ -228,7 +228,7 @@ public class GameMenuController extends MenuController {
     public Response fertilize(String[] params) {
         String fertilize = params[0].trim();
         String direction = params[1];
-        return gameService.fertilize(fertilize, direction);
+        return Response.empty();
     }
 
     public Response howMuchWater(String[] params) {

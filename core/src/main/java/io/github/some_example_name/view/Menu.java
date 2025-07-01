@@ -24,7 +24,7 @@ public enum Menu {
     }
 
     public void checkCommand(Scanner scanner) {
-        this.commandProcessor.processCommand(scanner.nextLine().trim());
+        this.commandProcessor.processCommand(scanner.nextLine().trim(),null);
     }
 
 }

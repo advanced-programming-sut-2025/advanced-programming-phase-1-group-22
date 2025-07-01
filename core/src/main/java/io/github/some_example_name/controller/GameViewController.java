@@ -8,6 +8,7 @@ public class GameViewController {
     private final WorldController worldController = new WorldController();
     private final PlayerController playerController = new PlayerController();
     private final ToolController toolController = new ToolController();
+    private final CarryingController carryingController = new CarryingController();
     private final GameView view;
 
     public GameViewController(GameView view) {
@@ -18,5 +19,6 @@ public class GameViewController {
         worldController.update();
         playerController.update();
         toolController.update();
+        carryingController.update();
     }
 }

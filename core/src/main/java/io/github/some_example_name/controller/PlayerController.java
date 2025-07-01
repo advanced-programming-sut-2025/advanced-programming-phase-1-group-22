@@ -23,7 +23,9 @@ public class PlayerController {
         currentPlayer.getSprite().setPosition(currentPlayer.getTiles().get(0).getX() * App.tileWidth,
             currentPlayer.getTiles().get(0).getY() * App.tileHeight);
         currentPlayer.getSprite().draw(MainGradle.getInstance().getBatch());
-        handlePlayerMovement(currentPlayer);
+        if (!GameView.Console.isVisible())
+            handlePlayerMovement(currentPlayer);
+        handleInputs();
         setCameraPosition(currentPlayer);
     }
 
@@ -53,8 +55,14 @@ public class PlayerController {
         else if (Gdx.input.isKeyJustPressed(Input.Keys.D)){
             gameService.walk(playerX + 1,playerY);
         }
-        else if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)){
+    }
+
+    private void handleInputs(){
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)){
             InventoryMenu.createMenu(GameView.stage,GameAsset.SKIN);
+        }
+        else if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)){
+            GameView.Console.handleGlobalKey(GameView.stage);
         }
     }
 }
