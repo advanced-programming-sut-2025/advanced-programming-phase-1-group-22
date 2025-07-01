@@ -16,4 +16,8 @@ public class Pair {
         this.x = x;
         this.y = y;
     }
+
+    public boolean isOrigin() {
+        return x == 0 && y == 0;
+    }
 }

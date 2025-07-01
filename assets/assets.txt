@@ -1869,6 +1869,7 @@ Gem/Jade.png
 Gem/Prismatic_Shard.png
 Gem/Ruby.png
 Gem/Topaz.png
+Greenhouse/Farm_Building.png
 Greenhouse/greenhouse.png
 Hat/Abigail%27s_Bow.png
 Hat/Arcane_Hat.png

@@ -9,6 +9,8 @@ import io.github.some_example_name.service.GameService;
 import io.github.some_example_name.utils.App;
 
 public class PlayerController {
+    GameService gameService = new GameService();
+
     public void update(){
         Player currentPlayer = App.getInstance().getCurrentGame().getCurrentPlayer();
         currentPlayer.getSprite().setPosition(currentPlayer.getTiles().get(0).getX() * App.tileWidth,
@@ -31,7 +33,6 @@ public class PlayerController {
     private void handlePlayerMovement(Player player){
         int playerX = player.getTiles().get(0).getX();
         int playerY = player.getTiles().get(0).getY();
-        GameService gameService = new GameService();
         if (Gdx.input.isKeyJustPressed(Input.Keys.W)){
             gameService.walk(playerX,playerY + 1);
         }
