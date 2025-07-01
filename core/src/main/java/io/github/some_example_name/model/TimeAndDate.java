@@ -77,8 +77,6 @@ public class TimeAndDate {
             season = Season.SPRING;
         }
         if (nextDay) {
-            setWeatherSprite(App.getInstance().getCurrentGame().getVillage().getTomorrowWeather());
-            setSeasonSprite(season);
             App.getInstance().getCurrentGame().startDay();
         }
     }
@@ -223,7 +221,7 @@ public class TimeAndDate {
         }
     }
 
-    private void setWeatherSprite(Weather weather) {
+    public void setWeatherSprite(Weather weather) {
         if (App.getInstance().getCurrentGame().getCurrentPlayer().getIsWedding()) {
             this.weather = new Sprite(GameAsset.ClOCK_MANNERS[8]);
             return;
@@ -235,7 +233,7 @@ public class TimeAndDate {
             case SUNNY -> this.weather = new Sprite(GameAsset.ClOCK_MANNERS[7]);
         }
     }
-    private void setSeasonSprite(Season season) {
+    public void setSeasonSprite() {
         if (App.getInstance().getCurrentGame().getCurrentPlayer().getIsWedding()) {
             this.seasonSprite = new Sprite(GameAsset.ClOCK_MANNERS[3]);
             return;
