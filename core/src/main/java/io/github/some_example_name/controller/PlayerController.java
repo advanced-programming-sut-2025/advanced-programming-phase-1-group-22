@@ -10,6 +10,7 @@ import io.github.some_example_name.utils.App;
 
 public class PlayerController {
     GameService gameService = new GameService();
+    private float timeSinceLastMove = 0;
 
     public void update(){
         Player currentPlayer = App.getInstance().getCurrentGame().getCurrentPlayer();
@@ -33,17 +34,25 @@ public class PlayerController {
     private void handlePlayerMovement(Player player){
         int playerX = player.getTiles().get(0).getX();
         int playerY = player.getTiles().get(0).getY();
-        if (Gdx.input.isKeyJustPressed(Input.Keys.W)){
-            gameService.walk(playerX,playerY + 1);
-        }
-        else if (Gdx.input.isKeyJustPressed(Input.Keys.A)){
-            gameService.walk(playerX - 1,playerY);
-        }
-        else if (Gdx.input.isKeyJustPressed(Input.Keys.S)){
-            gameService.walk(playerX,playerY - 1);
-        }
-        else if (Gdx.input.isKeyJustPressed(Input.Keys.D)){
-            gameService.walk(playerX + 1,playerY);
+        float delta = Gdx.graphics.getDeltaTime();
+        timeSinceLastMove += delta;
+        if (timeSinceLastMove >= 0.1f) {
+            if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+                gameService.walk(playerX, playerY + 1);
+                timeSinceLastMove = 0f;
+            }
+            if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+                gameService.walk(playerX - 1, playerY);
+                timeSinceLastMove = 0f;
+            }
+            if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+                gameService.walk(playerX, playerY - 1);
+                timeSinceLastMove = 0f;
+            }
+            if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+                gameService.walk(playerX + 1, playerY);
+                timeSinceLastMove = 0f;
+            }
         }
     }
 }

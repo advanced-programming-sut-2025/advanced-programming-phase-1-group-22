@@ -2919,3 +2919,6 @@ Weapon/Wind_Spire.png
 Weapon/Wood_Club.png
 Weapon/Wood_Mallet.png
 Weapon/Wooden_Blade.png
+Weather/Rain.png
+Weather/Snow.png
+Weather/Storm.png

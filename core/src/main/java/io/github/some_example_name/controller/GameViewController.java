@@ -27,7 +27,6 @@ public class GameViewController {
         switch (App.getInstance().getCurrentGame().getFadingInTheNight()) {
             case 1: {
                 nightAlpha += Gdx.graphics.getDeltaTime()/2.5f;
-                System.err.println(nightAlpha);
                 if (nightAlpha >= 1f) {
                     nightAlpha = 1f;
                 }
