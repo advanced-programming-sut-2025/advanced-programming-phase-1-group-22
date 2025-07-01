@@ -1,28 +1,53 @@
 package io.github.some_example_name.controller;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.Timer;
 import io.github.some_example_name.MainGradle;
-import io.github.some_example_name.model.Farm;
-import io.github.some_example_name.model.Game;
-import io.github.some_example_name.model.Pair;
-import io.github.some_example_name.model.Tile;
+import io.github.some_example_name.model.*;
 import io.github.some_example_name.model.records.Response;
 import io.github.some_example_name.model.structure.Structure;
 import io.github.some_example_name.model.structure.farmInitialElements.GreenHouse;
 import io.github.some_example_name.service.GameService;
 import io.github.some_example_name.utils.App;
+import io.github.some_example_name.utils.GameAsset;
 import io.github.some_example_name.view.GameView;
+
+import java.util.ArrayList;
+import java.util.Random;
 
 public class WorldController {
     GameService gameService = new GameService();
+    ArrayList<SpriteContainer> rainDrops = new ArrayList<>();
+    ArrayList<SpriteContainer> storms = new ArrayList<>();
+    ArrayList<Sprite> snowDrops = new ArrayList<>();
+    float delta = 0f;
+    {
+        Random rand  = new Random();
+        for (int i = 0; i < 3 * Gdx.graphics.getWidth() / GameAsset.SNOW.getWidth(); i++) {
+            for (int j = 0; j <= 6 * Gdx.graphics.getHeight() / GameAsset.SNOW.getHeight(); j++) {
+                Sprite sprite = new Sprite(GameAsset.SNOW);
+                sprite.setScale(3);
+                sprite.setPosition(i * sprite.getWidth(), j * sprite.getHeight() + rand.nextInt((int) sprite.getHeight()));
+                snowDrops.add(sprite);
+            }
+        }
+    }
 
     public WorldController() {
     }
 
     public void update() {
+        delta += Gdx.graphics.getDeltaTime();
         printMap();
+        switch (App.getInstance().getCurrentGame().getVillage().getWeather()) {
+            case SNOWY -> handleSnowDrops();
+            case RAINY -> handleRainDrops();
+            case STORMY -> handleStorms();
+        }
         handleInput();
     }
 
@@ -30,16 +55,103 @@ public class WorldController {
 
     }
 
+    private void handleRainDrops() {
+        Random rand = new Random();
+        if (rand.nextInt(50) == 4) {
+            Sprite sprite = new Sprite(GameAsset.RAIN[0][0]);
+            sprite.setPosition(
+                MainGradle.getInstance().getCamera().position.x - 3 * Gdx.graphics.getWidth()/2f + rand.nextFloat(3 * Gdx.graphics.getWidth() + 1),
+                MainGradle.getInstance().getCamera().position.y + 3 * Gdx.graphics.getHeight()/2f
+            );
+            sprite.setScale(5);
+            rainDrops.add(new SpriteContainer(sprite));
+        }
+        for (SpriteContainer rainDrop : rainDrops.stream().toList()) {
+            if (rand.nextInt(750) == 4) {
+                rainDrop.setMoving(false);
+                Tuple<Float> pair = new Tuple<>(rainDrop.getSprite().getX(), rainDrop.getSprite().getY());
+                for (int i = 0; i < 10; i++) {
+                    int finalI = i;
+                    Timer.schedule(new Timer.Task() {
+                        @Override
+                        public void run() {
+                            rainDrop.setSprite(new Sprite(GameAsset.RAIN[0][finalI + 1]));
+                            rainDrop.getSprite().setPosition(pair.getX(), pair.getY());
+                            rainDrop.getSprite().setScale(5);
+                        }
+                    }, 0.3f * i + 0.1f);
+                }
+                Timer.schedule(new Timer.Task() {
+                    @Override
+                    public void run() {
+                        rainDrops.remove(rainDrop);
+                    }
+                }, 3.1f);
+            } else if (rainDrop.getSprite().getY() + rainDrop.getSprite().getHeight() < MainGradle.getInstance().getCamera().position.y - 3 * Gdx.graphics.getHeight()/2f - 20) {
+                rainDrops.remove(rainDrop);
+            } else if (rainDrop.isMoving()){
+                rainDrop.getSprite().setY(rainDrop.getSprite().getY() - 1000*Gdx.graphics.getDeltaTime());
+            }
+            rainDrop.getSprite().draw(MainGradle.getInstance().getBatch());
+        }
+    }
+
+    private void handleSnowDrops() {
+        float offset = MainGradle.getInstance().getCamera().position.x - 3*Gdx.graphics.getWidth()/2f;
+        for (Sprite snowDrop : snowDrops.stream().toList()) {
+            snowDrop.setY(snowDrop.getY() - 400*Gdx.graphics.getDeltaTime());
+            if (snowDrop.getY() + snowDrop.getHeight() < MainGradle.getInstance().getCamera().position.y - 3 * Gdx.graphics.getHeight()/2f - 20) {
+                snowDrop.setY(MainGradle.getInstance().getCamera().position.y + 3 * Gdx.graphics.getHeight()/2f);
+            }
+            snowDrop.setX(snowDrop.getX() + offset);
+            snowDrop.draw(MainGradle.getInstance().getBatch());
+            snowDrop.setX(snowDrop.getX() - offset);
+        }
+    }
+
+    private void handleStorms() {
+        Random rand = new Random();
+        if (rand.nextInt(200) == 4) {
+            Sprite sprite = new Sprite(GameAsset.STORM[rand.nextInt(0,2)][rand.nextInt(0,4)]);
+            sprite.setPosition(
+                MainGradle.getInstance().getCamera().position.x - 3 * Gdx.graphics.getWidth()/2f + rand.nextFloat(3 * Gdx.graphics.getWidth()),
+                MainGradle.getInstance().getCamera().position.y + 3 * Gdx.graphics.getHeight()/2f
+            );
+            sprite.setScale(2.5f);
+            storms.add(new SpriteContainer(sprite));
+        }
+        for (SpriteContainer storm : storms.stream().toList()) {
+            if (delta > 0.1f) {
+                storm.getSprite().setY(storm.getSprite().getY() - storm.getSprite().getHeight()/2.5f);
+                if (storm.getSprite().getY() + storm.getSprite().getHeight() < MainGradle.getInstance().getCamera().position.y - 3 * Gdx.graphics.getHeight()/2f - 20) {
+                    storms.remove(storm);
+                } else {
+                    Tuple<Float> pair = new Tuple<>(storm.getSprite().getX(), storm.getSprite().getY());
+                    Sprite sprite = new Sprite(GameAsset.STORM[rand.nextInt(0,2)][rand.nextInt(0,4)]);
+                    sprite.setPosition(pair.getX(), pair.getY());
+                    sprite.setScale(2.5f);
+                    storm.setSprite(sprite);
+                }
+            }
+            storm.getSprite().draw(MainGradle.getInstance().getBatch());
+        }
+        if (delta > 0.3f) {
+            delta = 0;
+        }
+    }
+
     private void handleInput() {
-        Farm farm = currentFarm();
-        if (farm != null) {
-            GreenHouse greenHouse = farm.getGreenHouse();
-            if (!greenHouse.isBuilt()) {
-                for (Tile tile : greenHouse.getTiles()) {
-                    if (distanceFromClick(tile).isOrigin()) {
-                        Response resp = gameService.greenhouseBuild();
-                        if (!resp.shouldBeBack()) {
-                            showResponse(resp);
+        if (Gdx.input.isTouched()) {
+            Farm farm = currentFarm();
+            if (farm != null) {
+                GreenHouse greenHouse = farm.getGreenHouse();
+                if (!greenHouse.isBuilt()) {
+                    for (Tile tile : greenHouse.getTiles()) {
+                        if (distanceFromClick(tile).isOrigin()) {
+                            Response resp = gameService.greenhouseBuild();
+                            if (!resp.shouldBeBack()) {
+                                showResponse(resp);
+                            }
                         }
                     }
                 }

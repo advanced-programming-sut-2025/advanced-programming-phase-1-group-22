@@ -2392,4 +2392,7 @@ public class GameAsset {
     public static final Texture WOOD_CLUB = new Texture("Weapon/Wood_Club.png");
     public static final Texture WOOD_MALLET = new Texture("Weapon/Wood_Mallet.png");
     public static final Texture WOODEN_BLADE = new Texture("Weapon/Wooden_Blade.png");
+    public static final TextureRegion[][] RAIN = TextureRegion.split(new Texture("Weather/Rain.png"), 41, 130);
+    public static final TextureRegion[][] STORM = TextureRegion.split(new Texture("Weather/Storm.png"), 192, 384);
+    public static final Texture SNOW = new Texture("Weather/Snow.png");
 }
