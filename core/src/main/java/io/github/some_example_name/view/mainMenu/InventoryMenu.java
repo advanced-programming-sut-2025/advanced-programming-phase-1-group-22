@@ -28,24 +28,32 @@ import java.util.ArrayList;
 import java.util.Map;
 
 public class InventoryMenu {
+    private static final Group menuGroup = new Group();
+    private static final Table tabs = new Table();
+
     public static void createMenu(Stage stage, Skin skin) {
-        Table tabs = new Table();
+        if (!stage.getActors().contains(menuGroup, true)) {
+            stage.addActor(menuGroup);
+        }
+        menuGroup.clear();
+        tabs.clear();
+
         tabs.top().left();
         tabs.defaults().size(80, 80).padRight(4);
         Image tab1 = new Image(GameAsset.INVENTORY_TAB);
         tab1.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                stage.clear();
-                createInventory(skin, tabs, stage);
+                menuGroup.clear();
+                createInventory(skin, tabs, menuGroup,stage);
             }
         });
         Image tab2 = new Image(GameAsset.SKILL_TAB);
         tab2.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                stage.clear();
-                createSkillMenu(skin,stage,tabs);
+                menuGroup.clear();
+                createSkillMenu(skin,menuGroup,tabs);
             }
         });
         Image tab3 = new Image(GameAsset.SOCIAL_TAB);
@@ -59,15 +67,16 @@ public class InventoryMenu {
         tab4.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                stage.clear();
-                createMapMenu(skin,stage,tabs);
+                menuGroup.clear();
+                createMapMenu(skin,menuGroup,tabs);
             }
         });
         tabs.add(tab1);
         tabs.add(tab2);
         tabs.add(tab3);
         tabs.add(tab4);
-        createInventory(skin, tabs, stage);
+
+        createInventory(skin, tabs, menuGroup,stage);
     }
 
     private static boolean isOverTrashCan(Image item, ImageButton trashCan) {
@@ -181,7 +190,7 @@ public class InventoryMenu {
         });
     }
 
-    private static void createInventory(Skin skin, Table tabs, Stage stage) {
+    private static void createInventory(Skin skin, Table tabs, Group menuGroup,Stage stage) {
         Player currentPlayer = App.getInstance().getCurrentGame().getCurrentPlayer();
         Texture slotTexture = new Texture(Gdx.files.internal("button-.png"));
         Window window = new Window("", skin);
@@ -291,10 +300,10 @@ public class InventoryMenu {
         group.addActor(exitButton);
         group.addActor(trashCan);
         group.addActor(tabs);
-        stage.addActor(group);
+        menuGroup.addActor(group);
     }
 
-    private static void createSkillMenu(Skin skin,Stage stage,Table tabs) {
+    private static void createSkillMenu(Skin skin,Group menuGroup,Table tabs) {
         Player player = App.getInstance().getCurrentGame().getCurrentPlayer();
         Window window = new Window("Skills", skin);
         window.setSize(900, 600);
@@ -397,14 +406,14 @@ public class InventoryMenu {
         group.addActor(window);
         group.addActor(exitButton);
         group.addActor(tabs);
-        stage.addActor(group);
+        menuGroup.addActor(group);
     }
 
     private static void createSocialMenu() {
 
     }
 
-    private static void createMapMenu(Skin skin,Stage stage,Table tabs) {
+    private static void createMapMenu(Skin skin,Group menuGroup,Table tabs) {
         float scale = 0.03125f;
         int minimapWidth = (int) (160 * 160 * scale);
         int minimapHeight = (int) (120 * 160 * scale);
@@ -468,7 +477,7 @@ public class InventoryMenu {
         group.addActor(window);
         group.addActor(exitButton);
         group.addActor(tabs);
-        stage.addActor(group);
+        menuGroup.addActor(group);
     }
 
     private static void drawMiniTiles(Batch batch, float scale) {
