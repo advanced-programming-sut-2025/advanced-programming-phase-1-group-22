@@ -353,6 +353,7 @@ Chest/ChestWhite.png
 Chest/ChestYellow.png
 Clock/Clock.png
 Clock/ClockWithJournal.png
+Clock/Clock_All.png
 Clock/GoldDisplay.png
 Clock/WeddingDayHeart.png
 Concessions/Apple_Slices.png

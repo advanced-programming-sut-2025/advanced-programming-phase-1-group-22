@@ -5,48 +5,166 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d95100ff-6e61-4571-9e87-dcef3d963dba" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/controller/CameraViewController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/assets/assets.txt" beforeDir="false" afterPath="$PROJECT_DIR$/assets/assets.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/reports/problems/problems-report.html" beforeDir="false" afterPath="$PROJECT_DIR$/build/reports/problems/problems-report.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/controller/AccountMenuController.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/controller/AccountMenuController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/controller/MainMenuController.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/controller/MainMenuController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/controller/WorldController.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/controller/WorldController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/controller/mainMenu/MainMenuController.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/controller/mainMenu/MainMenuController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/MainGradle.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/MainGradle.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/controller/GameViewController.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/controller/GameViewController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/Buff.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/Buff.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/Direction.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/Direction.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/FarmType.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/FarmType.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/Game.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/Game.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/Tile.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/Tile.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/TileType.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/TileType.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/TimeAndDate.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/TimeAndDate.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/User.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/User.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/Village.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/Village.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/abilitiy/Ability.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/abilitiy/Ability.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/animal/AnimalType.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/animal/AnimalType.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/animal/Fish.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/animal/Fish.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/animal/FishType.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/animal/FishType.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/cook/FoodType$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/cook/FoodType$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/cook/FoodType$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/cook/FoodType$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/cook/FoodType$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/cook/FoodType$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/cook/FoodType$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/cook/FoodType$4.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/cook/FoodType$5.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/cook/FoodType$5.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/cook/FoodType$6.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/cook/FoodType$6.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/cook/FoodType$7.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/cook/FoodType$7.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/cook/FoodType.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/cook/FoodType.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/craft/Craft.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/craft/Craft.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/craft/CraftType$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/craft/CraftType$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/craft/CraftType$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/craft/CraftType$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/craft/CraftType$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/craft/CraftType$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/craft/CraftType$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/craft/CraftType$4.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/craft/CraftType$5.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/craft/CraftType$5.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/craft/CraftType$6.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/craft/CraftType$6.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/craft/CraftType$7.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/craft/CraftType$7.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/craft/CraftType$8.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/craft/CraftType$8.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/craft/CraftType.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/craft/CraftType.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/dto/QuestionDto.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/dto/QuestionDto.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/dto/TradePriceDto$TradePriceDtoBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/dto/TradePriceDto$TradePriceDtoBuilder.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/dto/TradePriceDto.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/dto/TradePriceDto.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/dto/TradeProductDto$TradeProductDtoBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/dto/TradeProductDto$TradeProductDtoBuilder.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/dto/TradeProductDto.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/dto/TradeProductDto.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/dto/UserDto$UserDtoBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/dto/UserDto$UserDtoBuilder.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/dto/UserDto.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/dto/UserDto.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/enums/Gender.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/enums/Gender.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/enums/Season.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/enums/Season.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/enums/Weather.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/enums/Weather.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/gameSundry/SundryType.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/gameSundry/SundryType.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/products/AnimalProductType.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/products/AnimalProductType.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/products/ProductQuality.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/products/ProductQuality.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/products/TreesAndFruitsAndSeeds/Fruit.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/products/TreesAndFruitsAndSeeds/Fruit.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/products/TreesAndFruitsAndSeeds/FruitType.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/products/TreesAndFruitsAndSeeds/FruitType.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/products/TreesAndFruitsAndSeeds/MadeProductType$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/products/TreesAndFruitsAndSeeds/MadeProductType$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/products/TreesAndFruitsAndSeeds/MadeProductType$10.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/products/TreesAndFruitsAndSeeds/MadeProductType$10.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/products/TreesAndFruitsAndSeeds/MadeProductType$11.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/products/TreesAndFruitsAndSeeds/MadeProductType$11.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/products/TreesAndFruitsAndSeeds/MadeProductType$12.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/products/TreesAndFruitsAndSeeds/MadeProductType$12.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/products/TreesAndFruitsAndSeeds/MadeProductType$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/products/TreesAndFruitsAndSeeds/MadeProductType$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/products/TreesAndFruitsAndSeeds/MadeProductType$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/products/TreesAndFruitsAndSeeds/MadeProductType$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/products/TreesAndFruitsAndSeeds/MadeProductType$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/products/TreesAndFruitsAndSeeds/MadeProductType$4.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/products/TreesAndFruitsAndSeeds/MadeProductType$5.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/products/TreesAndFruitsAndSeeds/MadeProductType$5.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/products/TreesAndFruitsAndSeeds/MadeProductType$6.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/products/TreesAndFruitsAndSeeds/MadeProductType$6.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/products/TreesAndFruitsAndSeeds/MadeProductType$7.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/products/TreesAndFruitsAndSeeds/MadeProductType$7.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/products/TreesAndFruitsAndSeeds/MadeProductType$8.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/products/TreesAndFruitsAndSeeds/MadeProductType$8.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/products/TreesAndFruitsAndSeeds/MadeProductType$9.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/products/TreesAndFruitsAndSeeds/MadeProductType$9.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/products/TreesAndFruitsAndSeeds/MadeProductType.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/products/TreesAndFruitsAndSeeds/MadeProductType.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/products/TreesAndFruitsAndSeeds/Tree.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/products/TreesAndFruitsAndSeeds/Tree.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/products/TreesAndFruitsAndSeeds/TreeType.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/products/TreesAndFruitsAndSeeds/TreeType.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/receipe/CookingRecipe.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/receipe/CookingRecipe.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/receipe/CraftingRecipe.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/receipe/CraftingRecipe.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/records/Response.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/records/Response.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/relations/Account.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/relations/Account.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/relations/Dialog.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/relations/Dialog.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/relations/Friendship.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/relations/Friendship.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/relations/Gift.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/relations/Gift.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/relations/Mission.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/relations/Mission.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/relations/NPCType.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/relations/NPCType.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/relations/Player.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/relations/Player.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/relations/Trade.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/relations/Trade.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/shelter/FarmBuildingType.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/shelter/FarmBuildingType.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/shelter/ShippingBin.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/shelter/ShippingBin.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/source/CropType.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/source/CropType.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/source/MineralType.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/source/MineralType.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/source/MixedSeedsType$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/source/MixedSeedsType$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/source/MixedSeedsType$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/source/MixedSeedsType$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/source/MixedSeedsType$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/source/MixedSeedsType$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/source/MixedSeedsType$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/source/MixedSeedsType$4.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/source/MixedSeedsType.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/source/MixedSeedsType.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/source/SeedType.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/source/SeedType.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/structure/StoneType.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/structure/StoneType.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/structure/TrunkType.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/structure/TrunkType.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/structure/stores/BlackSmithStuff.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/structure/stores/BlackSmithStuff.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/structure/stores/BlackSmithUpgrade.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/structure/stores/BlackSmithUpgrade.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/structure/stores/CarpenterShopFarmBuildings.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/structure/stores/CarpenterShopFarmBuildings.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/structure/stores/CarpenterShopMineralStuff.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/structure/stores/CarpenterShopMineralStuff.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/structure/stores/FishShopStuff$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/structure/stores/FishShopStuff$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/structure/stores/FishShopStuff$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/structure/stores/FishShopStuff$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/structure/stores/FishShopStuff.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/structure/stores/FishShopStuff.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/structure/stores/JojaMartShopSeed.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/structure/stores/JojaMartShopSeed.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/structure/stores/MarnieShopAnimal.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/structure/stores/MarnieShopAnimal.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/structure/stores/MarnieShopAnimalRequierment.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/structure/stores/MarnieShopAnimalRequierment.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/structure/stores/PierreShop$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/structure/stores/PierreShop$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/structure/stores/PierreShop$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/structure/stores/PierreShop$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/structure/stores/PierreShop$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/structure/stores/PierreShop$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/structure/stores/PierreShop.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/structure/stores/PierreShop.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/structure/stores/Store.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/structure/stores/Store.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/structure/stores/StoreType.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/structure/stores/StoreType.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/structure/stores/TheStardropSaloonStuff.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/structure/stores/TheStardropSaloonStuff.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/tools/Axe.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/tools/Axe.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/tools/BackPack.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/tools/BackPack.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/tools/BackPackType.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/tools/BackPackType.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/tools/FishingPole.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/tools/FishingPole.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/tools/Hoe.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/tools/Hoe.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/tools/MilkPail.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/tools/MilkPail.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/tools/Pickaxe.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/tools/Pickaxe.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/tools/Scythe.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/tools/Scythe.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/tools/Shear.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/tools/Shear.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/tools/TrashCan.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/tools/TrashCan.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/tools/WateringCanType.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/tools/WateringCanType.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/repository/UserRepo.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/repository/UserRepo.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/repository/UserRepositoryImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/repository/UserRepositoryImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/saveGame/ObjectWrapper.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/saveGame/ObjectWrapper.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/saveGame/SalableKeyDeserializer.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/saveGame/SalableKeyDeserializer.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/saveGame/SalableKeySerializer.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/saveGame/SalableKeySerializer.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/service/AccountService.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/service/AccountService.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/service/GameInitService.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/service/GameInitService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/service/GameService$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/service/GameService$1.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/service/GameService.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/service/GameService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/service/RelationService.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/service/RelationService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/service/TradeService.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/service/TradeService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/utils/GameAsset.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/utils/GameAsset.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/utils/GeneratePassword.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/utils/GeneratePassword.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/utils/GenerateQuestion.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/utils/GenerateQuestion.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/utils/PasswordHasher.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/utils/PasswordHasher.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/view/Menu.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/view/Menu.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/view/gameMenu/CottageMenu.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/view/gameMenu/CottageMenu.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/view/gameMenu/GameMenu.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/view/gameMenu/GameMenu.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/view/gameMenu/RelationShipMenu.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/view/gameMenu/RelationShipMenu.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/view/gameMenu/StoreMenu.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/view/gameMenu/StoreMenu.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/view/gameMenu/TradeMenu.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/view/gameMenu/TradeMenu.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/view/mainMenu/ExitMenu.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/view/mainMenu/ExitMenu.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/view/mainMenu/LoginMenu.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/view/mainMenu/LoginMenu.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/view/mainMenu/MainMenu.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/view/mainMenu/MainMenu.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/view/mainMenu/MapSelectionMenu.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/view/mainMenu/MapSelectionMenu.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/view/mainMenu/ProfileMenu.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/view/mainMenu/ProfileMenu.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/build/libs/core-1.0.0.jar" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/libs/core-1.0.0.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/build/tmp/compileJava/compileTransaction/stash-dir/AccountMenuController.class.uniqueId3" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/build/tmp/compileJava/compileTransaction/stash-dir/ExitMenu.class.uniqueId2" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/build/tmp/compileJava/compileTransaction/stash-dir/GameInitService.class.uniqueId0" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/build/tmp/compileJava/compileTransaction/stash-dir/GameMenu.class.uniqueId5" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/build/tmp/compileJava/compileTransaction/stash-dir/GameMenuController.class.uniqueId4" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/build/tmp/compileJava/compileTransaction/stash-dir/GameService$1.class.uniqueId12" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/build/tmp/compileJava/compileTransaction/stash-dir/GameService.class.uniqueId13" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/build/tmp/compileJava/compileTransaction/stash-dir/LoginMenu.class.uniqueId6" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/build/tmp/compileJava/compileTransaction/stash-dir/MainMenu.class.uniqueId9" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/build/tmp/compileJava/compileTransaction/stash-dir/MainMenuController.class.uniqueId10" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/build/tmp/compileJava/compileTransaction/stash-dir/MainMenuController.class.uniqueId14" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/build/tmp/compileJava/compileTransaction/stash-dir/MapSelectionMenu.class.uniqueId1" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/build/tmp/compileJava/compileTransaction/stash-dir/Player.class.uniqueId11" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/build/tmp/compileJava/compileTransaction/stash-dir/PlayerController.class.uniqueId8" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/build/tmp/compileJava/compileTransaction/stash-dir/ProfileMenu.class.uniqueId7" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/core/build/tmp/compileJava/previous-compilation-data.bin" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/tmp/compileJava/previous-compilation-data.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/build/tmp/jar/MANIFEST.MF" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/tmp/jar/MANIFEST.MF" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/controller/AccountMenuController.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/controller/AccountMenuController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/controller/MainMenuController.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/controller/MainMenuController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/controller/mainMenu/MainMenuController.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/controller/mainMenu/MainMenuController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/service/GameInitService.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/service/GameInitService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/service/GameService.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/service/GameService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/MainGradle.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/MainGradle.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/controller/GameViewController.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/controller/GameViewController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/TimeAndDate.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/TimeAndDate.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/relations/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/relations/Player.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/utils/GameAsset.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/utils/GameAsset.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lwjgl3/build/classes/java/main/io/github/some_example_name/lwjgl3/StartupHelper.class" beforeDir="false" afterPath="$PROJECT_DIR$/lwjgl3/build/classes/java/main/io/github/some_example_name/lwjgl3/StartupHelper.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lwjgl3/build/resources/main/assets.txt" beforeDir="false" afterPath="$PROJECT_DIR$/lwjgl3/build/resources/main/assets.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lwjgl3/build/tmp/compileJava/previous-compilation-data.bin" beforeDir="false" afterPath="$PROJECT_DIR$/lwjgl3/build/tmp/compileJava/previous-compilation-data.bin" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
-  </component>
-  <component name="ExternalProjectsData">
-    <projectState path="$PROJECT_DIR$">
-      <ProjectState />
-    </projectState>
   </component>
   <component name="ExternalProjectsManager">
     <system id="GRADLE">
@@ -69,12 +187,12 @@
     &quot;assignee&quot;: &quot;Roham8406&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/advanced-programming-sut-2025/advanced-programming-phase-1-group-22.git",
-    "accountId": "6dfd5896-35af-4905-a843-c0bfce2ce8d8"
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/advanced-programming-sut-2025/advanced-programming-phase-1-group-22&quot;,
+    &quot;accountId&quot;: &quot;b9efcc9e-e39f-461c-9d13-6b57ad5013fb&quot;
   }
-}]]></component>
+}</component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
   &quot;associatedIndex&quot;: 6
@@ -84,25 +202,35 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Gradle.advanced-programming-phase-1-group-22:lwjgl3 [:lwjgl3:io.github.some_example_name.lwjgl3.Lwjgl3Launcher.main()].executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "main",
-    "kotlin-language-version-configured": "true",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.Project4:core [:core:io.github.some_example_name.lwjgl3.Lwjgl3Launcher.main()].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.Project4:lwjgl3 [:lwjgl3:io.github.some_example_name.lwjgl3.Lwjgl3Launcher.main()].executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;Roham&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/temp/SUT/AP/040302/Project&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
+  <component name="RecentsManager">
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="io.github.some_example_name.controller" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration name="Main" type="Application" factoryName="Application">
+      <option name="ALTERNATIVE_JRE_PATH" value="21" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
       <option name="MAIN_CLASS_NAME" value="io.github.some_example_name.lwjgl3.Lwjgl3Launcher" />
-      <module name="advanced-programming-phase-1-group-22.lwjgl3.main" />
+      <module name="Project4.lwjgl3.main" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -137,6 +265,9 @@
       <updated>1751233628607</updated>
       <workItem from="1751233633441" duration="440000" />
       <workItem from="1751234075801" duration="656000" />
+      <workItem from="1751310491739" duration="1563000" />
+      <workItem from="1751364649853" duration="8713000" />
+      <workItem from="1751382903617" duration="2767000" />
     </task>
     <servers />
   </component>

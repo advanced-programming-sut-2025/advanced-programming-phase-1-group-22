@@ -1,8 +1,11 @@
 package io.github.some_example_name.utils;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class GameAsset {
+    public static final BitmapFont MAIN_FONT = new BitmapFont();
     public static final Texture LIGHT_GREEN_FLOOR = new Texture("Flooring/Flooring_44.png");
     public static final Texture DARK_GREEN_FLOOR = new Texture("Flooring/Flooring_50.png");
     public static final Texture GREEN_FLOOR = new Texture("Flooring/Flooring_28.png");
@@ -364,6 +367,15 @@ public class GameAsset {
     public static final Texture CHESTWHITE = new Texture("Chest/ChestWhite.png");
     public static final Texture CHESTYELLOW = new Texture("Chest/ChestYellow.png");
     public static final Texture CLOCK = new Texture("Clock/Clock.png");
+    public static final Texture CLOCK_ALL = new Texture("Clock/Clock_All.png");
+    public static final TextureRegion CLOCK_MAIN = new TextureRegion(CLOCK_ALL, 0, 0, 72, 59);
+    public static final TextureRegion CLOCK_ARROW = new TextureRegion(CLOCK_ALL, 72, 0, 8, 18);
+    public static final TextureRegion[] ClOCK_MANNERS = new TextureRegion[12];
+    static {
+        for (int i = 0; i < 12; i++) {
+            ClOCK_MANNERS[i] = new TextureRegion(CLOCK_ALL, 80 + i % 4 * 13, i / 4 * 9, 13, 9);
+        }
+    }
     public static final Texture CLOCKWITHJOURNAL = new Texture("Clock/ClockWithJournal.png");
     public static final Texture GOLDDISPLAY = new Texture("Clock/GoldDisplay.png");
     public static final Texture WEDDINGDAYHEART = new Texture("Clock/WeddingDayHeart.png");
