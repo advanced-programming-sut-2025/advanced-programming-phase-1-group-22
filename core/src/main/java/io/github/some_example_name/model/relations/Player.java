@@ -59,6 +59,7 @@ public class Player extends Actor implements JsonPreparable {
 	private Map<CraftingRecipe, Boolean> craftingRecipes = new HashMap<>();
 	private StoreType storeType;
 	private Menu currentMenu = Menu.COTTAGE;
+    private Boolean isWedding = true;
     private Sprite sprite;
 	@JsonProperty("abilitiesMap")
 	private ObjectMapWrapper abilitiesWrapper;
