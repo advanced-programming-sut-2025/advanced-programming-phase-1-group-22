@@ -1,5 +1,6 @@
 package io.github.some_example_name.model.products;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import io.github.some_example_name.utils.App;
 import lombok.Getter;
@@ -12,10 +13,12 @@ import io.github.some_example_name.model.structure.Structure;
 public class AnimalProduct extends Structure implements Salable {
     private AnimalProductType animalProductType;
     private ProductQuality productQuality = ProductQuality.NORMAL;
+    private Texture texture;
     private Sprite sprite;
 
     public AnimalProduct(AnimalProductType animalProductType) {
         this.animalProductType = animalProductType;
+        this.texture = animalProductType.getTexture();
         this.sprite = new Sprite(animalProductType.getTexture());
         this.sprite.setSize(App.tileWidth,App.tileHeight);
     }

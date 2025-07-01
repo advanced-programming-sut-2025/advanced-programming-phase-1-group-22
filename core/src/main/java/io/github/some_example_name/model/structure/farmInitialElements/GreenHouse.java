@@ -17,20 +17,25 @@ import io.github.some_example_name.model.source.MineralType;
 public class GreenHouse extends HardCodeFarmElements {
     private final FarmBuildingType farmBuildingType = FarmBuildingType.GreenHouse;
     private Lake pool;
-    private Sprite sprite;
-
+    private Sprite spriteBuilt;
+    private Sprite spriteBroken;
     private boolean isBuilt = false;
+
     public GreenHouse(GreenHouse greenHouse) {
         super(greenHouse);
-        this.sprite = new Sprite(GameAsset.GREENHOUSE);
-        this.sprite.setSize(this.farmBuildingType.getWidth() * App.tileWidth,this.farmBuildingType.getHeight() * App.tileHeight);
+        this.spriteBuilt = new Sprite(GameAsset.GREENHOUSE);
+        this.spriteBuilt.setSize(this.farmBuildingType.getWidth() * App.tileWidth,this.farmBuildingType.getHeight() * App.tileHeight);
+        this.spriteBroken = new Sprite(GameAsset.BROKEN_GREENHOUSE);
+        this.spriteBroken.setSize(this.farmBuildingType.getWidth() * App.tileWidth,this.farmBuildingType.getHeight() * App.tileHeight);
     }
 
     public GreenHouse() {
         super.setLength(8);
         super.setWidth(7);
-        this.sprite = new Sprite(GameAsset.GREENHOUSE);
-        this.sprite.setSize(this.farmBuildingType.getWidth() * App.tileWidth,this.farmBuildingType.getHeight() * App.tileHeight);
+        this.spriteBuilt = new Sprite(GameAsset.GREENHOUSE);
+        this.spriteBuilt.setSize(this.farmBuildingType.getWidth() * App.tileWidth,this.farmBuildingType.getHeight() * App.tileHeight);
+        this.spriteBroken = new Sprite(GameAsset.BROKEN_GREENHOUSE);
+        this.spriteBroken.setSize(this.farmBuildingType.getWidth() * App.tileWidth,this.farmBuildingType.getHeight() * App.tileHeight);
     }
 
     public int areIngredientsAvailable(Player player) {
@@ -60,5 +65,11 @@ public class GreenHouse extends HardCodeFarmElements {
             pool.getTiles().add(this.getTiles().get(i));
         }
         farm.getStructures().add(pool);
+    }
+
+    @Override
+    public Sprite getSprite() {
+        if (this.isBuilt) return this.spriteBuilt;
+        return this.spriteBroken;
     }
 }

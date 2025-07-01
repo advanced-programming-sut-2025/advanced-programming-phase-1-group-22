@@ -1,6 +1,9 @@
 package io.github.some_example_name.model.products.TreesAndFruitsAndSeeds;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import io.github.some_example_name.utils.GameAsset;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -213,6 +216,24 @@ public class Tree extends HarvestAbleProduct {
             return this.sprite;
         }
         int level = calculateRegrowthLevel();
+        if (level == 5){
+            Texture treeSheet = treeType.getTextures().get(4);
+            TextureRegion[] trees = new TextureRegion[4];
+            for (int i = 0; i < 4; i++) {
+                trees[i] = new TextureRegion(treeSheet, i * (treeSheet.getWidth() / 4),
+                    0, treeSheet.getWidth() / 4, treeSheet.getHeight());
+            }
+            int season = 0;
+            switch (App.getInstance().getCurrentGame().getTimeAndDate().getSeason()){
+                case SPRING -> season = 0;
+                case SUMMER -> season = 1;
+                case FALL -> season = 2;
+                case WINTER -> season = 3;
+            }
+            this.sprite = new Sprite(trees[season]);
+            this.sprite.setSize(App.tileWidth * 2,App.tileHeight * 3);
+            return this.sprite;
+        }
         this.sprite = new Sprite(this.treeType.getTextures().get(level - 1));
         this.sprite.setSize(App.tileWidth * 2,App.tileHeight * 3);
         return this.sprite;

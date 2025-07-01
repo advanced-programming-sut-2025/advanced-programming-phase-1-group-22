@@ -24,13 +24,15 @@ public class ShippingBin extends HardCodeFarmElements {
 
     public ShippingBin(ShippingBin shippingBin) {
         super(shippingBin);
-        this.sprite = new Sprite(GameAsset.DELUXE_WORM_BIN);
+        this.sprite = new Sprite(GameAsset.SHIPPINGBIN);
         this.sprite.setSize(App.tileWidth,App.tileHeight);
     }
 
     public ShippingBin() {
         super.setWidth(1);
         super.setLength(1);
+        this.sprite = new Sprite(GameAsset.SHIPPINGBIN);
+        this.sprite.setSize(App.tileWidth,App.tileHeight);
     }
 
     @Override

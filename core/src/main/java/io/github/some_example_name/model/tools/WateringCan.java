@@ -1,5 +1,6 @@
 package io.github.some_example_name.model.tools;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,9 +21,14 @@ import java.util.List;
 public class WateringCan implements Tool{
 	private WateringCanType wateringCanType;
 	private Integer remain;
+    private Texture texture;
+    private Sprite sprite;
 
 	public WateringCan(WateringCanType wateringCanType) {
 		this.wateringCanType = wateringCanType;
+        this.texture = wateringCanType.getTexture();
+        this.sprite = new Sprite(wateringCanType.getTexture());
+        this.sprite.setSize(App.tileWidth,App.tileHeight);
 		this.remain = wateringCanType.getCapacity();
 	}
 

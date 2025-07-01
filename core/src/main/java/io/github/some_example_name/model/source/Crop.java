@@ -1,5 +1,6 @@
 package io.github.some_example_name.model.source;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,6 +31,7 @@ public class Crop extends HarvestAbleProduct implements Source {
 	private List<SundryType> fertilizes = new ArrayList<>();
 	private Integer numberOfWithoutWaterDays = 0;
 	private Integer numberOfStages = 0;
+    private Texture texture;
     private Sprite sprite;
 
 	public Crop(CropType cropType) {
@@ -39,6 +41,7 @@ public class Crop extends HarvestAbleProduct implements Source {
 		} else {
 			numberOfStages = 0;
 		}
+        this.texture = cropType.getTextures().get(cropType.getTextures().size() - 1);
         this.sprite = new Sprite(cropType.getTextures().get(0));
         this.sprite.setSize(App.tileWidth / 2f, App.tileHeight / 2f);
 	}

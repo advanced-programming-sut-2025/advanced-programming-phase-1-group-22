@@ -151,13 +151,7 @@ public class BackPack implements JsonPreparable {
     }
 
     private TrashCan getPlayerTrashCan(Player player) {
-        TrashCan trashCan = null;
-        for (Map.Entry<Salable, Integer> salableIntegerEntry : player.getInventory().getProducts().entrySet()) {
-            if (salableIntegerEntry.getKey() instanceof TrashCan) {
-                trashCan = (TrashCan) salableIntegerEntry.getKey();
-            }
-        }
-        return trashCan;
+        return player.getCurrentTrashCan();
     }
 
     public boolean checkProductAvailabilityInBackPack(String name, int count) {

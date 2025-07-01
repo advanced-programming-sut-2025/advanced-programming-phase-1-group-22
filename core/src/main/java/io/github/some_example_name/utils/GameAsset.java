@@ -1,8 +1,26 @@
 package io.github.some_example_name.utils;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 public class GameAsset {
+    public static final Texture INVENTORY_TAB = new Texture("Inventory_Tab.png");
+    public static final Texture MAP_TAB = new Texture("map_tab.png");
+    public static final Texture SKILL_TAB = new Texture("skill_tab.png");
+    public static final Texture SOCIAL_TAB = new Texture("socail_tab.png");
+    public static final Texture EXIT_BUTTON = new Texture("exit.png");
+    public static final Skin SKIN = new Skin(Gdx.files.internal("skin/craftacular-ui.json"));
+    public static final Texture BARN = new Texture("Farm_Buildings/Barn.png");
+    public static final Texture BIG_BARN = new Texture("Farm_Buildings/Big_Barn.png");
+    public static final Texture DELUXE_BARN = new Texture("Farm_Buildings/Deluxe_Barn.png");
+    public static final Texture COOP = new Texture("Farm_Buildings/Coop.png");
+    public static final Texture BIG_COOP = new Texture("Farm_Buildings/Big_Coop.png");
+    public static final Texture DELUXE_COOP = new Texture("Farm_Buildings/Deluxe_Coop.png");
+    public static final Texture WELL = new Texture("Farm_Buildings/Well.png");
+    public static final Texture SHIPPINGBIN = new Texture("Farm_Buildings/Shipping_Bin_Anim.png");
+    public static final Texture HOUSE = new Texture("House_(tier_3).png");
+    public static final Texture BROKEN_GREENHOUSE = new Texture("Greenhouse/Broken_Greenhouse.png");
     public static final Texture WATER = new Texture("Flooring/water.png");
     public static final Texture LIGHT_GREEN_FLOOR = new Texture("Flooring/Flooring_44.png");
     public static final Texture DARK_GREEN_FLOOR = new Texture("Flooring/Flooring_50.png");

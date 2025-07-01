@@ -1,5 +1,6 @@
 package io.github.some_example_name.model.source;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import io.github.some_example_name.utils.App;
 import lombok.Getter;
@@ -13,10 +14,12 @@ import io.github.some_example_name.model.structure.Structure;
 @NoArgsConstructor
 public class Seed extends Structure implements Salable {
     private SeedType seedType;
+    private Texture texture;
     private Sprite sprite;
 
     public Seed(SeedType seedType) {
         this.seedType = seedType;
+        this.texture = seedType.getTexture();
         this.sprite = new Sprite(seedType.getTexture());
         this.sprite.setSize(App.tileWidth/2f,App.tileHeight/2f);
     }

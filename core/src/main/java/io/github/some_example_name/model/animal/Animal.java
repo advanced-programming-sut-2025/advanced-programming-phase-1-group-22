@@ -1,5 +1,6 @@
 package io.github.some_example_name.model.animal;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import io.github.some_example_name.utils.App;
 import lombok.Getter;
@@ -24,11 +25,13 @@ public class Animal extends Structure implements Salable {
     private final String name;
     private Boolean isAnimalStayOutAllNight = false;
     private Player owner;
+    private Texture texture;
     private Sprite sprite;
 
     public Animal(AnimalType animalType,String name) {
         this.animalType = animalType;
         this.name = name;
+        this.texture = animalType.getTexture();
         this.sprite = new Sprite(animalType.getTexture());
         this.sprite.setSize(App.tileWidth,App.tileHeight);
     }

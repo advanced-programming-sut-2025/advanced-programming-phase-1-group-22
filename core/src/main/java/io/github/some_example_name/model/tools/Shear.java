@@ -1,5 +1,6 @@
 package io.github.some_example_name.model.tools;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import io.github.some_example_name.utils.GameAsset;
 import lombok.Getter;
@@ -16,19 +17,21 @@ import java.util.List;
 
 @Getter
 public enum Shear implements Tool {
-    SHEAR("shear", 4, 1000 / 2,new Sprite(GameAsset.SHEARS));
+    SHEAR("shear", 4, 1000 / 2,new Sprite(GameAsset.SHEARS),GameAsset.SHEARS);
 
     private final String name;
     private final Integer energyCost;
     private final Integer price;
+    private final Texture texture;
     private final Sprite sprite;
 
-    Shear(String name, Integer energyCost, Integer price,Sprite sprite) {
+    Shear(String name, Integer energyCost, Integer price,Sprite sprite,Texture texture) {
         this.name = name;
         this.energyCost = energyCost;
         this.price = price;
         this.sprite = sprite;
         this.sprite.setSize(App.tileWidth,App.tileHeight);
+        this.texture = texture;
     }
 
 	@Override

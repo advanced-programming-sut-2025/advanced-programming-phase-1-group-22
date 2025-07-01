@@ -1,5 +1,6 @@
 package io.github.some_example_name.model.products.TreesAndFruitsAndSeeds;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,10 +16,12 @@ import io.github.some_example_name.model.structure.Structure;
 @ToString
 public class Fruit implements Salable{
     FruitType fruitType;
+    private Texture texture;
     private Sprite sprite;
 
     public Fruit(FruitType fruitType) {
         this.fruitType = fruitType;
+        this.texture = fruitType.getTexture();
         this.sprite = new Sprite(fruitType.getTexture());
 
     }

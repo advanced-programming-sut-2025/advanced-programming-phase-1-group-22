@@ -1,15 +1,19 @@
 package io.github.some_example_name.view;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import io.github.some_example_name.MainGradle;
 import io.github.some_example_name.controller.GameViewController;
 import io.github.some_example_name.model.*;
 import io.github.some_example_name.model.enums.Gender;
 import io.github.some_example_name.model.relations.Player;
+import io.github.some_example_name.model.source.Seed;
+import io.github.some_example_name.model.source.SeedType;
 import io.github.some_example_name.model.tools.Hoe;
 import io.github.some_example_name.model.tools.Scythe;
 import io.github.some_example_name.utils.App;
@@ -18,7 +22,7 @@ import java.util.Random;
 
 public class GameView implements Screen, InputProcessor {
     private final GameViewController controller = new GameViewController(this);
-    private static Stage stage;
+    public static Stage stage =  new Stage(MainGradle.getInstance().getViewport(), MainGradle.getInstance().getBatch());
     public static int screenX;
     public static int screenY;
 
@@ -31,10 +35,10 @@ public class GameView implements Screen, InputProcessor {
         village.initAfterLoad();
         game.setVillage(village);
         Player player = new Player(new User("mahdi","","d","mahdi", Gender.MALE));
-        player.setCurrentCarrying(Hoe.IRIDIUM);
+        player.setCurrentCarrying(Hoe.NORMAL);
         game.addPlayer(player);
         Player player2 = new Player(new User("ali","","d","ali", Gender.MALE));
-        player2.setCurrentCarrying(new Scythe());
+        player2.setCurrentCarrying(new Seed(SeedType.JAZZ_SEEDS));
         game.addPlayer(player2);
         FarmType.BLUE_FARM.initial();
         player.setFarmType(FarmType.BLUE_FARM);
@@ -42,7 +46,7 @@ public class GameView implements Screen, InputProcessor {
         player2.setFarmType(FarmType.FLOWER_FARM);
         game.setCurrentPlayer(game.getPlayers().get(0));
         completeMap();
-        stage = new Stage(MainGradle.getInstance().getViewport(), MainGradle.getInstance().getBatch());
+//        stage = new Stage(MainGradle.getInstance().getViewport(), MainGradle.getInstance().getBatch());
     }
 
     private void completeMap() {
@@ -118,7 +122,11 @@ public class GameView implements Screen, InputProcessor {
 
     @Override
     public void show() {
-        Gdx.input.setInputProcessor(this);
+        //Gdx.input.setInputProcessor(this);
+        InputMultiplexer multiplexer = new InputMultiplexer();
+        multiplexer.addProcessor(stage);
+        multiplexer.addProcessor(this);
+        Gdx.input.setInputProcessor(multiplexer);
     }
 
     @Override
@@ -133,6 +141,9 @@ public class GameView implements Screen, InputProcessor {
 
     @Override
     public void resize(int i, int i1) {
+        MainGradle.getInstance().getCamera().viewportWidth = i;
+        MainGradle.getInstance().getCamera().viewportHeight = i1;
+        MainGradle.getInstance().getCamera().update();
         stage.getViewport().update(i, i1, true);
     }
 
