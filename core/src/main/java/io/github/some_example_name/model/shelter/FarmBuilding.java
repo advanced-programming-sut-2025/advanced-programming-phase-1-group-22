@@ -1,5 +1,7 @@
 package io.github.some_example_name.model.shelter;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import io.github.some_example_name.utils.App;
 import lombok.Getter;
 import lombok.Setter;
 import io.github.some_example_name.model.animal.Animal;
@@ -13,9 +15,12 @@ import java.util.List;
 public class FarmBuilding extends Structure {
 	private FarmBuildingType farmBuildingType;
 	private List<Animal> animals = new ArrayList<>();
+    private Sprite sprite;
 
 	public FarmBuilding(FarmBuildingType farmBuildingType) {
 		this.farmBuildingType = farmBuildingType;
+        this.sprite = farmBuildingType.getSprite();
+        this.sprite.setSize(App.tileWidth * farmBuildingType.getWidth(),App.tileHeight * farmBuildingType.getHeight());
 	}
 
 	public Boolean canAddNewAnimal(){

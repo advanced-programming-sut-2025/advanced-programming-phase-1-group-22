@@ -1,5 +1,6 @@
 package io.github.some_example_name.model.tools;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import io.github.some_example_name.utils.GameAsset;
 import lombok.Getter;
@@ -17,9 +18,11 @@ import java.util.List;
 @Getter
 public class MilkPail implements Tool {
 	private static MilkPail instance;
-    private Sprite sprite;
+    private final Texture texture;
+    private final Sprite sprite;
 
 	private MilkPail() {
+        this.texture = GameAsset.MILK_PAIL;
         this.sprite = new Sprite(GameAsset.MILK_PAIL);
         this.sprite.setSize(App.tileWidth,App.tileHeight);
 	}

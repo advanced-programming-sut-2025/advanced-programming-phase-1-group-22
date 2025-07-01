@@ -1,5 +1,6 @@
 package io.github.some_example_name.model.tools;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import io.github.some_example_name.utils.GameAsset;
 import lombok.Getter;
@@ -18,25 +19,32 @@ import java.util.List;
 
 @Getter
 public enum Pickaxe implements Tool {
-    NORMAL("normal pickaxe", 0, 5, 0,new Sprite(GameAsset.PICKAXE)),
-    COPPER("copper pickaxe", 1, 4, 2000 / 2,new Sprite(GameAsset.COPPER_PICKAXE)),
-    IRON("iron pickaxe", 2, 3, 5000 / 2,new Sprite(GameAsset.STEEL_PICKAXE)),
-    GOLD("gold pickaxe", 3, 2, 10000 / 2,new Sprite(GameAsset.GOLD_PICKAXE)),
-    IRIDIUM("iridium pickaxe", 4, 1, 25000 / 2,new Sprite(GameAsset.IRIDIUM_PICKAXE));
+    NORMAL("normal pickaxe", 0, 5, 0,
+        new Sprite(GameAsset.PICKAXE),GameAsset.PICKAXE),
+    COPPER("copper pickaxe", 1, 4, 2000 / 2,
+        new Sprite(GameAsset.COPPER_PICKAXE),GameAsset.COPPER_PICKAXE),
+    IRON("iron pickaxe", 2, 3, 5000 / 2,
+        new Sprite(GameAsset.STEEL_PICKAXE),GameAsset.STEEL_PICKAXE),
+    GOLD("gold pickaxe", 3, 2, 10000 / 2,
+        new Sprite(GameAsset.GOLD_PICKAXE),GameAsset.GOLD_PICKAXE),
+    IRIDIUM("iridium pickaxe", 4, 1, 25000 / 2,
+        new Sprite(GameAsset.IRIDIUM_PICKAXE),GameAsset.IRIDIUM_PICKAXE);
 
     private final String name;
     private final int level;
     private final int energyCost;
     private final int price;
+    private final Texture texture;
     private final Sprite sprite;
 
-    Pickaxe(String name, int level1, int energyUse1, int price,Sprite sprite) {
+    Pickaxe(String name, int level1, int energyUse1, int price,Sprite sprite,Texture texture) {
         this.name = name;
         this.level = level1;
         this.energyCost = energyUse1;
         this.price = price;
         this.sprite = sprite;
         this.sprite.setSize(App.tileWidth,App.tileHeight);
+        this.texture = texture;
     }
 
 	@Override

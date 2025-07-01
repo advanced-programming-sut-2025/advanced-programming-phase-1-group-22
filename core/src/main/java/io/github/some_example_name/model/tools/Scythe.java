@@ -1,5 +1,6 @@
 package io.github.some_example_name.model.tools;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import io.github.some_example_name.utils.GameAsset;
 import lombok.Getter;
@@ -21,6 +22,7 @@ import java.util.List;
 @Getter
 public class Scythe implements Tool {
     private final Integer energyCost = 2;
+    private final Texture texture = GameAsset.SCYTHE;
     private final Sprite sprite = new Sprite(GameAsset.SCYTHE);
 
     public Scythe(){

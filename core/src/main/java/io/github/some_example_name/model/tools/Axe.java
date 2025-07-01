@@ -1,5 +1,6 @@
 package io.github.some_example_name.model.tools;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import io.github.some_example_name.utils.GameAsset;
 import lombok.Getter;
@@ -19,25 +20,32 @@ import java.util.List;
 
 @Getter
 public enum Axe implements Tool {
-    NORMAL("normal axe", 0, 5, 0,new Sprite(GameAsset.AXE)),
-    COPPER("copper axe", 1, 4, 2000 / 2,new Sprite(GameAsset.COPPER_AXE)),
-    IRON("iron axe", 2, 3, 5000 / 2,new Sprite(GameAsset.STEEL_AXE)),
-    GOLD("gold axe", 3, 2, 10000 / 2,new Sprite(GameAsset.GOLD_AXE)),
-    IRIDIUM("iridium axe", 4, 1, 25000 / 2,new Sprite(GameAsset.IRIDIUM_AXE));
+    NORMAL("normal axe", 0, 5, 0,
+        new Sprite(GameAsset.AXE),GameAsset.AXE),
+    COPPER("copper axe", 1, 4, 2000 / 2,
+        new Sprite(GameAsset.COPPER_AXE),GameAsset.COPPER_AXE),
+    IRON("iron axe", 2, 3, 5000 / 2,
+        new Sprite(GameAsset.STEEL_AXE),GameAsset.STEEL_AXE),
+    GOLD("gold axe", 3, 2, 10000 / 2,
+        new Sprite(GameAsset.GOLD_AXE),GameAsset.GOLD_AXE),
+    IRIDIUM("iridium axe", 4, 1, 25000 / 2,
+        new Sprite(GameAsset.IRIDIUM_AXE),GameAsset.IRIDIUM_AXE);
 
     private final String name;
     private final int level;
     private final int energyCost;
     private final int price;
+    private final Texture texture;
     private final Sprite sprite;
 
-    Axe(String name, int level1, int energyUse1, int price,Sprite sprite) {
+    Axe(String name, int level1, int energyUse1, int price,Sprite sprite,Texture texture) {
         this.name = name;
         this.level = level1;
         this.energyCost = energyUse1;
         this.price = price;
         this.sprite = sprite;
         this.sprite.setSize(App.tileWidth,App.tileHeight);
+        this.texture = texture;
     }
 
 	@Override

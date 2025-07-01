@@ -31,4 +31,11 @@ public enum Direction {
 		}
 		return null;
 	}
+
+    public static Direction getByXAndY(int dx,int dy){
+        for (Direction value : Direction.values()) {
+            if (value.getXTransmit() == dx && value.getYTransmit() == dy) return value;
+        }
+        return null;
+    }
 }

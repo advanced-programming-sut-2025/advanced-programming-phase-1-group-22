@@ -812,6 +812,7 @@ public class GameService {
                 currentTool = (Tool) salableIntegerEntry.getKey();
             }
         }
+        if (player.getCurrentTrashCan().getName().equalsIgnoreCase(name)) return player.getCurrentTrashCan();
         return currentTool;
     }
 
@@ -891,7 +892,9 @@ public class GameService {
         }
         if (oldtool instanceof WateringCan) {
             ((WateringCan) oldtool).setWateringCanType((WateringCanType) upgradeTool);
-        } else {
+        }else if(oldtool instanceof TrashCan){
+            player.setCurrentTrashCan((TrashCan) upgradeTool);
+        }else {
             player.getInventory().getProducts().remove(oldtool);
             player.getInventory().getProducts().put(upgradeTool, 1);
         }

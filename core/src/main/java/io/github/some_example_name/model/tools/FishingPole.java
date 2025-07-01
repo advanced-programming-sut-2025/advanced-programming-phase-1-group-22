@@ -1,5 +1,6 @@
 package io.github.some_example_name.model.tools;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import io.github.some_example_name.utils.GameAsset;
 import lombok.Getter;
@@ -17,10 +18,14 @@ import java.util.Random;
 
 @Getter
 public enum FishingPole implements Tool {
-    TRAINING("training fishingPole",25,0,0,8,0.1,new Sprite(GameAsset.TRAINING_ROD)),
-    BAMBOO("bamboo fishingPole",500,1,0,8,0.5,new Sprite(GameAsset.BAMBOO_POLE)),
-    FIBER_GLASS("fiber glass fishingPole",1_8000,2,2,6,0.9,new Sprite(GameAsset.FIBERGLASS_ROD)),
-    IRIDIUM("iridium fishingPole",7_500,3,4,4,1.2,new Sprite(GameAsset.IRIDIUM_ROD));
+    TRAINING("training fishingPole",25,0,0,8,0.1,
+        new Sprite(GameAsset.TRAINING_ROD),GameAsset.TRAINING_ROD),
+    BAMBOO("bamboo fishingPole",500,1,0,8,0.5,
+        new Sprite(GameAsset.BAMBOO_POLE),GameAsset.BAMBOO_POLE),
+    FIBER_GLASS("fiber glass fishingPole",1_8000,2,2,6,0.9,
+        new Sprite(GameAsset.FIBERGLASS_ROD),GameAsset.FIBERGLASS_ROD),
+    IRIDIUM("iridium fishingPole",7_500,3,4,4,1.2,
+        new Sprite(GameAsset.IRIDIUM_ROD),GameAsset.IRIDIUM_ROD);
 
     private final String name;
     private final Integer price;
@@ -28,9 +33,10 @@ public enum FishingPole implements Tool {
     private final Integer abilityLevel;
     private final Integer energyCost;
     private final Double qualityPercent;
+    private final Texture texture;
     private final Sprite sprite;
 
-    FishingPole(String name,Integer price,Integer level, Integer abilityLevel, Integer energyCost, Double qualityPercent,Sprite sprite) {
+    FishingPole(String name,Integer price,Integer level, Integer abilityLevel, Integer energyCost, Double qualityPercent,Sprite sprite,Texture texture) {
         this.name = name;
         this.price = price;
         this.level = level;
@@ -39,6 +45,7 @@ public enum FishingPole implements Tool {
         this.qualityPercent = qualityPercent;
         this.sprite = sprite;
         this.sprite.setSize(App.tileWidth,App.tileHeight);
+        this.texture = texture;
     }
     public void finishing() {
 

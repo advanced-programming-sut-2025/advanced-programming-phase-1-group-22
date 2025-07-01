@@ -59,6 +59,7 @@ public class Player extends Actor implements JsonPreparable {
 	private Map<CraftingRecipe, Boolean> craftingRecipes = new HashMap<>();
 	private StoreType storeType;
 	private Menu currentMenu = Menu.COTTAGE;
+    private TrashCan currentTrashCan;
     private Sprite sprite;
 	@JsonProperty("abilitiesMap")
 	private ObjectMapWrapper abilitiesWrapper;
@@ -173,14 +174,12 @@ public class Player extends Actor implements JsonPreparable {
 
 	private void addBasicTools() {
 		this.getAccount().setGolds(10);
-		inventory.getProducts().put(new Flower(), 1);
-		inventory.getProducts().put(new Sundry(SundryType.WEDDING_RING), 1);
 		inventory.getProducts().put(Hoe.NORMAL, 1);
 		inventory.getProducts().put(Pickaxe.NORMAL, 1);
 		inventory.getProducts().put(Axe.NORMAL, 1);
 		inventory.getProducts().put(new WateringCan(WateringCanType.NORMAL), 1);
-		inventory.getProducts().put(TrashCan.NORMAL, 1);
 		inventory.getProducts().put(new Scythe(), 1);
+        this.currentTrashCan = TrashCan.NORMAL;
 	}
 
 	private Salable generateRandomElement() {
