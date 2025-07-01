@@ -175,7 +175,7 @@ public class Player extends Actor implements JsonPreparable {
 	private void addBasicTools() {
 		this.getAccount().setGolds(10);
 		inventory.getProducts().put(Hoe.NORMAL, 1);
-		inventory.getProducts().put(Pickaxe.NORMAL, 1);
+		inventory.getProducts().put(Pickaxe.IRIDIUM, 1);
 		inventory.getProducts().put(Axe.NORMAL, 1);
 		inventory.getProducts().put(new WateringCan(WateringCanType.NORMAL), 1);
 		inventory.getProducts().put(new Scythe(), 1);
