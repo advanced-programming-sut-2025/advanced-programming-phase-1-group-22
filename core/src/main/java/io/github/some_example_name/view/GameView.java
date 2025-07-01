@@ -12,6 +12,7 @@ import io.github.some_example_name.model.enums.Gender;
 import io.github.some_example_name.model.relations.Player;
 import io.github.some_example_name.model.tools.Hoe;
 import io.github.some_example_name.model.tools.Scythe;
+import io.github.some_example_name.service.GameService;
 import io.github.some_example_name.utils.App;
 
 import java.util.Random;
@@ -43,6 +44,10 @@ public class GameView implements Screen, InputProcessor {
         game.setCurrentPlayer(game.getPlayers().get(0));
         completeMap();
         stage = new Stage(MainGradle.getInstance().getViewport(), MainGradle.getInstance().getBatch());
+
+        GameService gameService = new GameService();
+        gameService.C_AddDollars("1000");
+        gameService.C_AddItem("wood", "1000");
     }
 
     private void completeMap() {

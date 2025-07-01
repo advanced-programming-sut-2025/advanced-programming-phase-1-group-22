@@ -1,25 +1,68 @@
 package io.github.some_example_name.controller;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import io.github.some_example_name.MainGradle;
 import io.github.some_example_name.model.Farm;
 import io.github.some_example_name.model.Game;
+import io.github.some_example_name.model.Pair;
 import io.github.some_example_name.model.Tile;
 import io.github.some_example_name.model.records.Response;
 import io.github.some_example_name.model.structure.Structure;
+import io.github.some_example_name.model.structure.farmInitialElements.GreenHouse;
+import io.github.some_example_name.service.GameService;
 import io.github.some_example_name.utils.App;
+import io.github.some_example_name.view.GameView;
 
 public class WorldController {
+    GameService gameService = new GameService();
 
     public WorldController() {
     }
 
     public void update() {
         printMap();
+        handleInput();
     }
 
     public void showResponse(Response response){
 
+    }
+
+    private void handleInput() {
+        Farm farm = currentFarm();
+        if (farm != null) {
+            GreenHouse greenHouse = farm.getGreenHouse();
+            if (!greenHouse.isBuilt()) {
+                for (Tile tile : greenHouse.getTiles()) {
+                    if (distanceFromClick(tile).isOrigin()) {
+                        Response resp = gameService.greenhouseBuild();
+                        if (!resp.shouldBeBack()) {
+                            showResponse(resp);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private Farm currentFarm() {
+        for (Farm farm : App.getInstance().getCurrentGame().getVillage().getFarms()) {
+            if (farm.getPlayers().get(0).equals(App.getInstance().getCurrentGame().getCurrentPlayer())) {
+                return farm;
+            }
+        }
+        return null;
+    }
+
+    private Pair distanceFromClick(Tile tile) {
+        Vector3 mouse = new Vector3(GameView.screenX, GameView.screenY,0);
+        MainGradle.getInstance().getCamera().unproject(mouse);
+        Vector2 mouseWorld = new Vector2(mouse.x,mouse.y);
+        int mouseTileX = (int) Math.floor(mouseWorld.x / App.tileWidth);
+        int mouseTileY = (int) Math.floor(mouseWorld.y / App.tileHeight);
+        return new Pair(mouseTileX - tile.getX(), mouseTileY - tile.getY());
     }
 
     public void printMap() {

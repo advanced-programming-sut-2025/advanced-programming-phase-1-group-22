@@ -22,14 +22,14 @@ public class GreenHouse extends HardCodeFarmElements {
     private boolean isBuilt = false;
     public GreenHouse(GreenHouse greenHouse) {
         super(greenHouse);
-        this.sprite = new Sprite(GameAsset.GREENHOUSE);
+        this.sprite = new Sprite(GameAsset.GREENHOUSE_UNBUILT);
         this.sprite.setSize(this.farmBuildingType.getWidth() * App.tileWidth,this.farmBuildingType.getHeight() * App.tileHeight);
     }
 
     public GreenHouse() {
         super.setLength(8);
         super.setWidth(7);
-        this.sprite = new Sprite(GameAsset.GREENHOUSE);
+        this.sprite = new Sprite(GameAsset.GREENHOUSE_UNBUILT);
         this.sprite.setSize(this.farmBuildingType.getWidth() * App.tileWidth,this.farmBuildingType.getHeight() * App.tileHeight);
     }
 
@@ -40,6 +40,8 @@ public class GreenHouse extends HardCodeFarmElements {
         Salable salable = player.getInventory().findProductInBackPackByNAme(MineralType.WOOD.getName());
         player.getInventory().deleteProductFromBackPack(salable, player,500);
         isBuilt = true;
+        sprite =  new Sprite(GameAsset.GREENHOUSE);
+        this.sprite.setSize(this.farmBuildingType.getWidth() * App.tileWidth,this.farmBuildingType.getHeight() * App.tileHeight);
         return 0;
     }
 
@@ -50,6 +52,8 @@ public class GreenHouse extends HardCodeFarmElements {
     }
 
     public void build(Farm farm) {
+        sprite =  new Sprite(GameAsset.GREENHOUSE);
+        this.sprite.setSize(this.farmBuildingType.getWidth() * App.tileWidth,this.farmBuildingType.getHeight() * App.tileHeight);
         isBuilt = true;
         for (Tile tile : this.getTiles()) {
             tile.setIsFilled(false);

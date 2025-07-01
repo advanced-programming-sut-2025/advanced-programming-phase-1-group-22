@@ -1494,6 +1494,8 @@ public class GameAsset {
     public static final Texture RUBY = new Texture("Gem/Ruby.png");
     public static final Texture TOPAZ = new Texture("Gem/Topaz.png");
     public static final Texture GREENHOUSE = new Texture("Greenhouse/greenhouse.png");
+    public static final Texture FARM_BUILDINGS = new Texture("Greenhouse/Farm_Building.png");
+    public static final TextureRegion GREENHOUSE_UNBUILT = new TextureRegion(FARM_BUILDINGS, 478, 109, 118, 130);
     public static final Texture ABIGAIL_S_BOW = new Texture("Hat/Abigail%27s_Bow.png");
     public static final Texture ARCANE_HAT = new Texture("Hat/Arcane_Hat.png");
     public static final Texture ARCHER_S_CAP = new Texture("Hat/Archer%27s_Cap.png");
