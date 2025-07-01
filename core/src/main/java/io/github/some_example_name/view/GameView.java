@@ -36,7 +36,7 @@ public class GameView implements Screen, InputProcessor {
         game.setVillage(village);
         Player player = new Player(new User("mahdi","","d","mahdi", Gender.MALE));
         player.getInventory().addProductToBackPack(new Seed(SeedType.JAZZ_SEEDS),1);
-        player.getInventory().addProductToBackPack(new Sundry(SundryType.QUALITY_RETAINING_SOIL),1);
+        player.getInventory().addProductToBackPack(new Sundry(SundryType.DELUXE_RETAINING_SOIL),1);
         game.addPlayer(player);
         Player player2 = new Player(new User("ali","","d","ali", Gender.MALE));
         player2.setCurrentCarrying(new Seed(SeedType.JAZZ_SEEDS));

@@ -27,19 +27,9 @@ public class Console {
     private boolean visible = false;
 
     public Console(Stage stage) {
-        root = new Group() {
-            @Override
-            public void act(float d) {
-                super.act(d);
-                setPosition(camera.position.x - camera.viewportWidth / 2f + 12,
-                    camera.position.y - camera.viewportHeight / 2f + 12);
-            }
-        };
-
         Table box = new Table(skin);
         box.setBackground("window");
         box.defaults().pad(4);
-        root.addActor(box);
 
         logTable = new Table(skin);
         logTable.top().left();
@@ -69,6 +59,15 @@ public class Console {
         box.add(bottom).growX();
 
         box.pack();
+        root = new Group() {
+            @Override
+            public void act(float d) {
+                box.setPosition(camera.position.x - camera.viewportWidth / 2f + 12,
+                    camera.position.y - camera.viewportHeight / 2f + 12);
+                super.act(d);
+            }
+        };
+        root.addActor(box);
         root.setVisible(false);
         stage.addActor(root);
     }
