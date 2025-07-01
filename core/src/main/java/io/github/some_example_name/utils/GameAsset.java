@@ -1,7 +1,9 @@
 package io.github.some_example_name.utils;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class GameAsset {
@@ -1683,6 +1685,11 @@ public class GameAsset {
     public static final Texture STAR_SHARDS = new Texture("Mineral/Star_Shards.png");
     public static final Texture THUNDER_EGG = new Texture("Mineral/Thunder_Egg.png");
     public static final Texture TIGERSEYE = new Texture("Mineral/Tigerseye.png");
+    public static final Texture NIGHT = new Texture("Night/night.jpg");
+    public static final Sprite NIGHT_SPRITE = new Sprite(NIGHT);
+    static {
+        NIGHT_SPRITE.setSize(Gdx.graphics.getWidth()*3, Gdx.graphics.getHeight()*3);
+    }
     public static final Texture AMETHYST_NODE = new Texture("Node/Amethyst_Node.png");
     public static final Texture AQUAMARINE_NODE = new Texture("Node/Aquamarine_Node.png");
     public static final Texture BONE_NODE_1 = new Texture("Node/Bone_Node_1.png");
