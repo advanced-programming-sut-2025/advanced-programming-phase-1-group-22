@@ -4,22 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d95100ff-6e61-4571-9e87-dcef3d963dba" name="Changes" comment="add inventory">
-      <change afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/view/MiniMapRenderer.java" afterDir="false" />
+    <list default="true" id="d95100ff-6e61-4571-9e87-dcef3d963dba" name="Changes" comment="add skill and map menu but not complete">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/Game.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/Game.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/abilitiy/Ability.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/abilitiy/Ability.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/relations/Account.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/relations/Account.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/relations/Player.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/relations/Player.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/tools/TrashCan.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/model/tools/TrashCan.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/service/GameService.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/service/GameService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/service/RelationService.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/service/RelationService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/service/TradeService.class" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/classes/java/main/io/github/some_example_name/service/TradeService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/build/libs/core-1.0.0.jar" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/libs/core-1.0.0.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/build/tmp/compileJava/previous-compilation-data.bin" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/tmp/compileJava/previous-compilation-data.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/abilitiy/Ability.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/abilitiy/Ability.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/relations/Account.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/relations/Account.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/relations/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/relations/Player.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/view/mainMenu/InventoryMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/view/mainMenu/InventoryMenu.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -160,7 +146,15 @@
       <option name="project" value="LOCAL" />
       <updated>1751336513232</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="add skill and map menu but not complete">
+      <option name="closed" value="true" />
+      <created>1751389260909</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1751389260909</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -180,6 +174,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="add lake sprite" />
     <MESSAGE value="add inventory" />
-    <option name="LAST_COMMIT_MESSAGE" value="add inventory" />
+    <MESSAGE value="add skill and map menu but not complete" />
+    <option name="LAST_COMMIT_MESSAGE" value="add skill and map menu but not complete" />
   </component>
 </project>
