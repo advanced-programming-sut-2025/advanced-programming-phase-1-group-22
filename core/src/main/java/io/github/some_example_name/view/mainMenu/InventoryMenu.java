@@ -338,6 +338,23 @@ public class InventoryMenu {
             skillTable.add(row).row();
         }
 
+        Image iconHeart = new Image(GameAsset.SECRET_HEART);
+        Label heart = new Label("energy",skin);
+        ProgressBar xpBar = new ProgressBar(0, player.getMaxEnergy(), 1, false, skin);
+        xpBar.setValue(player.getEnergy());
+        xpBar.setAnimateDuration(0.2f);
+        xpBar.setWidth(300);
+        Label infinite = new Label("",skin);
+        if (player.getEnergyIsInfinite()) infinite.setText("infinite");
+        Table row = new Table();
+        row.defaults().pad(10).align(Align.left);
+        row.add(iconHeart).size(64).padRight(20);
+        row.add(heart).width(100).padRight(20);
+        row.add(xpBar).width(300).padRight(20);
+        row.add(infinite).width(80).align(Align.right);
+
+        skillTable.add(row).row();
+
         ImageButton exitButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(GameAsset.EXIT_BUTTON)));
         exitButton.setSize(32, 32);
         exitButton.addListener(new ClickListener() {
