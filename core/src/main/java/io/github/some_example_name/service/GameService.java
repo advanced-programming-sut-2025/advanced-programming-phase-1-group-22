@@ -652,17 +652,18 @@ public class GameService {
         return new Response(harvestableType.craftInfo(), true);
     }
 
-    public Response plantSeed(String name, String direction) {
+    public Response plantSeed(String name, Tile currentTile) {
         Player currentPlayer = getCurrentPlayer();
-        Direction currentDirection = Direction.getByName(direction);
-        if (currentDirection == null) {
-            return new Response("use valid direction");
-        }
-        Tile currentTile = getTileByXAndY(currentPlayer.getTiles().get(0).getX() + currentDirection.getXTransmit(),
-                currentPlayer.getTiles().get(0).getY() + currentDirection.getYTransmit());
-        if (currentTile == null) {
-            return new Response("out of bound");
-        } else if (currentTile.getIsFilled()) {
+//        Direction currentDirection = Direction.getByName(direction);
+//        if (currentDirection == null) {
+//            return new Response("use valid direction");
+//        }
+//        Tile currentTile = getTileByXAndY(currentPlayer.getTiles().get(0).getX() + currentDirection.getXTransmit(),
+//                currentPlayer.getTiles().get(0).getY() + currentDirection.getYTransmit());
+//        if (currentTile == null) {
+//            return new Response("out of bound");
+//        }
+        if (currentTile.getIsFilled()) {
             return new Response("this tile is not available for farming");
         } else if (!currentTile.getTileType().equals(TileType.PLOWED)) {
             return new Response("you should plow the tile first");
@@ -737,7 +738,7 @@ public class GameService {
         return new Response(makeTokenShowHarvestable(harvestAbleProduct), true);
     }
 
-    public Response fertilize(String fertilize, String direction) {
+    public Response fertilize(String fertilize, Tile currentTile) {
         Player currentPlayer = getCurrentPlayer();
         Sundry currentFertilize = (Sundry) currentPlayer.getInventory().getProductFromBackPack(fertilize);
         if (currentFertilize == null) {
@@ -746,15 +747,15 @@ public class GameService {
         if (!isThisFertilize(currentFertilize)) {
             return new Response("there is no fertilize with this name");
         }
-        Direction currentDirection = Direction.getByName(direction);
-        if (currentDirection == null) {
-            return new Response("use valid direction");
-        }
-        Tile currentTile = getTileByXAndY(currentPlayer.getTiles().get(0).getX() + currentDirection.getXTransmit(),
-                currentPlayer.getTiles().get(0).getY() + currentDirection.getYTransmit());
-        if (currentTile == null) {
-            return new Response("out of bound");
-        }
+//        Direction currentDirection = Direction.getByName(direction);
+//        if (currentDirection == null) {
+//            return new Response("use valid direction");
+//        }
+//        Tile currentTile = getTileByXAndY(currentPlayer.getTiles().get(0).getX() + currentDirection.getXTransmit(),
+//                currentPlayer.getTiles().get(0).getY() + currentDirection.getYTransmit());
+//        if (currentTile == null) {
+//            return new Response("out of bound");
+//        }
         HarvestAbleProduct harvestAbleProduct = findHarvestable(currentTile);
         if (harvestAbleProduct == null) {
             return new Response("there is no harvestable in this tile");

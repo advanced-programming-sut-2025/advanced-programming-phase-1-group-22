@@ -6,16 +6,15 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.ScreenUtils;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import io.github.some_example_name.MainGradle;
 import io.github.some_example_name.controller.GameViewController;
 import io.github.some_example_name.model.*;
 import io.github.some_example_name.model.enums.Gender;
+import io.github.some_example_name.model.gameSundry.Sundry;
+import io.github.some_example_name.model.gameSundry.SundryType;
 import io.github.some_example_name.model.relations.Player;
 import io.github.some_example_name.model.source.Seed;
 import io.github.some_example_name.model.source.SeedType;
-import io.github.some_example_name.model.tools.Hoe;
-import io.github.some_example_name.model.tools.Scythe;
 import io.github.some_example_name.utils.App;
 
 import java.util.Random;
@@ -25,6 +24,7 @@ public class GameView implements Screen, InputProcessor {
     public static Stage stage =  new Stage(MainGradle.getInstance().getViewport(), MainGradle.getInstance().getBatch());
     public static int screenX;
     public static int screenY;
+    public static Console Console = new Console(stage);
 
     public GameView() {
         Game game = new Game();
@@ -35,7 +35,8 @@ public class GameView implements Screen, InputProcessor {
         village.initAfterLoad();
         game.setVillage(village);
         Player player = new Player(new User("mahdi","","d","mahdi", Gender.MALE));
-        player.setCurrentCarrying(Hoe.NORMAL);
+        player.getInventory().addProductToBackPack(new Seed(SeedType.JAZZ_SEEDS),1);
+        player.getInventory().addProductToBackPack(new Sundry(SundryType.QUALITY_RETAINING_SOIL),1);
         game.addPlayer(player);
         Player player2 = new Player(new User("ali","","d","ali", Gender.MALE));
         player2.setCurrentCarrying(new Seed(SeedType.JAZZ_SEEDS));

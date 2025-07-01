@@ -9,10 +9,14 @@ import io.github.some_example_name.model.records.Response;
 import io.github.some_example_name.model.structure.Structure;
 import io.github.some_example_name.model.structure.farmInitialElements.Lake;
 import io.github.some_example_name.utils.App;
+import io.github.some_example_name.utils.GameAsset;
+import io.github.some_example_name.view.GameNotifier;
+import io.github.some_example_name.view.GameView;
 
 public class WorldController {
-
+    private final GameNotifier notifier;
     public WorldController() {
+        notifier = new GameNotifier(GameView.stage, GameAsset.SKIN);
     }
 
     public void update() {
@@ -20,7 +24,8 @@ public class WorldController {
     }
 
     public void showResponse(Response response){
-
+        if (response.shouldBeBack()) notifier.showMessage(response.message(), GameNotifier.MessageType.SUCCESS);
+        else notifier.showMessage(response.message(), GameNotifier.MessageType.ERROR);
     }
 
     public void printMap() {
