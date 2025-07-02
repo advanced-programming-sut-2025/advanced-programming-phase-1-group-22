@@ -2,6 +2,9 @@ package io.github.some_example_name.utils;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 public class GameAsset {
@@ -22,6 +25,7 @@ public class GameAsset {
     public static final Texture HOUSE = new Texture("House_(tier_3).png");
     public static final Texture BROKEN_GREENHOUSE = new Texture("Greenhouse/Broken_Greenhouse.png");
     public static final Texture WATER = new Texture("Flooring/water.png");
+    public static final BitmapFont MAIN_FONT = new BitmapFont();
     public static final Texture LIGHT_GREEN_FLOOR = new Texture("Flooring/Flooring_44.png");
     public static final Texture DARK_GREEN_FLOOR = new Texture("Flooring/Flooring_50.png");
     public static final Texture GREEN_FLOOR = new Texture("Flooring/Flooring_28.png");
@@ -383,6 +387,15 @@ public class GameAsset {
     public static final Texture CHESTWHITE = new Texture("Chest/ChestWhite.png");
     public static final Texture CHESTYELLOW = new Texture("Chest/ChestYellow.png");
     public static final Texture CLOCK = new Texture("Clock/Clock.png");
+    public static final Texture CLOCK_ALL = new Texture("Clock/Clock_All.png");
+    public static final TextureRegion CLOCK_MAIN = new TextureRegion(CLOCK_ALL, 0, 0, 72, 59);
+    public static final TextureRegion CLOCK_ARROW = new TextureRegion(CLOCK_ALL, 72, 0, 8, 18);
+    public static final TextureRegion[] ClOCK_MANNERS = new TextureRegion[12];
+    static {
+        for (int i = 0; i < 12; i++) {
+            ClOCK_MANNERS[i] = new TextureRegion(CLOCK_ALL, 80 + i % 4 * 13, i / 4 * 9, 13, 9);
+        }
+    }
     public static final Texture CLOCKWITHJOURNAL = new Texture("Clock/ClockWithJournal.png");
     public static final Texture GOLDDISPLAY = new Texture("Clock/GoldDisplay.png");
     public static final Texture WEDDINGDAYHEART = new Texture("Clock/WeddingDayHeart.png");
@@ -1499,6 +1512,8 @@ public class GameAsset {
     public static final Texture RUBY = new Texture("Gem/Ruby.png");
     public static final Texture TOPAZ = new Texture("Gem/Topaz.png");
     public static final Texture GREENHOUSE = new Texture("Greenhouse/greenhouse.png");
+    public static final Texture FARM_BUILDINGS = new Texture("Greenhouse/Farm_Building.png");
+    public static final TextureRegion GREENHOUSE_UNBUILT = new TextureRegion(FARM_BUILDINGS, 478, 109, 118, 130);
     public static final Texture ABIGAIL_S_BOW = new Texture("Hat/Abigail%27s_Bow.png");
     public static final Texture ARCANE_HAT = new Texture("Hat/Arcane_Hat.png");
     public static final Texture ARCHER_S_CAP = new Texture("Hat/Archer%27s_Cap.png");
@@ -1690,6 +1705,11 @@ public class GameAsset {
     public static final Texture STAR_SHARDS = new Texture("Mineral/Star_Shards.png");
     public static final Texture THUNDER_EGG = new Texture("Mineral/Thunder_Egg.png");
     public static final Texture TIGERSEYE = new Texture("Mineral/Tigerseye.png");
+    public static final Texture NIGHT = new Texture("Night/night.jpg");
+    public static final Sprite NIGHT_SPRITE = new Sprite(NIGHT);
+    static {
+        NIGHT_SPRITE.setSize(Gdx.graphics.getWidth()*3, Gdx.graphics.getHeight()*3);
+    }
     public static final Texture AMETHYST_NODE = new Texture("Node/Amethyst_Node.png");
     public static final Texture AQUAMARINE_NODE = new Texture("Node/Aquamarine_Node.png");
     public static final Texture BONE_NODE_1 = new Texture("Node/Bone_Node_1.png");
@@ -2390,4 +2410,7 @@ public class GameAsset {
     public static final Texture WOOD_CLUB = new Texture("Weapon/Wood_Club.png");
     public static final Texture WOOD_MALLET = new Texture("Weapon/Wood_Mallet.png");
     public static final Texture WOODEN_BLADE = new Texture("Weapon/Wooden_Blade.png");
+    public static final TextureRegion[][] RAIN = TextureRegion.split(new Texture("Weather/Rain.png"), 41, 130);
+    public static final TextureRegion[][] STORM = TextureRegion.split(new Texture("Weather/Storm.png"), 192, 384);
+    public static final Texture SNOW = new Texture("Weather/Snow.png");
 }

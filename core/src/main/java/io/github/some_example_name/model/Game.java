@@ -1,5 +1,6 @@
 package io.github.some_example_name.model;
 
+import com.badlogic.gdx.utils.Timer;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
@@ -40,6 +41,7 @@ public class Game implements Serializable {
     private final Integer width = 120;
     private int playersInFavorTermination = 0;
     public Tile[][] tiles = new Tile[length][width];
+    private int fadingInTheNight = 0;
 
     public void start() {
         timeAndDate = new TimeAndDate(1, 8);
@@ -51,6 +53,27 @@ public class Game implements Serializable {
     }
 
     public void startDay() {
+        fadingInTheNight = 1;
+        Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+                fadingInTheNight = 2;
+                startDayEvents();
+                Timer.schedule(new Timer.Task() {
+                    @Override
+                    public void run() {
+                        fadingInTheNight = 0;
+                    }
+                }, 4);
+            }
+        }, 2.5f);
+    }
+
+    private void startDayEvents() {
+        App.getInstance().getCurrentGame().getTimeAndDate().setWeatherSprite(
+            App.getInstance().getCurrentGame().getVillage().getTomorrowWeather()
+        );
+        App.getInstance().getCurrentGame().getTimeAndDate().setSeasonSprite();
         for (Farm farm : this.village.getFarms()) {
             for (Tile tile : farm.getTiles()) {
                 if (tile.getTileType().equals(TileType.THUNDERED)) {
