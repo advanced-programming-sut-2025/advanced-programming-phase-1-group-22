@@ -90,6 +90,30 @@ public class CameraViewController {
             gameMenuController.C_AddItem("mystic tree seed recipe", "1");
             gameMenuController.C_AddItem("fiber", "60");
         }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_6)) {
+            gameMenuController.C_AddItem("fried egg recipe", "1");
+            gameMenuController.C_AddItem("baked fish recipe", "1");
+            gameMenuController.C_AddItem("salad recipe", "1");
+            gameMenuController.C_AddItem("salmon dinner recipe", "1");
+            gameMenuController.C_AddItem("hashbrowns recipe", "1");
+            gameMenuController.C_AddItem("omelet recipe", "1");
+            gameMenuController.C_AddItem("pancakes recipe", "1");
+            gameMenuController.C_AddItem("bread recipe", "1");
+            gameMenuController.C_AddItem("tortilla recipe", "1");
+            gameMenuController.C_AddItem("pizza recipe", "1");
+            gameMenuController.C_AddItem("maki roll recipe", "1");
+            gameMenuController.C_AddItem("triple shot espresso recipe", "1");
+            gameMenuController.C_AddItem("cookie recipe", "1");
+            gameMenuController.C_AddItem("vegetable medley recipe", "1");
+            gameMenuController.C_AddItem("farmer's lunch recipe", "1");
+            gameMenuController.C_AddItem("survival burger recipe", "1");
+            gameMenuController.C_AddItem("dish O' the Sea recipe", "1");
+            gameMenuController.C_AddItem("seafoam pudding recipe", "1");
+            gameMenuController.C_AddItem("miner's treat recipe", "1");
+            gameMenuController.C_AddItem("triple shot espresson recipe", "1");
+            gameMenuController.C_AddItem("triple shot espresson recipe", "1");
+
+        }
         if (Gdx.input.isKeyJustPressed(Input.Keys.F4)){
             GameView.screenshotting = true;
         }

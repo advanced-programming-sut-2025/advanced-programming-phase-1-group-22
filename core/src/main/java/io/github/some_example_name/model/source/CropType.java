@@ -220,4 +220,9 @@ public enum CropType implements Harvestable {
 
     @Override
     public Integer getContainingEnergy() {return getEnergy();}
+
+    @Override
+    public Texture getTexture() {
+        return textures.get(0);
+    }
 }

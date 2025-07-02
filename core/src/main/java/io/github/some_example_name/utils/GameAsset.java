@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 public class GameAsset {
     public static final Texture INVENTORY_TAB = new Texture("Inventory/Inventory_Tab.png");
     public static final Texture CRAFTING_TAB = new Texture("Inventory/crafting_tab.png");
+    public static final Texture COOKING_TAB = new Texture("Inventory/cooking_tab.png");
     public static final Texture BUTTON = new Texture("Inventory/button-.png");
     public static final Texture FILLED_BUTTON = new Texture("Inventory/Filled_Button.png");
     public static final Texture GREEN_SQUARE = new Texture("Night/Green.png");
@@ -415,7 +416,7 @@ public class GameAsset {
     public static final Texture JASMINE_TEA = new Texture("Concessions/Jasmine_Tea.png");
     public static final Texture JAWBREAKER = new Texture("Concessions/Jawbreaker.png");
     public static final Texture JOJACORN = new Texture("Concessions/JojaCorn.png");
-    public static final Texture JOJA_COLA_LARGE_ = new Texture("Concessions/Joja_Cola_%28large%29.png");
+    public static final Texture JOJA_COLA = new Texture("Concessions/Joja_Cola_%28large%29.png");
     public static final Texture KALE_SMOOTHIE = new Texture("Concessions/Kale_Smoothie.png");
     public static final Texture NACHOS = new Texture("Concessions/Nachos.png");
     public static final Texture PANZANELLA_SALAD = new Texture("Concessions/Panzanella_Salad.png");

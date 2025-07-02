@@ -87,6 +87,10 @@ public class TimeAndDate {
         return days;
     }
 
+    public String getTime() {
+        return getHour() + ":" + getMinute();
+    }
+
     public int compareDailyTime(TimeAndDate timeAndDate) {
         if (timeAndDate.getHour() > hour) return 1;
         if (timeAndDate.getHour() < hour) return -1;
