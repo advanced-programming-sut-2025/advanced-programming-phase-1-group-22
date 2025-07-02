@@ -2,6 +2,7 @@ package io.github.some_example_name.controller;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import io.github.some_example_name.MainGradle;
 import io.github.some_example_name.utils.App;
 import io.github.some_example_name.utils.GameAsset;
@@ -32,6 +33,7 @@ public class GameViewController {
         playerController.update();
         toolController.update();
         carryingController.update();
+        OrthographicCamera camera = MainGradle.getInstance().getCamera();
         switch (App.getInstance().getCurrentGame().getFadingInTheNight()) {
             case 1: {
                 nightAlpha += Gdx.graphics.getDeltaTime()/2.5f;
@@ -40,8 +42,8 @@ public class GameViewController {
                 }
                 GameAsset.NIGHT_SPRITE.setAlpha(nightAlpha);
                 GameAsset.NIGHT_SPRITE.setPosition(
-                    MainGradle.getInstance().getCamera().position.x - 3*Gdx.graphics.getWidth()/2f,
-                    MainGradle.getInstance().getCamera().position.y - 3*Gdx.graphics.getHeight()/2f);
+                    camera.position.x - camera.viewportWidth/2f,
+                    camera.position.y - camera.viewportHeight/2f);
                 GameAsset.NIGHT_SPRITE.draw(MainGradle.getInstance().getBatch());
             } break;
             case 2: {
@@ -50,8 +52,8 @@ public class GameViewController {
                     nightAlpha = 0;
                 }
                 GameAsset.NIGHT_SPRITE.setPosition(
-                    MainGradle.getInstance().getCamera().position.x - 3*Gdx.graphics.getWidth()/2f,
-                    MainGradle.getInstance().getCamera().position.y - 3*Gdx.graphics.getHeight()/2f);
+                    camera.position.x - camera.viewportWidth/2f,
+                    camera.position.y - camera.viewportHeight/2f);
                 GameAsset.NIGHT_SPRITE.setAlpha(nightAlpha);
                 GameAsset.NIGHT_SPRITE.draw(MainGradle.getInstance().getBatch());
             }
