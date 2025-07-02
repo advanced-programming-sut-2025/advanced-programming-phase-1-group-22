@@ -26,6 +26,7 @@ public class GameViewController {
     private final ToolController toolController = new ToolController();
     private final CarryingController carryingController = new CarryingController();
     private final CameraViewController cameraViewController = new CameraViewController();
+    private final AnimalController animalController = new AnimalController();
     private final GameView view;
     private Group inventoryBar;
     private final List<Stack> itemStacks = new ArrayList<>();
@@ -91,6 +92,7 @@ public class GameViewController {
         playerController.update();
         toolController.update();
         carryingController.update();
+        animalController.update();
         updateInventoryBar();
         switch (App.getInstance().getCurrentGame().getFadingInTheNight()) {
             case 1: {

@@ -540,18 +540,19 @@ public class GameService {
         return new Response(addNewCoopAnimal(currentFarm, animal, currentPlayer, marnieShopAnimal), true);
     }
 
-    public Response pet(String name) {
+    public Response pet(Animal currentAnimal) {
         Player currentPlayer = getCurrentPlayer();
-        Animal currentAnimal = getAnimalAroundPlayer(currentPlayer, name);
-        if (currentAnimal == null) {
-            return new Response("you have to be around animal to pet it");
-        } else if (!currentPlayer.getAnimals().contains(currentAnimal)) {
+      //  Animal currentAnimal = getAnimalAroundPlayer(currentPlayer, name);
+//        if (currentAnimal == null) {
+//            return new Response("you have to be around animal to pet it");
+//        }
+        if (!currentPlayer.getAnimals().contains(currentAnimal)) {
             return new Response("you only can pet your own animals");
         }
         if (!currentAnimal.getPet()) {
             currentAnimal.setPet(true);
             currentAnimal.changeFriendShip(15);
-            return new Response("you pet " + name, true);
+            return new Response("you pet " + currentAnimal.getName(), true);
         }
         return new Response("you already pet this animal");
     }
@@ -571,9 +572,9 @@ public class GameService {
         return new Response(makeStringTokenShowAnimals(currentPlayer), true);
     }
 
-    public Response shepherdAnimals(String name, int x, int y) {
+    public Response shepherdAnimals(Animal currentAnimal, int x, int y) {
         Player currentPlayer = getCurrentPlayer();
-        Animal currentAnimal = getAnimalWithName(name, currentPlayer);
+      //  Animal currentAnimal = getAnimalWithName(name, currentPlayer);
         if (currentAnimal == null) {
             return new Response("you do not have animal with such name");
         }
@@ -596,9 +597,9 @@ public class GameService {
         return new Response("animal shepherd successfully", true);
     }
 
-    public Response feedHay(String name) {
+    public Response feedHay(Animal currentAnimal) {
         Player currentPlayer = getCurrentPlayer();
-        Animal currentAnimal = getAnimalWithName(name, currentPlayer);
+       // Animal currentAnimal = getAnimalWithName(name, currentPlayer);
         if (currentAnimal == null) {
             return new Response("you do not have animal with such name");
         }
@@ -614,9 +615,9 @@ public class GameService {
         return new Response(currentAnimal.getName() + " eat hay!", true);
     }
 
-    public Response sellAnimal(String name) {
+    public Response sellAnimal(Animal currentAnimal) {
         Player currentPlayer = getCurrentPlayer();
-        Animal currentAnimal = getAnimalWithName(name, currentPlayer);
+ //       Animal currentAnimal = getAnimalWithName(name, currentPlayer);
         if (currentAnimal == null) {
             return new Response("you do not have animal with such name");
         }
@@ -633,14 +634,15 @@ public class GameService {
         return new Response(makeTokenShowAnimalProduce(currentPlayer), true);
     }
 
-    public Response collectProduce(String name) {
+    public Response collectProduce(Animal currentAnimal) {
         Player currentPlayer = getCurrentPlayer();
-        Animal currentAnimal = getAnimalWithName(name, currentPlayer);
+       // Animal currentAnimal = getAnimalWithName(name, currentPlayer);
         if (currentAnimal == null) {
             return new Response("you do not have animal with such name");
-        } else if (!isPlayerNearAnimal(currentPlayer, currentAnimal)) {
-            return new Response("you need to be next to animal to collect produce");
         }
+//        else if (!isPlayerNearAnimal(currentPlayer, currentAnimal)) {
+//            return new Response("you need to be next to animal to collect produce");
+//        }
         return new Response(collectProduce(currentAnimal, currentPlayer), true);
     }
 
