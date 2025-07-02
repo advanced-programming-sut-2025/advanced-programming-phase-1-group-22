@@ -9,17 +9,23 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import io.github.some_example_name.MainGradle;
 import io.github.some_example_name.controller.GameViewController;
 import io.github.some_example_name.model.*;
+import io.github.some_example_name.model.animal.Animal;
+import io.github.some_example_name.model.animal.AnimalType;
 import io.github.some_example_name.model.enums.Gender;
 import io.github.some_example_name.model.gameSundry.Sundry;
 import io.github.some_example_name.model.gameSundry.SundryType;
+import io.github.some_example_name.model.products.Hay;
 import io.github.some_example_name.model.relations.Player;
 import io.github.some_example_name.model.source.Seed;
 import io.github.some_example_name.model.source.SeedType;
 import io.github.some_example_name.model.tools.Hoe;
+import io.github.some_example_name.model.tools.MilkPail;
 import io.github.some_example_name.model.tools.Scythe;
 import io.github.some_example_name.service.GameService;
 import io.github.some_example_name.utils.App;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class GameView implements Screen, InputProcessor {
@@ -39,6 +45,7 @@ public class GameView implements Screen, InputProcessor {
         Village village = new Village();
         village.initAfterLoad();
         game.setVillage(village);
+        Animal animal = new Animal(AnimalType.COW,"parsa");
         Player player = new Player(new User("mahdi","","d","mahdi", Gender.MALE));
         player.getInventory().addProductToBackPack(new Seed(SeedType.APRICOT_SAPLING),1);
         player.getInventory().addProductToBackPack(new Sundry(SundryType.DELUXE_RETAINING_SOIL),1);
@@ -52,11 +59,19 @@ public class GameView implements Screen, InputProcessor {
         player2.setFarmType(FarmType.FLOWER_FARM);
         game.setCurrentPlayer(game.getPlayers().get(0));
         completeMap();
+        player.getAnimals().add(animal);
+        player.getInventory().addProductToBackPack(new Hay(),4);
+        player.getInventory().addProductToBackPack(MilkPail.getInstance(),1);
+        List<Tile> tiles = new ArrayList<>();
+        tiles.add(new Tile(player.getTiles().get(0).getX(),player.getTiles().get(0).getY() - 2));
+        animal.setTiles(tiles);
+        for (Farm farm : game.getVillage().getFarms()) {
+            if (farm.getPlayers().contains(player)) farm.getStructures().add(animal);
+        }
 
         GameService gameService = new GameService();
         gameService.C_AddDollars("1000");
         gameService.C_AddItem("wood", "1000");
-//        stage = new Stage(MainGradle.getInstance().getViewport(), MainGradle.getInstance().getBatch());
     }
 
     private void completeMap() {

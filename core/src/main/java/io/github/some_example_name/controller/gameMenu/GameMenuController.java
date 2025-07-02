@@ -169,7 +169,7 @@ public class GameMenuController extends MenuController {
 
     public Response pet(String[] params) {
         String name = params[0].trim();
-        return gameService.pet(name);
+        return Response.empty();
     }
 
     public Response setFriendship(String[] parms) {
@@ -186,17 +186,17 @@ public class GameMenuController extends MenuController {
         String name = params[0].trim();
         int x = Integer.parseInt(params[1]);
         int y = Integer.parseInt(params[2]);
-        return gameService.shepherdAnimals(name, x, y);
+        return Response.empty();
     }
 
     public Response feedHay(String[] parms) {
         String name = parms[0].trim();
-        return gameService.feedHay(name);
+        return Response.empty();
     }
 
     public Response sellAnimal(String[] params) {
         String name = params[0].trim();
-        return gameService.sellAnimal(name);
+        return Response.empty();
     }
 
     public Response produces(String[] params) {
@@ -205,7 +205,7 @@ public class GameMenuController extends MenuController {
 
     public Response collectProduce(String[] params) {
         String name = params[0].trim();
-        return gameService.collectProduce(name);
+        return Response.empty();
     }
 
     public Response craftInfo(String[] params) {
