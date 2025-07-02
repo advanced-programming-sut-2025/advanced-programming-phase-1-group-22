@@ -39,6 +39,7 @@ public class MainGradle extends Game {
     @Override
     public void render() {
         camera.update();
+        camera.zoom = 3f;
         viewport.apply();
         batch.setProjectionMatrix(camera.combined);
         ScreenUtils.clear(0.15f, 0.15f, 0.2f, 1f);
