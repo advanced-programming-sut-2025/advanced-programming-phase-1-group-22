@@ -60,6 +60,7 @@ public class Player extends Actor implements JsonPreparable {
 	private StoreType storeType;
 	private Menu currentMenu = Menu.COTTAGE;
     private TrashCan currentTrashCan;
+    private Boolean isWedding = false;
     private Sprite sprite;
 	@JsonProperty("abilitiesMap")
 	private ObjectMapWrapper abilitiesWrapper;
