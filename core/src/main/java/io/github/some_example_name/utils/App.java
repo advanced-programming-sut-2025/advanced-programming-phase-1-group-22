@@ -8,8 +8,8 @@ import java.util.List;
 
 public class App {
     private static App instance;
-    public static Integer tileWidth = 160;
-    public static Integer tileHeight = 160;
+    public static Integer tileWidth = 80;
+    public static Integer tileHeight = 80;
 
     private App() {
 

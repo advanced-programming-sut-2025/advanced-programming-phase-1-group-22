@@ -18,6 +18,9 @@ import io.github.some_example_name.view.GameView;
 import io.github.some_example_name.view.mainMenu.InventoryMenu;
 
 public class PlayerController {
+    GameService gameService = new GameService();
+    private float timeSinceLastMove = 0;
+
     public void update(){
         Player currentPlayer = App.getInstance().getCurrentGame().getCurrentPlayer();
         currentPlayer.getSprite().setPosition(currentPlayer.getTiles().get(0).getX() * App.tileWidth,
@@ -25,7 +28,9 @@ public class PlayerController {
         currentPlayer.getSprite().draw(MainGradle.getInstance().getBatch());
         if (!GameView.Console.isVisible())
             handlePlayerMovement(currentPlayer);
-        handleInputs();
+        if (!GameView.screenshotting) {
+            handleInputs();
+        }
         setCameraPosition(currentPlayer);
     }
 
@@ -42,27 +47,43 @@ public class PlayerController {
     private void handlePlayerMovement(Player player){
         int playerX = player.getTiles().get(0).getX();
         int playerY = player.getTiles().get(0).getY();
-        GameService gameService = new GameService();
-        if (Gdx.input.isKeyJustPressed(Input.Keys.W)){
-            gameService.walk(playerX,playerY + 1);
-        }
-        else if (Gdx.input.isKeyJustPressed(Input.Keys.A)){
-            gameService.walk(playerX - 1,playerY);
-        }
-        else if (Gdx.input.isKeyJustPressed(Input.Keys.S)){
-            gameService.walk(playerX,playerY - 1);
-        }
-        else if (Gdx.input.isKeyJustPressed(Input.Keys.D)){
-            gameService.walk(playerX + 1,playerY);
+        float delta = Gdx.graphics.getDeltaTime();
+        timeSinceLastMove += delta;
+        if (timeSinceLastMove >= 0.1f) {
+            if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+                gameService.walk(playerX, playerY + 1);
+                timeSinceLastMove = 0f;
+            }
+            if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+                gameService.walk(playerX - 1, playerY);
+                timeSinceLastMove = 0f;
+            }
+            if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+                gameService.walk(playerX, playerY - 1);
+                timeSinceLastMove = 0f;
+            }
+            if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+                gameService.walk(playerX + 1, playerY);
+                timeSinceLastMove = 0f;
+            }
         }
     }
 
     private void handleInputs(){
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)){
+        if (Gdx.input.isKeyJustPressed(Input.Keys.T)){
+            //TODO Talk Menu
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)){
+            GameView.Console.handleGlobalKey(GameView.stage);
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.X) || Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT)) {
+            //TODO Investigate?
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.E) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             InventoryMenu.createMenu(GameView.stage,GameAsset.SKIN);
         }
-        else if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)){
-            GameView.Console.handleGlobalKey(GameView.stage);
+        if (Gdx.input.isKeyJustPressed(Input.Keys.F)) {
+            //TODO open Journal?
         }
     }
 }

@@ -15,6 +15,9 @@ import io.github.some_example_name.model.gameSundry.SundryType;
 import io.github.some_example_name.model.relations.Player;
 import io.github.some_example_name.model.source.Seed;
 import io.github.some_example_name.model.source.SeedType;
+import io.github.some_example_name.model.tools.Hoe;
+import io.github.some_example_name.model.tools.Scythe;
+import io.github.some_example_name.service.GameService;
 import io.github.some_example_name.utils.App;
 
 import java.util.Random;
@@ -25,6 +28,8 @@ public class GameView implements Screen, InputProcessor {
     public static int screenX;
     public static int screenY;
     public static Console Console = new Console(stage);
+    public static boolean screenshotting;
+
 
     public GameView() {
         Game game = new Game();
@@ -47,6 +52,10 @@ public class GameView implements Screen, InputProcessor {
         player2.setFarmType(FarmType.FLOWER_FARM);
         game.setCurrentPlayer(game.getPlayers().get(0));
         completeMap();
+
+        GameService gameService = new GameService();
+        gameService.C_AddDollars("1000");
+        gameService.C_AddItem("wood", "1000");
 //        stage = new Stage(MainGradle.getInstance().getViewport(), MainGradle.getInstance().getBatch());
     }
 

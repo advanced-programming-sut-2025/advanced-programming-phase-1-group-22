@@ -353,6 +353,7 @@ Chest/ChestWhite.png
 Chest/ChestYellow.png
 Clock/Clock.png
 Clock/ClockWithJournal.png
+Clock/Clock_All.png
 Clock/GoldDisplay.png
 Clock/WeddingDayHeart.png
 Concessions/Apple_Slices.png
@@ -1878,6 +1879,7 @@ Gem/Prismatic_Shard.png
 Gem/Ruby.png
 Gem/Topaz.png
 Greenhouse/Broken_Greenhouse.png
+Greenhouse/Farm_Building.png
 Greenhouse/greenhouse.png
 Hat/Abigail%27s_Bow.png
 Hat/Arcane_Hat.png
@@ -2081,6 +2083,8 @@ Mineral/Soapstone.png
 Mineral/Star_Shards.png
 Mineral/Thunder_Egg.png
 Mineral/Tigerseye.png
+Night/Night.jpg
+Night/night.jpg
 Node/Amethyst_Node.png
 Node/Aquamarine_Node.png
 Node/Bone_Node_1.png
@@ -2928,6 +2932,9 @@ Weapon/Wind_Spire.png
 Weapon/Wood_Club.png
 Weapon/Wood_Mallet.png
 Weapon/Wooden_Blade.png
+Weather/Rain.png
+Weather/Snow.png
+Weather/Storm.png
 button-.png
 exit.png
 map_tab.png
