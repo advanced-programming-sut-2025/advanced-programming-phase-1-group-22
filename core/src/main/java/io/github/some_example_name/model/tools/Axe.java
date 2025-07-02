@@ -191,6 +191,7 @@ public enum Axe implements Tool {
 		player.getInventory().addProductToBackPack(mineralOrSeed, 1);
 		for (Tile tile : structure.getTiles()) {
 			tile.setIsFilled(false);
+            tile.setIsPassable(true);
 			tile.setTileType(TileType.FLAT);
 		}
 		App.getInstance().getCurrentGame().getVillage().removeStructure(structure);

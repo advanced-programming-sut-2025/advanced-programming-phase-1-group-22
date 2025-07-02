@@ -1,11 +1,14 @@
 package io.github.some_example_name.controller;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import io.github.some_example_name.MainGradle;
 import io.github.some_example_name.model.Farm;
 import io.github.some_example_name.model.Game;
 import io.github.some_example_name.model.Tile;
+import io.github.some_example_name.model.products.TreesAndFruitsAndSeeds.Tree;
 import io.github.some_example_name.model.records.Response;
+import io.github.some_example_name.model.source.Crop;
 import io.github.some_example_name.model.structure.Structure;
 import io.github.some_example_name.model.structure.farmInitialElements.Lake;
 import io.github.some_example_name.utils.App;
@@ -53,7 +56,18 @@ public class WorldController {
                                         tile.getY() * App.tileHeight);
                                 structure.getSprite().draw(MainGradle.getInstance().getBatch());
                             }
-                        }else {
+                        }else if (structure instanceof Crop crop){
+                            Sprite sprite = crop.getSprite();
+                            sprite.setPosition(structure.getTiles().get(0).getX() * App.tileWidth,
+                                structure.getTiles().get(0).getY() * App.tileHeight);
+                            sprite.draw(MainGradle.getInstance().getBatch());
+                        }else if (structure instanceof Tree tree){
+                            Sprite sprite = tree.getSprite();
+                            sprite.setPosition(structure.getTiles().get(0).getX() * App.tileWidth,
+                                structure.getTiles().get(0).getY() * App.tileHeight);
+                            sprite.draw(MainGradle.getInstance().getBatch());
+                        }
+                        else {
                             structure.getSprite().setPosition(structure.getTiles().get(0).getX() * App.tileWidth,
                                     structure.getTiles().get(0).getY() * App.tileHeight);
                             structure.getSprite().draw(MainGradle.getInstance().getBatch());

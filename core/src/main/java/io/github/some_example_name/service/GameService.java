@@ -702,6 +702,7 @@ public class GameService {
             return new Response("you should plant in a farm");
         }
         currentTile.setIsFilled(true);
+        if (harvestableProduct instanceof Tree) currentTile.setIsPassable(false);
         harvestableProduct.setTiles(List.of(currentTile));
         TimeAndDate timeAndDate = new TimeAndDate();
         timeAndDate.setDay(App.getInstance().getCurrentGame().getTimeAndDate().getDay());
