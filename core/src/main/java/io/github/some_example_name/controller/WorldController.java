@@ -9,7 +9,9 @@ import com.badlogic.gdx.utils.Timer;
 import io.github.some_example_name.MainGradle;
 import io.github.some_example_name.model.*;
 import io.github.some_example_name.model.records.Response;
+import io.github.some_example_name.model.relations.Player;
 import io.github.some_example_name.model.structure.Structure;
+import io.github.some_example_name.model.structure.farmInitialElements.Cottage;
 import io.github.some_example_name.model.structure.farmInitialElements.Lake;
 import io.github.some_example_name.model.structure.farmInitialElements.GreenHouse;
 import io.github.some_example_name.service.GameService;
@@ -17,8 +19,7 @@ import io.github.some_example_name.utils.App;
 import io.github.some_example_name.utils.GameAsset;
 import io.github.some_example_name.view.GameNotifier;
 import io.github.some_example_name.view.GameView;
-import io.github.some_example_name.utils.GameAsset;
-import io.github.some_example_name.view.GameView;
+import io.github.some_example_name.view.Menu;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -195,6 +196,7 @@ public class WorldController {
 
     public void printMap() {
         Game game = App.getInstance().getCurrentGame();
+        Player player = App.getInstance().getCurrentGame().getCurrentPlayer();
         Tile[][] tiles = game.tiles;
         OrthographicCamera camera = MainGradle.getInstance().getCamera();
 
@@ -218,7 +220,7 @@ public class WorldController {
                                         tile.getY() * App.tileHeight);
                                 structure.getSprite().draw(MainGradle.getInstance().getBatch());
                             }
-                        }else {
+                        } else {
                             structure.getSprite().setPosition(structure.getTiles().get(0).getX() * App.tileWidth,
                                     structure.getTiles().get(0).getY() * App.tileHeight);
                             structure.getSprite().draw(MainGradle.getInstance().getBatch());

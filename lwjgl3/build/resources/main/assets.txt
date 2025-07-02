@@ -380,6 +380,7 @@ Concessions/Sour_Slimes.png
 Concessions/Star_Cookie.png
 Concessions/Stardrop_Sorbet.png
 Concessions/Truffle_Popcorn.png
+Cottage/Cottage_Inside.png
 Crab_Pot_fish/Clam.png
 Crab_Pot_fish/Cockle.png
 Crab_Pot_fish/Crab.png

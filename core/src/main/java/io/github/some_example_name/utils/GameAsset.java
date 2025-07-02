@@ -26,6 +26,7 @@ public class GameAsset {
     public static final Texture WELL = new Texture("Farm_Buildings/Well.png");
     public static final Texture SHIPPINGBIN = new Texture("Farm_Buildings/Shipping_Bin_Anim.png");
     public static final Texture HOUSE = new Texture("House_(tier_3).png");
+    public static final Texture COTTAGE_INSIDE = new Texture("Cottage/Cottage_Inside.png");
     public static final Texture BROKEN_GREENHOUSE = new Texture("Greenhouse/Broken_Greenhouse.png");
     public static final Texture WATER = new Texture("Flooring/water.png");
     public static final BitmapFont MAIN_FONT = new BitmapFont();
