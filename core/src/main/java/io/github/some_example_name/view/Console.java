@@ -63,7 +63,7 @@ public class Console {
             @Override
             public void act(float d) {
                 box.setPosition(camera.position.x - camera.viewportWidth / 2f + 12,
-                    camera.position.y - camera.viewportHeight / 2f + 12);
+                    camera.position.y - camera.viewportHeight / 2f + 100);
                 super.act(d);
             }
         };

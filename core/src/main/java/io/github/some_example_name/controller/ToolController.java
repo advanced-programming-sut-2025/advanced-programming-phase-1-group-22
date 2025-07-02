@@ -17,6 +17,9 @@ import io.github.some_example_name.utils.App;
 import io.github.some_example_name.view.GameView;
 import jakarta.persistence.criteria.CriteriaBuilder;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ToolController {
     public void update(){
         Player currentPlayer = App.getInstance().getCurrentGame().getCurrentPlayer();
@@ -56,6 +59,7 @@ public class ToolController {
         }
 
         Integer[] shortcut = {
+            Input.Keys.NUM_0,
             Input.Keys.NUM_1,
             Input.Keys.NUM_2,
             Input.Keys.NUM_3,
@@ -69,8 +73,10 @@ public class ToolController {
             Input.Keys.EQUALS
         };
         for (int i = 0; i < shortcut.length; i++) {
-            if (Gdx.input.isKeyPressed(shortcut[i])) {
-                //TODO select item i
+            if (Gdx.input.isKeyJustPressed(shortcut[i])) {
+                Player player = App.getInstance().getCurrentGame().getCurrentPlayer();
+                List<Salable> items = new ArrayList<>(player.getInventory().getProducts().keySet());
+                if (i < items.size()) player.setCurrentCarrying(items.get(i));
             }
         }
     }

@@ -2935,6 +2935,7 @@ Weapon/Wooden_Blade.png
 Weather/Rain.png
 Weather/Snow.png
 Weather/Storm.png
+bar.png
 button-.png
 exit.png
 map_tab.png
