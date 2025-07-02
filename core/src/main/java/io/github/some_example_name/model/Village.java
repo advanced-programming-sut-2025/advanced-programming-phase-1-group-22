@@ -423,6 +423,7 @@ public class Village implements JsonPreparable {
         }
         for (Tile tile : structure.getTiles()) {
             tile.setIsFilled(false);
+            tile.setIsPassable(true);
         }
     }
 
