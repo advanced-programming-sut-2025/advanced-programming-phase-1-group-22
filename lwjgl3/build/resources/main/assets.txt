@@ -1878,6 +1878,7 @@ Gem/Jade.png
 Gem/Prismatic_Shard.png
 Gem/Ruby.png
 Gem/Topaz.png
+Greenhouse/Broken_Greenhouse.png
 Greenhouse/Farm_Building.png
 Greenhouse/greenhouse.png
 Hat/Abigail%27s_Bow.png
@@ -2025,6 +2026,7 @@ Hoe/Gold_Hoe.png
 Hoe/Hoe.png
 Hoe/Iridium_Hoe.png
 Hoe/Steel_Hoe.png
+House_(tier_3).png
 Ingredient/Oil.png
 Ingredient/Rice.png
 Ingredient/Sugar.png

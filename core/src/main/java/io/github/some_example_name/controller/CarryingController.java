@@ -27,7 +27,9 @@ public class CarryingController {
             carrying.getSprite().draw(MainGradle.getInstance().getBatch());
             carrying.getSprite().setPosition(currentPlayer.getTiles().get(0).getX() * App.tileWidth,
                 currentPlayer.getTiles().get(0).getY() * App.tileHeight);
-            handleInput(carrying);
+            if (!GameView.screenshotting) {
+                handleInput(carrying);
+            }
         }
     }
 
