@@ -28,7 +28,9 @@ public class PlayerController {
         currentPlayer.getSprite().draw(MainGradle.getInstance().getBatch());
         if (!GameView.Console.isVisible())
             handlePlayerMovement(currentPlayer);
-        handleInputs();
+        if (!GameView.screenshotting) {
+            handleInputs();
+        }
         setCameraPosition(currentPlayer);
     }
 
@@ -68,11 +70,20 @@ public class PlayerController {
     }
 
     private void handleInputs(){
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)){
+        if (Gdx.input.isKeyJustPressed(Input.Keys.T)){
+            //TODO Talk Menu
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)){
+            GameView.Console.handleGlobalKey(GameView.stage);
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.X) || Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT)) {
+            //TODO Investigate?
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.E) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             InventoryMenu.createMenu(GameView.stage,GameAsset.SKIN);
         }
-        else if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)){
-            GameView.Console.handleGlobalKey(GameView.stage);
+        if (Gdx.input.isKeyJustPressed(Input.Keys.F)) {
+            //TODO open Journal?
         }
     }
 }
