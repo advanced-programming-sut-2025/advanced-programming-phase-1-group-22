@@ -1,5 +1,8 @@
 package io.github.some_example_name.model.craft;
 
+import com.badlogic.gdx.graphics.Texture;
+import io.github.some_example_name.model.Game;
+import io.github.some_example_name.utils.GameAsset;
 import lombok.Getter;
 import lombok.ToString;
 import io.github.some_example_name.model.Pair;
@@ -23,75 +26,75 @@ import java.util.Map;
 @Getter
 @ToString
 public enum CraftType implements Product {
-    CHERRY_BOMB("cherry_bomb", "هرچیز در شعاع ۳ تایلی را نابود میکند", () -> Map.of(MineralType.COPPER_ORE, 4, MineralType.COAL, 1), 50, Map.of(Ability.MINING, 1)) {
+    CHERRY_BOMB("cherry_bomb", "Destroys anything in 3 tiles far.", () -> Map.of(MineralType.COPPER_ORE, 4, MineralType.COAL, 1), 50, Map.of(Ability.MINING, 1), GameAsset.CHERRY_BOMB) {
         public List<Tile> getTilesAffected(Tile origin) {
             Pair current = new Pair(origin.getX(), origin.getY());
             Tile[][] tiles = App.getInstance().getCurrentGame().tiles;
             return getTilesInRadius(current, 3, tiles);
         }
     },
-    BOMB("bomb", "هرچیز در شعاع  ۵ تایلی را نابود میکند", () -> Map.of(MineralType.IRON_ORE, 4, MineralType.COAL, 1), 50, Map.of(Ability.MINING, 2)) {
+    BOMB("bomb", "Destroys anything in 5 tiles far.", () -> Map.of(MineralType.IRON_ORE, 4, MineralType.COAL, 1), 50, Map.of(Ability.MINING, 2), GameAsset.BOMB) {
         public List<Tile> getTilesAffected(Tile origin) {
             Pair current = new Pair(origin.getX(), origin.getY());
             Tile[][] tiles = App.getInstance().getCurrentGame().tiles;
             return getTilesInRadius(current, 5, tiles);
         }
     },
-    MEGA_BOMB("mega_bomb", "هرچیز در شعاع ۷ تایلی را نابود میکند", () -> Map.of(MineralType.GOLD_ORE, 4, MineralType.COAL, 1), 50, Map.of(Ability.MINING, 3)) {
+    MEGA_BOMB("mega_bomb", "Destroys anything in 7 tiles far.", () -> Map.of(MineralType.GOLD_ORE, 4, MineralType.COAL, 1), 50, Map.of(Ability.MINING, 3), GameAsset.MEGA_BOMB) {
         public List<Tile> getTilesAffected(Tile origin) {
             Pair current = new Pair(origin.getX(), origin.getY());
             Tile[][] tiles = App.getInstance().getCurrentGame().tiles;
             return getTilesInRadius(current, 7, tiles);
         }
     },
-    SPRINKLER("sprinklers", "به ۴ تایل مجاور آب میدهد", () -> Map.of(MadeProductType.IRON_BAR, 1, MadeProductType.COPPER_BAR, 1), 0, Map.of(Ability.FARMING, 1)) {
+    SPRINKLER("sprinklers", "Waters anything in 4 tiles far.", () -> Map.of(MadeProductType.IRON_BAR, 1, MadeProductType.COPPER_BAR, 1), 0, Map.of(Ability.FARMING, 1), GameAsset.SPRINKLER) {
         public List<Tile> getTilesAffected(Tile origin) {
             Pair current = new Pair(origin.getX(), origin.getY());
             Tile[][] tiles = App.getInstance().getCurrentGame().tiles;
             return getTilesInRadius(current, 4, tiles);
         }
     },
-    QUALITY_SPRINKLER("quality_sprinklers", "به ۸ تایل مجاور آب میدهد", () -> Map.of(MadeProductType.IRON_BAR, 1, MadeProductType.GOLD_BAR, 1), 0, Map.of(Ability.FARMING, 2)) {
+    QUALITY_SPRINKLER("quality_sprinklers", "Waters anything in 8 tiles far.", () -> Map.of(MadeProductType.IRON_BAR, 1, MadeProductType.GOLD_BAR, 1), 0, Map.of(Ability.FARMING, 2), GameAsset.QUALITY_SPRINKLER) {
         public List<Tile> getTilesAffected(Tile origin) {
             Pair current = new Pair(origin.getX(), origin.getY());
             Tile[][] tiles = App.getInstance().getCurrentGame().tiles;
             return getTilesInRadius(current, 8, tiles);
         }
     },
-    IRIDIUM_SPRINKLER("iridium_sprinklers", "به ۲۴ تایل مجاور آب میدهد", () -> Map.of(MadeProductType.IRIDIUM_BAR, 1, MadeProductType.GOLD_BAR, 1), 0, Map.of(Ability.FARMING, 3)) {
+    IRIDIUM_SPRINKLER("iridium_sprinklers", "Waters anything in 24 tiles far.", () -> Map.of(MadeProductType.IRIDIUM_BAR, 1, MadeProductType.GOLD_BAR, 1), 0, Map.of(Ability.FARMING, 3), GameAsset.IRIDIUM_SPRINKLER) {
         public List<Tile> getTilesAffected(Tile origin) {
             Pair current = new Pair(origin.getX(), origin.getY());
             Tile[][] tiles = App.getInstance().getCurrentGame().tiles;
             return getTilesInRadius(current, 24, tiles);
         }
     },
-    CHARCOAL_KLIN("charcoal_klin", "۱۰ چوب را تبدیل به ۱ ذغال میکند", () -> Map.of(MineralType.WOOD, 20, MadeProductType.COPPER_BAR, 2), 0, Map.of(Ability.FORAGING, 1)),
-    FURNACE("furnace", "کانی ها و ذغال را تبدیل به شمش میکند", () -> Map.of(MineralType.COPPER_ORE, 20, MineralType.STONE, 25), 0, Map.of()),
-    SCARE_CROW("scare_crow", "از حمله کلاغ ها تا شعاع ۸ تایلی جلوگیری میکند", () -> Map.of(MineralType.COAL, 1, MineralType.WOOD, 50, MineralType.FIBER, 20), 0, Map.of()) {
+    CHARCOAL_KLIN("charcoal_klin", "Converts 10 pieces of wood to coal.", () -> Map.of(MineralType.WOOD, 20, MadeProductType.COPPER_BAR, 2), 0, Map.of(Ability.FORAGING, 1), GameAsset.CHARCOAL_KILN),
+    FURNACE("furnace", "Converts ore to bar.", () -> Map.of(MineralType.COPPER_ORE, 20, MineralType.STONE, 25), 0, Map.of(), GameAsset.FURNACE),
+    SCARE_CROW("scare_crow", "Scares crows in 8 tiles far.", () -> Map.of(MineralType.COAL, 1, MineralType.WOOD, 50, MineralType.FIBER, 20), 0, Map.of(), GameAsset.SCARECROW) {
         public List<Tile> getTilesAffected(Tile origin) {
             Pair current = new Pair(origin.getX(), origin.getY());
             Tile[][] tiles = App.getInstance().getCurrentGame().tiles;
             return getTilesInRadius(current, 8, tiles);
         }
     },
-    DELUXE_SCARECROW("deluxe_scarecrow", "از حمله کلاغ ها تا شعاع 12 تایلی جلوگیری میکند", () -> Map.of(MineralType.WOOD, 50, MineralType.COAL, 1, MineralType.FIBER, 20, MineralType.IRIDIUM_ORE, 1), 0, Map.of(Ability.FARMING, 2)) {
+    DELUXE_SCARECROW("deluxe_scarecrow", "Scares crows in 12 tiles far.", () -> Map.of(MineralType.WOOD, 50, MineralType.COAL, 1, MineralType.FIBER, 20, MineralType.IRIDIUM_ORE, 1), 0, Map.of(Ability.FARMING, 2), GameAsset.DELUXE_SCARECROW) {
         public List<Tile> getTilesAffected(Tile origin) {
             Pair current = new Pair(origin.getX(), origin.getY());
             Tile[][] tiles = App.getInstance().getCurrentGame().tiles;
             return getTilesInRadius(current, 12, tiles);
         }
     },
-    BEE_HOUSE("bee_house", "اگر در مزرعه گذاشته شود عسل تولید میکند", () -> Map.of(MineralType.WOOD, 40, MineralType.COAL, 8, MadeProductType.IRON_BAR, 1), 0, Map.of(Ability.FARMING, 1)),
-    CHEESE_PRESS("cheese_press", "شیر را به پنیر تبدیل میکند", () -> Map.of(MineralType.WOOD, 45, MineralType.STONE, 45, MadeProductType.COPPER_BAR, 1), 0, Map.of(Ability.FARMING, 2)),
-    KEG("keg", "میوه و سبزیجات را به نوشیدنی تبدیل میکند", () -> Map.of(MineralType.WOOD, 30, MadeProductType.COPPER_BAR, 1, MadeProductType.IRON_BAR, 1), 0, Map.of(Ability.FARMING, 3)),
-    LOOM("loom", "پشم را به پارچه تبدیل میکند", () -> Map.of(MineralType.WOOD, 60, MineralType.FIBER, 30), 0, Map.of(Ability.FARMING, 3)),
-    MAYONNAISE_MACHINE("mayonnaise_machine", "تخم مرغ را به سس مایونز تبدیل میکند", () -> Map.of(MineralType.WOOD, 15, MineralType.STONE, 15, MadeProductType.COPPER_BAR, 1), 0, Map.of()),
-    OIL_MAKER("oil_maker", "truffle را به روغن تبدیل میکند", () -> Map.of(MineralType.WOOD, 100, MadeProductType.IRON_BAR, 1, MadeProductType.GOLD_BAR, 1), 0, Map.of(Ability.FARMING, 3)),
-    PRESERVES_JAR("preserves_jar", "سبزیجات را به ترشی و میوه ها را به مربا تبدیل میکند", () -> Map.of(MineralType.WOOD, 50, MineralType.STONE, 40, MineralType.COAL, 8), 0, Map.of(Ability.FARMING, 2)),
-    DEHYDRATOR("dehydrator", "میوه یا قارچ را خشک میکند", () -> Map.of(MineralType.WOOD, 30, MineralType.STONE, 20, MineralType.FIBER, 30), 0, StoreType.PIERRE_SHOP),
-    GRASS_STARTER("grass_starter", "باعث رشد علف میشود", () -> Map.of(MineralType.WOOD, 1, MineralType.FIBER, 1), 0, StoreType.PIERRE_SHOP),
-    FISH_SMOKER("fish_smoker", "هر ماهی را با یک ذغال با حفظ کیفیتش تبدیل به ماهی دودی میکند", () -> Map.of(MineralType.WOOD, 50, MineralType.COAL, 10, MadeProductType.IRON_BAR, 3), 0, StoreType.FISH_SHOP),
-    MYSTIC_TREE_SEEDS("mystic_tree_seed", "میتواند کاشته شود تا mystic tree رشد کند", () -> Map.of(SeedType.PINE_CONES, 5, SeedType.MAHOGANY_SEEDS, 5, SeedType.ACORNS, 5, SeedType.MAPLE_SEEDS, 5), 100, Map.of(Ability.MINING, 4));
+    BEE_HOUSE("bee_house", "Produces honey if put on the farm.", () -> Map.of(MineralType.WOOD, 40, MineralType.COAL, 8, MadeProductType.IRON_BAR, 1), 0, Map.of(Ability.FARMING, 1), GameAsset.BEE_HOUSE),
+    CHEESE_PRESS("cheese_press", "Presses milk to cheese.", () -> Map.of(MineralType.WOOD, 45, MineralType.STONE, 45, MadeProductType.COPPER_BAR, 1), 0, Map.of(Ability.FARMING, 2), GameAsset.CHEESE_PRESS) ,
+    KEG("keg", "Converts fruits and vegetables to drinks.", () -> Map.of(MineralType.WOOD, 30, MadeProductType.COPPER_BAR, 1, MadeProductType.IRON_BAR, 1), 0, Map.of(Ability.FARMING, 3), GameAsset.KEG),
+    LOOM("loom", "Converts wool to cloth.", () -> Map.of(MineralType.WOOD, 60, MineralType.FIBER, 30), 0, Map.of(Ability.FARMING, 3), GameAsset.LOOM),
+    MAYONNAISE_MACHINE("mayonnaise_machine", "Converts eggs to mayonnaise sauce.", () -> Map.of(MineralType.WOOD, 15, MineralType.STONE, 15, MadeProductType.COPPER_BAR, 1), 0, Map.of(), GameAsset.MAYONNAISE_MACHINE),
+    OIL_MAKER("oil_maker", "Converts truffle to oil.", () -> Map.of(MineralType.WOOD, 100, MadeProductType.IRON_BAR, 1, MadeProductType.GOLD_BAR, 1), 0, Map.of(Ability.FARMING, 3), GameAsset.OIL_MAKER),
+    PRESERVES_JAR("preserves_jar", "Converts vegetables and fruits to jam and pickles.", () -> Map.of(MineralType.WOOD, 50, MineralType.STONE, 40, MineralType.COAL, 8), 0, Map.of(Ability.FARMING, 2), GameAsset.PRESERVES_JAR),
+    DEHYDRATOR("dehydrator", "Dehydrates fruits or mushrooms.", () -> Map.of(MineralType.WOOD, 30, MineralType.STONE, 20, MineralType.FIBER, 30), 0, StoreType.PIERRE_SHOP, GameAsset.DEHYDRATOR),
+    GRASS_STARTER("grass_starter", "Derives grass to grow.", () -> Map.of(MineralType.WOOD, 1, MineralType.FIBER, 1), 0, StoreType.PIERRE_SHOP, GameAsset.GRASS_STARTER),
+    FISH_SMOKER("fish_smoker", "Converts a fish to a smoked fish retaining the quality.", () -> Map.of(MineralType.WOOD, 50, MineralType.COAL, 10, MadeProductType.IRON_BAR, 3), 0, StoreType.FISH_SHOP, GameAsset.FISH_SMOKER),
+    MYSTIC_TREE_SEEDS("mystic_tree_seed", "A seed which when in planted a mystic tree grows.", () -> Map.of(SeedType.PINE_CONES, 5, SeedType.MAHOGANY_SEEDS, 5, SeedType.ACORNS, 5, SeedType.MAPLE_SEEDS, 5), 100, Map.of(Ability.MINING, 4), GameAsset.MYSTIC_TREE_SEED);
 
     @FunctionalInterface
     private interface IngredientsSupplier {
@@ -100,6 +103,7 @@ public enum CraftType implements Product {
 
     private transient volatile Map<Salable, Integer> resolvedIngredients;
     private final IngredientsSupplier ingredientsSupplier;
+    private Texture texture;
 
     public Map<Salable, Integer> getIngredients() {
         if (resolvedIngredients == null) {
@@ -108,20 +112,22 @@ public enum CraftType implements Product {
         return resolvedIngredients;
     }
 
-    CraftType(String name, String description, IngredientsSupplier ingredientsSupplier, Integer sellPrice, Map<Ability, Integer> abilities) {
+    CraftType(String name, String description, IngredientsSupplier ingredientsSupplier, Integer sellPrice, Map<Ability, Integer> abilities, Texture texture) {
         this.name = name;
         this.description = description;
         this.ingredientsSupplier = ingredientsSupplier;
         this.sellPrice = sellPrice;
         this.abilities = abilities;
+        this.texture = texture;
     }
 
-    CraftType(String name, String description, IngredientsSupplier ingredientsSupplier, Integer sellPrice, StoreType storeType) {
+    CraftType(String name, String description, IngredientsSupplier ingredientsSupplier, Integer sellPrice, StoreType storeType, Texture texture) {
         this.name = name;
         this.description = description;
         this.ingredientsSupplier = ingredientsSupplier;
         this.sellPrice = sellPrice;
         this.storeType = storeType;
+        this.texture = texture;
     }
 
     private final String name;

@@ -13,7 +13,12 @@ import io.github.some_example_name.view.mainMenu.InventoryMenu;
 
 public class PlayerController {
     GameService gameService = new GameService();
+    WorldController worldController;
     private float timeSinceLastMove = 0;
+
+    public PlayerController(WorldController worldController) {
+        this.worldController = worldController;
+    }
 
     public void update(){
         Player currentPlayer = App.getInstance().getCurrentGame().getCurrentPlayer();
@@ -74,10 +79,14 @@ public class PlayerController {
             //TODO Investigate?
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.E) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            InventoryMenu.createMenu(GameView.stage,GameAsset.SKIN);
+            InventoryMenu.createMenu(GameView.stage,GameAsset.SKIN, this);
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.F)) {
             //TODO open Journal?
         }
+    }
+
+    public WorldController getWorldController() {
+        return worldController;
     }
 }

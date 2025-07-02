@@ -66,6 +66,30 @@ public class CameraViewController {
         if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)){
             gameMenuController.nextTurn();
         }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_5)){
+            gameMenuController.C_AddItem("cherry bomb recipe", "1");
+            gameMenuController.C_AddItem("bomb recipe", "1");
+            gameMenuController.C_AddItem("mega bomb recipe", "1");
+            gameMenuController.C_AddItem("Sprinklers recipe", "1");
+            gameMenuController.C_AddItem("quality Sprinklers recipe", "1");
+            gameMenuController.C_AddItem("iridium Sprinklers recipe", "1");
+            gameMenuController.C_AddItem("charcoal klin recipe", "1");
+            gameMenuController.C_AddItem("furnace recipe", "1");
+            gameMenuController.C_AddItem("scare crow recipe", "1");
+            gameMenuController.C_AddItem("deluxe scarecrow recipe", "1");
+            gameMenuController.C_AddItem("bee house recipe", "1");
+            gameMenuController.C_AddItem("cheese press recipe", "1");
+            gameMenuController.C_AddItem("keg recipe", "1");
+            gameMenuController.C_AddItem("loom recipe", "1");
+            gameMenuController.C_AddItem("mayonnaise machine recipe", "1");
+            gameMenuController.C_AddItem("oil maker recipe", "1");
+            gameMenuController.C_AddItem("preserves jar recipe", "1");
+            gameMenuController.C_AddItem("dehydrator recipe", "1");
+            gameMenuController.C_AddItem("grass started recipe", "1");
+            gameMenuController.C_AddItem("fish smoker recipe", "1");
+            gameMenuController.C_AddItem("mystic tree seed recipe", "1");
+            gameMenuController.C_AddItem("fiber", "60");
+        }
         if (Gdx.input.isKeyJustPressed(Input.Keys.F4)){
             GameView.screenshotting = true;
         }

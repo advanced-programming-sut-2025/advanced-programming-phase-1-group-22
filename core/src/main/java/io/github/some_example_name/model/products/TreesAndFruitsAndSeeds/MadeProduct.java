@@ -1,5 +1,6 @@
 package io.github.some_example_name.model.products.TreesAndFruitsAndSeeds;
 
+import com.badlogic.gdx.graphics.Texture;
 import lombok.Getter;
 import lombok.Setter;
 import io.github.some_example_name.model.Salable;
@@ -44,4 +45,9 @@ public class MadeProduct implements Salable {
 
     @Override
     public Integer getContainingEnergy() {return getEnergy();}
+
+    @Override
+    public Texture getTexture() {
+        return madeProductType.getTexture();
+    }
 }
