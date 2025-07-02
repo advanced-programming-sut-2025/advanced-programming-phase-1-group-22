@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 public class GameAsset {
     public static final Texture INVENTORY_TAB = new Texture("Inventory/Inventory_Tab.png");
+    public static final Texture CRAFTING_TAB = new Texture("Inventory/crafting_tab.png");
     public static final Texture BUTTON = new Texture("Inventory/button-.png");
     public static final Texture FILLED_BUTTON = new Texture("Inventory/Filled_Button.png");
     public static final Texture GREEN_SQUARE = new Texture("Night/Green.png");

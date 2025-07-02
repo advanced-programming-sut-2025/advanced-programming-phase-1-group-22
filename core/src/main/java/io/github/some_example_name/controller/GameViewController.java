@@ -12,7 +12,7 @@ import lombok.Getter;
 @Getter
 public class GameViewController {
     private final WorldController worldController = new WorldController();
-    private final PlayerController playerController = new PlayerController();
+    private final PlayerController playerController = new PlayerController(worldController);
     private final ToolController toolController = new ToolController();
     private final CarryingController carryingController = new CarryingController();
     private final CameraViewController cameraViewController = new CameraViewController();

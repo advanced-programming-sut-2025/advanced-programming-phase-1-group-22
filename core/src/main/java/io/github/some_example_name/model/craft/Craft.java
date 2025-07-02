@@ -1,5 +1,6 @@
 package io.github.some_example_name.model.craft;
 
+import com.badlogic.gdx.graphics.Texture;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -48,4 +49,9 @@ public class Craft extends Structure implements Salable {
 
     @Override
     public Integer getContainingEnergy() {return 0;}
+
+    @Override
+    public Texture getTexture() {
+        return craftType.getTexture();
+    }
 }
