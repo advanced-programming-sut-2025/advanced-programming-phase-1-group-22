@@ -28,6 +28,8 @@ public class GameView implements Screen, InputProcessor {
     public static int screenX;
     public static int screenY;
     public static Console Console = new Console(stage);
+    public static boolean screenshotting;
+
 
     public GameView() {
         Game game = new Game();
