@@ -2084,6 +2084,7 @@ Mineral/Star_Shards.png
 Mineral/Thunder_Egg.png
 Mineral/Tigerseye.png
 Night/Night.jpg
+Night/night.jpg
 Node/Amethyst_Node.png
 Node/Aquamarine_Node.png
 Node/Bone_Node_1.png
