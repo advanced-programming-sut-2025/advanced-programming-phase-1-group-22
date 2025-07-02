@@ -1,6 +1,7 @@
 package io.github.some_example_name.controller;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import io.github.some_example_name.MainGradle;
 import io.github.some_example_name.utils.App;
 import io.github.some_example_name.utils.GameAsset;
@@ -22,6 +23,11 @@ public class GameViewController {
     }
 
     public void update(){
+        if (GameView.screenshotting) {
+            if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+                GameView.screenshotting = false;
+            }
+        }
         worldController.update();
         playerController.update();
         toolController.update();
@@ -50,6 +56,8 @@ public class GameViewController {
                 GameAsset.NIGHT_SPRITE.draw(MainGradle.getInstance().getBatch());
             }
         }
-        cameraViewController.update();
+        if (!GameView.screenshotting) {
+            cameraViewController.update();
+        }
     }
 }

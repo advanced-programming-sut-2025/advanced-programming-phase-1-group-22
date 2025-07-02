@@ -32,5 +32,8 @@ public class CameraViewController {
         if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)){
             gameMenuController.nextTurn();
         }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.F4)){
+            GameView.screenshotting = true;
+        }
     }
 }
