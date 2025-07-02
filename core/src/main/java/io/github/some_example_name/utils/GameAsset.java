@@ -9,6 +9,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 public class GameAsset {
     public static final Texture INVENTORY_TAB = new Texture("Inventory_Tab.png");
+    public static final Texture BUTTON = new Texture("button-.png");
+    public static final Texture FILLED_BUTTON = new Texture("Filled_Button.png");
+    public static final Texture GREEN_SQUARE = new Texture("Night/Green.png");
     public static final Texture MAP_TAB = new Texture("map_tab.png");
     public static final Texture SKILL_TAB = new Texture("skill_tab.png");
     public static final Texture SOCIAL_TAB = new Texture("socail_tab.png");
@@ -1708,7 +1711,7 @@ public class GameAsset {
     public static final Texture NIGHT = new Texture("Night/night.jpg");
     public static final Sprite NIGHT_SPRITE = new Sprite(NIGHT);
     static {
-        NIGHT_SPRITE.setSize(Gdx.graphics.getWidth()*3, Gdx.graphics.getHeight()*3);
+        NIGHT_SPRITE.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
     public static final Texture AMETHYST_NODE = new Texture("Node/Amethyst_Node.png");
     public static final Texture AQUAMARINE_NODE = new Texture("Node/Aquamarine_Node.png");

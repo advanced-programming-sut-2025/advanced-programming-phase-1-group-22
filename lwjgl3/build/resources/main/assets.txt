@@ -1519,6 +1519,7 @@ Fertilizer/Quality_Fertilizer.png
 Fertilizer/Quality_Retaining_Soil.png
 Fertilizer/Speed-Gro.png
 Fertilizer/Tree_Fertilizer.png
+Filled_Button.png
 Fish/Albacore.png
 Fish/Anchovy.png
 Fish/Angler.png
@@ -2083,7 +2084,7 @@ Mineral/Soapstone.png
 Mineral/Star_Shards.png
 Mineral/Thunder_Egg.png
 Mineral/Tigerseye.png
-Night/Night.jpg
+Night/Green.png
 Night/night.jpg
 Node/Amethyst_Node.png
 Node/Aquamarine_Node.png
