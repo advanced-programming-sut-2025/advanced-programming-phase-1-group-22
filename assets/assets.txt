@@ -2037,6 +2037,7 @@ Inventory/Filled_Button.png
 Inventory/Inventory_Parts.png
 Inventory/Inventory_Tab.png
 Inventory/button-.png
+Inventory/cooking_tab.png
 Inventory/crafting_tab.png
 Inventory/exit.png
 Inventory/map_tab.png
