@@ -79,7 +79,7 @@ public class PlayerController {
         if (Gdx.input.isKeyJustPressed(Input.Keys.X) || Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT)) {
             //TODO Investigate?
         }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.E) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             InventoryMenu.createMenu(GameView.stage,GameAsset.SKIN);
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.F)) {
