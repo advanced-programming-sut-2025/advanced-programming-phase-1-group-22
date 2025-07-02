@@ -8,14 +8,14 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 public class GameAsset {
-    public static final Texture INVENTORY_TAB = new Texture("Inventory_Tab.png");
-    public static final Texture BUTTON = new Texture("button-.png");
-    public static final Texture FILLED_BUTTON = new Texture("Filled_Button.png");
+    public static final Texture INVENTORY_TAB = new Texture("Inventory/Inventory_Tab.png");
+    public static final Texture BUTTON = new Texture("Inventory/button-.png");
+    public static final Texture FILLED_BUTTON = new Texture("Inventory/Filled_Button.png");
     public static final Texture GREEN_SQUARE = new Texture("Night/Green.png");
-    public static final Texture MAP_TAB = new Texture("map_tab.png");
-    public static final Texture SKILL_TAB = new Texture("skill_tab.png");
-    public static final Texture SOCIAL_TAB = new Texture("socail_tab.png");
-    public static final Texture EXIT_BUTTON = new Texture("exit.png");
+    public static final Texture MAP_TAB = new Texture("Inventory/map_tab.png");
+    public static final Texture SKILL_TAB = new Texture("Inventory/skill_tab.png");
+    public static final Texture SOCIAL_TAB = new Texture("Inventory/socail_tab.png");
+    public static final Texture EXIT_BUTTON = new Texture("Inventory/exit.png");
     public static final Skin SKIN = new Skin(Gdx.files.internal("skin/craftacular-ui.json"));
     public static final Texture BARN = new Texture("Farm_Buildings/Barn.png");
     public static final Texture BIG_BARN = new Texture("Farm_Buildings/Big_Barn.png");
@@ -25,7 +25,7 @@ public class GameAsset {
     public static final Texture DELUXE_COOP = new Texture("Farm_Buildings/Deluxe_Coop.png");
     public static final Texture WELL = new Texture("Farm_Buildings/Well.png");
     public static final Texture SHIPPINGBIN = new Texture("Farm_Buildings/Shipping_Bin_Anim.png");
-    public static final Texture HOUSE = new Texture("House_(tier_3).png");
+    public static final Texture HOUSE = new Texture("Cottage/House_(tier_3).png");
     public static final Texture COTTAGE_INSIDE = new Texture("Cottage/Cottage_Inside.png");
     public static final Texture BROKEN_GREENHOUSE = new Texture("Greenhouse/Broken_Greenhouse.png");
     public static final Texture WATER = new Texture("Flooring/water.png");
