@@ -73,6 +73,9 @@ public class Village implements JsonPreparable {
             Farm farm = farms.get(i);
             farm.fillFarmType(i);
             farm.generateRandomStructures();
+            if (farm.getCottage() != null) {
+                farm.getFridge().getTiles().add(farm.getCottage().getTiles().get(2));
+            }
         }
     }
 

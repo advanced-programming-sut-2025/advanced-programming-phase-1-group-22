@@ -9,6 +9,8 @@ import io.github.some_example_name.service.GameService;
 import io.github.some_example_name.utils.App;
 import io.github.some_example_name.utils.GameAsset;
 import io.github.some_example_name.view.GameView;
+import io.github.some_example_name.view.Menu;
+import io.github.some_example_name.view.mainMenu.FridgeMenu;
 import io.github.some_example_name.view.mainMenu.InventoryMenu;
 
 public class PlayerController {
@@ -79,10 +81,22 @@ public class PlayerController {
             //TODO Investigate?
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.E) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            InventoryMenu.createMenu(GameView.stage,GameAsset.SKIN, this);
+            InventoryMenu.createMenu(GameView.stage,GameAsset.SKIN, this, 0);
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) && Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
+            FridgeMenu.createMenu(GameView.stage,GameAsset.SKIN, getWorldController());
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.F)) {
             //TODO open Journal?
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.M)) {
+            InventoryMenu.createMenu(GameView.stage,GameAsset.SKIN, this, 3);
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.B)) {
+            InventoryMenu.createMenu(GameView.stage,GameAsset.SKIN, this, 4);
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.C)) {
+            InventoryMenu.createMenu(GameView.stage,GameAsset.SKIN, this, 5);
         }
     }
 

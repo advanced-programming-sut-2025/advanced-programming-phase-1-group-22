@@ -26,6 +26,7 @@ import io.github.some_example_name.model.records.Response;
 import io.github.some_example_name.model.relations.Player;
 import io.github.some_example_name.model.structure.Structure;
 import io.github.some_example_name.model.structure.farmInitialElements.Lake;
+import io.github.some_example_name.model.tools.BackPack;
 import io.github.some_example_name.service.GameService;
 import io.github.some_example_name.utils.App;
 import io.github.some_example_name.utils.GameAsset;
@@ -41,7 +42,7 @@ public class InventoryMenu {
     private static final GameService gameService = new GameService();
     private static PlayerController controller;
 
-    public static void createMenu(Stage stage, Skin skin, PlayerController playerController) {
+    public static void createMenu(Stage stage, Skin skin, PlayerController playerController, int tabIndex) {
         controller = playerController;
         if (!stage.getActors().contains(menuGroup, true)) {
             stage.addActor(menuGroup);
@@ -104,7 +105,14 @@ public class InventoryMenu {
         tabs.add(tab5);
         tabs.add(tab6);
 
-        createInventory(skin, tabs, menuGroup,stage);
+        switch (tabIndex) {
+            case 0 -> createInventory(skin, tabs, menuGroup, stage);
+            case 1 -> createSkillMenu(skin,menuGroup,tabs);
+            case 2 -> createSkillMenu(skin,menuGroup,tabs);
+            case 3 -> createMapMenu(skin,menuGroup,tabs);
+            case 4 -> createCraftingMenu(skin, tabs, menuGroup, stage);
+            case 5 -> createCookingMenu(skin, tabs, menuGroup, stage);
+        }
     }
 
     private static boolean isOverTrashCan(Image item, ImageButton trashCan) {
@@ -241,8 +249,17 @@ public class InventoryMenu {
         scrollPane.layout();
         scrollPane.setTouchable(Touchable.enabled);
 
-        for (int row = 0; row < 3; row++) {
-            for (int col = 0; col < 9; col++) {
+        int maxCol = 9;
+        int maxRow;
+        BackPack backPack = App.getInstance().getCurrentGame().getCurrentPlayer().getInventory();
+        if (backPack.getBackPackType().getIsInfinite()) {
+            maxRow = Math.max(5, backPack.getProducts().size() / maxCol + 1);
+        } else {
+            maxRow = (int)Math.ceil((double) backPack.getBackPackType().getCapacity() / maxCol);
+        }
+
+        for (int row = 0; row < maxRow; row++) {
+            for (int col = 0; col < maxCol; col++) {
                 Image slot = new Image(slotTexture);
 
                 int index = row * 9 + col;
@@ -559,6 +576,7 @@ public class InventoryMenu {
                     o.remove();
                 }
                 exitButton.remove();
+                selectedIndex = null;
             }
         });
         return exitButton;

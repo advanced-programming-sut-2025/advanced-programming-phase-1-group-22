@@ -20,6 +20,7 @@ import io.github.some_example_name.utils.GameAsset;
 import io.github.some_example_name.view.GameNotifier;
 import io.github.some_example_name.view.GameView;
 import io.github.some_example_name.view.Menu;
+import io.github.some_example_name.view.mainMenu.FridgeMenu;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -170,6 +171,11 @@ public class WorldController {
                                 showResponse(resp);
                             }
                         }
+                    }
+                }
+                if (App.getInstance().getCurrentGame().getCurrentPlayer().getCurrentMenu() == Menu.COTTAGE) {
+                    if (distanceFromClick(farm.getFridge().getTiles().getFirst()).isOrigin()) {
+                        FridgeMenu.createMenu(GameView.stage,GameAsset.SKIN, this);
                     }
                 }
             }
