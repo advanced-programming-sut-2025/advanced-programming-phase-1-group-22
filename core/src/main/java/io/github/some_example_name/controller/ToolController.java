@@ -42,18 +42,7 @@ public class ToolController {
         if (Gdx.input.isKeyJustPressed(Input.Keys.C) || Gdx.input.justTouched()){
             handleToolUse(GameView.screenX,GameView.screenY);
         }
-//        Gdx.input.setInputProcessor(new InputAdapter() {
-//            @Override
-//            public boolean scrolled(float amountX, float amountY) {
-//                if (amountY > 0) {
-//                    //TODO change item
-//                }
-//                if (amountY < 0) {
-//                    //TODO change item
-//                }
-//                return true;
-//            }
-//        });
+
         if (Gdx.input.isKeyJustPressed(Input.Keys.TAB)) {
             //TODO change item
         }

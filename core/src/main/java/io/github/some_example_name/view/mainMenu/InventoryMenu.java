@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.*;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
@@ -342,10 +343,31 @@ public class InventoryMenu {
 
             Image iconImage = new Image(icon);
             Label nameLabel = new Label(abilityIntegerEntry.getKey().getName(), skin);
-//            TextTooltip tooltip = new TextTooltip(abilityIntegerEntry.getKey().getDescription(), skin);
-//            TooltipManager.getInstance().initialTime = 0.2f;
-//            TooltipManager.getInstance().resetTime = 0.5f;
-//            iconImage.addListener(tooltip);
+            final Label tooltipLabel = new Label(abilityIntegerEntry.getKey().getDescription(), skin);
+            tooltipLabel.setVisible(false);
+            tooltipLabel.setColor(1, 1, 1, 0.9f);
+            tooltipLabel.setZIndex(1000);
+            menuGroup.addActor(tooltipLabel);
+            iconImage.addListener(new InputListener() {
+                @Override
+                public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                    tooltipLabel.setText(abilityIntegerEntry.getKey().getDescription());
+                    tooltipLabel.pack();
+                    Vector2 stageCoords = iconImage.localToStageCoordinates(new Vector2(iconImage.getWidth(), iconImage.getHeight()));
+                    tooltipLabel.setPosition(stageCoords.x, stageCoords.y);
+                    tooltipLabel.setVisible(true);
+                    tooltipLabel.addAction(Actions.alpha(1f));
+                    tooltipLabel.toFront();
+                }
+
+                @Override
+                public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+                    tooltipLabel.addAction(Actions.sequence(
+                        Actions.fadeOut(0.2f),
+                        Actions.visible(false)
+                    ));
+                }
+            });
 
             float currentXP = abilityIntegerEntry.getValue();
             float maxXP = Math.min(player.getAbilityLevel(abilityIntegerEntry.getKey()) + 1,4) * 100 + 50;
