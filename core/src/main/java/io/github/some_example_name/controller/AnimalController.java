@@ -10,46 +10,87 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Array;
 import io.github.some_example_name.MainGradle;
+import io.github.some_example_name.model.Direction;
 import io.github.some_example_name.model.animal.Animal;
+import io.github.some_example_name.model.records.Response;
 import io.github.some_example_name.model.relations.Player;
 import io.github.some_example_name.service.GameService;
 import io.github.some_example_name.utils.App;
 import io.github.some_example_name.utils.GameAsset;
 import io.github.some_example_name.view.GameView;
+import io.github.some_example_name.view.HeartEffect;
 
 public class AnimalController {
     private final Group menuGroup = new Group();
+    private final Group effectGroup = new Group();
+    private final Array<HeartEffect> heartEffects = new Array<>();
     private final GameService gameService = new GameService();
     private final WorldController worldController = new WorldController();
 
-    public void update(){
+    public void update() {
         handleInputs();
+        float delta = Gdx.graphics.getDeltaTime();
+        for (int i = heartEffects.size - 1; i >= 0; i--) {
+            HeartEffect heartEffect = heartEffects.get(i);
+            heartEffect.update(delta);
+            if (heartEffect.isFinished()) {
+                heartEffects.removeIndex(i);
+            }
+        }
+        for (HeartEffect heartEffect : heartEffects) {
+            heartEffect.draw(MainGradle.getInstance().getBatch());
+        }
     }
 
-    private void handleInputs(){
+    private void handleInputs() {
         Player player = App.getInstance().getCurrentGame().getCurrentPlayer();
-        if (Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT)){
+        if (Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT)) {
             Vector3 worldCoords = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
             MainGradle.getInstance().getCamera().unproject(worldCoords);
             float worldX = worldCoords.x;
             float worldY = worldCoords.y;
             for (Animal animal : player.getAnimals()) {
-                if (collision(animal,worldX,worldY)) createAnimalMenu(animal);
+                if (collision(animal, worldX, worldY)) createAnimalMenu(animal);
+            }
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
+            Animal animal = getAnimalAroundPlayer(player);
+            if (animal!=null){
+                Response response = gameService.pet(animal);
+                if (response.shouldBeBack()){
+                    heartEffects.add(new HeartEffect(animal.getTiles().get(0).getX() * App.tileWidth,
+                        animal.getTiles().get(0).getY() * App.tileHeight));
+                }
+                worldController.showResponse(response);
             }
         }
     }
 
-    private boolean collision(Animal animal,float worldX,float worldY){
+    private Animal getAnimalAroundPlayer(Player player) {
+        for (Animal animal : player.getAnimals()) {
+            for (Direction value : Direction.values()) {
+                if (player.getTiles().get(0).getX() + value.getXTransmit() == animal.getTiles().get(0).getX() &&
+                    player.getTiles().get(0).getY() + value.getYTransmit() == animal.getTiles().get(0).getY()) {
+                    return animal;
+                }
+            }
+        }
+        return null;
+    }
+
+    private boolean collision(Animal animal, float worldX, float worldY) {
         Sprite sprite = animal.getSprite();
         sprite.setPosition(animal.getTiles().get(0).getX() * App.tileWidth, animal.getTiles().get(0).getY() * App.tileHeight);
         return worldX >= sprite.getX() && worldX <= sprite.getX() + sprite.getWidth() && worldY >= sprite.getY() && worldY <= sprite.getY() + sprite.getHeight();
     }
 
-    private void createAnimalMenu(Animal animal){
+    private void createAnimalMenu(Animal animal) {
         if (!GameView.stage.getActors().contains(menuGroup, true)) {
             GameView.stage.addActor(menuGroup);
         }
+        menuGroup.clear();
+
         Window window = new Window("", GameAsset.SKIN);
         window.setSize(1200, 700);
         window.setPosition(
@@ -62,9 +103,9 @@ public class AnimalController {
         table.setFillParent(true);
         table.top().pad(20).defaults().pad(10).left();
 
-        Label feed = new Label("isFeedToday: " + animal.getIsFeed(),GameAsset.SKIN);
-        TextButton feedButton = new TextButton("feedAnimal",GameAsset.SKIN);
-        feedButton.addListener(new ClickListener(){
+        Label feed = new Label("isFeedToday: " + animal.getIsFeed(), GameAsset.SKIN);
+        TextButton feedButton = new TextButton("feedAnimal", GameAsset.SKIN);
+        feedButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 worldController.showResponse(gameService.feedHay(animal));
@@ -76,9 +117,9 @@ public class AnimalController {
         table.add(feedButton).right();
         table.row();
 
-        Label pet = new Label("isPetToday: " + animal.getPet(),GameAsset.SKIN);
-        TextButton petButton = new TextButton("petAnimal",GameAsset.SKIN);
-        petButton.addListener(new ClickListener(){
+        Label pet = new Label("isPetToday: " + animal.getPet(), GameAsset.SKIN);
+        TextButton petButton = new TextButton("petAnimal", GameAsset.SKIN);
+        petButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 worldController.showResponse(gameService.pet(animal));
@@ -92,12 +133,12 @@ public class AnimalController {
 
         Label produce;
         if (animal.getTodayProduct() != null) {
-            produce = new Label("ProduceToday: " + animal.getTodayProduct().getName() + " " + animal.getTodayProduct().getProductQuality(),GameAsset.SKIN);
-        }else {
-            produce = new Label("ProduceToday: None",GameAsset.SKIN);
+            produce = new Label("ProduceToday: " + animal.getTodayProduct().getName() + " " + animal.getTodayProduct().getProductQuality(), GameAsset.SKIN);
+        } else {
+            produce = new Label("ProduceToday: None", GameAsset.SKIN);
         }
-        TextButton produceButton = new TextButton("collectProduct",GameAsset.SKIN);
-        produceButton.addListener(new ClickListener(){
+        TextButton produceButton = new TextButton("collectProduct", GameAsset.SKIN);
+        produceButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 worldController.showResponse(gameService.collectProduce(animal));
@@ -109,20 +150,21 @@ public class AnimalController {
         table.add(produceButton).right();
         table.row();
 
-        Label shepherd = new Label("isAnimalOut: " + animal.getIsAnimalStayOutAllNight(),GameAsset.SKIN);
-        TextField shepherdPositionX = new TextField("x",GameAsset.SKIN);
-        TextField shepherdPositionY = new TextField("y",GameAsset.SKIN);
-        TextButton shepherdButton = new TextButton("ShepherdAnimal",GameAsset.SKIN);
-        shepherdButton.addListener(new ClickListener(){
+        Label shepherd = new Label("isAnimalOut: " + animal.getIsAnimalStayOutAllNight(), GameAsset.SKIN);
+        TextField shepherdPositionX = new TextField("x", GameAsset.SKIN);
+        TextField shepherdPositionY = new TextField("y", GameAsset.SKIN);
+        TextButton shepherdButton = new TextButton("ShepherdAnimal", GameAsset.SKIN);
+        shepherdButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 try {
                     int positionX = Integer.parseInt(shepherdPositionX.getText());
                     int positionY = Integer.parseInt(shepherdPositionY.getText());
-                   worldController.showResponse(gameService.shepherdAnimals(animal,positionX,positionY));
+                    worldController.showResponse(gameService.shepherdAnimals(animal, positionX, positionY));
                     menuGroup.clear();
                     createAnimalMenu(animal);
-                } catch (Exception ignored) {}
+                } catch (Exception ignored) {
+                }
             }
         });
         table.add(shepherd).colspan(2);
@@ -132,14 +174,14 @@ public class AnimalController {
         table.add(shepherdButton).right();
         table.row();
 
-        Label sellPrice = new Label("sellPrice: " + animal.getSellPrice(),GameAsset.SKIN);
-        Label friendShip = new Label("friendShip: " + animal.getRelationShipQuality(),GameAsset.SKIN);
+        Label sellPrice = new Label("sellPrice: " + animal.getSellPrice(), GameAsset.SKIN);
+        Label friendShip = new Label("friendShip: " + animal.getRelationShipQuality(), GameAsset.SKIN);
         table.add(sellPrice);
         table.add(friendShip).right();
         table.row();
 
-        TextButton sell = new TextButton("sellAnimal",GameAsset.SKIN);
-        sell.addListener(new ClickListener(){
+        TextButton sell = new TextButton("sellAnimal", GameAsset.SKIN);
+        sell.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 worldController.showResponse(gameService.sellAnimal(animal));
