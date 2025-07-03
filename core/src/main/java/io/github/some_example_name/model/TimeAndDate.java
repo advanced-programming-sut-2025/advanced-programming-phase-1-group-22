@@ -249,4 +249,8 @@ public class TimeAndDate {
             case WINTER -> this.seasonSprite = new Sprite(GameAsset.ClOCK_MANNERS[4]);
         }
     }
+
+    public String getDayHour() {
+        return day + "d " + hour + "h";
+    }
 }
