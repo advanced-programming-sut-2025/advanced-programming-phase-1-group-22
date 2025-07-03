@@ -2,6 +2,7 @@ package io.github.some_example_name.controller;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector3;
@@ -13,18 +14,22 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import io.github.some_example_name.MainGradle;
 import io.github.some_example_name.model.Direction;
+import io.github.some_example_name.model.Farm;
+import io.github.some_example_name.model.Tile;
 import io.github.some_example_name.model.animal.Animal;
 import io.github.some_example_name.model.records.Response;
 import io.github.some_example_name.model.relations.Player;
+import io.github.some_example_name.model.structure.Structure;
 import io.github.some_example_name.service.GameService;
 import io.github.some_example_name.utils.App;
 import io.github.some_example_name.utils.GameAsset;
 import io.github.some_example_name.view.GameView;
 import io.github.some_example_name.view.HeartEffect;
 
+import java.util.Random;
+
 public class AnimalController {
     private final Group menuGroup = new Group();
-    private final Group effectGroup = new Group();
     private final Array<HeartEffect> heartEffects = new Array<>();
     private final GameService gameService = new GameService();
     private final WorldController worldController = new WorldController();
@@ -42,6 +47,13 @@ public class AnimalController {
         for (HeartEffect heartEffect : heartEffects) {
             heartEffect.draw(MainGradle.getInstance().getBatch());
         }
+        for (Farm farm : App.getInstance().getCurrentGame().getVillage().getFarms()) {
+            for (Structure structure : farm.getStructures()) {
+                if (structure instanceof Animal && isStructureInBond(structure)) {
+                    handleAnimalMovement(((Animal) structure));
+                }
+            }
+        }
     }
 
     private void handleInputs() {
@@ -56,15 +68,57 @@ public class AnimalController {
             }
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
             Animal animal = getAnimalAroundPlayer(player);
-            if (animal!=null){
+            if (animal != null) {
                 Response response = gameService.pet(animal);
-                if (response.shouldBeBack()){
+                if (response.shouldBeBack()) {
                     heartEffects.add(new HeartEffect(animal.getTiles().get(0).getX() * App.tileWidth,
                         animal.getTiles().get(0).getY() * App.tileHeight));
                 }
                 worldController.showResponse(response);
             }
         }
+    }
+
+    private void handleAnimalMovement(Animal animal) {
+        if (animal.getIsAnimalStayOutAllNight()) {
+            Random random = new Random();
+            if (random.nextInt(1, 1000) == 1) {
+                moveAnimal(animal);
+            }
+        }
+    }
+
+    private void moveAnimal(Animal animal) {
+        Random random = new Random();
+        int dx = random.nextInt(-5, 5);
+        int dy = (int) Math.sqrt(Math.pow(5, 2) - Math.pow(dx, 2));
+        if (random.nextInt() % 2 == 0) dy = -dy;
+        Tile tile = getTileByXAndY(animal.getTiles().get(0).getX() + dx, animal.getTiles().get(0).getY() + dy);
+        if (tile != null && !tile.getIsFilled() &&
+            getPlayerMainFarm(App.getInstance().getCurrentGame().getCurrentPlayer()).getTiles().contains(tile)) {
+            animal.getTiles().get(0).setX(animal.getTiles().get(0).getX() + dx);
+            animal.getTiles().get(0).setY(animal.getTiles().get(0).getY() + dy);
+        }
+    }
+
+    private Farm getPlayerMainFarm(Player player) {
+        for (Farm farm : App.getInstance().getCurrentGame().getVillage().getFarms()) {
+            if (farm.getPlayers().get(0).equals(player)) {
+                return farm;
+            }
+        }
+        return null;
+    }
+
+    private Tile getTileByXAndY(int x, int y) {
+        for (Tile[] tile : App.getInstance().getCurrentGame().tiles) {
+            for (Tile tile1 : tile) {
+                if (tile1.getX() == x && tile1.getY() == y) {
+                    return tile1;
+                }
+            }
+        }
+        return null;
     }
 
     private Animal getAnimalAroundPlayer(Player player) {
@@ -83,6 +137,15 @@ public class AnimalController {
         Sprite sprite = animal.getSprite();
         sprite.setPosition(animal.getTiles().get(0).getX() * App.tileWidth, animal.getTiles().get(0).getY() * App.tileHeight);
         return worldX >= sprite.getX() && worldX <= sprite.getX() + sprite.getWidth() && worldY >= sprite.getY() && worldY <= sprite.getY() + sprite.getHeight();
+    }
+
+    private boolean isStructureInBond(Structure structure) {
+        OrthographicCamera camera = MainGradle.getInstance().getCamera();
+        for (Tile tile : structure.getTiles()) {
+            if (camera.frustum.pointInFrustum(tile.getX() * App.tileWidth, tile.getY() * App.tileHeight, 0))
+                return true;
+        }
+        return false;
     }
 
     private void createAnimalMenu(Animal animal) {
