@@ -2,8 +2,10 @@ package io.github.some_example_name.controller;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
@@ -29,11 +31,14 @@ public class GameViewController {
     private final AnimalController animalController = new AnimalController();
     private final GameView view;
     private Group inventoryBar;
+    private Group energyBar;
+    private Image energyFill;
     private final List<Stack> itemStacks = new ArrayList<>();
     private float nightAlpha = 0.0f;
 
     public GameViewController(GameView view) {
         initInventoryBar();
+        initEnergyBar();
         this.view = view;
     }
 
@@ -59,6 +64,48 @@ public class GameViewController {
         };
         inventoryBar.addActor(bar);
         GameView.stage.addActor(inventoryBar);
+    }
+
+    private void initEnergyBar(){
+        Texture texture = GameAsset.ENERGY_BAR;
+        Texture texture1 = GameAsset.ENERGY_BAR_EMPTY;
+        TextureRegion backgroundRegion = new TextureRegion(texture1, 0, 0, 101, 580);
+        TextureRegion fillRegion = new TextureRegion(texture, 9, 26, 18, 160);
+        Image energyBackground = new Image(backgroundRegion);
+        energyFill = new Image(fillRegion);
+        energyFill.setSize(30, 160);
+        energyFill.setPosition(9, 10);
+
+        Stack energyStack = new Stack();
+        energyStack.setSize(50, 260);
+        energyStack.add(energyBackground);
+        energyStack.add(energyFill);
+
+        energyBar = new Group() {
+            @Override
+            public void act(float delta) {
+                OrthographicCamera camera = MainGradle.getInstance().getCamera();
+                float screenRight = camera.position.x + camera.viewportWidth / 2f;
+                float screenBottom = camera.position.y - camera.viewportHeight / 2f;
+
+                setPosition(screenRight - 36f - 20f, screenBottom + 20f);
+                super.act(delta);
+            }
+        };
+        energyBar.setSize(50, 260);
+        energyBar.addActor(energyStack);
+        GameView.stage.addActor(energyBar);
+    }
+
+    private void updateEnergyBar(){
+        Player player = App.getInstance().getCurrentGame().getCurrentPlayer();
+        float energyPercent = (float) player.getEnergy() / player.getMaxEnergy();
+
+        float fullHeight = 160f;
+        float currentHeight = fullHeight * energyPercent;
+
+        energyFill.setSize(30, currentHeight);
+        energyFill.setPosition(9,10);
     }
 
     private void updateInventoryBar(){
@@ -94,6 +141,7 @@ public class GameViewController {
         carryingController.update();
         animalController.update();
         updateInventoryBar();
+        updateEnergyBar();
         switch (App.getInstance().getCurrentGame().getFadingInTheNight()) {
             case 1: {
                 nightAlpha += Gdx.graphics.getDeltaTime()/2.5f;
