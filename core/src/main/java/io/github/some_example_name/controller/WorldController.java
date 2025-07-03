@@ -1,6 +1,7 @@
 package io.github.some_example_name.controller;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
@@ -8,6 +9,8 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Timer;
 import io.github.some_example_name.MainGradle;
 import io.github.some_example_name.model.*;
+import io.github.some_example_name.model.craft.Craft;
+import io.github.some_example_name.model.dto.SpriteHolder;
 import io.github.some_example_name.model.records.Response;
 import io.github.some_example_name.model.relations.Player;
 import io.github.some_example_name.model.structure.Structure;
@@ -20,8 +23,10 @@ import io.github.some_example_name.utils.GameAsset;
 import io.github.some_example_name.view.GameNotifier;
 import io.github.some_example_name.view.GameView;
 import io.github.some_example_name.view.Menu;
+import io.github.some_example_name.view.mainMenu.ArtisanMenu;
 import io.github.some_example_name.view.mainMenu.FridgeMenu;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -178,6 +183,17 @@ public class WorldController {
                         FridgeMenu.createMenu(GameView.stage,GameAsset.SKIN, this);
                     }
                 }
+                if (Gdx.input.isTouched()) {
+                    for (Structure structure : farm.getStructures()) {
+                        if (structure instanceof Craft) {
+                            if (distanceFromClick(structure.getTiles().getFirst()).isOrigin()) {
+                                if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
+                                    ArtisanMenu.createMenu((Craft) structure, GameView.stage, GameAsset.SKIN, this);
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     }
@@ -223,12 +239,20 @@ public class WorldController {
                             for (Tile tile : structure.getTiles()) {
                                 structure.getSprite().setSize(App.tileWidth,App.tileHeight);
                                 structure.getSprite().setPosition(tile.getX() * App.tileWidth,
-                                        tile.getY() * App.tileHeight);
+                                    tile.getY() * App.tileHeight);
                                 structure.getSprite().draw(MainGradle.getInstance().getBatch());
                             }
                         } else {
                             structure.getSprite().setPosition(structure.getTiles().get(0).getX() * App.tileWidth,
-                                    structure.getTiles().get(0).getY() * App.tileHeight);
+                                structure.getTiles().get(0).getY() * App.tileHeight);
+                            structure.getSprite().draw(MainGradle.getInstance().getBatch());
+                        }
+                    }
+                    if (structure.getSprites() != null){
+                        for (SpriteHolder sprite : structure.getSprites()) {
+                            structure.getSprite().setPosition(
+                                (structure.getTiles().get(0).getX() + sprite.getOffset().getX()) * App.tileWidth,
+                                (sprite.getOffset().getY() + structure.getTiles().get(0).getY()) * App.tileHeight );
                             structure.getSprite().draw(MainGradle.getInstance().getBatch());
                         }
                     }

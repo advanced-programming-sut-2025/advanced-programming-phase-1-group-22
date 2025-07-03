@@ -170,6 +170,7 @@ Animals/Void_Chicken.png
 Animals/White_Chicken.png
 Animals/White_Cow.png
 Animals/Wool.png
+Artisan_good/Artisan_Menu.png
 Artisan_good/Beer.png
 Artisan_good/Blue_Dried_Fruit.png
 Artisan_good/Blue_Jelly.png

@@ -1,6 +1,8 @@
 package io.github.some_example_name.model.craft;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import io.github.some_example_name.model.dto.SpriteHolder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -11,6 +13,8 @@ import io.github.some_example_name.model.products.TreesAndFruitsAndSeeds.MadePro
 import io.github.some_example_name.model.products.TreesAndFruitsAndSeeds.MadeProductType;
 import io.github.some_example_name.model.structure.Structure;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @Getter
@@ -21,6 +25,8 @@ public class Craft extends Structure implements Salable {
     private CraftType craftType;
     private MadeProduct madeProduct;
     private TimeAndDate ETA;
+    private Sprite sprite;
+    private HashMap<Salable, Integer> ingredients = new HashMap<>();
 
     public Craft(CraftType craftType, MadeProduct madeProduct, TimeAndDate ETA) {
         this.craftType = craftType;
@@ -53,5 +59,20 @@ public class Craft extends Structure implements Salable {
     @Override
     public Texture getTexture() {
         return craftType.getTexture();
+    }
+
+    @Override
+    public Sprite getSprite() {
+        if (sprite == null) {
+            sprite = new Sprite(craftType.getTexture());
+        }
+        return sprite;
+    }
+
+    @Override
+    public ArrayList<SpriteHolder> getSprites() {
+        if (getETA() == null) return super.getSprites();
+        ArrayList<SpriteHolder> sprites = new ArrayList<>();
+        return sprites;
     }
 }

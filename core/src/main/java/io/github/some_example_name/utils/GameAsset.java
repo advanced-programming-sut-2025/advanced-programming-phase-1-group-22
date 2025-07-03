@@ -1712,6 +1712,7 @@ public class GameAsset {
     public static final Texture THUNDER_EGG = new Texture("Mineral/Thunder_Egg.png");
     public static final Texture TIGERSEYE = new Texture("Mineral/Tigerseye.png");
     public static final Texture NIGHT = new Texture("Night/night.jpg");
+//    public static final Texture NIGHT = TIGERSEYE;
     public static final Sprite NIGHT_SPRITE = new Sprite(NIGHT);
     static {
         NIGHT_SPRITE.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -2141,6 +2142,8 @@ public class GameAsset {
     public static final Texture IRIDIUM_PAN = new Texture("Tools/Iridium_Pan.png");
     public static final Texture IRIDIUM_SCYTHE = new Texture("Tools/Iridium_Scythe.png");
     public static final Texture MILK_PAIL = new Texture("Tools/Milk_Pail.png");
+    public static final Texture ARTISAN_MENU = new Texture("artisan_good/Artisan_Menu.png");
+    public static final TextureRegion ARTISAN_PLATE = new TextureRegion(ARTISAN_MENU, 0, 0, 320, 178);
     public static final Texture OSTRICH_INCUBATOR_FULL = new Texture("Tools/Ostrich_Incubator_Full.png");
     public static final Texture COPPER_PICKAXE = new Texture("Tools/Pickaxe/Copper_Pickaxe.png");
     public static final Texture GOLD_PICKAXE = new Texture("Tools/Pickaxe/Gold_Pickaxe.png");

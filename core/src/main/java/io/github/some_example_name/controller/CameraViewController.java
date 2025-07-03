@@ -24,7 +24,7 @@ public class CameraViewController {
     private Sprite energy = new Sprite(GameAsset.GREEN_SQUARE);
     private Sprite eSprite = new Sprite(GameAsset.FILLED_BUTTON);
     private OrthographicCamera camera = MainGradle.getInstance().getCamera();
-    public void update(){
+    public void update() {
         App.getInstance().getCurrentGame().getTimeAndDate().updateBatch(MainGradle.getInstance().getBatch());
         handleEnergyBar();
         handleInput();
@@ -117,7 +117,12 @@ public class CameraViewController {
             }
             if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_7)) {
                 gameMenuController.C_AddItem("pizza", "1");
-//            gameMenuController.cookingRefrigeratorPut("pizza");
+            }
+            if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_8)) {
+                gameMenuController.C_AddItem("bee_house", "1");
+            }
+            if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_9)) {
+                gameMenuController.placeItem("bee_house", "south");
             }
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.F4)){
