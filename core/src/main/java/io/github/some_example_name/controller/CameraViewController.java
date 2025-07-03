@@ -51,68 +51,74 @@ public class CameraViewController {
     }
 
     public void handleInput(){
-        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)){
-            gameMenuController.C_WeatherSet("STORMY");
-            gameMenuController.C_AdvanceDate("2");
-        }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_3)){
-            gameMenuController.C_WeatherSet("RAINY");
-            gameMenuController.C_AdvanceDate("1");
-        }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_4)){
-            gameMenuController.C_WeatherSet("SNOWY");
-            gameMenuController.C_AdvanceDate("1");
-        }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)){
-            gameMenuController.nextTurn();
-        }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_5)){
-            gameMenuController.C_AddItem("cherry bomb recipe", "1");
-            gameMenuController.C_AddItem("bomb recipe", "1");
-            gameMenuController.C_AddItem("mega bomb recipe", "1");
-            gameMenuController.C_AddItem("Sprinklers recipe", "1");
-            gameMenuController.C_AddItem("quality Sprinklers recipe", "1");
-            gameMenuController.C_AddItem("iridium Sprinklers recipe", "1");
-            gameMenuController.C_AddItem("charcoal klin recipe", "1");
-            gameMenuController.C_AddItem("furnace recipe", "1");
-            gameMenuController.C_AddItem("scare crow recipe", "1");
-            gameMenuController.C_AddItem("deluxe scarecrow recipe", "1");
-            gameMenuController.C_AddItem("bee house recipe", "1");
-            gameMenuController.C_AddItem("cheese press recipe", "1");
-            gameMenuController.C_AddItem("keg recipe", "1");
-            gameMenuController.C_AddItem("loom recipe", "1");
-            gameMenuController.C_AddItem("mayonnaise machine recipe", "1");
-            gameMenuController.C_AddItem("oil maker recipe", "1");
-            gameMenuController.C_AddItem("preserves jar recipe", "1");
-            gameMenuController.C_AddItem("dehydrator recipe", "1");
-            gameMenuController.C_AddItem("grass started recipe", "1");
-            gameMenuController.C_AddItem("fish smoker recipe", "1");
-            gameMenuController.C_AddItem("mystic tree seed recipe", "1");
-            gameMenuController.C_AddItem("fiber", "60");
-        }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_6)) {
-            gameMenuController.C_AddItem("fried egg recipe", "1");
-            gameMenuController.C_AddItem("baked fish recipe", "1");
-            gameMenuController.C_AddItem("salad recipe", "1");
-            gameMenuController.C_AddItem("salmon dinner recipe", "1");
-            gameMenuController.C_AddItem("hashbrowns recipe", "1");
-            gameMenuController.C_AddItem("omelet recipe", "1");
-            gameMenuController.C_AddItem("pancakes recipe", "1");
-            gameMenuController.C_AddItem("bread recipe", "1");
-            gameMenuController.C_AddItem("tortilla recipe", "1");
-            gameMenuController.C_AddItem("pizza recipe", "1");
-            gameMenuController.C_AddItem("maki roll recipe", "1");
-            gameMenuController.C_AddItem("triple shot espresso recipe", "1");
-            gameMenuController.C_AddItem("cookie recipe", "1");
-            gameMenuController.C_AddItem("vegetable medley recipe", "1");
-            gameMenuController.C_AddItem("farmer's lunch recipe", "1");
-            gameMenuController.C_AddItem("survival burger recipe", "1");
-            gameMenuController.C_AddItem("dish O' the Sea recipe", "1");
-            gameMenuController.C_AddItem("seafoam pudding recipe", "1");
-            gameMenuController.C_AddItem("miner's treat recipe", "1");
-            gameMenuController.C_AddItem("triple shot espresson recipe", "1");
-            gameMenuController.C_AddItem("triple shot espresson recipe", "1");
+        if (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)) {
+            if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) {
+                gameMenuController.C_WeatherSet("STORMY");
+                gameMenuController.C_AdvanceDate("2");
+            }
+            if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_3)) {
+                gameMenuController.C_WeatherSet("RAINY");
+                gameMenuController.C_AdvanceDate("1");
+            }
+            if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_4)) {
+                gameMenuController.C_WeatherSet("SNOWY");
+                gameMenuController.C_AdvanceDate("1");
+            }
+            if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)) {
+                gameMenuController.nextTurn();
+            }
+            if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_5)) {
+                gameMenuController.C_AddItem("cherry bomb recipe", "1");
+                gameMenuController.C_AddItem("bomb recipe", "1");
+                gameMenuController.C_AddItem("mega bomb recipe", "1");
+                gameMenuController.C_AddItem("Sprinklers recipe", "1");
+                gameMenuController.C_AddItem("quality Sprinklers recipe", "1");
+                gameMenuController.C_AddItem("iridium Sprinklers recipe", "1");
+                gameMenuController.C_AddItem("charcoal klin recipe", "1");
+                gameMenuController.C_AddItem("furnace recipe", "1");
+                gameMenuController.C_AddItem("scare crow recipe", "1");
+                gameMenuController.C_AddItem("deluxe scarecrow recipe", "1");
+                gameMenuController.C_AddItem("bee house recipe", "1");
+                gameMenuController.C_AddItem("cheese press recipe", "1");
+                gameMenuController.C_AddItem("keg recipe", "1");
+                gameMenuController.C_AddItem("loom recipe", "1");
+                gameMenuController.C_AddItem("mayonnaise machine recipe", "1");
+                gameMenuController.C_AddItem("oil maker recipe", "1");
+                gameMenuController.C_AddItem("preserves jar recipe", "1");
+                gameMenuController.C_AddItem("dehydrator recipe", "1");
+                gameMenuController.C_AddItem("grass started recipe", "1");
+                gameMenuController.C_AddItem("fish smoker recipe", "1");
+                gameMenuController.C_AddItem("mystic tree seed recipe", "1");
+                gameMenuController.C_AddItem("fiber", "60");
+            }
+            if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_6)) {
+                gameMenuController.C_AddItem("fried egg recipe", "1");
+                gameMenuController.C_AddItem("baked fish recipe", "1");
+                gameMenuController.C_AddItem("salad recipe", "1");
+                gameMenuController.C_AddItem("salmon dinner recipe", "1");
+                gameMenuController.C_AddItem("hashbrowns recipe", "1");
+                gameMenuController.C_AddItem("omelet recipe", "1");
+                gameMenuController.C_AddItem("pancakes recipe", "1");
+                gameMenuController.C_AddItem("bread recipe", "1");
+                gameMenuController.C_AddItem("tortilla recipe", "1");
+                gameMenuController.C_AddItem("pizza recipe", "1");
+                gameMenuController.C_AddItem("maki roll recipe", "1");
+                gameMenuController.C_AddItem("triple shot espresso recipe", "1");
+                gameMenuController.C_AddItem("cookie recipe", "1");
+                gameMenuController.C_AddItem("vegetable medley recipe", "1");
+                gameMenuController.C_AddItem("farmer's lunch recipe", "1");
+                gameMenuController.C_AddItem("survival burger recipe", "1");
+                gameMenuController.C_AddItem("dish O' the Sea recipe", "1");
+                gameMenuController.C_AddItem("seafoam pudding recipe", "1");
+                gameMenuController.C_AddItem("miner's treat recipe", "1");
+                gameMenuController.C_AddItem("triple shot espresson recipe", "1");
+                gameMenuController.C_AddItem("triple shot espresson recipe", "1");
 
+            }
+            if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_7)) {
+                gameMenuController.C_AddItem("pizza", "1");
+//            gameMenuController.cookingRefrigeratorPut("pizza");
+            }
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.F4)){
             GameView.screenshotting = true;
