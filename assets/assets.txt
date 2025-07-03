@@ -1391,6 +1391,7 @@ Emoji/Emojis190.png
 Emoji/Emojis191.png
 Emoji/Emojis194.png
 Emoji/Emojis195.png
+EnergyBar.png
 Farm_Buildings/Barn.png
 Farm_Buildings/Big_Barn.png
 Farm_Buildings/Big_Coop.png
@@ -2937,6 +2938,7 @@ Weather/Snow.png
 Weather/Storm.png
 bar.png
 button-.png
+energyBarEmpty.jpg
 exit.png
 map_tab.png
 skill_tab.png

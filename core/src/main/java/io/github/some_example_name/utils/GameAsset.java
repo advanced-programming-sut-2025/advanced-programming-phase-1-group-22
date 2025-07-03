@@ -8,6 +8,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 public class GameAsset {
+    public static final Texture ENERGY_BAR_EMPTY = new Texture("energyBarEmpty.jpg");
+    public static final Texture ENERGY_BAR = new Texture("EnergyBar.png");
     public static final Texture INVENTORY_TAB = new Texture("Inventory_Tab.png");
     public static final Texture MAP_TAB = new Texture("map_tab.png");
     public static final Texture SKILL_TAB = new Texture("skill_tab.png");
