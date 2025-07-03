@@ -7,9 +7,8 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Group;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Stack;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.utils.Align;
 import io.github.some_example_name.MainGradle;
 import io.github.some_example_name.model.Salable;
 import io.github.some_example_name.model.relations.Player;
@@ -114,17 +113,26 @@ public class GameViewController {
 
         for (int i = 0; i < itemStacks.size(); i++) {
             Stack stack = itemStacks.get(i);
-            if (stack.getChildren().size > 1) {
+            while (stack.getChildren().size > 1) {
                 stack.removeActorAt(1, true);
             }
-
             if (i < items.size()) {
                 Salable item = items.get(i);
                 Image itemImage = new Image(item.getTexture());
                 itemImage.setSize(90, 90);
+                int count = player.getInventory().getProducts().get(item);
+                Label countLabel = new Label(String.valueOf(count), GameAsset.SKIN);
+                countLabel.setFontScale(0.7f);
+                countLabel.setAlignment(Align.right);
+                countLabel.setColor(Color.GREEN);
+                Container<Label> labelContainer = new Container<>(countLabel);
+                labelContainer.setFillParent(false);
+                labelContainer.setSize(30, 20);
+                labelContainer.setPosition(66, 5);
                 if (item.equals(player.getCurrentCarrying())) itemImage.setColor(1f,1f, 1f,1f);
                 else itemImage.setColor(1f,1f,1f,0.5f);
                 stack.add(itemImage);
+                stack.add(labelContainer);
             }
         }
     }

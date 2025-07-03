@@ -1,6 +1,7 @@
 package io.github.some_example_name.view.mainMenu;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -119,11 +120,21 @@ public class InventoryMenu {
                             }
                         }
                     });
+                    int count = currentPlayer.getInventory().getProducts().get(item);
+                    Label countLabel = new Label(String.valueOf(count), GameAsset.SKIN);
+                    countLabel.setFontScale(0.7f);
+                    countLabel.setAlignment(Align.right);
+                    countLabel.setColor(Color.GREEN);
+                    Container<Label> labelContainer = new Container<>(countLabel);
+                    labelContainer.setFillParent(false);
+                    labelContainer.setSize(30, 20);
+                    labelContainer.setPosition(66, 5);
                     if (item == currentPlayer.getCurrentCarrying()) itemImage.setColor(1, 1, 1, 1f);
                     else itemImage.setColor(1, 1, 1, 0.5f);
                     Stack stack = new Stack();
                     stack.add(slot);
                     stack.add(itemImage);
+                    stack.add(labelContainer);
                     inventory.add(stack).size(96, 96);
                 } else {
                     inventory.add(slot).size(96, 96);
@@ -137,7 +148,7 @@ public class InventoryMenu {
         itemImage.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                event.stop(); // 🔒 جلوگیری از تداخل با ScrollPane
+                event.stop();
                 return true;
             }
         });
@@ -232,12 +243,22 @@ public class InventoryMenu {
                             }
                         }
                     });
+                    int count = currentPlayer.getInventory().getProducts().get(item);
+                    Label countLabel = new Label(String.valueOf(count), skin);
+                    countLabel.setFontScale(0.7f);
+                    countLabel.setAlignment(Align.right);
+                    countLabel.setColor(Color.GREEN);
+                    Container<Label> labelContainer = new Container<>(countLabel);
+                    labelContainer.setFillParent(false);
+                    labelContainer.setSize(30, 20);
+                    labelContainer.setPosition(66, 5);
                     if (item == currentPlayer.getCurrentCarrying()) itemImage.setColor(1, 1, 1, 1f);
                     else itemImage.setColor(1, 1, 1, 0.5f);
                     itemImage.setSize(90, 90);
                     Stack stack = new Stack();
                     stack.add(slot);
                     stack.add(itemImage);
+                    stack.add(labelContainer);
                     inventory.add(stack).size(96, 96);
                 } else {
                     inventory.add(slot).size(96, 96);
