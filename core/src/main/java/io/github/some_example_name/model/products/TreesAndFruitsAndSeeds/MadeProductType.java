@@ -2,6 +2,10 @@ package io.github.some_example_name.model.products.TreesAndFruitsAndSeeds;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import io.github.some_example_name.model.Game;
 import io.github.some_example_name.utils.GameAsset;
 import lombok.Getter;
@@ -21,6 +25,7 @@ import io.github.some_example_name.model.source.MineralType;
 import io.github.some_example_name.model.source.SeedType;
 import io.github.some_example_name.utils.App;
 
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -260,6 +265,32 @@ public enum MadeProductType implements Product {
     private boolean isCoalNeeded;
     private Texture texture;
 
+    public void addInfo(Table info, Skin skin) {
+        info.add(new Image(getTexture())).width(50).padRight(5);
+        info.add(new Label(getName(), skin)).width(200).padRight(30);
+        if (getEnergy() != 0) {
+            info.add(new Label(Integer.valueOf(getEnergy()).toString(), skin)).width(50).padRight(5);
+            info.add(new Image(GameAsset.ENERGY)).height(50).width(50).padRight(60);
+        } else {
+            info.add(new Label("Not", skin)).width(50).padRight(5);
+            info.add(new Label("Edible", skin)).width(50).padRight(60);
+        }
+        info.add(new Label("ETA: " + ((getProcessingTime() != null) ? getProcessingTime().getDayHour() : "Next day"), skin))
+            .colspan(2).width(140).padRight(30);
+        info.add(new Label(getSellPrice() + "g", skin)).width(50).expandX().row();
+        info.add(new Label(getDescription(), skin)).colspan(9).expandX().row();
+
+        for (Map.Entry<Salable, Integer> salable : ingredientsSupplier.get().entrySet()) {
+            addIngredientInfo(info, skin, salable);
+        }
+    }
+
+    private void addIngredientInfo(Table info, Skin skin, Map.Entry<Salable, Integer> salable) {
+        info.add(new Image(salable.getKey().getTexture())).width(50).padRight(5);
+        info.add(new Label(salable.getValue().toString(), skin)).width(40).padRight(5);
+        info.add(new Label(salable.getKey().getName(), skin)).colspan(7).expandX().row();
+    }
+
 
     @FunctionalInterface
     private interface IngredientsSupplier {
@@ -306,11 +337,12 @@ public enum MadeProductType implements Product {
     }
 
 
-    public static MadeProductType findByCraft(CraftType craft) {
+    public static ArrayList<MadeProductType> findByCraft(CraftType craft) {
+        ArrayList<MadeProductType> list = new ArrayList<>();
         for (MadeProductType value : MadeProductType.values()) {
-            if (craft.equals(value.getCraft())) return value;
+            if (craft.equals(value.getCraft())) list.add(value);
         }
-        return null;
+        return list;
     }
 
     public Map<Salable, Integer> getIngredients() {

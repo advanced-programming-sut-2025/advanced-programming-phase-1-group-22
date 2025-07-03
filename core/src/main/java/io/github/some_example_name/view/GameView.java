@@ -56,6 +56,8 @@ public class GameView implements Screen, InputProcessor {
         GameService gameService = new GameService();
         gameService.C_AddDollars("1000");
         gameService.C_AddItem("wood", "1000");
+        gameService.C_AddItem("bee_house", "1");
+        gameService.placeItem("bee_house", "south");
 //        stage = new Stage(MainGradle.getInstance().getViewport(), MainGradle.getInstance().getBatch());
     }
 
