@@ -3,13 +3,22 @@ package io.github.some_example_name.controller;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import io.github.some_example_name.MainGradle;
+import io.github.some_example_name.model.Salable;
 import io.github.some_example_name.model.relations.Player;
 import io.github.some_example_name.service.GameService;
 import io.github.some_example_name.utils.App;
 import io.github.some_example_name.utils.GameAsset;
 import io.github.some_example_name.view.GameView;
+import io.github.some_example_name.view.mainMenu.PopUp;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class CameraViewController {
     GameService gameMenuController = new GameService();
@@ -17,10 +26,125 @@ public class CameraViewController {
     private Sprite energy = new Sprite(GameAsset.GREEN_SQUARE);
     private Sprite eSprite = new Sprite(GameAsset.FILLED_BUTTON);
     private OrthographicCamera camera = MainGradle.getInstance().getCamera();
+    private Group inventoryBar;
+    private Group energyBar;
+    private Image energyBackground;
+    private Image energyFill;
+    private final List<Stack> itemStacks = new ArrayList<>();
+    private List<Salable> items = new ArrayList<>();
+    private Integer currentToolIndex;
+
+    public CameraViewController() {
+        initInventoryBar();
+        initEnergyBar();
+    }
+
     public void update() {
         App.getInstance().getCurrentGame().getTimeAndDate().updateBatch(MainGradle.getInstance().getBatch());
-//        handleEnergyBar();
+        updateEnergyBar();
+        updateInventoryBar();
         handleInput();
+    }
+
+
+    private void initInventoryBar() {
+        Table bar = new Table(GameAsset.SKIN);
+        bar.setFillParent(true);
+        bar.bottom().center().padBottom(20);
+
+        for (int i = 0; i < 12; i++) {
+            Image slot = new Image(new Texture(Gdx.files.internal("bar.png")));
+            Stack stack = new Stack();
+            stack.add(slot);
+            itemStacks.add(stack);
+            bar.add(stack).size(96, 96);
+        }
+        inventoryBar = new Group(){
+            @Override
+            public void act(float delta) {
+                OrthographicCamera camera = MainGradle.getInstance().getCamera();
+                bar.setPosition(camera.position.x - bar.getWidth() / 2f,camera.position.y - camera.viewportHeight / 2f + 40f);
+                super.act(delta);
+            }
+        };
+        inventoryBar.addActor(bar);
+        GameView.stage.addActor(inventoryBar);
+    }
+
+    private void initEnergyBar(){
+        Texture texture = GameAsset.ENERGY_BAR;
+        Texture texture1 = GameAsset.ENERGY_BAR_EMPTY;
+        OrthographicCamera camera = MainGradle.getInstance().getCamera();
+        TextureRegion backgroundRegion = new TextureRegion(texture1, 0, 0, 101, 580);
+        TextureRegion fillRegion = new TextureRegion(texture, 9, 26, 18, 160);
+        energyBackground = new Image(backgroundRegion);
+        energyFill = new Image(fillRegion);
+        energyFill.setSize(camera.viewportWidth * 0.03f,
+            camera.viewportHeight * 0.2f / 160 * 200);
+        energyFill.setPosition(9, 10);
+
+        Stack energyStack = new Stack();
+        energyStack.setSize(50, 260);
+        energyStack.add(energyBackground);
+        energyStack.add(energyFill);
+
+        energyBar = new Group() {
+            @Override
+            public void act(float delta) {
+                float screenRight = camera.position.x + camera.viewportWidth / 2f;
+                float screenBottom = camera.position.y - camera.viewportHeight / 2f;
+
+                setPosition(camera.position.x + camera.viewportWidth/2f - energyBar.getWidth()*1.1f,
+                    camera.position.y - camera.viewportHeight/2f + energyBar.getHeight()*0.3f);
+                super.act(delta);
+            }
+        };
+
+        energyBar.setSize(50, 260);
+        energyBar.addActor(energyStack);
+        GameView.stage.addActor(energyBar);
+    }
+
+    private void updateEnergyBar(){
+        Player player = App.getInstance().getCurrentGame().getCurrentPlayer();
+        float energyPercent = (float) player.getEnergy() / player.getMaxEnergy();
+
+        float fullHeight = 160f;
+        float currentHeight = fullHeight * energyPercent;
+
+        energyFill.setSize(30, currentHeight);
+        energyBackground.setScale(1, player.getMaxEnergy()/200f);
+
+        energyFill.setPosition(9,10);
+    }
+
+    private void updateInventoryBar(){
+        Player player = App.getInstance().getCurrentGame().getCurrentPlayer();
+        items = new ArrayList<>(player.getInventory().getProducts().keySet());
+
+        boolean flag = true;
+        for (int i = 0; i < itemStacks.size(); i++) {
+            Stack stack = itemStacks.get(i);
+            while (stack.getChildren().size > 1) {
+                stack.removeActorAt(1, true);
+            }
+            if (i < items.size()) {
+                Salable item = items.get(i);
+                Image itemImage = new Image(item.getTexture());
+                itemImage.setSize(90, 90);
+                Container<Label> labelContainer = PopUp.getLabelContainer(player.getInventory().getProducts(), item);
+                if (item.equals(player.getCurrentCarrying())) {
+                    itemImage.setColor(1f,1f, 1f,1f);
+                    flag = false;
+                }
+                else itemImage.setColor(1f,1f,1f,0.5f);
+                stack.add(itemImage);
+                stack.add(labelContainer);
+            }
+        }
+        if (flag) {
+            currentToolIndex = null;
+        }
     }
 
     private void handleEnergyBar() {
@@ -44,6 +168,7 @@ public class CameraViewController {
     }
 
     public void handleInput(){
+        Player player = App.getInstance().getCurrentGame().getCurrentPlayer();
         if (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)) {
             if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) {
                 gameMenuController.C_WeatherSet("STORMY");
@@ -121,6 +246,22 @@ public class CameraViewController {
         if (Gdx.input.isKeyJustPressed(Input.Keys.F4)){
             GameView.captureInput = false;
             GameView.screenshotting = true;
+        }
+        int[] shortcuts = {Input.Keys.NUM_1, Input.Keys.NUM_2, Input.Keys.NUM_3, Input.Keys.NUM_4, Input.Keys.NUM_5,
+            Input.Keys.NUM_6, Input.Keys.NUM_7, Input.Keys.NUM_8, Input.Keys.NUM_9, Input.Keys.NUM_0, Input.Keys.MINUS,
+            Input.Keys.EQUALS
+        };
+        for (int i = 0; i < shortcuts.length; i++) {
+            if (Gdx.input.isKeyJustPressed(shortcuts[i])) {
+                if (i < player.getInventory().getProducts().size()) {
+                    player.setCurrentCarrying(items.get(i));
+                    currentToolIndex = i;
+                }
+            }
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.TAB)) {
+            if (currentToolIndex == null) currentToolIndex = -1;
+            player.setCurrentCarrying(items.get(++currentToolIndex % Math.min(12, player.getInventory().getProducts().size())));
         }
     }
 }
