@@ -181,7 +181,7 @@ public class WorldController {
                 }
                 if (App.getInstance().getCurrentGame().getCurrentPlayer().getCurrentMenu() == Menu.COTTAGE) {
                     if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
-                        if (distanceFromClick(farm.getFridge().getTiles().getFirst()).isOrigin()) {
+                        if (distanceFromClick(farm.getFridge().getTiles().get(0)).isOrigin()) {
                             FridgeMenu fridgeMenu = new FridgeMenu();
                             fridgeMenu.createMenu(GameView.stage, GameAsset.SKIN, this);
                         }
@@ -189,7 +189,7 @@ public class WorldController {
                 }
                 for (Structure structure : farm.getStructures()) {
                     if (structure instanceof Craft) {
-                        if (distanceFromClick(structure.getTiles().getFirst()).isOrigin()) {
+                        if (distanceFromClick(structure.getTiles().get(0)).isOrigin()) {
                             if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
                                 ArtisanMenu artisanMenu = new ArtisanMenu();
                                 artisanMenu.setCraft((Craft) structure);
