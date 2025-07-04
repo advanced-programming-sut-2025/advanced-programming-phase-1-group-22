@@ -3,45 +3,26 @@ package io.github.some_example_name.view.mainMenu;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import io.github.some_example_name.MainGradle;
 import io.github.some_example_name.controller.WorldController;
-import io.github.some_example_name.model.Farm;
-import io.github.some_example_name.model.Pair;
-import io.github.some_example_name.model.Salable;
 import io.github.some_example_name.model.craft.Craft;
-import io.github.some_example_name.model.craft.CraftType;
-import io.github.some_example_name.model.products.TreesAndFruitsAndSeeds.MadeProduct;
-import io.github.some_example_name.model.products.TreesAndFruitsAndSeeds.MadeProductType;
 import io.github.some_example_name.model.records.Response;
-import io.github.some_example_name.model.relations.Player;
-import io.github.some_example_name.model.source.Mineral;
-import io.github.some_example_name.model.source.MineralType;
-import io.github.some_example_name.model.tools.BackPack;
 import io.github.some_example_name.service.GameService;
 import io.github.some_example_name.utils.App;
-import io.github.some_example_name.utils.GameAsset;
 import io.github.some_example_name.view.GameView;
 
-import java.util.ArrayList;
-import java.util.Map;
-
 public class CraftPopUp {
-    private static final Group menuGroup = new Group();
-    private static final GameService gameService = new GameService();
-    private static WorldController controller;
-    private static Craft craft;
+    private final Group menuGroup = new Group();
+    private final GameService gameService = new GameService();
+    private WorldController controller;
+    private Craft craft;
 
-    public static void createMenu(Craft craft, Stage stage, Skin skin, WorldController worldController) {
-        CraftPopUp.craft = craft;
+    public void createMenu(Craft craft, Stage stage, Skin skin, WorldController worldController) {
+        this.craft = craft;
         controller = worldController;
         if (!stage.getActors().contains(menuGroup, true)) {
             stage.addActor(menuGroup);
@@ -50,11 +31,11 @@ public class CraftPopUp {
         createInventory(skin, menuGroup, stage);
     }
 
-    private static void close(Window window) {
+    private void close(Window window) {
         window.remove();
     }
 
-    private static void createInventory(Skin skin, Group menuGroup, Stage stage) {
+    private void createInventory(Skin skin, Group menuGroup, Stage stage) {
         OrthographicCamera camera = MainGradle.getInstance().getCamera();
 
         Window window = new Window("", skin);

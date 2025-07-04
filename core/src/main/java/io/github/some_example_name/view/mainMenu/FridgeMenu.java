@@ -38,11 +38,11 @@ import java.util.ArrayList;
 import java.util.Map;
 
 public class FridgeMenu {
-    private static final Group menuGroup = new Group();
-    private static final GameService gameService = new GameService();
-    private static WorldController controller;
+    private final Group menuGroup = new Group();
+    private final GameService gameService = new GameService();
+    private WorldController controller;
 
-    public static void createMenu(Stage stage, Skin skin, WorldController worldController) {
+    public void createMenu(Stage stage, Skin skin, WorldController worldController) {
         controller = worldController;
         if (!stage.getActors().contains(menuGroup, true)) {
             stage.addActor(menuGroup);
@@ -51,7 +51,7 @@ public class FridgeMenu {
         createInventory(skin, menuGroup,stage);
     }
 
-    private static boolean isOverActor(Image item, Actor actor) {
+    private boolean isOverActor(Image item, Actor actor) {
         float itemX = item.getX();
         float itemY = item.getY();
         float itemWidth = item.getWidth();
@@ -68,7 +68,7 @@ public class FridgeMenu {
             itemY + itemHeight > trashY;
     }
 
-    private static void addDrag(Image itemImage, Stage stage, Player currentPlayer, ImageButton trashCan, Salable item,
+    private void addDrag(Image itemImage, Stage stage, Player currentPlayer, ImageButton trashCan, Salable item,
                                 Window inventory, Window fridge, Skin skin, ScrollPane scrollPane, boolean inBackPack) {
         itemImage.addListener(new InputListener() {
             @Override
@@ -145,7 +145,7 @@ public class FridgeMenu {
     }
 
 
-    private static void createInventory(Skin skin, Group menuGroup,Stage stage) {
+    private void createInventory(Skin skin, Group menuGroup,Stage stage) {
         Farm currentFarm = currentFarm();
         if (currentFarm == null) {
             controller.showResponse(new Response("Enter a cottage to see it's refrigerator."));
@@ -343,7 +343,7 @@ public class FridgeMenu {
         menuGroup.addActor(group);
     }
 
-    private static ImageButton provideExitButton(ArrayList<Actor> array) {
+    private ImageButton provideExitButton(ArrayList<Actor> array) {
         ImageButton exitButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(GameAsset.EXIT_BUTTON)));
         exitButton.setSize(32, 32);
 
@@ -359,7 +359,7 @@ public class FridgeMenu {
         return exitButton;
     }
 
-    private static Farm currentFarm() {
+    private Farm currentFarm() {
         for (Farm farm : App.getInstance().getCurrentGame().getVillage().getFarms()) {
             if (farm.getPlayers().get(0).equals(App.getInstance().getCurrentGame().getCurrentPlayer())) {
                 return farm;
