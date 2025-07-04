@@ -1744,13 +1744,13 @@ public class GameService {
     }
 
 
-    public Response artisanUse(String name, Salable product1, Integer count1, Salable product2, Integer count2) {
+    public Response artisanUse(Craft craft, Salable product1, Integer count1, Salable product2, Integer count2) {
         Player player = app.getCurrentGame().getCurrentPlayer();
-        FlagWraper resp = new FlagWraper(true);
-        Craft craft = findCraft(name, resp);
-        if (resp.isFlag()) {
-            return new Response("No artisan called " + name + " in the farm.");
-        }
+//        FlagWraper resp = new FlagWraper(true);
+//        Craft craft = findCraft(name, resp);
+//        if (resp.isFlag()) {
+//            return new Response("No artisan called " + name + " in the farm.");
+//        }
 //        if (craft == null) {
 //            return new Response("No artisan called " + name + " nearby.");
 //        }
@@ -1773,6 +1773,14 @@ public class GameService {
         }
         if (madeProductType == null) return new Response("Items given are not suitable for the craft");
         if (craft.getMadeProduct() != null) return new Response("Craft already in queue.");
+        if (product1 != null) {
+            product1 = player.getInventory().findProductInBackPackByNAme(product1.getName());
+            player.getInventory().deleteProductFromBackPack(product1, player, madeProductType.countIngredient());
+        }
+        if (product2 != null) {
+            product2 = player.getInventory().findProductInBackPackByNAme(MadeProductType.COAL.getName());
+            player.getInventory().deleteProductFromBackPack(product2, player, 1);
+        }
         craft.setMadeProduct(new MadeProduct(madeProductType, product1));
         craft.getIngredients().clear();
         craft.setETA(madeProductType.calcETA(product1));
@@ -1780,7 +1788,6 @@ public class GameService {
     }
 
     public Response artisanGet(String name) {
-        Player player = app.getCurrentGame().getCurrentPlayer();
         FlagWraper resp = new FlagWraper(true);
         Craft craft = findCraft(name, resp);
         if (resp.isFlag()) {
@@ -1789,6 +1796,11 @@ public class GameService {
         if (craft == null) {
             return new Response("No artisan called " + name + " nearby.");
         }
+        return artisanGet(craft);
+    }
+
+    public Response artisanGet(Craft craft) {
+        Player player = app.getCurrentGame().getCurrentPlayer();
         if (craft.getMadeProduct() == null) {
             return new Response("No queue underway.");
         }
