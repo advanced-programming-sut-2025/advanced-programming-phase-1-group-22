@@ -2,6 +2,8 @@ package io.github.some_example_name.view.mainMenu;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -15,13 +17,20 @@ import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import io.github.some_example_name.MainGradle;
+import io.github.some_example_name.controller.PlayerController;
 import io.github.some_example_name.model.Farm;
 import io.github.some_example_name.model.Salable;
 import io.github.some_example_name.model.Tile;
 import io.github.some_example_name.model.abilitiy.Ability;
+import io.github.some_example_name.model.cook.FoodType;
+import io.github.some_example_name.model.receipe.CookingRecipe;
+import io.github.some_example_name.model.receipe.CraftingRecipe;
+import io.github.some_example_name.model.records.Response;
 import io.github.some_example_name.model.relations.Player;
 import io.github.some_example_name.model.structure.Structure;
 import io.github.some_example_name.model.structure.farmInitialElements.Lake;
+import io.github.some_example_name.model.tools.BackPack;
+import io.github.some_example_name.service.GameService;
 import io.github.some_example_name.utils.App;
 import io.github.some_example_name.utils.GameAsset;
 import io.github.some_example_name.view.MiniMapRenderer;
@@ -32,8 +41,12 @@ import java.util.Map;
 public class InventoryMenu {
     private static final Group menuGroup = new Group();
     private static final Table tabs = new Table();
+    private static Integer selectedIndex;
+    private static final GameService gameService = new GameService();
+    private static PlayerController controller;
 
-    public static void createMenu(Stage stage, Skin skin) {
+    public static void createMenu(Stage stage, Skin skin, PlayerController playerController, int tabIndex) {
+        controller = playerController;
         if (!stage.getActors().contains(menuGroup, true)) {
             stage.addActor(menuGroup);
         }
@@ -73,12 +86,36 @@ public class InventoryMenu {
                 createMapMenu(skin,menuGroup,tabs);
             }
         });
+        Image tab5 = new Image(GameAsset.CRAFTING_TAB);
+        tab5.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                menuGroup.clear();
+                createCraftingMenu(skin, tabs, menuGroup, stage);            }
+        });
+        Image tab6 = new Image(GameAsset.COOKING_TAB);
+        tab6.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                menuGroup.clear();
+                createCookingMenu(skin, tabs, menuGroup, stage);            }
+        });
+
         tabs.add(tab1);
         tabs.add(tab2);
         tabs.add(tab3);
         tabs.add(tab4);
+        tabs.add(tab5);
+        tabs.add(tab6);
 
-        createInventory(skin, tabs, menuGroup,stage);
+        switch (tabIndex) {
+            case 0 -> createInventory(skin, tabs, menuGroup, stage);
+            case 1 -> createSkillMenu(skin,menuGroup,tabs);
+            case 2 -> createSkillMenu(skin,menuGroup,tabs);
+            case 3 -> createMapMenu(skin,menuGroup,tabs);
+            case 4 -> createCraftingMenu(skin, tabs, menuGroup, stage);
+            case 5 -> createCookingMenu(skin, tabs, menuGroup, stage);
+        }
     }
 
     private static boolean isOverTrashCan(Image item, ImageButton trashCan) {
@@ -204,7 +241,7 @@ public class InventoryMenu {
 
     private static void createInventory(Skin skin, Table tabs, Group menuGroup,Stage stage) {
         Player currentPlayer = App.getInstance().getCurrentGame().getCurrentPlayer();
-        Texture slotTexture = new Texture(Gdx.files.internal("button-.png"));
+        Texture slotTexture = GameAsset.BUTTON;
         Window window = new Window("", skin);
         window.setSize(700, 500);
         window.setPosition(
@@ -225,8 +262,17 @@ public class InventoryMenu {
         scrollPane.layout();
         scrollPane.setTouchable(Touchable.enabled);
 
-        for (int row = 0; row < 3; row++) {
-            for (int col = 0; col < 9; col++) {
+        int maxCol = 9;
+        int maxRow;
+        BackPack backPack = App.getInstance().getCurrentGame().getCurrentPlayer().getInventory();
+        if (backPack.getBackPackType().getIsInfinite()) {
+            maxRow = Math.max(5, backPack.getProducts().size() / maxCol + 1);
+        } else {
+            maxRow = (int)Math.ceil((double) backPack.getBackPackType().getCapacity() / maxCol);
+        }
+
+        for (int row = 0; row < maxRow; row++) {
+            for (int col = 0; col < maxCol; col++) {
                 Image slot = new Image(slotTexture);
 
                 int index = row * 9 + col;
@@ -273,18 +319,11 @@ public class InventoryMenu {
         finances.add(new Label("Current Funds: " + App.getInstance().getCurrentGame().getCurrentPlayer().getAccount().getGolds() + "g", skin)).row();
         finances.add(new Label("Current earning: " + App.getInstance().getCurrentGame().getCurrentPlayer().getAccount().getEarned() + "g", skin)).row();
 
-        ImageButton exitButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(GameAsset.EXIT_BUTTON)));
-        exitButton.setSize(32, 32);
-
-        exitButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                window.remove();
-                exitButton.remove();
-                trashCan.remove();
-                tabs.remove();
-            }
-        });
+        ArrayList<Table> array = new ArrayList<>();
+        array.add(window);
+        array.add(tabs);
+        array.add(trashCan);
+        ImageButton exitButton = provideExitButton(array);
 
 
         Table content = new Table();
@@ -323,6 +362,247 @@ public class InventoryMenu {
         group.addActor(trashCan);
         group.addActor(tabs);
         menuGroup.addActor(group);
+    }
+
+    private static void createCraftingMenu(Skin skin, Table tabs, Group menuGroup,Stage stage) {
+        OrthographicCamera camera = MainGradle.getInstance().getCamera();
+        Window window = new Window("", skin);
+        window.setSize(camera.viewportWidth * 0.7f, camera.viewportHeight * 0.5f);
+        window.setPosition(
+            (MainGradle.getInstance().getCamera().viewportWidth - window.getWidth()) / 2f,
+            (MainGradle.getInstance().getCamera().viewportHeight - window.getHeight()) / 2f
+        );
+        window.setMovable(false);
+
+
+        Table craftingRecipes = new Table();
+        craftingRecipes.pack();
+        java.util.List<Map.Entry<CraftingRecipe, Boolean>> recipes = App.getInstance().getCurrentGame().
+            getCurrentPlayer().getCraftingRecipes().entrySet().stream().toList();
+        int i = 0;
+        for (Map.Entry<CraftingRecipe, Boolean> entry : recipes) {
+            int row = i / 7, col = i % 7;
+            Image itemImage = new Image(entry.getKey().getTexture());
+            int finalI = i;
+            itemImage.addListener(new InputListener() {
+                @Override
+                public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                    if (button == Input.Buttons.RIGHT) {
+                        selectedIndex = finalI;
+                        menuGroup.clear();
+                        createCraftingMenu(skin, tabs, menuGroup, stage);
+                        return true;
+                    }
+                    if (button == Input.Buttons.LEFT) {
+                        Response resp = gameService.craftingCraft(entry.getKey().getCraft().getName());
+                        if (!resp.shouldBeBack()) {
+                            controller.getWorldController().showResponse(resp);
+                        }
+                        return true;
+                    }
+                    return false;
+                }
+            });
+            itemImage.setSize(90, 90);
+            if (!entry.getValue()) {
+                itemImage.setColor(0.3f, 0.3f, 0.3f, 0.6f);
+            }
+            craftingRecipes.add(itemImage);
+            craftingRecipes.add().expandX();
+            if (col == 6) craftingRecipes.row().expandY();
+            i++;
+        }
+
+        ArrayList<Table> array = new ArrayList<>();
+        array.add(window);
+        array.add(tabs);
+        ImageButton exitButton = provideExitButton(array);
+
+
+        Table info = new Table();
+        info.left();
+        if (selectedIndex == null) {
+            Label label = new Label("Right Click An Item To See Info", skin);
+            info.add(label).expandX().fillX().row();
+        } else {
+            Map.Entry<CraftingRecipe, Boolean> recipe = recipes.get(selectedIndex);
+            Label name = new Label(recipe.getKey().getName(), skin);
+            Label type = new Label("Crafting Recipe", skin);
+            info.add(name).colspan(3).expandX().fillX().row();
+            info.add(type).colspan(3).expandX().fillX().row();
+            info.row();
+            if (!recipe.getValue()) {
+                Label noInfo = new Label("You've not learnt this recipe", skin);
+                info.add(noInfo).expandX().fillX().row();
+            } else {
+                Label ingredients = new Label("Ingredients", skin);
+                info.add(ingredients).colspan(3).expandX().fillX().row();
+                recipe.getKey().addInfo(info, skin);
+            }
+        }
+
+
+
+        Table content = new Table();
+        content.setFillParent(true);
+        content.add(craftingRecipes).width(window.getWidth()*0.6f).height(window.getHeight()*0.8f).padBottom(20).padTop(50);
+        content.add(info).width(window.getWidth()*0.3f).height(window.getHeight()*0.8f).padBottom(20).padTop(50).row();
+
+        window.add(content).expand().fill().pad(10);
+        Group group = new Group() {
+            @Override
+            public void act(float delta) {
+                window.setPosition(
+                    (MainGradle.getInstance().getCamera().viewportWidth - window.getWidth()) / 2f +
+                        MainGradle.getInstance().getCamera().position.x - MainGradle.getInstance().getCamera().viewportWidth / 2,
+                    (MainGradle.getInstance().getCamera().viewportHeight - window.getHeight()) / 2f +
+                        MainGradle.getInstance().getCamera().position.y - MainGradle.getInstance().getCamera().viewportHeight / 2
+                );
+                exitButton.setPosition(
+                    window.getX() + window.getWidth() - exitButton.getWidth() / 2f + 16,
+                    window.getY() + window.getHeight() - exitButton.getHeight() / 2f
+                );
+                tabs.setPosition(
+                    window.getX(),
+                    window.getY() + window.getHeight() - tabs.getHeight() / 2f + 70
+                );
+
+                super.act(delta);
+            }
+        };
+        group.addActor(window);
+        group.addActor(exitButton);
+        group.addActor(tabs);
+        menuGroup.addActor(group);
+    }
+
+    private static void createCookingMenu(Skin skin, Table tabs, Group menuGroup,Stage stage) {
+        OrthographicCamera camera = MainGradle.getInstance().getCamera();
+        Window window = new Window("", skin);
+        window.setSize(camera.viewportWidth * 0.7f, camera.viewportHeight * 0.5f);
+        window.setPosition(
+            (MainGradle.getInstance().getCamera().viewportWidth - window.getWidth()) / 2f,
+            (MainGradle.getInstance().getCamera().viewportHeight - window.getHeight()) / 2f
+        );
+        window.setMovable(false);
+
+
+        Table cookingRecipes = new Table();
+        cookingRecipes.pack();
+        java.util.List<Map.Entry<CookingRecipe, Boolean>> recipes = App.getInstance().getCurrentGame().
+            getCurrentPlayer().getCookingRecipes().entrySet().stream().toList();
+        int i = 0;
+        for (Map.Entry<CookingRecipe, Boolean> entry : recipes) {
+            int row = i / 7, col = i % 7;
+            Image itemImage = new Image(entry.getKey().getTexture());
+            int finalI = i;
+            itemImage.addListener(new InputListener() {
+                @Override
+                public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                    if (button == Input.Buttons.RIGHT) {
+                        selectedIndex = finalI;
+                        menuGroup.clear();
+                        createCookingMenu(skin, tabs, menuGroup, stage);
+                        return true;
+                    }
+                    if (button == Input.Buttons.LEFT) {
+                        Response resp = gameService.cookingPrepare(entry.getKey().getName().replace(" recipe", ""));
+                        if (!resp.shouldBeBack()) {
+                            controller.getWorldController().showResponse(resp);
+                        }
+                        return true;
+                    }
+                    return false;
+                }
+            });
+            itemImage.setSize(130, 130);
+            if (!entry.getValue()) {
+                itemImage.setColor(0.3f, 0.3f, 0.3f, 0.6f);
+            }
+            cookingRecipes.add(itemImage);
+            cookingRecipes.add().expandX();
+            if (col == 6) cookingRecipes.row().expandY();
+            i++;
+        }
+
+        ArrayList<Table> array = new ArrayList<>();
+        array.add(window);
+        array.add(tabs);
+        ImageButton exitButton = provideExitButton(array);
+
+
+        Table info = new Table();
+        info.left();
+        if (selectedIndex == null) {
+            Label label = new Label("Right Click An Item To See Info", skin);
+            info.add(label).expandX().fillX().row();
+        } else {
+            Map.Entry<CookingRecipe, Boolean> recipe = recipes.get(selectedIndex);
+            Label name = new Label(recipe.getKey().getName(), skin);
+            Label type = new Label("Cooking Recipe", skin);
+            info.add(name).colspan(3).expandX().fillX().row();
+            info.add(type).colspan(3).expandX().fillX().row();
+            info.row();
+            if (!recipe.getValue()) {
+                Label noInfo = new Label("You've not learnt this recipe", skin);
+                info.add(noInfo).expandX().fillX().row();
+            } else {
+                Label ingredients = new Label("Ingredients", skin);
+                info.add(ingredients).colspan(3).expandX().fillX().row();
+                recipe.getKey().addInfo(info, skin);
+            }
+        }
+
+
+
+        Table content = new Table();
+        content.setFillParent(true);
+        content.add(cookingRecipes).width(window.getWidth()*0.6f).height(window.getHeight()*0.8f).padBottom(20).padTop(50);
+        content.add(info).width(window.getWidth()*0.3f).height(window.getHeight()*0.8f).padBottom(20).padTop(50).row();
+
+        window.add(content).expand().fill().pad(10);
+        Group group = new Group() {
+            @Override
+            public void act(float delta) {
+                window.setPosition(
+                    (MainGradle.getInstance().getCamera().viewportWidth - window.getWidth()) / 2f +
+                        MainGradle.getInstance().getCamera().position.x - MainGradle.getInstance().getCamera().viewportWidth / 2,
+                    (MainGradle.getInstance().getCamera().viewportHeight - window.getHeight()) / 2f +
+                        MainGradle.getInstance().getCamera().position.y - MainGradle.getInstance().getCamera().viewportHeight / 2
+                );
+                exitButton.setPosition(
+                    window.getX() + window.getWidth() - exitButton.getWidth() / 2f + 16,
+                    window.getY() + window.getHeight() - exitButton.getHeight() / 2f
+                );
+                tabs.setPosition(
+                    window.getX(),
+                    window.getY() + window.getHeight() - tabs.getHeight() / 2f + 70
+                );
+
+                super.act(delta);
+            }
+        };
+        group.addActor(window);
+        group.addActor(exitButton);
+        group.addActor(tabs);
+        menuGroup.addActor(group);
+    }
+
+    private static ImageButton provideExitButton(ArrayList<Table> array) {
+        ImageButton exitButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(GameAsset.EXIT_BUTTON)));
+        exitButton.setSize(32, 32);
+
+        exitButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                for (Table o : array) {
+                    o.remove();
+                }
+                exitButton.remove();
+                selectedIndex = null;
+            }
+        });
+        return exitButton;
     }
 
     private static void createSkillMenu(Skin skin,Group menuGroup,Table tabs) {
@@ -407,16 +687,10 @@ public class InventoryMenu {
 
         skillTable.add(row).row();
 
-        ImageButton exitButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(GameAsset.EXIT_BUTTON)));
-        exitButton.setSize(32, 32);
-        exitButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                window.remove();
-                exitButton.remove();
-                tabs.remove();
-            }
-        });
+        ArrayList<Table> array = new ArrayList<>();
+        array.add(window);
+        array.add(tabs);
+        ImageButton exitButton = provideExitButton(array);
 
         Table content = new Table();
         content.setFillParent(true);
@@ -476,16 +750,10 @@ public class InventoryMenu {
             (MainGradle.getInstance().getCamera().viewportHeight - window.getHeight()) / 2f
         );
 
-        ImageButton exitButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(GameAsset.EXIT_BUTTON)));
-        exitButton.setSize(32, 32);
-        exitButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                window.remove();
-                exitButton.remove();
-                tabs.remove();
-            }
-        });
+        ArrayList<Table> array = new ArrayList<>();
+        array.add(window);
+        array.add(tabs);
+        ImageButton exitButton = provideExitButton(array);
 
         Image mapImage = new Image(miniMap.getTexture());
         mapImage.setSize(minimapWidth, minimapHeight);

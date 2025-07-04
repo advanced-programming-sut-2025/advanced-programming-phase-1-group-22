@@ -87,6 +87,10 @@ public class TimeAndDate {
         return days;
     }
 
+    public String getTime() {
+        return getHour() + ":" + getMinute();
+    }
+
     public int compareDailyTime(TimeAndDate timeAndDate) {
         if (timeAndDate.getHour() > hour) return 1;
         if (timeAndDate.getHour() < hour) return -1;
@@ -191,18 +195,18 @@ public class TimeAndDate {
 
     public void updateBatch(SpriteBatch batch) {
         OrthographicCamera camera = MainGradle.getInstance().getCamera();
-        float width = 976;
-        float height = 800;
+        float width = 366;
+        float height = 300;
         mainClock.draw(batch);
         mainClock.setSize(width, height);
-        mainClock.setPosition(camera.position.x + Gdx.graphics.getWidth(),
-            camera.position.y + Gdx.graphics.getHeight() - mainClock.getHeight()/2);
+        mainClock.setPosition(camera.position.x + camera.viewportWidth/2f - mainClock.getWidth(),
+            camera.position.y + camera.viewportHeight/2f - mainClock.getHeight());
         arrow.draw(batch);
         arrow.setSize(width * 0.1f, height * 0.28f);
         arrow.setRotation(180 - 180f / 60 / 13 * ((hour - 9)*60 + minute) );
         arrow.setPosition(mainClock.getX() + width * 0.3082f - arrow.getWidth()/2 * (float) Math.cos(arrow.getRotation()/180 * Math.PI),
             mainClock.getY() + height / 2 + arrow.getHeight()/2 - arrow.getWidth()/2 * (float) Math.sin(arrow.getRotation()/180 * Math.PI));
-        GameAsset.MAIN_FONT.getData().setScale(6.5f);
+        GameAsset.MAIN_FONT.getData().setScale(2.43f);
         GameAsset.MAIN_FONT.setColor(Color.RED);
         GameAsset.MAIN_FONT.draw(batch, getDayOfTheWeek() + " " + getDay(),
             mainClock.getX() + width*0.43f, mainClock.getY() + height * 0.90f);
@@ -245,4 +249,27 @@ public class TimeAndDate {
             case WINTER -> this.seasonSprite = new Sprite(GameAsset.ClOCK_MANNERS[4]);
         }
     }
+
+    public String getDayHour() {
+        return day + "d " + hour + "h";
+    }
+
+    public long difference(TimeAndDate ETA) {
+        long sum = 0;
+        sum += (year - ETA.year);
+        sum *= 4;
+        sum += (season.ordinal() - ETA.season.ordinal());
+        sum *= 28;
+        sum += (day - ETA.day);
+        sum *= 24;
+        sum += (hour - ETA.hour);
+        sum *= 60;
+        sum += (minute - ETA.minute);
+        return sum;
+    }
+
+    public TimeAndDate copy() {
+        return new TimeAndDate(day, hour, minute, season, year);
+    }
 }
+

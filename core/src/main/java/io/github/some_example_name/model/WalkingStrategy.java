@@ -18,7 +18,7 @@ public class WalkingStrategy {
             distances.clear();
             return -1;
         }
-        return (int) Math.ceil(((double) distance) / 20);
+        return (int) Math.ceil(((double) distance) / 20) + new Random().nextInt(10)/9;
     }
 
     public boolean calculateTile(Pair origin, Pair dest, int distance) {

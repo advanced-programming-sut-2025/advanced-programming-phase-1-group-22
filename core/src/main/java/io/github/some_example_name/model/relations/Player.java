@@ -222,6 +222,7 @@ public class Player extends Actor implements JsonPreparable {
 	}
 
 	public CraftingRecipe findCraftingRecipe(String string) {
+        string = string.replace("_", " ");
 		for (CraftingRecipe craftingRecipe : craftingRecipes.keySet()) {
 			if (craftingRecipe.getName().equalsIgnoreCase(string + " recipe")) {
 				return craftingRecipe;

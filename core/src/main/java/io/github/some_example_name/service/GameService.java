@@ -1692,9 +1692,9 @@ public class GameService {
         if (resp.isFlag()) {
             return new Response("No artisan called " + name + " in the farm.");
         }
-        if (craft == null) {
-            return new Response("No artisan called " + name + " nearby.");
-        }
+//        if (craft == null) {
+//            return new Response("No artisan called " + name + " nearby.");
+//        }
         Salable product1 = null, product2 = null;
         if (item1 != null && !item1.isEmpty()) {
             for (Salable value : player.getInventory().getProducts().keySet()) {
@@ -1720,8 +1720,8 @@ public class GameService {
             for (MadeProductType value : MadeProductType.values()) {
                 if (value.getCraft() == craft.getCraftType()) {
                     Response isArtisanValid = product1 == null ? new Response("", true) : value.isIngredientsValid(product1,
-                            player.getInventory().countProductFromBackPack(product1.getName()),
-                            product2 != null);
+                        player.getInventory().countProductFromBackPack(product1.getName()),
+                        product2 != null);
                     if (isArtisanValid.shouldBeBack()) {
                         madeProductType = value;
                         break;
@@ -1746,8 +1746,51 @@ public class GameService {
         return new Response("The item will be ready in due time.");
     }
 
-    public Response artisanGet(String name) {
+
+    public Response artisanUse(Craft craft, Salable product1, Integer count1, Salable product2, Integer count2) {
         Player player = app.getCurrentGame().getCurrentPlayer();
+//        FlagWraper resp = new FlagWraper(true);
+//        Craft craft = findCraft(name, resp);
+//        if (resp.isFlag()) {
+//            return new Response("No artisan called " + name + " in the farm.");
+//        }
+//        if (craft == null) {
+//            return new Response("No artisan called " + name + " nearby.");
+//        }
+
+        MadeProductType madeProductType = null;
+        try {
+            for (MadeProductType value : MadeProductType.values()) {
+                if (value.getCraft() == craft.getCraftType()) {
+                    Response isArtisanValid = product1 == null ? new Response("", true) : value.isIngredientsValid(product1,
+                        count1,
+                        product2 != null);
+                    if (isArtisanValid.shouldBeBack()) {
+                        madeProductType = value;
+                        break;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            return new Response(e.getMessage());
+        }
+        if (madeProductType == null) return new Response("Items given are not suitable for the craft");
+        if (craft.getMadeProduct() != null) return new Response("Craft already in queue.");
+        if (product1 != null) {
+            product1 = player.getInventory().findProductInBackPackByNAme(product1.getName());
+            player.getInventory().deleteProductFromBackPack(product1, player, madeProductType.countIngredient());
+        }
+        if (product2 != null) {
+            product2 = player.getInventory().findProductInBackPackByNAme(MadeProductType.COAL.getName());
+            player.getInventory().deleteProductFromBackPack(product2, player, 1);
+        }
+        craft.setMadeProduct(new MadeProduct(madeProductType, product1));
+        craft.getIngredients().clear();
+        craft.setETA(madeProductType.calcETA(product1));
+        return new Response("The item will be ready in due time.");
+    }
+
+    public Response artisanGet(String name) {
         FlagWraper resp = new FlagWraper(true);
         Craft craft = findCraft(name, resp);
         if (resp.isFlag()) {
@@ -1756,6 +1799,11 @@ public class GameService {
         if (craft == null) {
             return new Response("No artisan called " + name + " nearby.");
         }
+        return artisanGet(craft);
+    }
+
+    public Response artisanGet(Craft craft) {
+        Player player = app.getCurrentGame().getCurrentPlayer();
         if (craft.getMadeProduct() == null) {
             return new Response("No queue underway.");
         }
@@ -2121,9 +2169,9 @@ public class GameService {
                     resp.setFlag(false);
                     Pair pair = new Pair(structure.getTiles().get(0).getX(), structure.getTiles().get(0).getY());
                     Pair origin = new Pair(player.getTiles().get(0).getX(), player.getTiles().get(0).getY());
-                    if (Math.abs(pair.getX() - origin.getX()) <= 1 && Math.abs(pair.getY() - origin.getY()) <= 1) {
+//                    if (Math.abs(pair.getX() - origin.getX()) <= 1 && Math.abs(pair.getY() - origin.getY()) <= 1) {
                         return (Craft) structure;
-                    }
+//                    }
                 }
             }
         }

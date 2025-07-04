@@ -10,11 +10,16 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 public class GameAsset {
     public static final Texture ENERGY_BAR_EMPTY = new Texture("energyBarEmpty.jpg");
     public static final Texture ENERGY_BAR = new Texture("EnergyBar.png");
-    public static final Texture INVENTORY_TAB = new Texture("Inventory_Tab.png");
-    public static final Texture MAP_TAB = new Texture("map_tab.png");
-    public static final Texture SKILL_TAB = new Texture("skill_tab.png");
-    public static final Texture SOCIAL_TAB = new Texture("socail_tab.png");
-    public static final Texture EXIT_BUTTON = new Texture("exit.png");
+    public static final Texture INVENTORY_TAB = new Texture("Inventory/Inventory_Tab.png");
+    public static final Texture CRAFTING_TAB = new Texture("Inventory/crafting_tab.png");
+    public static final Texture COOKING_TAB = new Texture("Inventory/cooking_tab.png");
+    public static final Texture BUTTON = new Texture("Inventory/button-.png");
+    public static final Texture FILLED_BUTTON = new Texture("Inventory/Filled_Button.png");
+    public static final Texture GREEN_SQUARE = new Texture("Night/Green.png");
+    public static final Texture MAP_TAB = new Texture("Inventory/map_tab.png");
+    public static final Texture SKILL_TAB = new Texture("Inventory/skill_tab.png");
+    public static final Texture SOCIAL_TAB = new Texture("Inventory/socail_tab.png");
+    public static final Texture EXIT_BUTTON = new Texture("Inventory/exit.png");
     public static final Skin SKIN = new Skin(Gdx.files.internal("skin/craftacular-ui.json"));
     public static final Texture BARN = new Texture("Farm_Buildings/Barn.png");
     public static final Texture BIG_BARN = new Texture("Farm_Buildings/Big_Barn.png");
@@ -24,7 +29,8 @@ public class GameAsset {
     public static final Texture DELUXE_COOP = new Texture("Farm_Buildings/Deluxe_Coop.png");
     public static final Texture WELL = new Texture("Farm_Buildings/Well.png");
     public static final Texture SHIPPINGBIN = new Texture("Farm_Buildings/Shipping_Bin_Anim.png");
-    public static final Texture HOUSE = new Texture("House_(tier_3).png");
+    public static final Texture HOUSE = new Texture("Cottage/House_(tier_3).png");
+    public static final Texture COTTAGE_INSIDE = new Texture("Cottage/Cottage_Inside.png");
     public static final Texture BROKEN_GREENHOUSE = new Texture("Greenhouse/Broken_Greenhouse.png");
     public static final Texture WATER = new Texture("Flooring/water.png");
     public static final BitmapFont MAIN_FONT = new BitmapFont();
@@ -412,7 +418,7 @@ public class GameAsset {
     public static final Texture JASMINE_TEA = new Texture("Concessions/Jasmine_Tea.png");
     public static final Texture JAWBREAKER = new Texture("Concessions/Jawbreaker.png");
     public static final Texture JOJACORN = new Texture("Concessions/JojaCorn.png");
-    public static final Texture JOJA_COLA_LARGE_ = new Texture("Concessions/Joja_Cola_%28large%29.png");
+    public static final Texture JOJA_COLA = new Texture("Concessions/Joja_Cola_%28large%29.png");
     public static final Texture KALE_SMOOTHIE = new Texture("Concessions/Kale_Smoothie.png");
     public static final Texture NACHOS = new Texture("Concessions/Nachos.png");
     public static final Texture PANZANELLA_SALAD = new Texture("Concessions/Panzanella_Salad.png");
@@ -1707,10 +1713,11 @@ public class GameAsset {
     public static final Texture STAR_SHARDS = new Texture("Mineral/Star_Shards.png");
     public static final Texture THUNDER_EGG = new Texture("Mineral/Thunder_Egg.png");
     public static final Texture TIGERSEYE = new Texture("Mineral/Tigerseye.png");
+    public static final Texture NOTIFICATION = new Texture("Inventory/Notification.png");
     public static final Texture NIGHT = new Texture("Night/night.jpg");
     public static final Sprite NIGHT_SPRITE = new Sprite(NIGHT);
     static {
-        NIGHT_SPRITE.setSize(Gdx.graphics.getWidth()*3, Gdx.graphics.getHeight()*3);
+        NIGHT_SPRITE.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
     public static final Texture AMETHYST_NODE = new Texture("Node/Amethyst_Node.png");
     public static final Texture AQUAMARINE_NODE = new Texture("Node/Aquamarine_Node.png");
@@ -2137,6 +2144,8 @@ public class GameAsset {
     public static final Texture IRIDIUM_PAN = new Texture("Tools/Iridium_Pan.png");
     public static final Texture IRIDIUM_SCYTHE = new Texture("Tools/Iridium_Scythe.png");
     public static final Texture MILK_PAIL = new Texture("Tools/Milk_Pail.png");
+    public static final Texture ARTISAN_MENU = new Texture("artisan_good/Artisan_Menu.png");
+    public static final TextureRegion ARTISAN_PLATE = new TextureRegion(ARTISAN_MENU, 0, 0, 320, 178);
     public static final Texture OSTRICH_INCUBATOR_FULL = new Texture("Tools/Ostrich_Incubator_Full.png");
     public static final Texture COPPER_PICKAXE = new Texture("Tools/Pickaxe/Copper_Pickaxe.png");
     public static final Texture GOLD_PICKAXE = new Texture("Tools/Pickaxe/Gold_Pickaxe.png");

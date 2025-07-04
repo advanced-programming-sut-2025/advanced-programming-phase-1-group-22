@@ -2,6 +2,7 @@ package io.github.some_example_name.controller;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -23,7 +24,7 @@ import java.util.List;
 @Getter
 public class GameViewController {
     private final WorldController worldController = new WorldController();
-    private final PlayerController playerController = new PlayerController();
+    private final PlayerController playerController = new PlayerController(worldController);
     private final ToolController toolController = new ToolController();
     private final CarryingController carryingController = new CarryingController();
     private final CameraViewController cameraViewController = new CameraViewController();
@@ -150,6 +151,7 @@ public class GameViewController {
         animalController.update();
         updateInventoryBar();
         updateEnergyBar();
+        OrthographicCamera camera = MainGradle.getInstance().getCamera();
         switch (App.getInstance().getCurrentGame().getFadingInTheNight()) {
             case 1: {
                 nightAlpha += Gdx.graphics.getDeltaTime()/2.5f;
@@ -158,8 +160,8 @@ public class GameViewController {
                 }
                 GameAsset.NIGHT_SPRITE.setAlpha(nightAlpha);
                 GameAsset.NIGHT_SPRITE.setPosition(
-                    MainGradle.getInstance().getCamera().position.x - 3*Gdx.graphics.getWidth()/2f,
-                    MainGradle.getInstance().getCamera().position.y - 3*Gdx.graphics.getHeight()/2f);
+                    camera.position.x - camera.viewportWidth/2f,
+                    camera.position.y - camera.viewportHeight/2f);
                 GameAsset.NIGHT_SPRITE.draw(MainGradle.getInstance().getBatch());
             } break;
             case 2: {
@@ -168,8 +170,8 @@ public class GameViewController {
                     nightAlpha = 0;
                 }
                 GameAsset.NIGHT_SPRITE.setPosition(
-                    MainGradle.getInstance().getCamera().position.x - 3*Gdx.graphics.getWidth()/2f,
-                    MainGradle.getInstance().getCamera().position.y - 3*Gdx.graphics.getHeight()/2f);
+                    camera.position.x - camera.viewportWidth/2f,
+                    camera.position.y - camera.viewportHeight/2f);
                 GameAsset.NIGHT_SPRITE.setAlpha(nightAlpha);
                 GameAsset.NIGHT_SPRITE.draw(MainGradle.getInstance().getBatch());
             }
