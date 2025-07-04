@@ -86,6 +86,7 @@ public class Craft extends Structure implements Salable {
         }
         sprites.add(mainSprite);
 
+        if (getETA() == null) return sprites;
         if (getETA().compareTime(App.getInstance().getCurrentGame().getTimeAndDate()) < 0) {
             if (processContainer == null) {
                 mainSprite.setSprite(new Sprite(craftType.getTexture1()));
