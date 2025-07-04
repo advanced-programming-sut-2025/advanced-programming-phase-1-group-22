@@ -522,6 +522,7 @@ public class InventoryMenu extends PopUp {
     @Override
     protected void close() {
         selectedIndex = null;
+        super.close();
     }
 
     private void createSkillMenu(Skin skin, Group menuGroup, Table tabs) {

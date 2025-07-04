@@ -18,9 +18,7 @@ import io.github.some_example_name.model.products.Hay;
 import io.github.some_example_name.model.relations.Player;
 import io.github.some_example_name.model.source.Seed;
 import io.github.some_example_name.model.source.SeedType;
-import io.github.some_example_name.model.tools.Hoe;
 import io.github.some_example_name.model.tools.MilkPail;
-import io.github.some_example_name.model.tools.Scythe;
 import io.github.some_example_name.service.GameService;
 import io.github.some_example_name.utils.App;
 
@@ -35,6 +33,7 @@ public class GameView implements Screen, InputProcessor {
     public static int screenY;
     public static Console Console = new Console(stage);
     public static boolean screenshotting;
+    public static boolean captureInput = true;
 
 
     public GameView() {

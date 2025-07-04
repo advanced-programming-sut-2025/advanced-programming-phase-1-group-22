@@ -30,6 +30,7 @@ public class CraftPopUp extends PopUp {
     protected void handleDragRelease(InputEvent event, float x, float y, int pointer, Image itemImage, Salable item, Image dragImage, Boolean flag) {}
 
     private void close(Window window) {
+        GameView.captureInput = true;
         window.remove();
     }
 

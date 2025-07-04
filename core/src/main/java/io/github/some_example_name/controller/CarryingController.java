@@ -34,7 +34,7 @@ public class CarryingController {
             sprite.draw(MainGradle.getInstance().getBatch());
             sprite.setPosition(currentPlayer.getTiles().get(0).getX() * App.tileWidth,
                 currentPlayer.getTiles().get(0).getY() * App.tileHeight);
-            if (!GameView.screenshotting) {
+            if (GameView.captureInput) {
                 handleInput(carrying);
             }
         }
