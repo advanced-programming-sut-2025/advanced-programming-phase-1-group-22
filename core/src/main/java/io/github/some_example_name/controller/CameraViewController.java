@@ -26,7 +26,7 @@ public class CameraViewController {
     private OrthographicCamera camera = MainGradle.getInstance().getCamera();
     public void update() {
         App.getInstance().getCurrentGame().getTimeAndDate().updateBatch(MainGradle.getInstance().getBatch());
-        handleEnergyBar();
+//        handleEnergyBar();
         handleInput();
     }
 

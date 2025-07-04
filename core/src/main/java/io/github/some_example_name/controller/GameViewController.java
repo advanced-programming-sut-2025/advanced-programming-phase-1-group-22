@@ -32,6 +32,7 @@ public class GameViewController {
     private final GameView view;
     private Group inventoryBar;
     private Group energyBar;
+    private Image energyBackground;
     private Image energyFill;
     private final List<Stack> itemStacks = new ArrayList<>();
     private float nightAlpha = 0.0f;
@@ -69,11 +70,13 @@ public class GameViewController {
     private void initEnergyBar(){
         Texture texture = GameAsset.ENERGY_BAR;
         Texture texture1 = GameAsset.ENERGY_BAR_EMPTY;
+        OrthographicCamera camera = MainGradle.getInstance().getCamera();
         TextureRegion backgroundRegion = new TextureRegion(texture1, 0, 0, 101, 580);
         TextureRegion fillRegion = new TextureRegion(texture, 9, 26, 18, 160);
-        Image energyBackground = new Image(backgroundRegion);
+        energyBackground = new Image(backgroundRegion);
         energyFill = new Image(fillRegion);
-        energyFill.setSize(30, 160);
+        energyFill.setSize(camera.viewportWidth * 0.03f,
+            camera.viewportHeight * 0.2f / 160 * 200);
         energyFill.setPosition(9, 10);
 
         Stack energyStack = new Stack();
@@ -84,14 +87,15 @@ public class GameViewController {
         energyBar = new Group() {
             @Override
             public void act(float delta) {
-                OrthographicCamera camera = MainGradle.getInstance().getCamera();
                 float screenRight = camera.position.x + camera.viewportWidth / 2f;
                 float screenBottom = camera.position.y - camera.viewportHeight / 2f;
 
-                setPosition(screenRight - 36f - 20f, screenBottom + 20f);
+                setPosition(camera.position.x + camera.viewportWidth/2f - energyBar.getWidth()*1.1f,
+                    camera.position.y - camera.viewportHeight/2f + energyBar.getHeight()*0.3f);
                 super.act(delta);
             }
         };
+
         energyBar.setSize(50, 260);
         energyBar.addActor(energyStack);
         GameView.stage.addActor(energyBar);
@@ -105,6 +109,8 @@ public class GameViewController {
         float currentHeight = fullHeight * energyPercent;
 
         energyFill.setSize(30, currentHeight);
+        energyBackground.setScale(1, player.getMaxEnergy()/200f);
+
         energyFill.setPosition(9,10);
     }
 
