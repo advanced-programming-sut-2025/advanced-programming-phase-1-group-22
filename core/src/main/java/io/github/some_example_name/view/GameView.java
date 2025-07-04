@@ -72,7 +72,7 @@ public class GameView implements Screen, InputProcessor {
         GameService gameService = new GameService();
         gameService.C_AddDollars("1000");
         gameService.C_AddItem("wood", "1000");
-        gameService.C_AddItem("furnace", "2");
+        gameService.C_AddItem("pizza", "1");
         gameService.C_AddItem("bee_house", "2");
         gameService.placeItem("bee_house", "south");
         gameService.placeItem("furnace", "southwest");

@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import io.github.some_example_name.MainGradle;
+import io.github.some_example_name.controller.PlayerController;
 import io.github.some_example_name.controller.WorldController;
 import io.github.some_example_name.model.Farm;
 import io.github.some_example_name.model.Salable;
@@ -26,131 +27,58 @@ import io.github.some_example_name.model.tools.BackPack;
 import io.github.some_example_name.service.GameService;
 import io.github.some_example_name.utils.App;
 import io.github.some_example_name.utils.GameAsset;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.Map;
 
-public class ArtisanMenu {
-    private final Group menuGroup = new Group();
-    private final GameService gameService = new GameService();
-    private WorldController controller;
+@Setter
+public class ArtisanMenu extends PopUp {
     private Craft craft;
+    private Window window, window2;
 
-    public void createMenu(Craft craft, Stage stage, Skin skin, WorldController worldController) {
-        this.craft = craft;
-        controller = worldController;
-        if (!stage.getActors().contains(menuGroup, true)) {
-            stage.addActor(menuGroup);
-        }
-        menuGroup.clear();
-        createInventory(skin, menuGroup, stage);
+    public void createMenu(Stage stage, Skin skin, WorldController worldController) {
+        super.createMenu(stage, skin, worldController);
+        createInventory(skin, getMenuGroup(), stage);
     }
 
-    private boolean isOverActor(Image item, Actor actor) {
-        float itemX = item.getX();
-        float itemY = item.getY();
-        float itemWidth = item.getWidth();
-        float itemHeight = item.getHeight();
-
-        float trashX = actor.getX();
-        float trashY = actor.getY();
-        float trashWidth = actor.getWidth();
-        float trashHeight = actor.getHeight();
-
-        return itemX < trashX + trashWidth &&
-            itemX + itemWidth > trashX &&
-            itemY < trashY + trashHeight &&
-            itemY + itemHeight > trashY;
-    }
-
-    private void addDrag(Image itemImage, Stage stage, Player currentPlayer, ImageButton trashCan, Salable item,
-                                Window inventory, Window fridge, Skin skin, ScrollPane scrollPane, ScrollPane scrollPane2, boolean inBackPack) {
-        itemImage.addListener(new InputListener() {
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                event.stop();
-                return true;
-            }
-        });
-        itemImage.addListener(new DragListener() {
-            private Stack originalStack;
-            private final Vector2 originalPos = new Vector2();
-            private Image dragImage;
-
-            @Override
-            public void dragStart(InputEvent event, float x, float y, int pointer) {
-                scrollPane.setTouchable(Touchable.disabled);
-                scrollPane2.setTouchable(Touchable.disabled);
-                originalStack = (Stack) itemImage.getParent();
-                originalPos.set(itemImage.getX(), itemImage.getY());
-
-                dragImage = new Image(itemImage.getDrawable());
-                dragImage.setSize(itemImage.getWidth(), itemImage.getHeight());
-
-                Vector2 stagePos = originalStack.localToStageCoordinates(new Vector2(originalPos.x, originalPos.y));
-                dragImage.setPosition(stagePos.x, stagePos.y);
-                stage.addActor(dragImage);
-                dragImage.toFront();
-            }
-
-            @Override
-            public void drag(InputEvent event, float x, float y, int pointer) {
-                if (dragImage != null) {
-                    Vector2 localPos = new Vector2(x, y);
-                    Vector2 stagePos = originalStack.localToStageCoordinates(localPos);
-                    dragImage.setPosition(
-                        stagePos.x - dragImage.getWidth() / 2,
-                        stagePos.y - dragImage.getHeight() / 2
-                    );
+    @Override
+    protected void handleDragRelease(InputEvent event, float x, float y, int pointer, Image itemImage, Salable item, Image dragImage, Boolean flag) {
+        Player currentPlayer = App.getInstance().getCurrentGame().getCurrentPlayer();
+        if (isOverActor(dragImage, trashCan)) {
+            if (flag) {
+                currentPlayer.getInventory().deleteProductFromBackPack(item, currentPlayer, 1);
+            } else {
+                Farm farm = currentFarm();
+                if (farm == null) {
+                    getController().showResponse(new Response("Enter your farm to use artisans"));
+                } else {
+                    farm.getFridge().deleteProduct(item, farm.getFridge().countProduct(item));
                 }
             }
-
-            @Override
-            public void dragStop(InputEvent event, float x, float y, int pointer) {
-                if (dragImage != null) {
-                    if (isOverActor(dragImage, trashCan)) {
-                        if (inBackPack) {
-                            currentPlayer.getInventory().deleteProductFromBackPack(item, currentPlayer, 1);
-                        } else {
-                            Farm farm = currentFarm();
-                            if (farm == null) {
-                                controller.showResponse(new Response("Enter your farm to use artisans"));
-                            } else {
-                                farm.getFridge().deleteProduct(item, farm.getFridge().countProduct(item));
-                            }
-                        }
-                    } else if (inBackPack && isOverActor(dragImage, fridge)) {
-                        int count = currentPlayer.getInventory().countProductFromBackPack(item.getName());
-                        craft.getIngredients().put(item, count);
+        } else if (flag && isOverActor(dragImage, window2)) {
+            int count = currentPlayer.getInventory().countProductFromBackPack(item.getName());
+            craft.getIngredients().put(item, count);
 //                        gameService.removeFromPlayerInventory(item.getName(), false);
-                    } else if (!inBackPack && isOverActor(dragImage, inventory)) {
+        } else if (!flag && isOverActor(dragImage, window)) {
 //                        currentPlayer.getInventory().addProductToBackPack(item, craft.getIngredients().get(item));
-                        craft.getIngredients().remove(item);
-                    }
+            craft.getIngredients().remove(item);
+        }
+        createMenu(stage, skin, getController());
 
-                    dragImage.remove();
-                    dragImage = null;
-                    scrollPane.setTouchable(Touchable.enabled);
-                    scrollPane2.setTouchable(Touchable.enabled);
-                    createMenu(craft, stage, skin, controller);
-                }
-            }
-        });
     }
-
 
     private void createInventory(Skin skin, Group menuGroup, Stage stage) {
         Farm currentFarm = currentFarm();
         if (currentFarm == null) {
-            controller.showResponse(new Response("Enter your farm to artisan."));
+            getController().showResponse(new Response("Enter your farm to artisan."));
             return;
         }
         Player currentPlayer = App.getInstance().getCurrentGame().getCurrentPlayer();
-        Texture slotTexture = GameAsset.BUTTON;
         OrthographicCamera camera = MainGradle.getInstance().getCamera();
 
-        Window window = new Window("", skin);
-        Window window2 = new Window("", skin);
+        window = new Window("", skin);
+        window2 = new Window("", skin);
         window.setSize(camera.viewportWidth * 0.7f, camera.viewportHeight * 0.35f);
         window.setPosition(
             (camera.viewportWidth - window.getWidth()) / 2f,
@@ -198,17 +126,11 @@ public class ArtisanMenu {
                     java.util.List<Salable> items = new ArrayList<>(backPack.getProducts().keySet());
                     Salable item = items.get(index);
                     Image itemImage = new Image(item.getTexture());
-                    addDrag(itemImage, stage, currentPlayer, trashCan, item, window, window2, skin, scrollPane, scrollPane2, true);
+                    ArrayList<ScrollPane> list = new ArrayList<>();
+                    list.add(scrollPane);
+                    addDrag(itemImage, stage, currentPlayer, item, list,true);
                     itemImage.setSize(90, 90);
-                    int count = backPack.getProducts().get(item);
-                    Label countLabel = new Label(String.valueOf(count), skin);
-                    countLabel.setFontScale(0.7f);
-                    countLabel.setAlignment(Align.right);
-                    countLabel.setColor(Color.GREEN);
-                    Container<Label> labelContainer = new Container<>(countLabel);
-                    labelContainer.setFillParent(false);
-                    labelContainer.setSize(30, 20);
-                    labelContainer.setPosition(96, 0);
+                    Container<Label> labelContainer = getLabelContainer(backPack.getProducts(), item);
                     Stack stack = new Stack();
                     stack.add(slot);
                     stack.add(itemImage);
@@ -242,7 +164,9 @@ public class ArtisanMenu {
                     java.util.List<Salable> items = new ArrayList<>(craft.getIngredients().keySet());
                     Salable item = items.get(index);
                     Image itemImage = new Image(item.getTexture());
-                    addDrag(itemImage, stage, currentPlayer, trashCan, item, window, window2, skin, scrollPane, scrollPane2, false);
+                    ArrayList<ScrollPane> list = new ArrayList<>();
+                    list.add(scrollPane);
+                    addDrag(itemImage, stage, currentPlayer, item, list, false);
                     itemImage.setSize(90, 90);
                     int count = craft.getIngredients().get(item);
                     Label countLabel = new Label(String.valueOf(count), skin);
@@ -279,7 +203,7 @@ public class ArtisanMenu {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 Response resp;
                 if (craft.getCraftType() == CraftType.BEE_HOUSE) {
-                    resp = gameService.artisanUse("bee_house", null, null);
+                    resp = getGameService().artisanUse("bee_house", null, null);
                 } else if (craft.getIngredients().isEmpty()) {
                     resp = new Response("This craft needs ingredients.");
                 } else {
@@ -313,9 +237,9 @@ public class ArtisanMenu {
                         count1 = list.get(0).getValue();
                         salable2 = null;
                     }
-                    resp = gameService.artisanUse(craft, salable1, count1, salable2, count2);
+                    resp = getGameService().artisanUse(craft, salable1, count1, salable2, count2);
                 }
-                controller.showResponse(resp);
+                getController().showResponse(resp);
                 return resp.shouldBeBack();
             }
         });
@@ -374,22 +298,6 @@ public class ArtisanMenu {
         group.addActor(exitButton);
         group.addActor(trashCan);
         menuGroup.addActor(group);
-    }
-
-    private ImageButton provideExitButton(ArrayList<Actor> array) {
-        ImageButton exitButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(GameAsset.EXIT_BUTTON)));
-        exitButton.setSize(32, 32);
-
-        exitButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                for (Actor o : array) {
-                    o.remove();
-                }
-                exitButton.remove();
-            }
-        });
-        return exitButton;
     }
 
     private Farm currentFarm() {
