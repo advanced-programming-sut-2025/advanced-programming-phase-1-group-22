@@ -2,7 +2,6 @@ package io.github.some_example_name.controller;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -15,7 +14,6 @@ import io.github.some_example_name.model.relations.Player;
 import io.github.some_example_name.model.tools.Tool;
 import io.github.some_example_name.utils.App;
 import io.github.some_example_name.view.GameView;
-import jakarta.persistence.criteria.CriteriaBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +31,7 @@ public class ToolController {
         currentTool.getSprite().draw(MainGradle.getInstance().getBatch());
         currentTool.getSprite().setPosition(currentPlayer.getTiles().get(0).getX() * App.tileWidth,
             currentPlayer.getTiles().get(0).getY() * App.tileHeight);
-        if (!GameView.screenshotting) {
+        if (!GameView.captureInput) {
             handleInput();
         }
     }

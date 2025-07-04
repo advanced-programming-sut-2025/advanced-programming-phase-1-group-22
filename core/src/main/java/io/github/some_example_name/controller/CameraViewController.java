@@ -4,15 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import io.github.some_example_name.MainGradle;
-import io.github.some_example_name.controller.gameMenu.GameMenuController;
-import io.github.some_example_name.model.Salable;
-import io.github.some_example_name.model.Tile;
 import io.github.some_example_name.model.relations.Player;
-import io.github.some_example_name.model.tools.Tool;
 import io.github.some_example_name.service.GameService;
 import io.github.some_example_name.utils.App;
 import io.github.some_example_name.utils.GameAsset;
@@ -126,6 +119,7 @@ public class CameraViewController {
             }
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.F4)){
+            GameView.captureInput = false;
             GameView.screenshotting = true;
         }
     }

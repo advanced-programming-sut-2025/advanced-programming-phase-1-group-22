@@ -44,7 +44,7 @@ import java.util.Map;
 
 @Setter
 @Getter
-abstract class PopUp {
+public abstract class PopUp {
     private final Group menuGroup = new Group();
     private final Table tabs = new Table();
     private final GameService gameService = new GameService();
@@ -54,8 +54,8 @@ abstract class PopUp {
     protected Skin skin = GameAsset.SKIN;
     protected Texture slotTexture = GameAsset.BUTTON;
 
-
     public void createMenu(Stage stage, Skin skin, WorldController playerController) {
+        GameView.captureInput = false;
         controller = playerController;
         this.stage = stage;
         if (!stage.getActors().contains(menuGroup, true)) {
@@ -141,7 +141,9 @@ abstract class PopUp {
 
     abstract protected void handleDragRelease(InputEvent event, float x, float y, int pointer, Image itemImage, Salable item, Image dragImage, Boolean flag);
 
-    protected void close() {}
+    protected void close() {
+        GameView.captureInput = true;
+    }
 
     protected ImageButton provideExitButton(ArrayList<Actor> array) {
         ImageButton exitButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(GameAsset.EXIT_BUTTON)));

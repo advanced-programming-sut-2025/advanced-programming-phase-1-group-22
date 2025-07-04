@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Group;
@@ -148,6 +147,7 @@ public class GameViewController {
         if (GameView.screenshotting) {
             if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
                 GameView.screenshotting = false;
+                GameView.captureInput = true;
             }
         }
         worldController.update();

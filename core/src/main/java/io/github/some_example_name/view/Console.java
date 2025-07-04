@@ -1,5 +1,7 @@
 package io.github.some_example_name.view;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.Group;
@@ -8,13 +10,15 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import io.github.some_example_name.MainGradle;
+import io.github.some_example_name.model.Salable;
 import io.github.some_example_name.model.records.Response;
 import io.github.some_example_name.utils.GameAsset;
 import io.github.some_example_name.view.gameMenu.CottageMenu;
+import io.github.some_example_name.view.mainMenu.PopUp;
 import lombok.Getter;
 
 @Getter
-public class Console {
+public class Console extends PopUp {
     private final Group root;
     private final Table logTable;
     private final ScrollPane logPane;
@@ -64,6 +68,12 @@ public class Console {
             public void act(float d) {
                 box.setPosition(camera.position.x - camera.viewportWidth / 2f + 12,
                     camera.position.y - camera.viewportHeight / 2f + 100);
+                if (visible && Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+                    handleGlobalKey(stage);
+                }
+                if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
+                    dispatch();
+                }
                 super.act(d);
             }
         };
@@ -74,6 +84,7 @@ public class Console {
 
     public void handleGlobalKey(Stage stage) {
         visible = !visible;
+        GameView.captureInput = !GameView.captureInput;
         root.setVisible(visible);
         if (visible) {
             stage.setKeyboardFocus(input);
@@ -102,4 +113,7 @@ public class Console {
     private void handleCommand(String cmd) {
         commandProcessor.processCommand(cmd,response -> addLine(response));
     }
+
+    @Override
+    protected void handleDragRelease(InputEvent event, float x, float y, int pointer, Image itemImage, Salable item, Image dragImage, Boolean flag) {}
 }

@@ -16,7 +16,6 @@ import io.github.some_example_name.model.records.Response;
 import io.github.some_example_name.model.relations.Player;
 import io.github.some_example_name.model.source.Crop;
 import io.github.some_example_name.model.structure.Structure;
-import io.github.some_example_name.model.structure.farmInitialElements.Cottage;
 import io.github.some_example_name.model.structure.farmInitialElements.Lake;
 import io.github.some_example_name.model.structure.farmInitialElements.GreenHouse;
 import io.github.some_example_name.service.GameService;
@@ -29,7 +28,6 @@ import io.github.some_example_name.view.mainMenu.ArtisanMenu;
 import io.github.some_example_name.view.mainMenu.CraftPopUp;
 import io.github.some_example_name.view.mainMenu.FridgeMenu;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -65,7 +63,7 @@ public class WorldController {
             case RAINY -> handleRainDrops();
             case STORMY -> handleStorms();
         }
-        if (!GameView.screenshotting) {
+        if (GameView.captureInput) {
             handleInput();
         }
     }
