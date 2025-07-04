@@ -76,7 +76,8 @@ public class Craft extends Structure implements Salable {
     @Override
     public ArrayList<SpriteHolder> getSprites() {
         ArrayList<SpriteHolder> sprites = new ArrayList<>();
-        if (mainSprite == null) {
+        if (mainSprite == null || processed != null && getETA() == null) {
+            processed = null;
             mainSprite = new SpriteHolder(new Sprite(craftType.getTexture()), null);
             mainSprite.setOffset(new Tuple<>(
                 0.5f - mainSprite.getSprite().getWidth() / 2f / App.tileWidth,
@@ -84,9 +85,10 @@ public class Craft extends Structure implements Salable {
             ));
         }
         sprites.add(mainSprite);
-        if (getETA() == null) return sprites;
+
         if (getETA().compareTime(App.getInstance().getCurrentGame().getTimeAndDate()) < 0) {
             if (processContainer == null) {
+                mainSprite.setSprite(new Sprite(craftType.getTexture1()));
                 processContainer = new SpriteHolder(new Sprite(GameAsset.BUTTON), new Tuple<>(0.1f, 1.0f));
                 processContainer.getSprite().setSize(App.tileWidth * 0.8f, App.tileHeight * 0.2f);
             }
@@ -108,10 +110,11 @@ public class Craft extends Structure implements Salable {
             sprites.add(processed);
         } else {
             if (processContainer != null) {
+                mainSprite.setSprite(new Sprite(craftType.getTexture2()));
                 processContainer = null;
                 processed = new SpriteHolder(new Sprite(GameAsset.NOTIFICATION),
                     new Tuple<>(0.25f, 1.1f));
-                processed.getSprite().setSize(App.tileWidth * 0.5f, App.tileHeight * 0.3f);
+                processed.getSprite().setSize(App.tileWidth * 0.5f, App.tileHeight * 0.5f);
             }
             sprites.add(processed);
         }

@@ -4,7 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d95100ff-6e61-4571-9e87-dcef3d963dba" name="Changes" comment="implementing craft popup" />
+    <list default="true" id="d95100ff-6e61-4571-9e87-dcef3d963dba" name="Changes" comment="updated assets">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/reports/problems/problems-report.html" beforeDir="false" afterPath="$PROJECT_DIR$/build/reports/problems/problems-report.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build/libs/core-1.0.0.jar" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/libs/core-1.0.0.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/craft/Craft.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/craft/Craft.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/craft/CraftType.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/craft/CraftType.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -133,7 +139,7 @@
       <workItem from="1751534446237" duration="31342000" />
       <workItem from="1751581638050" duration="7547000" />
       <workItem from="1751589530032" duration="172000" />
-      <workItem from="1751624190435" duration="9851000" />
+      <workItem from="1751624190435" duration="11021000" />
     </task>
     <task id="LOCAL-00001" summary="added clock">
       <option name="closed" value="true" />
@@ -239,7 +245,15 @@
       <option name="project" value="LOCAL" />
       <updated>1751634966360</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="updated assets">
+      <option name="closed" value="true" />
+      <created>1751635079174</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1751635079174</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -269,7 +283,8 @@
     <MESSAGE value="implementing refrigerator" />
     <MESSAGE value="implementing basics of artisan Menu" />
     <MESSAGE value="implementing craft popup" />
-    <option name="LAST_COMMIT_MESSAGE" value="implementing craft popup" />
+    <MESSAGE value="updated assets" />
+    <option name="LAST_COMMIT_MESSAGE" value="updated assets" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
