@@ -1,11 +1,8 @@
 package io.github.some_example_name.view.mainMenu;
 
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.*;
@@ -15,42 +12,32 @@ import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import io.github.some_example_name.MainGradle;
-import io.github.some_example_name.controller.PlayerController;
 import io.github.some_example_name.controller.WorldController;
 import io.github.some_example_name.model.Farm;
-import io.github.some_example_name.model.Fridge;
 import io.github.some_example_name.model.Salable;
-import io.github.some_example_name.model.Tile;
-import io.github.some_example_name.model.abilitiy.Ability;
 import io.github.some_example_name.model.craft.Craft;
 import io.github.some_example_name.model.craft.CraftType;
 import io.github.some_example_name.model.products.TreesAndFruitsAndSeeds.MadeProductType;
-import io.github.some_example_name.model.receipe.CookingRecipe;
-import io.github.some_example_name.model.receipe.CraftingRecipe;
 import io.github.some_example_name.model.records.Response;
 import io.github.some_example_name.model.relations.Player;
 import io.github.some_example_name.model.source.Mineral;
 import io.github.some_example_name.model.source.MineralType;
-import io.github.some_example_name.model.structure.Structure;
-import io.github.some_example_name.model.structure.farmInitialElements.Lake;
 import io.github.some_example_name.model.tools.BackPack;
 import io.github.some_example_name.service.GameService;
 import io.github.some_example_name.utils.App;
 import io.github.some_example_name.utils.GameAsset;
-import io.github.some_example_name.view.MiniMapRenderer;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
 public class ArtisanMenu {
-    private static final Group menuGroup = new Group();
-    private static final GameService gameService = new GameService();
-    private static WorldController controller;
-    private static Craft craft;
+    private final Group menuGroup = new Group();
+    private final GameService gameService = new GameService();
+    private WorldController controller;
+    private Craft craft;
 
-    public static void createMenu(Craft craft, Stage stage, Skin skin, WorldController worldController) {
-        ArtisanMenu.craft = craft;
+    public void createMenu(Craft craft, Stage stage, Skin skin, WorldController worldController) {
+        this.craft = craft;
         controller = worldController;
         if (!stage.getActors().contains(menuGroup, true)) {
             stage.addActor(menuGroup);
@@ -59,7 +46,7 @@ public class ArtisanMenu {
         createInventory(skin, menuGroup, stage);
     }
 
-    private static boolean isOverActor(Image item, Actor actor) {
+    private boolean isOverActor(Image item, Actor actor) {
         float itemX = item.getX();
         float itemY = item.getY();
         float itemWidth = item.getWidth();
@@ -76,7 +63,7 @@ public class ArtisanMenu {
             itemY + itemHeight > trashY;
     }
 
-    private static void addDrag(Image itemImage, Stage stage, Player currentPlayer, ImageButton trashCan, Salable item,
+    private void addDrag(Image itemImage, Stage stage, Player currentPlayer, ImageButton trashCan, Salable item,
                                 Window inventory, Window fridge, Skin skin, ScrollPane scrollPane, ScrollPane scrollPane2, boolean inBackPack) {
         itemImage.addListener(new InputListener() {
             @Override
@@ -152,7 +139,7 @@ public class ArtisanMenu {
     }
 
 
-    private static void createInventory(Skin skin, Group menuGroup, Stage stage) {
+    private void createInventory(Skin skin, Group menuGroup, Stage stage) {
         Farm currentFarm = currentFarm();
         if (currentFarm == null) {
             controller.showResponse(new Response("Enter your farm to artisan."));
@@ -389,7 +376,7 @@ public class ArtisanMenu {
         menuGroup.addActor(group);
     }
 
-    private static ImageButton provideExitButton(ArrayList<Actor> array) {
+    private ImageButton provideExitButton(ArrayList<Actor> array) {
         ImageButton exitButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(GameAsset.EXIT_BUTTON)));
         exitButton.setSize(32, 32);
 
@@ -405,7 +392,7 @@ public class ArtisanMenu {
         return exitButton;
     }
 
-    private static Farm currentFarm() {
+    private Farm currentFarm() {
         for (Farm farm : App.getInstance().getCurrentGame().getVillage().getFarms()) {
             if (farm.getPlayers().get(0).equals(App.getInstance().getCurrentGame().getCurrentPlayer())) {
                 return farm;

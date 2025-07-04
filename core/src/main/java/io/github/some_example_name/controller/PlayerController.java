@@ -84,7 +84,8 @@ public class PlayerController {
             InventoryMenu.createMenu(GameView.stage,GameAsset.SKIN, this, 0);
         }
         if (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) && Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
-            FridgeMenu.createMenu(GameView.stage,GameAsset.SKIN, getWorldController());
+            FridgeMenu fridgeMenu = new FridgeMenu();
+            fridgeMenu.createMenu(GameView.stage,GameAsset.SKIN, getWorldController());
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.F)) {
             //TODO open Journal?

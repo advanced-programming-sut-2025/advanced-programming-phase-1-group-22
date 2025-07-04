@@ -182,18 +182,23 @@ public class WorldController {
                     }
                 }
                 if (App.getInstance().getCurrentGame().getCurrentPlayer().getCurrentMenu() == Menu.COTTAGE) {
-                    if (distanceFromClick(farm.getFridge().getTiles().getFirst()).isOrigin()) {
-                        FridgeMenu.createMenu(GameView.stage, GameAsset.SKIN, this);
+                    if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
+                        if (distanceFromClick(farm.getFridge().getTiles().getFirst()).isOrigin()) {
+                            FridgeMenu fridgeMenu = new FridgeMenu();
+                            fridgeMenu.createMenu(GameView.stage, GameAsset.SKIN, this);
+                        }
                     }
                 }
                 for (Structure structure : farm.getStructures()) {
                     if (structure instanceof Craft) {
                         if (distanceFromClick(structure.getTiles().getFirst()).isOrigin()) {
                             if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
-                                ArtisanMenu.createMenu((Craft) structure, GameView.stage, GameAsset.SKIN, this);
+                                ArtisanMenu artisanMenu = new ArtisanMenu();
+                                artisanMenu.createMenu((Craft) structure, GameView.stage, GameAsset.SKIN, this);
                             } else if (Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT)) {
                                 if (((Craft) structure).getETA() != null) {
-                                    CraftPopUp.createMenu((Craft) structure, GameView.stage, GameAsset.SKIN, this);
+                                    CraftPopUp craftPopUp = new CraftPopUp();
+                                    craftPopUp.createMenu((Craft) structure, GameView.stage, GameAsset.SKIN, this);
                                 }
                             }
                         }
