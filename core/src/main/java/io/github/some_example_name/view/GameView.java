@@ -148,9 +148,13 @@ public class GameView implements Screen, InputProcessor {
         return false;
     }
 
+
+    public static float scrollY = 0;
+
     @Override
-    public boolean scrolled(float v, float v1) {
-        return false;
+    public boolean scrolled(float amountX, float amountY) {
+        scrollY += amountY;
+        return true;
     }
 
     @Override
