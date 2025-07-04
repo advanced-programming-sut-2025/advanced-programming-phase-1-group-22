@@ -1,6 +1,7 @@
 package io.github.some_example_name.view.mainMenu;
 
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -200,10 +201,20 @@ public class FridgeMenu {
                     Salable item = items.get(index);
                     Image itemImage = new Image(item.getTexture());
                     addDrag(itemImage, stage, currentPlayer, trashCan, item, window, window2, skin, scrollPane, true);
+                    int count = backPack.getProducts().get(item);
+                    Label countLabel = new Label(String.valueOf(count), skin);
+                    countLabel.setFontScale(0.7f);
+                    countLabel.setAlignment(Align.right);
+                    countLabel.setColor(Color.GREEN);
+                    Container<Label> labelContainer = new Container<>(countLabel);
+                    labelContainer.setFillParent(false);
+                    labelContainer.setSize(30, 20);
+                    labelContainer.setPosition(66, 5);
                     itemImage.setSize(90, 90);
                     Stack stack = new Stack();
                     stack.add(slot);
                     stack.add(itemImage);
+                    stack.add(labelContainer);
                     inventory.add(stack).size(96, 96);
                 } else {
                     inventory.add(slot).size(96, 96);
@@ -245,9 +256,19 @@ public class FridgeMenu {
                     Image itemImage = new Image(item.getTexture());
                     addDrag(itemImage, stage, currentPlayer, trashCan, item, window, window2, skin, scrollPane,false);
                     itemImage.setSize(90, 90);
+                    int count = refrigerator.getProducts().get(item);
+                    Label countLabel = new Label(String.valueOf(count), skin);
+                    countLabel.setFontScale(0.7f);
+                    countLabel.setAlignment(Align.right);
+                    countLabel.setColor(Color.GREEN);
+                    Container<Label> labelContainer = new Container<>(countLabel);
+                    labelContainer.setFillParent(false);
+                    labelContainer.setSize(30, 20);
+                    labelContainer.setPosition(96, 0);
                     Stack stack = new Stack();
                     stack.add(slot);
                     stack.add(itemImage);
+                    stack.add(labelContainer);
                     fridge.add(stack).size(96, 96);
                 } else {
                     fridge.add(slot).size(96, 96);
