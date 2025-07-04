@@ -253,4 +253,23 @@ public class TimeAndDate {
     public String getDayHour() {
         return day + "d " + hour + "h";
     }
+
+    public long difference(TimeAndDate ETA) {
+        long sum = 0;
+        sum += (year - ETA.year);
+        sum *= 4;
+        sum += (season.ordinal() - ETA.season.ordinal());
+        sum *= 28;
+        sum += (day - ETA.day);
+        sum *= 24;
+        sum += (hour - ETA.hour);
+        sum *= 60;
+        sum += (minute - ETA.minute);
+        return sum;
+    }
+
+    public TimeAndDate copy() {
+        return new TimeAndDate(day, hour, minute, season, year);
+    }
 }
+

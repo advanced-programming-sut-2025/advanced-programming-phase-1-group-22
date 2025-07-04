@@ -134,9 +134,9 @@ public class ArtisanMenu {
                     } else if (inBackPack && isOverActor(dragImage, fridge)) {
                         int count = currentPlayer.getInventory().countProductFromBackPack(item.getName());
                         craft.getIngredients().put(item, count);
-                        gameService.removeFromPlayerInventory(item.getName(), false);
+//                        gameService.removeFromPlayerInventory(item.getName(), false);
                     } else if (!inBackPack && isOverActor(dragImage, inventory)) {
-                        currentPlayer.getInventory().addProductToBackPack(item, craft.getIngredients().get(item));
+//                        currentPlayer.getInventory().addProductToBackPack(item, craft.getIngredients().get(item));
                         craft.getIngredients().remove(item);
                     }
 
@@ -305,7 +305,7 @@ public class ArtisanMenu {
                         count1 = list.get(0).getValue();
                         salable2 = null;
                     }
-                    resp = gameService.artisanUse(craft.getName(), salable1, count1, salable2, count2);
+                    resp = gameService.artisanUse(craft, salable1, count1, salable2, count2);
                 }
                 controller.showResponse(resp);
                 return resp.shouldBeBack();

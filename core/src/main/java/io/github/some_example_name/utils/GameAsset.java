@@ -1711,8 +1711,8 @@ public class GameAsset {
     public static final Texture STAR_SHARDS = new Texture("Mineral/Star_Shards.png");
     public static final Texture THUNDER_EGG = new Texture("Mineral/Thunder_Egg.png");
     public static final Texture TIGERSEYE = new Texture("Mineral/Tigerseye.png");
+    public static final Texture NOTIFICATION = new Texture("Inventory/Notification.png");
     public static final Texture NIGHT = new Texture("Night/night.jpg");
-//    public static final Texture NIGHT = TIGERSEYE;
     public static final Sprite NIGHT_SPRITE = new Sprite(NIGHT);
     static {
         NIGHT_SPRITE.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());

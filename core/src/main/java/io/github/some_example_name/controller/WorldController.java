@@ -24,6 +24,7 @@ import io.github.some_example_name.view.GameNotifier;
 import io.github.some_example_name.view.GameView;
 import io.github.some_example_name.view.Menu;
 import io.github.some_example_name.view.mainMenu.ArtisanMenu;
+import io.github.some_example_name.view.mainMenu.CraftPopUp;
 import io.github.some_example_name.view.mainMenu.FridgeMenu;
 
 import java.awt.*;
@@ -180,15 +181,17 @@ public class WorldController {
                 }
                 if (App.getInstance().getCurrentGame().getCurrentPlayer().getCurrentMenu() == Menu.COTTAGE) {
                     if (distanceFromClick(farm.getFridge().getTiles().getFirst()).isOrigin()) {
-                        FridgeMenu.createMenu(GameView.stage,GameAsset.SKIN, this);
+                        FridgeMenu.createMenu(GameView.stage, GameAsset.SKIN, this);
                     }
                 }
-                if (Gdx.input.isTouched()) {
-                    for (Structure structure : farm.getStructures()) {
-                        if (structure instanceof Craft) {
-                            if (distanceFromClick(structure.getTiles().getFirst()).isOrigin()) {
-                                if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
-                                    ArtisanMenu.createMenu((Craft) structure, GameView.stage, GameAsset.SKIN, this);
+                for (Structure structure : farm.getStructures()) {
+                    if (structure instanceof Craft) {
+                        if (distanceFromClick(structure.getTiles().getFirst()).isOrigin()) {
+                            if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
+                                ArtisanMenu.createMenu((Craft) structure, GameView.stage, GameAsset.SKIN, this);
+                            } else if (Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT)) {
+                                if (((Craft) structure).getETA() != null) {
+                                    CraftPopUp.createMenu((Craft) structure, GameView.stage, GameAsset.SKIN, this);
                                 }
                             }
                         }
@@ -250,10 +253,10 @@ public class WorldController {
                     }
                     if (structure.getSprites() != null){
                         for (SpriteHolder sprite : structure.getSprites()) {
-                            structure.getSprite().setPosition(
-                                (structure.getTiles().get(0).getX() + sprite.getOffset().getX()) * App.tileWidth,
+                            sprite.getSprite().setPosition(
+                                (sprite.getOffset().getX() + structure.getTiles().get(0).getX()) * App.tileWidth,
                                 (sprite.getOffset().getY() + structure.getTiles().get(0).getY()) * App.tileHeight );
-                            structure.getSprite().draw(MainGradle.getInstance().getBatch());
+                            sprite.getSprite().draw(MainGradle.getInstance().getBatch());
                         }
                     }
                 }
