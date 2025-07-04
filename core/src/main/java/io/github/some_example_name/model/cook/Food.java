@@ -1,6 +1,7 @@
 package io.github.some_example_name.model.cook;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import lombok.Getter;
 import lombok.Setter;
 import io.github.some_example_name.model.Salable;
@@ -9,6 +10,7 @@ import io.github.some_example_name.model.Salable;
 public class Food implements Salable {
     private Integer id;
     private FoodType foodType;
+    private Sprite sprite;
 
     public Food(FoodType foodType) {
         this.foodType = foodType;
@@ -30,5 +32,13 @@ public class Food implements Salable {
     @Override
     public Texture getTexture() {
         return foodType.getTexture();
+    }
+
+    @Override
+    public Sprite getSprite() {
+        if (sprite == null) {
+            sprite = new Sprite(foodType.getTexture());
+        }
+        return sprite;
     }
 }

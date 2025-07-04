@@ -162,7 +162,7 @@ public abstract class PopUp {
         return exitButton;
     }
 
-    protected <T> Container<Label> getLabelContainer(Map<T, Integer> list, T item) {
+    public static <T> Container<Label> getLabelContainer(Map<T, Integer> list, T item) {
         int count = list.get(item);
         Label countLabel = new Label(String.valueOf(count), GameAsset.SKIN);
         countLabel.setFontScale(0.7f);
