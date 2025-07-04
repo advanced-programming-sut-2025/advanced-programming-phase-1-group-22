@@ -194,11 +194,13 @@ public class WorldController {
                         if (distanceFromClick(structure.getTiles().getFirst()).isOrigin()) {
                             if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
                                 ArtisanMenu artisanMenu = new ArtisanMenu();
-                                artisanMenu.createMenu((Craft) structure, GameView.stage, GameAsset.SKIN, this);
+                                artisanMenu.setCraft((Craft) structure);
+                                artisanMenu.createMenu(GameView.stage, GameAsset.SKIN, this);
                             } else if (Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT)) {
                                 if (((Craft) structure).getETA() != null) {
                                     CraftPopUp craftPopUp = new CraftPopUp();
-                                    craftPopUp.createMenu((Craft) structure, GameView.stage, GameAsset.SKIN, this);
+                                    craftPopUp.setCraft((Craft) structure);
+                                    craftPopUp.createMenu(GameView.stage, GameAsset.SKIN, this);
                                 }
                             }
                         }

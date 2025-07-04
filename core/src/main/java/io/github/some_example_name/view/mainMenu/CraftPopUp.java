@@ -9,27 +9,25 @@ import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import io.github.some_example_name.MainGradle;
 import io.github.some_example_name.controller.WorldController;
+import io.github.some_example_name.model.Salable;
 import io.github.some_example_name.model.craft.Craft;
 import io.github.some_example_name.model.records.Response;
 import io.github.some_example_name.service.GameService;
 import io.github.some_example_name.utils.App;
 import io.github.some_example_name.view.GameView;
+import lombok.Setter;
 
-public class CraftPopUp {
-    private final Group menuGroup = new Group();
-    private final GameService gameService = new GameService();
-    private WorldController controller;
+@Setter
+public class CraftPopUp extends PopUp {
     private Craft craft;
 
-    public void createMenu(Craft craft, Stage stage, Skin skin, WorldController worldController) {
-        this.craft = craft;
-        controller = worldController;
-        if (!stage.getActors().contains(menuGroup, true)) {
-            stage.addActor(menuGroup);
-        }
-        menuGroup.clear();
-        createInventory(skin, menuGroup, stage);
+    public void createMenu(Stage stage, Skin skin, WorldController worldController) {
+        super.createMenu(stage, skin, worldController);
+        createInventory(skin, getMenuGroup(), stage);
     }
+
+    @Override
+    protected void handleDragRelease(InputEvent event, float x, float y, int pointer, Image itemImage, Salable item, Image dragImage, Boolean flag) {}
 
     private void close(Window window) {
         window.remove();
@@ -66,7 +64,7 @@ public class CraftPopUp {
                 if (!Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)) return false;
                 craft.setETA(App.getInstance().getCurrentGame().getTimeAndDate().copy());
                 close(window);
-                createMenu(craft, stage, skin, controller);
+                createMenu(stage, skin, getController());
                 return true;
             }
         });
@@ -81,8 +79,8 @@ public class CraftPopUp {
             button.addListener(new InputListener() {
                 @Override
                 public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                    Response resp = gameService.artisanGet(craft);
-                    controller.showResponse(resp);
+                    Response resp = getGameService().artisanGet(craft);
+                    getController().showResponse(resp);
                     if (resp.shouldBeBack()) {
                         close(window);
                         return true;

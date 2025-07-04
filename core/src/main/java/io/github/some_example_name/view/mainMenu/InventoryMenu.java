@@ -18,6 +18,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import io.github.some_example_name.MainGradle;
 import io.github.some_example_name.controller.PlayerController;
+import io.github.some_example_name.controller.WorldController;
 import io.github.some_example_name.model.Farm;
 import io.github.some_example_name.model.Salable;
 import io.github.some_example_name.model.Tile;
@@ -34,71 +35,69 @@ import io.github.some_example_name.service.GameService;
 import io.github.some_example_name.utils.App;
 import io.github.some_example_name.utils.GameAsset;
 import io.github.some_example_name.view.MiniMapRenderer;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.Map;
 
-public class InventoryMenu {
-    private static final Group menuGroup = new Group();
+@Setter
+public class InventoryMenu extends PopUp {
+    private Integer selectedIndex;
+    private Integer tabIndex = 0;
+    private Table inventory;
+    private ScrollPane scrollPane;
     private static final Table tabs = new Table();
-    private static Integer selectedIndex;
-    private static final GameService gameService = new GameService();
-    private static PlayerController controller;
 
-    public static void createMenu(Stage stage, Skin skin, PlayerController playerController, int tabIndex) {
-        controller = playerController;
-        if (!stage.getActors().contains(menuGroup, true)) {
-            stage.addActor(menuGroup);
-        }
-        menuGroup.clear();
+    public void createMenu(Stage stage, Skin skin, WorldController worldController) {
+        super.createMenu(stage, skin, worldController);
         tabs.clear();
-
         tabs.top().left();
         tabs.defaults().size(80, 80).padRight(4);
         Image tab1 = new Image(GameAsset.INVENTORY_TAB);
         tab1.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                menuGroup.clear();
-                createInventory(skin, tabs, menuGroup,stage);
+                getMenuGroup().clear();
+                createInventory(skin, tabs, getMenuGroup(), stage);
             }
         });
         Image tab2 = new Image(GameAsset.SKILL_TAB);
         tab2.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                menuGroup.clear();
-                createSkillMenu(skin,menuGroup,tabs);
+                getMenuGroup().clear();
+                createSkillMenu(skin, getMenuGroup(), tabs);
             }
         });
         Image tab3 = new Image(GameAsset.SOCIAL_TAB);
         tab3.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                createSocialMenu();
+//                getMenuGroup().clear();
+//                createSocialMenu();
             }
         });
         Image tab4 = new Image(GameAsset.MAP_TAB);
         tab4.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                menuGroup.clear();
-                createMapMenu(skin,menuGroup,tabs);
+                getMenuGroup().clear();
+                createMapMenu(skin,getMenuGroup(),tabs);
             }
         });
         Image tab5 = new Image(GameAsset.CRAFTING_TAB);
         tab5.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                menuGroup.clear();
-                createCraftingMenu(skin, tabs, menuGroup, stage);            }
+                getMenuGroup().clear();
+                createCraftingMenu(skin, tabs, getMenuGroup(), stage);            }
         });
         Image tab6 = new Image(GameAsset.COOKING_TAB);
         tab6.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                menuGroup.clear();
-                createCookingMenu(skin, tabs, menuGroup, stage);            }
+                getMenuGroup().clear();
+                createCookingMenu(skin, tabs, getMenuGroup(), stage);            }
         });
 
         tabs.add(tab1);
@@ -109,33 +108,16 @@ public class InventoryMenu {
         tabs.add(tab6);
 
         switch (tabIndex) {
-            case 0 -> createInventory(skin, tabs, menuGroup, stage);
-            case 1 -> createSkillMenu(skin,menuGroup,tabs);
-            case 2 -> createSkillMenu(skin,menuGroup,tabs);
-            case 3 -> createMapMenu(skin,menuGroup,tabs);
-            case 4 -> createCraftingMenu(skin, tabs, menuGroup, stage);
-            case 5 -> createCookingMenu(skin, tabs, menuGroup, stage);
+            case 0 -> createInventory(skin, tabs, getMenuGroup(), stage);
+            case 1 -> createSkillMenu(skin, getMenuGroup(), tabs);
+            case 2 -> createSkillMenu(skin, getMenuGroup(), tabs);
+            case 3 -> createMapMenu(skin, getMenuGroup(), tabs);
+            case 4 -> createCraftingMenu(skin, tabs, getMenuGroup(), stage);
+            case 5 -> createCookingMenu(skin, tabs, getMenuGroup(), stage);
         }
     }
 
-    private static boolean isOverTrashCan(Image item, ImageButton trashCan) {
-        float itemX = item.getX();
-        float itemY = item.getY();
-        float itemWidth = item.getWidth();
-        float itemHeight = item.getHeight();
-
-        float trashX = trashCan.getX();
-        float trashY = trashCan.getY();
-        float trashWidth = trashCan.getWidth();
-        float trashHeight = trashCan.getHeight();
-
-        return itemX < trashX + trashWidth &&
-            itemX + itemWidth > trashX &&
-            itemY < trashY + trashHeight &&
-            itemY + itemHeight > trashY;
-    }
-
-    private static void refreshInventory(Stage stage, Table inventory, Player player, Texture slotTexture, Player currentPlayer, ImageButton trashCan, ScrollPane scrollPane) {
+    private void refreshInventory(Stage stage, Table inventory, Player player, Texture slotTexture, Player currentPlayer, ImageButton trashCan, ScrollPane scrollPane) {
         inventory.clear();
         java.util.List<Salable> items = new ArrayList<>(player.getInventory().getProducts().keySet());
 
@@ -148,7 +130,9 @@ public class InventoryMenu {
                     Salable item = items.get(index);
                     Image itemImage = new Image(item.getTexture());
                     itemImage.setSize(90, 90);
-                    addDrag(itemImage, stage, currentPlayer, trashCan, item, inventory, slotTexture, scrollPane);
+                    ArrayList<ScrollPane> list = new ArrayList<>();
+                    list.add(scrollPane);
+                    addDrag(itemImage, stage, currentPlayer, item, list, true);
                     itemImage.addListener(new ClickListener() {
                         @Override
                         public void clicked(InputEvent event, float x, float y) {
@@ -158,15 +142,7 @@ public class InventoryMenu {
                             }
                         }
                     });
-                    int count = currentPlayer.getInventory().getProducts().get(item);
-                    Label countLabel = new Label(String.valueOf(count), GameAsset.SKIN);
-                    countLabel.setFontScale(0.7f);
-                    countLabel.setAlignment(Align.right);
-                    countLabel.setColor(Color.GREEN);
-                    Container<Label> labelContainer = new Container<>(countLabel);
-                    labelContainer.setFillParent(false);
-                    labelContainer.setSize(30, 20);
-                    labelContainer.setPosition(66, 5);
+                    Container<Label> labelContainer = getLabelContainer(currentPlayer.getInventory().getProducts(), item);
                     if (item == currentPlayer.getCurrentCarrying()) itemImage.setColor(1, 1, 1, 1f);
                     else itemImage.setColor(1, 1, 1, 0.5f);
                     Stack stack = new Stack();
@@ -182,66 +158,19 @@ public class InventoryMenu {
         }
     }
 
-    private static void addDrag(Image itemImage, Stage stage, Player currentPlayer, ImageButton trashCan, Salable item, Table inventory, Texture slotTexture, ScrollPane scrollPane) {
-        itemImage.addListener(new InputListener() {
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                event.stop();
-                return true;
-            }
-        });
-        itemImage.addListener(new DragListener() {
-            private Stack originalStack;
-            private final Vector2 originalPos = new Vector2();
-            private Image dragImage;
+    @Override
+    protected void handleDragRelease(InputEvent event, float x, float y, int pointer, Image itemImage, Salable item, Image dragImage, Boolean flag) {
+        Player currentPlayer = App.getInstance().getCurrentGame().getCurrentPlayer();
+        if (isOverActor(dragImage, trashCan)) {
+            currentPlayer.getInventory().deleteProductFromBackPack(item, currentPlayer, 1);
+        }
 
-            @Override
-            public void dragStart(InputEvent event, float x, float y, int pointer) {
-                scrollPane.setTouchable(Touchable.disabled);
-                originalStack = (Stack) itemImage.getParent();
-                originalPos.set(itemImage.getX(), itemImage.getY());
-
-                dragImage = new Image(itemImage.getDrawable());
-                dragImage.setSize(itemImage.getWidth(), itemImage.getHeight());
-
-                Vector2 stagePos = originalStack.localToStageCoordinates(new Vector2(originalPos.x, originalPos.y));
-                dragImage.setPosition(stagePos.x, stagePos.y);
-                stage.addActor(dragImage);
-                dragImage.toFront();
-            }
-
-            @Override
-            public void drag(InputEvent event, float x, float y, int pointer) {
-                if (dragImage != null) {
-                    Vector2 localPos = new Vector2(x, y);
-                    Vector2 stagePos = originalStack.localToStageCoordinates(localPos);
-                    dragImage.setPosition(
-                        stagePos.x - dragImage.getWidth() / 2,
-                        stagePos.y - dragImage.getHeight() / 2
-                    );
-                }
-            }
-
-            @Override
-            public void dragStop(InputEvent event, float x, float y, int pointer) {
-                if (dragImage != null) {
-                    if (isOverTrashCan(dragImage, trashCan)) {
-                        currentPlayer.getInventory().deleteProductFromBackPack(item, currentPlayer, 1);
-                    }
-
-                    dragImage.remove();
-                    dragImage = null;
-                    scrollPane.setTouchable(Touchable.enabled);
-                    refreshInventory(stage, inventory, currentPlayer, slotTexture, currentPlayer, trashCan, scrollPane);
-                    scrollPane.layout();
-                }
-            }
-        });
+        dragImage.remove();
+        refreshInventory(stage, inventory, currentPlayer, slotTexture, currentPlayer, trashCan, scrollPane);
     }
 
-    private static void createInventory(Skin skin, Table tabs, Group menuGroup,Stage stage) {
+    private void createInventory(Skin skin, Table tabs, Group menuGroup,Stage stage) {
         Player currentPlayer = App.getInstance().getCurrentGame().getCurrentPlayer();
-        Texture slotTexture = GameAsset.BUTTON;
         Window window = new Window("", skin);
         window.setSize(700, 500);
         window.setPosition(
@@ -250,9 +179,9 @@ public class InventoryMenu {
         );
         window.setMovable(false);
 
-        ImageButton trashCan = new ImageButton(new TextureRegionDrawable(new TextureRegion(GameAsset.WORM_BIN)));
-        Table inventory = new Table();
-        ScrollPane scrollPane = new ScrollPane(inventory, skin);
+        trashCan = new ImageButton(new TextureRegionDrawable(new TextureRegion(GameAsset.WORM_BIN)));
+        inventory = new Table();
+        scrollPane = new ScrollPane(inventory, skin);
         inventory.pack();
         scrollPane.setFadeScrollBars(false);
         scrollPane.setScrollbarsOnTop(true);
@@ -280,7 +209,9 @@ public class InventoryMenu {
                     java.util.List<Salable> items = new ArrayList<>(currentPlayer.getInventory().getProducts().keySet());
                     Salable item = items.get(index);
                     Image itemImage = new Image(item.getTexture());
-                    addDrag(itemImage, stage, currentPlayer, trashCan, item, inventory, slotTexture, scrollPane);
+                    ArrayList<ScrollPane> list = new ArrayList<>();
+                    list.add(scrollPane);
+                    addDrag(itemImage, stage, currentPlayer, item, list, true);
                     itemImage.addListener(new ClickListener() {
                         @Override
                         public void clicked(InputEvent event, float x, float y) {
@@ -319,7 +250,7 @@ public class InventoryMenu {
         finances.add(new Label("Current Funds: " + App.getInstance().getCurrentGame().getCurrentPlayer().getAccount().getGolds() + "g", skin)).row();
         finances.add(new Label("Current earning: " + App.getInstance().getCurrentGame().getCurrentPlayer().getAccount().getEarned() + "g", skin)).row();
 
-        ArrayList<Table> array = new ArrayList<>();
+        ArrayList<Actor> array = new ArrayList<>();
         array.add(window);
         array.add(tabs);
         array.add(trashCan);
@@ -364,7 +295,7 @@ public class InventoryMenu {
         menuGroup.addActor(group);
     }
 
-    private static void createCraftingMenu(Skin skin, Table tabs, Group menuGroup,Stage stage) {
+    private void createCraftingMenu(Skin skin, Table tabs, Group menuGroup,Stage stage) {
         OrthographicCamera camera = MainGradle.getInstance().getCamera();
         Window window = new Window("", skin);
         window.setSize(camera.viewportWidth * 0.7f, camera.viewportHeight * 0.5f);
@@ -394,9 +325,9 @@ public class InventoryMenu {
                         return true;
                     }
                     if (button == Input.Buttons.LEFT) {
-                        Response resp = gameService.craftingCraft(entry.getKey().getCraft().getName());
+                        Response resp = getGameService().craftingCraft(entry.getKey().getCraft().getName());
                         if (!resp.shouldBeBack()) {
-                            controller.getWorldController().showResponse(resp);
+                            getController().showResponse(resp);
                         }
                         return true;
                     }
@@ -413,7 +344,7 @@ public class InventoryMenu {
             i++;
         }
 
-        ArrayList<Table> array = new ArrayList<>();
+        ArrayList<Actor> array = new ArrayList<>();
         array.add(window);
         array.add(tabs);
         ImageButton exitButton = provideExitButton(array);
@@ -476,7 +407,7 @@ public class InventoryMenu {
         menuGroup.addActor(group);
     }
 
-    private static void createCookingMenu(Skin skin, Table tabs, Group menuGroup,Stage stage) {
+    private void createCookingMenu(Skin skin, Table tabs, Group menuGroup,Stage stage) {
         OrthographicCamera camera = MainGradle.getInstance().getCamera();
         Window window = new Window("", skin);
         window.setSize(camera.viewportWidth * 0.7f, camera.viewportHeight * 0.5f);
@@ -506,9 +437,9 @@ public class InventoryMenu {
                         return true;
                     }
                     if (button == Input.Buttons.LEFT) {
-                        Response resp = gameService.cookingPrepare(entry.getKey().getName().replace(" recipe", ""));
+                        Response resp = getGameService().cookingPrepare(entry.getKey().getName().replace(" recipe", ""));
                         if (!resp.shouldBeBack()) {
-                            controller.getWorldController().showResponse(resp);
+                            getController().showResponse(resp);
                         }
                         return true;
                     }
@@ -525,7 +456,7 @@ public class InventoryMenu {
             i++;
         }
 
-        ArrayList<Table> array = new ArrayList<>();
+        ArrayList<Actor> array = new ArrayList<>();
         array.add(window);
         array.add(tabs);
         ImageButton exitButton = provideExitButton(array);
@@ -588,24 +519,12 @@ public class InventoryMenu {
         menuGroup.addActor(group);
     }
 
-    private static ImageButton provideExitButton(ArrayList<Table> array) {
-        ImageButton exitButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(GameAsset.EXIT_BUTTON)));
-        exitButton.setSize(32, 32);
-
-        exitButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                for (Table o : array) {
-                    o.remove();
-                }
-                exitButton.remove();
-                selectedIndex = null;
-            }
-        });
-        return exitButton;
+    @Override
+    protected void close() {
+        selectedIndex = null;
     }
 
-    private static void createSkillMenu(Skin skin,Group menuGroup,Table tabs) {
+    private void createSkillMenu(Skin skin, Group menuGroup, Table tabs) {
         Player player = App.getInstance().getCurrentGame().getCurrentPlayer();
         Window window = new Window("Skills", skin);
         window.setSize(900, 600);
@@ -687,7 +606,7 @@ public class InventoryMenu {
 
         skillTable.add(row).row();
 
-        ArrayList<Table> array = new ArrayList<>();
+        ArrayList<Actor> array = new ArrayList<>();
         array.add(window);
         array.add(tabs);
         ImageButton exitButton = provideExitButton(array);
@@ -726,11 +645,11 @@ public class InventoryMenu {
         menuGroup.addActor(group);
     }
 
-    private static void createSocialMenu() {
+    private void createSocialMenu() {
 
     }
 
-    private static void createMapMenu(Skin skin,Group menuGroup,Table tabs) {
+    private void createMapMenu(Skin skin,Group menuGroup,Table tabs) {
         float scale = 0.03125f;
         int minimapWidth = (int) (160 * 160 * scale);
         int minimapHeight = (int) (120 * 160 * scale);
@@ -750,7 +669,7 @@ public class InventoryMenu {
             (MainGradle.getInstance().getCamera().viewportHeight - window.getHeight()) / 2f
         );
 
-        ArrayList<Table> array = new ArrayList<>();
+        ArrayList<Actor> array = new ArrayList<>();
         array.add(window);
         array.add(tabs);
         ImageButton exitButton = provideExitButton(array);
@@ -791,7 +710,7 @@ public class InventoryMenu {
         menuGroup.addActor(group);
     }
 
-    private static void drawMiniTiles(Batch batch, float scale) {
+    private void drawMiniTiles(Batch batch, float scale) {
         Tile[][] tiles = App.getInstance().getCurrentGame().tiles;
 
         for (int i = 0; i < tiles.length; i++) {
@@ -808,7 +727,7 @@ public class InventoryMenu {
         }
     }
 
-    private static void drawMiniStructures(Batch batch, float scale) {
+    private void drawMiniStructures(Batch batch, float scale) {
         for (Farm farm : App.getInstance().getCurrentGame().getVillage().getFarms()) {
             for (Structure structure : farm.getStructures()) {
                 if (structure.getSprite() != null) {

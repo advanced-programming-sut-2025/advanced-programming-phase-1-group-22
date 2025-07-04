@@ -9,14 +9,16 @@ import io.github.some_example_name.service.GameService;
 import io.github.some_example_name.utils.App;
 import io.github.some_example_name.utils.GameAsset;
 import io.github.some_example_name.view.GameView;
-import io.github.some_example_name.view.Menu;
 import io.github.some_example_name.view.mainMenu.FridgeMenu;
 import io.github.some_example_name.view.mainMenu.InventoryMenu;
+import lombok.Getter;
 
+@Getter
 public class PlayerController {
     GameService gameService = new GameService();
     WorldController worldController;
     private float timeSinceLastMove = 0;
+    private InventoryMenu inventoryMenu = new InventoryMenu();
 
     public PlayerController(WorldController worldController) {
         this.worldController = worldController;
@@ -81,7 +83,8 @@ public class PlayerController {
             //TODO Investigate?
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.E) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            InventoryMenu.createMenu(GameView.stage,GameAsset.SKIN, this, 0);
+            inventoryMenu.setTabIndex(0);
+            inventoryMenu.createMenu(GameView.stage,GameAsset.SKIN, getWorldController());
         }
         if (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) && Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
             FridgeMenu fridgeMenu = new FridgeMenu();
@@ -91,17 +94,16 @@ public class PlayerController {
             //TODO open Journal?
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.M)) {
-            InventoryMenu.createMenu(GameView.stage,GameAsset.SKIN, this, 3);
+            inventoryMenu.setTabIndex(3);
+            inventoryMenu.createMenu(GameView.stage,GameAsset.SKIN, getWorldController());
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.B)) {
-            InventoryMenu.createMenu(GameView.stage,GameAsset.SKIN, this, 4);
+            inventoryMenu.setTabIndex(4);
+            inventoryMenu.createMenu(GameView.stage,GameAsset.SKIN, getWorldController());
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.C)) {
-            InventoryMenu.createMenu(GameView.stage,GameAsset.SKIN, this, 5);
+            inventoryMenu.setTabIndex(5);
+            inventoryMenu.createMenu(GameView.stage,GameAsset.SKIN, getWorldController());
         }
-    }
-
-    public WorldController getWorldController() {
-        return worldController;
     }
 }
