@@ -2,6 +2,7 @@ package io.github.some_example_name.controller;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -262,6 +263,18 @@ public class CameraViewController {
         if (Gdx.input.isKeyJustPressed(Input.Keys.TAB)) {
             if (currentToolIndex == null) currentToolIndex = -1;
             player.setCurrentCarrying(items.get(++currentToolIndex % Math.min(12, player.getInventory().getProducts().size())));
+        }
+        if (GameView.scrollY != 0) { //todo check whether it's working
+            int mod = Math.min(12, player.getInventory().getProducts().size());
+            if (mod != 0) {
+                if (currentToolIndex == null) currentToolIndex = GameView.scrollY > 0 ? mod - 1 : 0;
+                currentToolIndex += (int) Math.ceil(GameView.scrollY);
+                currentToolIndex %= mod;
+                currentToolIndex += mod;
+                currentToolIndex %= mod;
+                player.setCurrentCarrying(items.get(currentToolIndex));
+                GameView.scrollY = 0;
+            }
         }
     }
 }

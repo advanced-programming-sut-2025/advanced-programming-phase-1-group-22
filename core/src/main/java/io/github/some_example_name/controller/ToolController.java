@@ -31,7 +31,7 @@ public class ToolController {
         currentTool.getSprite().draw(MainGradle.getInstance().getBatch());
         currentTool.getSprite().setPosition(currentPlayer.getTiles().get(0).getX() * App.tileWidth,
             currentPlayer.getTiles().get(0).getY() * App.tileHeight);
-        if (!GameView.captureInput) {
+        if (GameView.captureInput) {
             handleInput();
         }
     }
@@ -39,32 +39,6 @@ public class ToolController {
     public void handleInput(){
         if (Gdx.input.isKeyJustPressed(Input.Keys.C) || Gdx.input.justTouched()){
             handleToolUse(GameView.screenX,GameView.screenY);
-        }
-
-        if (Gdx.input.isKeyJustPressed(Input.Keys.TAB)) {
-            //TODO change item
-        }
-
-        Integer[] shortcut = {
-            Input.Keys.NUM_0,
-            Input.Keys.NUM_1,
-            Input.Keys.NUM_2,
-            Input.Keys.NUM_3,
-            Input.Keys.NUM_4,
-            Input.Keys.NUM_5,
-            Input.Keys.NUM_6,
-            Input.Keys.NUM_7,
-            Input.Keys.NUM_8,
-            Input.Keys.NUM_9,
-            Input.Keys.MINUS,
-            Input.Keys.EQUALS
-        };
-        for (int i = 0; i < shortcut.length; i++) {
-            if (Gdx.input.isKeyJustPressed(shortcut[i])) {
-                Player player = App.getInstance().getCurrentGame().getCurrentPlayer();
-                List<Salable> items = new ArrayList<>(player.getInventory().getProducts().keySet());
-                if (i < items.size()) player.setCurrentCarrying(items.get(i));
-            }
         }
     }
 
