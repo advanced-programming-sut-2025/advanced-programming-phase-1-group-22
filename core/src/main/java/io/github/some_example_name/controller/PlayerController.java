@@ -3,23 +3,24 @@ package io.github.some_example_name.controller;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import io.github.some_example_name.MainGradle;
-import io.github.some_example_name.model.Direction;
-import io.github.some_example_name.model.Salable;
-import io.github.some_example_name.model.products.Product;
-import io.github.some_example_name.model.relations.Dialog;
 import io.github.some_example_name.model.relations.Player;
 import io.github.some_example_name.service.GameService;
 import io.github.some_example_name.utils.App;
 import io.github.some_example_name.utils.GameAsset;
 import io.github.some_example_name.view.GameView;
+import io.github.some_example_name.view.Menu;
+import io.github.some_example_name.view.mainMenu.FridgeMenu;
 import io.github.some_example_name.view.mainMenu.InventoryMenu;
 
 public class PlayerController {
     GameService gameService = new GameService();
+    WorldController worldController;
     private float timeSinceLastMove = 0;
+
+    public PlayerController(WorldController worldController) {
+        this.worldController = worldController;
+    }
 
     public void update(){
         Player currentPlayer = App.getInstance().getCurrentGame().getCurrentPlayer();
@@ -79,11 +80,27 @@ public class PlayerController {
         if (Gdx.input.isKeyJustPressed(Input.Keys.X) || Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT)) {
             //TODO Investigate?
         }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            InventoryMenu.createMenu(GameView.stage,GameAsset.SKIN);
+        if (Gdx.input.isKeyJustPressed(Input.Keys.E) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            InventoryMenu.createMenu(GameView.stage,GameAsset.SKIN, this, 0);
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) && Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
+            FridgeMenu.createMenu(GameView.stage,GameAsset.SKIN, getWorldController());
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.F)) {
             //TODO open Journal?
         }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.M)) {
+            InventoryMenu.createMenu(GameView.stage,GameAsset.SKIN, this, 3);
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.B)) {
+            InventoryMenu.createMenu(GameView.stage,GameAsset.SKIN, this, 4);
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.C)) {
+            InventoryMenu.createMenu(GameView.stage,GameAsset.SKIN, this, 5);
+        }
+    }
+
+    public WorldController getWorldController() {
+        return worldController;
     }
 }

@@ -4,11 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d95100ff-6e61-4571-9e87-dcef3d963dba" name="Changes" comment="add count label to inventory">
+    <list default="true" id="d95100ff-6e61-4571-9e87-dcef3d963dba" name="Changes" comment="updated assets">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/reports/problems/problems-report.html" beforeDir="false" afterPath="$PROJECT_DIR$/build/reports/problems/problems-report.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/build/libs/core-1.0.0.jar" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/libs/core-1.0.0.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/controller/ToolController.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/controller/ToolController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/view/mainMenu/InventoryMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/view/mainMenu/InventoryMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/craft/Craft.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/craft/Craft.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/craft/CraftType.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/craft/CraftType.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -41,7 +42,6 @@
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
-    <option name="UPDATE_TYPE" value="REBASE" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
   &quot;lastFilter&quot;: {
@@ -68,13 +68,11 @@
   "keyToString": {
     "Application.Main.executor": "Run",
     "Gradle.Build Project4.executor": "Run",
-    "Gradle.Build advanced-programming-phase-1-group-22.executor": "Run",
     "Gradle.Project4:core [:core:io.github.some_example_name.lwjgl3.Lwjgl3Launcher.main()].executor": "Run",
     "Gradle.Project4:lwjgl3 [:lwjgl3:io.github.some_example_name.lwjgl3.Lwjgl3Launcher.main()].executor": "Run",
-    "Gradle.advanced-programming-phase-1-group-22:lwjgl3 [:lwjgl3:io.github.some_example_name.lwjgl3.Lwjgl3Launcher.main()].executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "mahdi",
+    "git-widget-placeholder": "Roham",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "D:/temp/SUT/AP/040302/Project",
     "node.js.detected.package.eslint": "true",
@@ -82,12 +80,15 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.keymap",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
   <component name="RecentsManager">
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="io.github.some_example_name.model.dto" />
+    </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="io.github.some_example_name.view.mainMenu" />
       <recent name="io.github.some_example_name.model" />
       <recent name="io.github.some_example_name.controller" />
     </key>
@@ -97,7 +98,7 @@
       <option name="ALTERNATIVE_JRE_PATH" value="21" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
       <option name="MAIN_CLASS_NAME" value="io.github.some_example_name.lwjgl3.Lwjgl3Launcher" />
-      <module name="advanced-programming-phase-1-group-22.lwjgl3.main" />
+      <module name="Project4.lwjgl3.main" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -135,6 +136,10 @@
       <workItem from="1751310491739" duration="1563000" />
       <workItem from="1751364649853" duration="8713000" />
       <workItem from="1751382903617" duration="24445000" />
+      <workItem from="1751534446237" duration="31342000" />
+      <workItem from="1751581638050" duration="7547000" />
+      <workItem from="1751589530032" duration="172000" />
+      <workItem from="1751624190435" duration="11021000" />
     </task>
     <task id="LOCAL-00001" summary="added clock">
       <option name="closed" value="true" />
@@ -160,71 +165,95 @@
       <option name="project" value="LOCAL" />
       <updated>1751397194408</updated>
     </task>
-    <task id="LOCAL-00004" summary="implemented screenshot">
+    <task id="LOCAL-00004" summary="calibrated camera objects and added energy bar">
       <option name="closed" value="true" />
-      <created>1751417413641</created>
+      <created>1751456170719</created>
       <option name="number" value="00004" />
       <option name="presentableId" value="LOCAL-00004" />
       <option name="project" value="LOCAL" />
-      <updated>1751417413641</updated>
+      <updated>1751456170719</updated>
     </task>
-    <task id="LOCAL-00005" summary="some stage changes">
+    <task id="LOCAL-00005" summary="dynamic cottage menu">
       <option name="closed" value="true" />
-      <created>1751457443018</created>
+      <created>1751460230419</created>
       <option name="number" value="00005" />
       <option name="presentableId" value="LOCAL-00005" />
       <option name="project" value="LOCAL" />
-      <updated>1751457443018</updated>
+      <updated>1751460230419</updated>
     </task>
-    <task id="LOCAL-00006" summary="add inventory bar">
+    <task id="LOCAL-00006" summary="uploaded assets">
       <option name="closed" value="true" />
-      <created>1751462489246</created>
+      <created>1751460382501</created>
       <option name="number" value="00006" />
       <option name="presentableId" value="LOCAL-00006" />
       <option name="project" value="LOCAL" />
-      <updated>1751462489246</updated>
+      <updated>1751460382501</updated>
     </task>
-    <task id="LOCAL-00007" summary="add animal menu">
+    <task id="LOCAL-00007" summary="asset refactor">
       <option name="closed" value="true" />
-      <created>1751498522151</created>
+      <created>1751461160287</created>
       <option name="number" value="00007" />
       <option name="presentableId" value="LOCAL-00007" />
       <option name="project" value="LOCAL" />
-      <updated>1751498522151</updated>
+      <updated>1751461160287</updated>
     </task>
-    <task id="LOCAL-00008" summary="add pet effect">
+    <task id="LOCAL-00008" summary="implemented crafting">
       <option name="closed" value="true" />
-      <created>1751534187741</created>
+      <created>1751484354734</created>
       <option name="number" value="00008" />
       <option name="presentableId" value="LOCAL-00008" />
       <option name="project" value="LOCAL" />
-      <updated>1751534187741</updated>
+      <updated>1751484354734</updated>
     </task>
-    <task id="LOCAL-00009" summary="add animal movement">
+    <task id="LOCAL-00009" summary="implemented cooking">
       <option name="closed" value="true" />
-      <created>1751541902931</created>
+      <created>1751494960500</created>
       <option name="number" value="00009" />
       <option name="presentableId" value="LOCAL-00009" />
       <option name="project" value="LOCAL" />
-      <updated>1751541902931</updated>
+      <updated>1751494960500</updated>
     </task>
-    <task id="LOCAL-00010" summary="add energyBar">
+    <task id="LOCAL-00010" summary="implementing refrigerator">
       <option name="closed" value="true" />
-      <created>1751546684718</created>
+      <created>1751546148433</created>
       <option name="number" value="00010" />
       <option name="presentableId" value="LOCAL-00010" />
       <option name="project" value="LOCAL" />
-      <updated>1751546684718</updated>
+      <updated>1751546148433</updated>
     </task>
-    <task id="LOCAL-00011" summary="add count label to inventory">
+    <task id="LOCAL-00011" summary="implementing basics of artisan Menu">
       <option name="closed" value="true" />
-      <created>1751547586180</created>
+      <created>1751581495825</created>
       <option name="number" value="00011" />
       <option name="presentableId" value="LOCAL-00011" />
       <option name="project" value="LOCAL" />
-      <updated>1751547586180</updated>
+      <updated>1751581495826</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="implementing basics of artisan Menu">
+      <option name="closed" value="true" />
+      <created>1751581707525</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1751581707525</updated>
+    </task>
+    <task id="LOCAL-00013" summary="implementing craft popup">
+      <option name="closed" value="true" />
+      <created>1751634966360</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1751634966360</updated>
+    </task>
+    <task id="LOCAL-00014" summary="updated assets">
+      <option name="closed" value="true" />
+      <created>1751635079174</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1751635079174</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -245,21 +274,27 @@
     <MESSAGE value="added clock" />
     <MESSAGE value="added night fade" />
     <MESSAGE value="added greenhouse build" />
-    <MESSAGE value="implemented screenshot" />
-    <MESSAGE value="some stage changes" />
-    <MESSAGE value="add inventory bar" />
-    <MESSAGE value="add animal menu" />
-    <MESSAGE value="add pet effect" />
-    <MESSAGE value="add animal movement" />
-    <MESSAGE value="add energyBar" />
-    <MESSAGE value="add count label to inventory" />
-    <option name="LAST_COMMIT_MESSAGE" value="add count label to inventory" />
+    <MESSAGE value="calibrated camera objects and added energy bar" />
+    <MESSAGE value="dynamic cottage menu" />
+    <MESSAGE value="uploaded assets" />
+    <MESSAGE value="asset refactor" />
+    <MESSAGE value="implemented crafting" />
+    <MESSAGE value="implemented cooking" />
+    <MESSAGE value="implementing refrigerator" />
+    <MESSAGE value="implementing basics of artisan Menu" />
+    <MESSAGE value="implementing craft popup" />
+    <MESSAGE value="updated assets" />
+    <option name="LAST_COMMIT_MESSAGE" value="updated assets" />
   </component>
   <component name="XDebuggerManager">
-    <watches-manager>
-      <configuration name="GradleRunConfiguration">
-        <watch expression="App.getInstance().getCurrentGame().getCurrentPlayer().getSprite()" language="JAVA" />
-      </configuration>
-    </watches-manager>
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/controller/WorldController.java</url>
+          <line>121</line>
+          <option name="timeStamp" value="26" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
