@@ -152,14 +152,18 @@ public abstract class PopUp {
         exitButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                for (Actor o : array) {
-                    o.remove();
-                }
-                exitButton.remove();
-                close();
+                endTask(array, exitButton);
             }
         });
         return exitButton;
+    }
+
+    protected void endTask(ArrayList<Actor> array, ImageButton exitButton) {
+        for (Actor o : array) {
+            o.remove();
+        }
+        exitButton.remove();
+        close();
     }
 
     public static <T> Container<Label> getLabelContainer(Map<T, Integer> list, T item) {

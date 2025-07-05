@@ -2036,10 +2036,12 @@ Ingredient/Sugar.png
 Ingredient/Vinegar.png
 Ingredient/Wheat_Flour.png
 Inventory/Filled_Button.png
+Inventory/Gift.png
 Inventory/Inventory_Parts.png
 Inventory/Inventory_Tab.png
 Inventory/Notification.png
 Inventory/button-.png
+Inventory/chat.png
 Inventory/cooking_tab.png
 Inventory/crafting_tab.png
 Inventory/exit.png

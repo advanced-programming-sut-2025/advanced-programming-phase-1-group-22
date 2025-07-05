@@ -1,5 +1,6 @@
 package io.github.some_example_name.model.relations;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -354,4 +355,8 @@ public class Player extends Actor implements JsonPreparable {
 		getTiles().clear();
 		getTiles().add(App.getInstance().getCurrentGame().getTiles()[path.get(max).getX()][path.get(max).getY()]);
 	}
+
+    public Texture getAvatar() {
+        return GameAsset.ABIGAIL; //TODO
+    }
 }

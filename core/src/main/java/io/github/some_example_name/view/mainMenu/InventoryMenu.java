@@ -27,11 +27,14 @@ import io.github.some_example_name.model.cook.FoodType;
 import io.github.some_example_name.model.receipe.CookingRecipe;
 import io.github.some_example_name.model.receipe.CraftingRecipe;
 import io.github.some_example_name.model.records.Response;
+import io.github.some_example_name.model.relations.Friendship;
+import io.github.some_example_name.model.relations.NPC;
 import io.github.some_example_name.model.relations.Player;
 import io.github.some_example_name.model.structure.Structure;
 import io.github.some_example_name.model.structure.farmInitialElements.Lake;
 import io.github.some_example_name.model.tools.BackPack;
 import io.github.some_example_name.service.GameService;
+import io.github.some_example_name.service.RelationService;
 import io.github.some_example_name.utils.App;
 import io.github.some_example_name.utils.GameAsset;
 import io.github.some_example_name.view.MiniMapRenderer;
@@ -46,6 +49,15 @@ public class InventoryMenu extends PopUp {
     private Integer tabIndex = 0;
     private Table inventory;
     private ScrollPane scrollPane;
+    private ArrayList<ImageButton> gifts = new ArrayList<>();
+    private ArrayList<ImageButton> histories = new ArrayList<>();
+    private ArrayList<ImageButton> chats = new ArrayList<>();
+    private ArrayList<Friendship> friendships = new ArrayList<>();
+    {
+        gifts.add(new ImageButton(new TextureRegionDrawable(new TextureRegion(GameAsset.GIFT))));
+        histories.add(new ImageButton(new TextureRegionDrawable(new TextureRegion(GameAsset.CHEST))));
+        chats.add(new ImageButton(new TextureRegionDrawable(new TextureRegion(GameAsset.CHAT))));
+    }
     private static final Table tabs = new Table();
 
     public void createMenu(Stage stage, Skin skin, WorldController worldController) {
@@ -73,8 +85,8 @@ public class InventoryMenu extends PopUp {
         tab3.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-//                getMenuGroup().clear();
-//                createSocialMenu();
+                getMenuGroup().clear();
+                createSocialMenu(skin, getMenuGroup(), tabs);
             }
         });
         Image tab4 = new Image(GameAsset.MAP_TAB);
@@ -110,7 +122,7 @@ public class InventoryMenu extends PopUp {
         switch (tabIndex) {
             case 0 -> createInventory(skin, tabs, getMenuGroup(), stage);
             case 1 -> createSkillMenu(skin, getMenuGroup(), tabs);
-            case 2 -> createSkillMenu(skin, getMenuGroup(), tabs);
+            case 2 -> createSocialMenu(skin, getMenuGroup(), tabs);
             case 3 -> createMapMenu(skin, getMenuGroup(), tabs);
             case 4 -> createCraftingMenu(skin, tabs, getMenuGroup(), stage);
             case 5 -> createCookingMenu(skin, tabs, getMenuGroup(), stage);
@@ -296,6 +308,7 @@ public class InventoryMenu extends PopUp {
     }
 
     private void createCraftingMenu(Skin skin, Table tabs, Group menuGroup,Stage stage) {
+        getGameService().updateRecipes();
         OrthographicCamera camera = MainGradle.getInstance().getCamera();
         Window window = new Window("", skin);
         window.setSize(camera.viewportWidth * 0.7f, camera.viewportHeight * 0.5f);
@@ -408,6 +421,7 @@ public class InventoryMenu extends PopUp {
     }
 
     private void createCookingMenu(Skin skin, Table tabs, Group menuGroup,Stage stage) {
+        getGameService().updateRecipes();
         OrthographicCamera camera = MainGradle.getInstance().getCamera();
         Window window = new Window("", skin);
         window.setSize(camera.viewportWidth * 0.7f, camera.viewportHeight * 0.5f);
@@ -526,6 +540,7 @@ public class InventoryMenu extends PopUp {
     }
 
     private void createSkillMenu(Skin skin, Group menuGroup, Table tabs) {
+        friendships.clear();
         Player player = App.getInstance().getCurrentGame().getCurrentPlayer();
         Window window = new Window("Skills", skin);
         window.setSize(900, 600);
@@ -646,8 +661,170 @@ public class InventoryMenu extends PopUp {
         menuGroup.addActor(group);
     }
 
-    private void createSocialMenu() {
+    private void createSocialMenu(Skin skin, Group menuGroup, Table tabs) {
+        Player player = App.getInstance().getCurrentGame().getCurrentPlayer();
+        OrthographicCamera camera = MainGradle.getInstance().getCamera();
+        Window window = new Window("Social", skin);
+        window.setSize(camera.viewportWidth * 0.7f, camera.viewportHeight * 0.5f);
+        window.setPosition(
+            (MainGradle.getInstance().getCamera().viewportWidth - window.getWidth()) / 2f,
+            (MainGradle.getInstance().getCamera().viewportHeight - window.getHeight()) / 2f
+        );
+        window.setMovable(false);
 
+        Table table = new Table();
+        table.defaults().pad(10).left();
+
+
+        ArrayList<Actor> array = new ArrayList<>();
+        array.add(window);
+        array.add(tabs);
+        ImageButton exitButton = provideExitButton(array);
+
+        int i = -1;
+        for (Friendship friendship : App.getInstance().getCurrentGame().getFriendships()) {
+            Player friend;
+            if (friendship.getSecondPlayer() instanceof NPC || friendship.getFirstPlayer() instanceof NPC) {
+                continue;
+            } else if (friendship.getSecondPlayer() == player) {
+                friend = (Player) friendship.getFirstPlayer();
+            } else if (friendship.getFirstPlayer() == player) {
+                friend = (Player) friendship.getSecondPlayer();
+            } else continue;
+            i++;
+            Image iconImage = new Image(friend.getAvatar());
+            Label nameLabel = new Label(friend.getUser().getNickname(), skin);
+            final Label tooltipLabel = new Label(friend.getUser().getUsername(), skin);
+            tooltipLabel.setVisible(false);
+            tooltipLabel.setColor(1, 1, 1, 0.9f);
+            tooltipLabel.setZIndex(1000);
+            menuGroup.addActor(tooltipLabel);
+            iconImage.addListener(new InputListener() {
+                @Override
+                public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                    tooltipLabel.pack();
+                    Vector2 stageCoords = iconImage.localToStageCoordinates(new Vector2(iconImage.getWidth(), iconImage.getHeight()));
+                    tooltipLabel.setPosition(stageCoords.x, stageCoords.y);
+                    tooltipLabel.setVisible(true);
+                    tooltipLabel.addAction(Actions.alpha(1f));
+                    tooltipLabel.toFront();
+                }
+
+                @Override
+                public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+                    tooltipLabel.addAction(Actions.sequence(
+                        Actions.fadeOut(0.2f),
+                        Actions.visible(false)
+                    ));
+                }
+            });
+
+            RelationService relationService = RelationService.getInstance();
+
+            float currentXP = friendship.getXp();
+            float maxXP = relationService.xpNeededForChangeLevel(friendship);
+            int level = friendship.getFriendShipLevel();
+
+
+            ProgressBar xpBar = new ProgressBar(0, maxXP, 1, false, skin);
+            xpBar.setValue(currentXP);
+            xpBar.setAnimateDuration(0.2f);
+            xpBar.setWidth(300);
+
+            Label levelLabel = new Label("Level: " + level, skin);
+
+            ImageButton gift = gifts.get(i);
+            ImageButton history = histories.get(i);
+            ImageButton chat = chats.get(i);
+            friendships.add(friendship);
+
+            Table row = new Table();
+            row.defaults().pad(10).align(Align.left);
+            row.add(iconImage).size(64).padRight(20);
+            row.add(nameLabel).width(100).padRight(20);
+            row.add(xpBar).width(300).padRight(20);
+            row.add(levelLabel).width(80).align(Align.right).padRight(20);
+            row.add(gift).size(64).padRight(20);
+            row.add(history).size(64).padRight(20);
+            row.add(chat).size(64);
+
+            table.add(row).row();
+        }
+
+        Table content = new Table();
+        content.setFillParent(true);
+        content.add(table).expand().fill().pad(20);
+
+        window.add(content).expand().fill();
+        window.top();
+
+        Group group = new Group() {
+            @Override
+            public void act(float delta) {
+                window.setPosition(
+                    (MainGradle.getInstance().getCamera().viewportWidth - window.getWidth()) / 2f +
+                        MainGradle.getInstance().getCamera().position.x - MainGradle.getInstance().getCamera().viewportWidth / 2,
+                    (MainGradle.getInstance().getCamera().viewportHeight - window.getHeight()) / 2f +
+                        MainGradle.getInstance().getCamera().position.y - MainGradle.getInstance().getCamera().viewportHeight / 2
+                );
+                exitButton.setPosition(
+                    window.getX() + window.getWidth() - exitButton.getWidth() / 2f + 16,
+                    window.getY() + window.getHeight() - exitButton.getHeight() / 2f
+                );
+                tabs.setPosition(
+                    window.getX(),
+                    window.getY() + window.getHeight() - tabs.getHeight() / 2f + 70
+                );
+                for (int j = 0; j < friendships.size(); j++) {
+                    Player friend;
+                    Friendship friendship = friendships.get(j);
+                    if (friendship.getSecondPlayer() == player) {
+                        friend = (Player) friendship.getFirstPlayer();
+                    } else {
+                        friend = (Player) friendship.getSecondPlayer();
+                    }
+
+                    if (gifts.get(j).isChecked()) {
+                        endTask(array, exitButton);
+                        getController().showResponse(new Response(friend.getUser().getNickname()));
+                        GiftMenu giftMenu = new GiftMenu();
+                        giftMenu.setFriendship(friendship);
+                        giftMenu.createMenu(stage, skin, getController());
+                        friendships.clear();
+                        gifts.get(j).setChecked(false);
+                        break;
+                    }
+                    if (histories.get(j).isChecked()) {
+                        getController().showResponse(new Response(friend.getUser().getNickname()));
+                        endTask(array, exitButton);
+//                GiftHistoryMenu giftMenu = new GiftHistoryMenu();
+//                        giftMenu.setFriendship(friendship);
+//                giftMenu.createMenu(skin, menuGroup, tabs);
+                        friendships.clear();
+                        histories.get(j).setChecked(false);
+                        break;
+                    }
+                    if (chats.get(j).isChecked()) {
+                        endTask(array, exitButton);
+                        getController().showResponse(new Response(friend.getUser().getNickname()));
+//                ChatMenu giftMenu = new ChatMenu();
+//                        giftMenu.setFriendship(friendship);
+//                giftMenu.createMenu(skin, menuGroup, tabs);
+                        friendships.clear();
+                        chats.get(j).setChecked(false);
+                        break;
+                    }
+
+
+                }
+                super.act(delta);
+            }
+        };
+
+        group.addActor(window);
+        group.addActor(exitButton);
+        group.addActor(tabs);
+        menuGroup.addActor(group);
     }
 
     private void createMapMenu(Skin skin,Group menuGroup,Table tabs) {
