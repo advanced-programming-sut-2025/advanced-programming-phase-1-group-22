@@ -162,7 +162,7 @@ public class GiftMenu extends PopUp {
         info.add(new Label(item == null ? "Select an item!" : item.getName(), skin)).colspan(3).center().row();
         TextButton increment = new TextButton("+", skin), decrement = new TextButton("-", skin);
         info.add(increment).width(20).center();
-        info.add(new TextButton(count.toString(), skin)).center();
+        info.add(new TextButton(count.toString(), skin)).width(80).center();
         info.add(decrement).width(20).center().row();
         TextButton button = new TextButton("Send as gift to " + friend.getUser().getNickname(), skin);
         info.add(button).colspan(3).padTop(20).center().row();
@@ -198,7 +198,6 @@ public class GiftMenu extends PopUp {
         button.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                endTask(array, exitButton);
                 if (item == null) {
                     getController().showResponse(new Response("Select an item to give!"));
                     return true;
@@ -210,7 +209,10 @@ public class GiftMenu extends PopUp {
                 getController().showResponse(resp);
                 item = null;
                 count = 0;
-                createInventory(skin, menuGroup, stage);
+                if (resp.shouldBeBack()) {
+                    endTask(array, exitButton);
+                    createInventory(skin, menuGroup, stage);
+                }
                 return resp.shouldBeBack();
             }
         });

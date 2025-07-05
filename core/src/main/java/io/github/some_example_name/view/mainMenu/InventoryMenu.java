@@ -662,6 +662,7 @@ public class InventoryMenu extends PopUp {
     }
 
     private void createSocialMenu(Skin skin, Group menuGroup, Table tabs) {
+        friendships.clear();
         Player player = App.getInstance().getCurrentGame().getCurrentPlayer();
         OrthographicCamera camera = MainGradle.getInstance().getCamera();
         Window window = new Window("Social", skin);
@@ -797,9 +798,9 @@ public class InventoryMenu extends PopUp {
                     if (histories.get(j).isChecked()) {
                         getController().showResponse(new Response(friend.getUser().getNickname()));
                         endTask(array, exitButton);
-//                GiftHistoryMenu giftMenu = new GiftHistoryMenu();
-//                        giftMenu.setFriendship(friendship);
-//                giftMenu.createMenu(skin, menuGroup, tabs);
+                        GiftHistoryMenu giftMenu = new GiftHistoryMenu();
+                        giftMenu.setFriendship(friendship);
+                        giftMenu.createMenu(stage, skin, getController());
                         friendships.clear();
                         histories.get(j).setChecked(false);
                         break;

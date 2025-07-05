@@ -10,6 +10,7 @@ import lombok.Setter;
 @Setter
 public class SpriteHolder {
     private Sprite sprite;
+    private boolean changed;
     private Tuple<Float> offset;
 
     public  SpriteHolder(Sprite sprite, Tuple<Float> offset){
