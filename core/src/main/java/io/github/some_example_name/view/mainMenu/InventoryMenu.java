@@ -787,7 +787,6 @@ public class InventoryMenu extends PopUp {
 
                     if (gifts.get(j).isChecked()) {
                         endTask(array, exitButton);
-                        getController().showResponse(new Response(friend.getUser().getNickname()));
                         GiftMenu giftMenu = new GiftMenu();
                         giftMenu.setFriendship(friendship);
                         giftMenu.createMenu(stage, skin, getController());
@@ -796,7 +795,6 @@ public class InventoryMenu extends PopUp {
                         break;
                     }
                     if (histories.get(j).isChecked()) {
-                        getController().showResponse(new Response(friend.getUser().getNickname()));
                         endTask(array, exitButton);
                         GiftHistoryMenu giftMenu = new GiftHistoryMenu();
                         giftMenu.setFriendship(friendship);
@@ -808,15 +806,13 @@ public class InventoryMenu extends PopUp {
                     if (chats.get(j).isChecked()) {
                         endTask(array, exitButton);
                         getController().showResponse(new Response(friend.getUser().getNickname()));
-//                ChatMenu giftMenu = new ChatMenu();
-//                        giftMenu.setFriendship(friendship);
-//                giftMenu.createMenu(skin, menuGroup, tabs);
+                        TalkMenu giftMenu = new TalkMenu();
+                        giftMenu.setFriendship(friendship);
+                        giftMenu.createMenu(stage, skin, getController());
                         friendships.clear();
                         chats.get(j).setChecked(false);
                         break;
                     }
-
-
                 }
                 super.act(delta);
             }

@@ -44,7 +44,9 @@ public class CameraViewController {
         App.getInstance().getCurrentGame().getTimeAndDate().updateBatch(MainGradle.getInstance().getBatch());
         updateEnergyBar();
         updateInventoryBar();
-        handleInput();
+        if (GameView.captureInput) {
+            handleInput();
+        }
     }
 
 

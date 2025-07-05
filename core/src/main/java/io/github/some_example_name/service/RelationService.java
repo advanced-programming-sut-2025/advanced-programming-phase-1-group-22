@@ -47,9 +47,9 @@ public class RelationService {
         if (anotherPlayer == null) {
             return new Response("Player with that username not found");
         }
-        if (!twoActorsAreNeighbors(currentPlayer, anotherPlayer, 1)) {
-            return new Response("You can't talk to the other player");
-        }
+//        if (!twoActorsAreNeighbors(currentPlayer, anotherPlayer, 1)) {
+//            return new Response("You can't talk to the other player");
+//        }
         Friendship friendship = getFriendShipBetweenTwoActors(anotherPlayer);
         friendship.getDialogs().put(message, currentPlayer);
         if (currentPlayer.getCouple() != null) {
@@ -62,6 +62,30 @@ public class RelationService {
         }
         currentPlayer.changeEnergy(50);
         anotherPlayer.changeEnergy(50);
+        anotherPlayer.notify(new Response("%s called you!".formatted(currentPlayer.getUser().getUsername())));
+        return new Response("message sent successfully");
+    }
+
+    public Response talkToAnotherPlayer(Player anotherPlayer, String message) {
+        game = App.getInstance().getCurrentGame();
+        currentPlayer = game.getCurrentPlayer();
+//        Player anotherPlayer = getPlayer(username);
+//        if (anotherPlayer == null) {
+//            return new Response("Player with that username not found");
+//        }
+//        if (!twoActorsAreNeighbors(currentPlayer, anotherPlayer, 1)) {
+//            return new Response("You can't talk to the other player");
+//        }
+        Friendship friendship = getFriendShipBetweenTwoActors(anotherPlayer);
+        friendship.getDialogs().put(message, currentPlayer);
+        if (currentPlayer.getCouple() != null) {
+            if (currentPlayer.getCouple().equals(anotherPlayer)) {
+                changeFriendShipLevelUp(friendship, 50);
+            }
+            if (currentPlayer.getCouple().equals(anotherPlayer)) {
+                changeFriendShipLevelUp(friendship, 20);
+            }
+        }
         anotherPlayer.notify(new Response("%s called you!".formatted(currentPlayer.getUser().getUsername())));
         return new Response("message sent successfully");
     }
