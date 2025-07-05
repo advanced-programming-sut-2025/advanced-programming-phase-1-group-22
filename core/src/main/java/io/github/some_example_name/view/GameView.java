@@ -20,6 +20,7 @@ import io.github.some_example_name.model.source.Seed;
 import io.github.some_example_name.model.source.SeedType;
 import io.github.some_example_name.model.tools.MilkPail;
 import io.github.some_example_name.service.GameService;
+import io.github.some_example_name.service.RelationService;
 import io.github.some_example_name.utils.App;
 
 import java.util.ArrayList;
@@ -79,6 +80,8 @@ public class GameView implements Screen, InputProcessor {
         gameService.placeItem("preserves_jar", "west");
         gameService.C_AddItem("fish_smoker", "1");
         gameService.placeItem("fish_smoker", "southeast");
+        RelationService.getInstance().giveGift("ali", "bee_house", 1);
+        gameService.nextTurn();
 //        stage = new Stage(MainGradle.getInstance().getViewport(), MainGradle.getInstance().getBatch());
     }
 

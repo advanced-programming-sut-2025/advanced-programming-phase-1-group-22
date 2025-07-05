@@ -1655,6 +1655,7 @@ public class GameAsset {
     public static final Texture NINE_HEARTS = new Texture("Heart/Nine_Hearts.png");
     public static final Texture ONE_HEARTS = new Texture("Heart/One_Hearts.png");
     public static final Texture SECRET_HEART = new Texture("Heart/Secret_Heart.png");
+    public static final Texture EMPTY_HEART = new Texture("Heart/Empty_Heart.png");
     public static final Texture SEVEN_HEARTS = new Texture("Heart/Seven_Hearts.png");
     public static final Texture SIX_HEARTS = new Texture("Heart/Six_Hearts.png");
     public static final Texture TEN_HEARTS = new Texture("Heart/Ten_Hearts.png");

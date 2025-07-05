@@ -2009,6 +2009,7 @@ Hat/White_Turban.png
 Hat/Witch_Hat.png
 Heart/Eight_Hearts.png
 Heart/Eleven_Hearts.png
+Heart/Empty_Heart.png
 Heart/Five_Hearts.png
 Heart/Four_Hearts.png
 Heart/Fourteen_Hearts.png
