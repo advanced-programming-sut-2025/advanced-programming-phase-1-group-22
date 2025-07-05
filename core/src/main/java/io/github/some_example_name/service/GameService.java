@@ -1965,7 +1965,7 @@ public class GameService {
                 + " " + player.getMaxEnergy(), true);
     }
 
-    private void updateRecipes() {
+    public void updateRecipes() {
         Player player = app.getCurrentGame().getCurrentPlayer();
         switch (player.getAbilityLevel(Ability.MINING)) {
             case 4:
