@@ -2,6 +2,7 @@ package io.github.some_example_name.model.relations;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.some_example_name.utils.GameAsset;
@@ -63,6 +64,7 @@ public class Player extends Actor implements JsonPreparable {
     private TrashCan currentTrashCan;
     private Boolean isWedding = false;
     private Sprite sprite;
+    private ArrayList<Notification<com.badlogic.gdx.scenes.scene2d.Actor>> notifications = new ArrayList<>();
 	@JsonProperty("abilitiesMap")
 	private ObjectMapWrapper abilitiesWrapper;
 
@@ -204,8 +206,8 @@ public class Player extends Actor implements JsonPreparable {
 		}
 	}
 
-	public void notify(Response response) {
-
+	public void notify(Response response, NotificationType type) {
+        notifications.add(new Notification<>(type, new Label(response.message(), GameAsset.SKIN)));
 	}
 
 	public Map.Entry<Salable, Integer> getItemFromInventory(String name) {
