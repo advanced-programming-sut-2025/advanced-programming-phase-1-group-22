@@ -126,7 +126,7 @@ public class RelationService {
         return null;
     }
 
-    boolean twoActorsAreNeighbors(Actor currentPlayer, Actor anotherPlayer, int dis) {
+    public boolean twoActorsAreNeighbors(Actor currentPlayer, Actor anotherPlayer, int dis) {
         game = App.getInstance().getCurrentGame();
         currentPlayer = game.getCurrentPlayer();
         Tile tile = currentPlayer.getTiles().get(0);
@@ -206,6 +206,8 @@ public class RelationService {
                 friendship.setXp(0);
             }
         }
+        currentPlayer.changeEnergy(50);
+        player.changeEnergy(50);
         return new Response("Gift gave successfully", true);
     }
 
@@ -312,12 +314,12 @@ public class RelationService {
             return new Response("find a girl please!");
         }
         Friendship friendShipBetweenTwoActors = getFriendShipBetweenTwoActors(player);
-//        if (friendShipBetweenTwoActors.getFriendShipLevel() < 3) {
-//            return new Response("you are not in that level of friendship");
-//        }
-//        if (!twoActorsAreNeighbors(currentPlayer, player, 1)) {
-//            return new Response("the other player is not next You");
-//        }
+        if (friendShipBetweenTwoActors.getFriendShipLevel() < 3) {
+            return new Response("you are not in that level of friendship");
+        }
+        if (!twoActorsAreNeighbors(currentPlayer, player, 1)) {
+            return new Response("the other player is not next You");
+        }
         Salable wRing = null;
         for (Map.Entry<Salable, Integer> salableIntegerEntry : currentPlayer.getInventory().getProducts().entrySet()) {
             if (salableIntegerEntry.getKey().getName().equals(ring)) {
