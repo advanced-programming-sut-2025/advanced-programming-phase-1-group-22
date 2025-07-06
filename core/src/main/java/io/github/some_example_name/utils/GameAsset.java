@@ -43,11 +43,17 @@ public class GameAsset {
     public static final Texture EXIT_BUTTON = new Texture("Inventory/exit.png");
     public static final Skin SKIN = new Skin(Gdx.files.internal("skin/craftacular-ui.json"));
     public static final Texture BARN = new Texture("Farm_Buildings/Barn.png");
+    public static final Texture BARN_INTERIOR = new Texture("Barn_Interior.png");
     public static final Texture BIG_BARN = new Texture("Farm_Buildings/Big_Barn.png");
     public static final Texture DELUXE_BARN = new Texture("Farm_Buildings/Deluxe_Barn.png");
     public static final Texture COOP = new Texture("Farm_Buildings/Coop.png");
     public static final Texture BIG_COOP = new Texture("Farm_Buildings/Big_Coop.png");
     public static final Texture DELUXE_COOP = new Texture("Farm_Buildings/Deluxe_Coop.png");
+    public static final Texture BIG_BARN_INTERIOR = new Texture("Big_Barn_Interior.png");
+    public static final Texture DELUXE_BARN_INTERIOR = new Texture("Deluxe_Barn_Interior.png");
+    public static final Texture COOP_INTERIOR = new Texture("Big_Coop_Interior.png");
+    public static final Texture BIG_COOP_INTERIOR = new Texture("Big_Coop_Interior.png");
+    public static final Texture DELUXE_COOP_INTERIOR = new Texture("Deluxe_Coop_Interior.png");
     public static final Texture WELL = new Texture("Farm_Buildings/Well.png");
     public static final Texture SHIPPINGBIN = new Texture("Farm_Buildings/Shipping_Bin_Anim.png");
     public static final Texture HOUSE = new Texture("Cottage/House_(tier_3).png");

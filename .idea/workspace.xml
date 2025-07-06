@@ -4,61 +4,20 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d95100ff-6e61-4571-9e87-dcef3d963dba" name="Changes" comment="merge">
-      <change afterPath="$PROJECT_DIR$/assets/Blacksmith.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/Blacksmith_Interior.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/Carpenter's_Shop.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/Carpenter's_Shop_Interior.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/Clint_Happy.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/Fish_Shop.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/Fish_Shop_Interior.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/Gus_Happy.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/JojaMart_Interior.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/Jojamart.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/Marnie's_Ranch_Interior.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/Marnie_Happy.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/Morris.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/Pierre's_General_Store_Interior.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/Pierre_Happy.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/Pierres_shop.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/Ranch.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/Robin_Happy.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/Saloon.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/Saloon_Interior.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/Willy_Happy.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/controller/StoreController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/structure/stores/Item.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="d95100ff-6e61-4571-9e87-dcef3d963dba" name="Changes" comment="add store menu">
+      <change afterPath="$PROJECT_DIR$/assets/Barn_Interior.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/Big_Barn_Interior.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/Big_Coop_Interior.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/Deluxe_Barn_Interior.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/Deluxe_Coop_Interior.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/assets/assets.txt" beforeDir="false" afterPath="$PROJECT_DIR$/assets/assets.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/skin/craftacular-ui.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/skin/craftacular-ui.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/build/libs/core-1.0.0.jar" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/libs/core-1.0.0.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/controller/AnimalController.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/controller/AnimalController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/controller/CarryingController.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/controller/CarryingController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/controller/GameViewController.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/controller/GameViewController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/controller/PlayerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/controller/PlayerController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/controller/WorldController.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/controller/WorldController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/controller/gameMenu/GameMenuController.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/controller/gameMenu/GameMenuController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/animal/AnimalType.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/animal/AnimalType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/shelter/FarmBuilding.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/shelter/FarmBuilding.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/shelter/FarmBuildingType.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/shelter/FarmBuildingType.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/structure/stores/BlackSmithStuff.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/structure/stores/BlackSmithStuff.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/structure/stores/BlackSmithUpgrade.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/structure/stores/BlackSmithUpgrade.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/structure/stores/CarpenterShopFarmBuildings.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/structure/stores/CarpenterShopFarmBuildings.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/structure/stores/CarpenterShopMineralStuff.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/structure/stores/CarpenterShopMineralStuff.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/structure/stores/FishShopStuff.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/structure/stores/FishShopStuff.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/structure/stores/JojaMartShopSeed.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/structure/stores/JojaMartShopSeed.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/structure/stores/MarnieShopAnimal.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/structure/stores/MarnieShopAnimal.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/structure/stores/MarnieShopAnimalRequierment.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/structure/stores/MarnieShopAnimalRequierment.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/structure/stores/PierreShop.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/structure/stores/PierreShop.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/structure/stores/Store.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/structure/stores/Store.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/structure/stores/StoreType.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/structure/stores/StoreType.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/structure/stores/TheStardropSaloonStuff.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/structure/stores/TheStardropSaloonStuff.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/tools/BackPackType.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/tools/BackPackType.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/tools/WateringCan.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/tools/WateringCan.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/service/GameService.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/service/GameService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/utils/GameAsset.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/utils/GameAsset.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/view/GameView.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/view/GameView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/view/mainMenu/InventoryMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/view/mainMenu/InventoryMenu.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lwjgl3/build/resources/main/assets.txt" beforeDir="false" afterPath="$PROJECT_DIR$/lwjgl3/build/resources/main/assets.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -363,7 +322,15 @@
       <option name="project" value="LOCAL" />
       <updated>1751669345993</updated>
     </task>
-    <option name="localTasksCounter" value="22" />
+    <task id="LOCAL-00022" summary="add store menu">
+      <option name="closed" value="true" />
+      <created>1751818460162</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1751818460162</updated>
+    </task>
+    <option name="localTasksCounter" value="23" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -401,7 +368,8 @@
     <MESSAGE value="preventing events while popup occurs" />
     <MESSAGE value="added shortcuts to carrying salables" />
     <MESSAGE value="merge" />
-    <option name="LAST_COMMIT_MESSAGE" value="merge" />
+    <MESSAGE value="add store menu" />
+    <option name="LAST_COMMIT_MESSAGE" value="add store menu" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

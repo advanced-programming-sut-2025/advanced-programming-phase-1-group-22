@@ -493,7 +493,6 @@ public class GameService {
             structure = new ShippingBin();
         } else {
             structure = new FarmBuilding(carpenterShopFarmBuildings.getFarmBuildingType());
-            ;
         }
         String message = buildStructureInAPlace(carpenterShopFarmBuildings,
                 currentFarm, structure, carpenterShopFarmBuildings.getFarmBuildingType().getHeight(),
