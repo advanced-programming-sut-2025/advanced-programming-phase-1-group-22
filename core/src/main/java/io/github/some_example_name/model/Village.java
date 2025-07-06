@@ -6,25 +6,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import io.github.some_example_name.model.animal.Animal;
-import io.github.some_example_name.model.craft.Craft;
 import io.github.some_example_name.model.enums.Weather;
-import io.github.some_example_name.model.products.AnimalProduct;
-import io.github.some_example_name.model.products.TreesAndFruitsAndSeeds.Tree;
 import io.github.some_example_name.model.relations.NPC;
 import io.github.some_example_name.model.relations.NPCType;
-import io.github.some_example_name.model.relations.Player;
-import io.github.some_example_name.model.shelter.FarmBuilding;
-import io.github.some_example_name.model.shelter.ShippingBin;
-import io.github.some_example_name.model.source.*;
-import io.github.some_example_name.model.structure.NPCHouse;
-import io.github.some_example_name.model.structure.Stone;
+import io.github.some_example_name.model.relations.NPCHouse;
 import io.github.some_example_name.model.structure.Structure;
-import io.github.some_example_name.model.structure.Trunk;
-import io.github.some_example_name.model.structure.farmInitialElements.Cottage;
-import io.github.some_example_name.model.structure.farmInitialElements.GreenHouse;
-import io.github.some_example_name.model.structure.farmInitialElements.Lake;
-import io.github.some_example_name.model.structure.farmInitialElements.Quarry;
 import io.github.some_example_name.model.structure.stores.Store;
 import io.github.some_example_name.model.structure.stores.StoreType;
 import io.github.some_example_name.saveGame.JsonPreparable;
@@ -113,7 +99,7 @@ public class Village implements JsonPreparable {
         addNPC(lia, randomNumber, 66, false);
 
 
-        NPCType ebigil = NPCType.EBIGIL;
+        NPCType ebigil = NPCType.ABIGIL;
         randomNumber = getRandomNumber(100, 112);
         addNPC(ebigil, randomNumber, 66, false);
 

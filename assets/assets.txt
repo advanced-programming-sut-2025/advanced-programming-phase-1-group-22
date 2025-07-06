@@ -283,6 +283,7 @@ Bait/White_Bait.png
 Bait/Wild_Bait.png
 Bait/Yellow_Bait.png
 Barn_Interior.png
+Beach_Cabin_Stage_3.png
 Big_Barn_Interior.png
 Big_Coop_Interior.png
 Blacksmith.png
@@ -2113,6 +2114,7 @@ Mineral/Star_Shards.png
 Mineral/Thunder_Egg.png
 Mineral/Tigerseye.png
 Morris.png
+Neighbor_Cabin_Stage_3.png
 Night/Green.png
 Night/night.jpg
 Node/Amethyst_Node.png
@@ -2167,6 +2169,7 @@ Pants/Tight_Pants.png
 Pierre's_General_Store_Interior.png
 Pierre_Happy.png
 Pierres_shop.png
+Plank_Cabin_Stage_3.png
 Ranch.png
 Rarecrow/Rarecrow_1.png
 Rarecrow/Rarecrow_2.png
@@ -2338,6 +2341,7 @@ Rock/Stone_Index762.png
 Rock/Stone_Index845.png
 Rock/Stone_Index846.png
 Rock/Stone_Index847.png
+Rustic_Cabin_Stage_3.png
 Saloon.png
 Saloon_Interior.png
 Shirt/Banana_Shirt.png
@@ -2627,6 +2631,7 @@ Special_item/Wilted_Bouquet.png
 Special_item/Wood_Chipper.png
 Special_item/Wood_Chipper_On.png
 Special_item/Workbench.png
+Stone_Cabin_Stage_3.png
 Tackle/Barbed_Hook.png
 Tackle/Cork_Bobber.png
 Tackle/Curiosity_Lure.png
@@ -2973,8 +2978,13 @@ Weather/Rain.png
 Weather/Snow.png
 Weather/Storm.png
 Willy_Happy.png
+abigel.png
 bar.png
 energyBarEmpty.jpg
+harvey.png
+lia.png
+robin.png
+sebastian.png
 skin/craftacular-ui.atlas
 skin/craftacular-ui.json
 skin/craftacular-ui.png
