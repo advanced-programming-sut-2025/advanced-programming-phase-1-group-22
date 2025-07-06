@@ -145,24 +145,4 @@ public class TalkMenu extends PopUp {
         group.addActor(exitButton);
         menuGroup.addActor(group);
     }
-
-
-    private ArrayList<String> wrapString(String string, int length) {
-        ArrayList<String> lines = new ArrayList<>();
-        if (string == null || string.isEmpty() || length <= 0) return lines;
-
-        String[] words = string.split("\\s+");
-        StringBuilder currentLine = new StringBuilder();
-        for (String word : words) {
-            if (currentLine.length() + word.length() + 1 > length) {
-                lines.add(currentLine.toString().trim());
-                currentLine.setLength(0);
-            }
-            currentLine.append(word).append(" ");
-        }
-        if (!currentLine.isEmpty()) {
-            lines.add(currentLine.toString().trim());
-        }
-        return lines;
-    }
 }

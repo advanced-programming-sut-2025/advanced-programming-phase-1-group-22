@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.MathUtils;
 import io.github.some_example_name.MainGradle;
+import io.github.some_example_name.model.Notification;
 import io.github.some_example_name.model.relations.Player;
 import io.github.some_example_name.service.GameService;
 import io.github.some_example_name.utils.App;
@@ -11,6 +12,7 @@ import io.github.some_example_name.utils.GameAsset;
 import io.github.some_example_name.view.GameView;
 import io.github.some_example_name.view.mainMenu.FridgeMenu;
 import io.github.some_example_name.view.mainMenu.InventoryMenu;
+import io.github.some_example_name.view.mainMenu.NotificationMenu;
 import lombok.Getter;
 
 @Getter
@@ -90,7 +92,9 @@ public class PlayerController {
             fridgeMenu.createMenu(GameView.stage,GameAsset.SKIN, getWorldController());
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.F)) {
-            //TODO open Journal?
+            NotificationMenu notificationMenu = new NotificationMenu();
+            notificationMenu.createMenu(GameView.stage,GameAsset.SKIN, getWorldController());
+            //TODO OPEN JOURNAL?
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.M)) {
             inventoryMenu.setTabIndex(3);
@@ -100,7 +104,7 @@ public class PlayerController {
             inventoryMenu.setTabIndex(4);
             inventoryMenu.createMenu(GameView.stage,GameAsset.SKIN, getWorldController());
         }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.C)) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.V)) {
             inventoryMenu.setTabIndex(5);
             inventoryMenu.createMenu(GameView.stage,GameAsset.SKIN, getWorldController());
         }
