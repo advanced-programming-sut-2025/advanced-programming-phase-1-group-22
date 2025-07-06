@@ -58,6 +58,7 @@ public class CraftPopUp extends PopUp {
                 return true;
             }
         });
+        info.add(cancel).padTop(20).colspan(2).row();
         TextButton cheat = new TextButton("Don't Touch!", skin);
         cheat.addListener(new InputListener() {
             @Override

@@ -64,7 +64,7 @@ public class Player extends Actor implements JsonPreparable {
     private TrashCan currentTrashCan;
     private Boolean isWedding = false;
     private Sprite sprite;
-    private ArrayList<Notification<com.badlogic.gdx.scenes.scene2d.Actor>> notifications = new ArrayList<>();
+    private ArrayList<Notification<com.badlogic.gdx.scenes.scene2d.Actor, Actor>> notifications = new ArrayList<>();
 	@JsonProperty("abilitiesMap")
 	private ObjectMapWrapper abilitiesWrapper;
 
@@ -206,8 +206,8 @@ public class Player extends Actor implements JsonPreparable {
 		}
 	}
 
-	public void notify(Response response, NotificationType type) {
-        notifications.add(new Notification<>(type, new Label(response.message(), GameAsset.SKIN)));
+	public void notify(Response response, NotificationType type, Actor source) {
+        notifications.add(new Notification<>(type, new Label(response.message(), GameAsset.SKIN), source));
 	}
 
 	public Map.Entry<Salable, Integer> getItemFromInventory(String name) {
@@ -357,8 +357,4 @@ public class Player extends Actor implements JsonPreparable {
 		getTiles().clear();
 		getTiles().add(App.getInstance().getCurrentGame().getTiles()[path.get(max).getX()][path.get(max).getY()]);
 	}
-
-    public Texture getAvatar() {
-        return GameAsset.ABIGAIL; //TODO
-    }
 }
