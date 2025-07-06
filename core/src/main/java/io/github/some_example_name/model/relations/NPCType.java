@@ -1,5 +1,7 @@
 package io.github.some_example_name.model.relations;
 
+import com.badlogic.gdx.graphics.Texture;
+import io.github.some_example_name.utils.GameAsset;
 import lombok.Getter;
 import lombok.ToString;
 import io.github.some_example_name.model.Salable;
@@ -12,18 +14,16 @@ import io.github.some_example_name.model.products.TreesAndFruitsAndSeeds.MadePro
 import io.github.some_example_name.model.receipe.CookingRecipe;
 import io.github.some_example_name.model.source.CropType;
 import io.github.some_example_name.model.source.MineralType;
-import io.github.some_example_name.model.structure.NPCHouse;
 import io.github.some_example_name.model.tools.WateringCanType;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Supplier;
 
 @Getter
 @ToString
 public enum NPCType {
-    SEBASTIAN("sebastian", "",
+    SEBASTIAN("sebastian", GameAsset.SEBASTIAN_,GameAsset.CABIN1,
             () -> List.of(AnimalProductType.SHEEP_WOOL, FoodType.PUMPKIN_PIE, FoodType.PIZZA),
             () -> List.of(
                     new Mission(() -> Map.of(MineralType.IRON, 50), () -> Map.of(MineralType.DIAMOND, 2), 0),
@@ -32,7 +32,7 @@ public enum NPCType {
             ),
             1),
 
-    EBIGIL("ebigel", "",
+    ABIGIL("ebigel", GameAsset.ABIGEL_,GameAsset.CABIN2,
             () -> List.of(MineralType.IRON_ORE, MineralType.STONE, MadeProductType.COFFE),
             () -> List.of(
                     new Mission(() -> Map.of(MadeProductType.GOLD_BAR, 1), () -> Map.of(MineralType.GOLD, 1), 0),
@@ -41,7 +41,7 @@ public enum NPCType {
             ),
             2),
 
-    HARVEY("harvey", "",
+    HARVEY("harvey", GameAsset.HARVEY_,GameAsset.CABIN3,
             () -> List.of(MadeProductType.PICKLES, MadeProductType.WINE, MadeProductType.COFFE),
             () -> List.of(
                     new Mission(() -> Map.of(MineralType.GOLD, 12), () -> Map.of(MineralType.GOLD, 750), 0),
@@ -50,7 +50,7 @@ public enum NPCType {
             ),
             3),
 
-    LIA("lia", "",
+    LIA("lia", GameAsset.LIA_,GameAsset.CABIN4,
             () -> List.of(MadeProductType.WINE, CropType.GRAPE, FoodType.SALAD),
             () -> List.of(
                     new Mission(() -> Map.of(MineralType.HARD_WOOD, 10), () -> Map.of(MineralType.GOLD, 500), 0),
@@ -59,7 +59,7 @@ public enum NPCType {
             ),
             4),
 
-    RABIN("rabin", "",
+    RABIN("rabin", GameAsset.ROBIN_,GameAsset.CABIN5,
             () -> List.of(FoodType.SPAGHETTI, MineralType.WOOD, MadeProductType.IRON_BAR),
             () -> List.of(
                     new Mission(() -> Map.of(MineralType.WOOD, 80), () -> Map.of(MineralType.GOLD, 1000), 0),
@@ -70,11 +70,11 @@ public enum NPCType {
 
     private Integer id;
     private final String name;
-    private final String job;
+    private final Texture textureCharacter;
+    private final Texture textureHouse;
     private String personality;
-    private NPCHouse NPCHouse;
-    private List<Mission> missions = new ArrayList<>();
-    private int missionSeasonDis;
+    private final List<Mission> missions = new ArrayList<>();
+    private final int missionSeasonDis;
 
     @FunctionalInterface
     private interface IngredientsSupplier {
@@ -104,10 +104,11 @@ public enum NPCType {
         return missions;
     }
 
-    NPCType(String name, String job, IngredientsSupplier ingredientsSupplier,
+    NPCType(String name, Texture textureCharacter,Texture textureHouse, IngredientsSupplier ingredientsSupplier,
             MissionsSupplier missionsSupplier, int missionSeasonDis) {
         this.name = name;
-        this.job = job;
+        this.textureCharacter = textureCharacter;
+        this.textureHouse = textureHouse;
         this.ingredientsSupplier = ingredientsSupplier;
         this.missionsSupplier = missionsSupplier;
         this.missionSeasonDis = missionSeasonDis;

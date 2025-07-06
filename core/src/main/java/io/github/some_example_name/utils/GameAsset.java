@@ -8,6 +8,16 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 public class GameAsset {
+    public static final Texture LIA_ = new Texture("lia.png");
+    public static final Texture ROBIN_ = new Texture("robin.png");
+    public static final Texture SEBASTIAN_ = new Texture("sebastian.png");
+    public static final Texture HARVEY_ = new Texture("harvey.png");
+    public static final Texture ABIGEL_ = new Texture("abigel.png");
+    public static final Texture CABIN1 = new Texture("Beach_Cabin_Stage_3.png");
+    public static final Texture CABIN2 = new Texture("Neighbor_Cabin_Stage_3.png");
+    public static final Texture CABIN3 = new Texture("Plank_Cabin_Stage_3.png");
+    public static final Texture CABIN4 = new Texture("Rustic_Cabin_Stage_3.png");
+    public static final Texture CABIN5 = new Texture("Stone_Cabin_Stage_3.png");
     public static final Texture BLACKSMITH = new Texture("Blacksmith.png");
     public static final Texture BLACKSMITH_INTERIOR = new Texture("Blacksmith_Interior.png");
     public static final Texture Clint = new Texture("Clint_Happy.png");
