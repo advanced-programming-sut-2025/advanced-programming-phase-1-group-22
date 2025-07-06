@@ -1291,11 +1291,17 @@ public class GameService {
         if (product == null) return new Response(itemName + " not found in your backpack.");
         Direction dir = Direction.getByName(direction);
         if (dir == null) return new Response(direction + " not recognized as a direction.");
+        return placeItem(product, dir);
+    }
+
+
+    public Response placeItem(Salable product, Direction dir) {
+        Player player = app.getCurrentGame().getCurrentPlayer();
         Tile tile = app.getCurrentGame().tiles[player.getTiles().get(0).getX() + dir.getXTransmit()]
-                [player.getTiles().get(0).getY() + dir.getYTransmit()];
+            [player.getTiles().get(0).getY() + dir.getYTransmit()];
         if (tile.getIsFilled()) return new Response("The tile you're trying to put the item on, is filled");
         if (!(product instanceof Structure))
-            return new Response(itemName + " Cannot be put on ground"); //TODO Some objects are not structure but must be put on ground
+            return new Response(product.getName() + " Cannot be put on ground"); //TODO Some objects are not structure but must be put on ground
         player.getInventory().deleteProductFromBackPack(product, player, 1);
         ((Structure) product).getTiles().add(tile);
         Farm currentFarm = getPlayerInWitchFarm(player);
@@ -1335,7 +1341,7 @@ public class GameService {
                 }
                 case GRASS_STARTER: {
                     ((Craft) product).getTiles().get(0).setTileType(TileType.GRASS);
-                    return new Response(itemName + " is put on the ground.", true);
+                    return new Response(product.getName() + " is put on the ground.", true);
                 }
             }
         }
@@ -1343,7 +1349,7 @@ public class GameService {
         setScareCrowAndSprinklerForAll();
         tile.setIsFilled(true);
         tile.setIsPassable(false);
-        return new Response(itemName + " is put on the ground.", true);
+        return new Response(product.getName() + " is put on the ground.", true);
     }
 
     public Response C_AddItem(String name, String count) {
