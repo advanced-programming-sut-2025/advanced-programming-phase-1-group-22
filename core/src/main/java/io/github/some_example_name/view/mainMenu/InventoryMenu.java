@@ -179,7 +179,11 @@ public class InventoryMenu extends PopUp {
         );
         window.setMovable(false);
 
-        trashCan = new ImageButton(new TextureRegionDrawable(new TextureRegion(GameAsset.WORM_BIN)));
+        if (currentPlayer.getCurrentTrashCan() != null) {
+            trashCan = new ImageButton(new TextureRegionDrawable(currentPlayer.getCurrentTrashCan().getTexture()));
+        }else {
+            trashCan = new ImageButton(new TextureRegionDrawable(new TextureRegion(GameAsset.WORM_BIN)));
+        }
         inventory = new Table();
         scrollPane = new ScrollPane(inventory, skin);
         inventory.pack();

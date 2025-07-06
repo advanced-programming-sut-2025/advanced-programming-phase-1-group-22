@@ -137,7 +137,7 @@ public class GameMenuController extends MenuController {
     }
 
     public Response upgradeTool(String[] params) {
-        return gameService.upgradeTool(params[0]);
+        return Response.empty();
     }
 
     public Response useTool(String[] params) {

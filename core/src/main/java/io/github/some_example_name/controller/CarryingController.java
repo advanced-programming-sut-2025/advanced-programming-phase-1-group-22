@@ -25,15 +25,19 @@ public class CarryingController {
         Player currentPlayer = App.getInstance().getCurrentGame().getCurrentPlayer();
         Salable carrying = currentPlayer.getCurrentCarrying();
         if (carrying != null && !(carrying instanceof Tool)){
-            Sprite sprite;
+            Sprite sprite = null;
             if (carrying.getSprite() == null) {
-                sprite = carrying.getSprites().get(0).getSprite();
+                if (carrying.getSprites() != null){
+                    sprite = carrying.getSprites().get(0).getSprite();
+                }
             } else {
                 sprite = carrying.getSprite();
             }
-            sprite.draw(MainGradle.getInstance().getBatch());
-            sprite.setPosition(currentPlayer.getTiles().get(0).getX() * App.tileWidth,
-                currentPlayer.getTiles().get(0).getY() * App.tileHeight);
+            if (sprite != null){
+                sprite.draw(MainGradle.getInstance().getBatch());
+                sprite.setPosition(currentPlayer.getTiles().get(0).getX() * App.tileWidth,
+                    currentPlayer.getTiles().get(0).getY() * App.tileHeight);
+            }
             if (GameView.captureInput) {
                 handleInput(carrying);
             }

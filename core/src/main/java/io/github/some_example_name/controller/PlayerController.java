@@ -29,11 +29,13 @@ public class PlayerController {
         currentPlayer.getSprite().setPosition(currentPlayer.getTiles().get(0).getX() * App.tileWidth,
             currentPlayer.getTiles().get(0).getY() * App.tileHeight);
         currentPlayer.getSprite().draw(MainGradle.getInstance().getBatch());
-        if (GameView.captureInput) {
+        if (GameView.captureInput && !GameView.positionChoosing) {
             handlePlayerMovement(currentPlayer);
             handleInputs();
         }
-        setCameraPosition(currentPlayer);
+        if (!GameView.positionChoosing){
+            setCameraPosition(currentPlayer);
+        }
     }
 
     private void setCameraPosition(Player currentPlayer){

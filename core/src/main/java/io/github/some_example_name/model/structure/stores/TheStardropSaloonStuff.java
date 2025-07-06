@@ -19,6 +19,10 @@ import io.github.some_example_name.model.tools.Tool;
 import io.github.some_example_name.utils.App;
 import io.github.some_example_name.model.relations.Player;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
 
 @Getter
 public enum TheStardropSaloonStuff implements Shop {
@@ -55,6 +59,15 @@ public enum TheStardropSaloonStuff implements Shop {
             product = ingredientsSupplier.get();
         }
         return product;
+    }
+
+    public static List<Item> getItems(){
+        List<Item> items = new ArrayList<>();
+        for (TheStardropSaloonStuff value : TheStardropSaloonStuff.values()) {
+            boolean available = !Objects.equals(value.dailyLimit, value.dailySold);
+            items.add(new Item(value.getSalable(),value.price, value.dailyLimit,available,null));
+        }
+        return items;
     }
 
     public static String showAllProducts() {

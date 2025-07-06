@@ -7,6 +7,10 @@ import io.github.some_example_name.model.source.Mineral;
 import io.github.some_example_name.model.source.MineralType;
 import io.github.some_example_name.utils.App;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
 @Getter
 public enum CarpenterShopMineralStuff implements Shop {
 	WOOD(MineralType.WOOD,10,-1),
@@ -22,6 +26,16 @@ public enum CarpenterShopMineralStuff implements Shop {
 		this.price = price;
 		this.dailyLimit = dailyLimit;
 	}
+
+    public static List<Item> getItems(){
+        List<Item> items = new ArrayList<>();
+        for (CarpenterShopMineralStuff value : CarpenterShopMineralStuff.values()) {
+            boolean available = !Objects.equals(value.dailyLimit, value.dailySold);
+            items.add(new Item(value.mineralType,value.price, value.dailyLimit,available,null));
+        }
+        return items;
+    }
+
 	public static String showAllProducts() {
 		StringBuilder res = new StringBuilder();
 		for (CarpenterShopMineralStuff value : CarpenterShopMineralStuff.values()) {

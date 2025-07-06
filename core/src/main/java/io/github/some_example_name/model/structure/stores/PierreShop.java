@@ -265,6 +265,15 @@ public enum PierreShop implements Shop {
         this.dailySold = 0;
     }
 
+    public static List<Item> getItems(){
+        List<Item> items = new ArrayList<>();
+        for (PierreShop value : PierreShop.values()) {
+            boolean available = value.isAvailable();
+            items.add(new Item(value.getSalable(),value.getPrice(), value.dailyLimit,available,null));
+        }
+        return items;
+    }
+
     public int getPrice() {
         if (season == null) {
             return inSeasonPrice;

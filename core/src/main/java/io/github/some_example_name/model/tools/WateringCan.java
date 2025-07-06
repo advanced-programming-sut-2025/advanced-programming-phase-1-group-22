@@ -100,4 +100,9 @@ public class WateringCan implements Tool{
 
 	@Override
 	public Integer getContainingEnergy() {return 0;}
+
+    @Override
+    public Texture getTexture() {
+        return wateringCanType.getTexture();
+    }
 }

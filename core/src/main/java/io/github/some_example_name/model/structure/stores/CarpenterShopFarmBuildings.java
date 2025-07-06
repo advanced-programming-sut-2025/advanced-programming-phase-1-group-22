@@ -1,11 +1,14 @@
 package io.github.some_example_name.model.structure.stores;
 
+import io.github.some_example_name.model.Salable;
 import lombok.Getter;
 import io.github.some_example_name.model.products.Product;
 import io.github.some_example_name.model.records.Response;
 import io.github.some_example_name.model.shelter.FarmBuildingType;
 import io.github.some_example_name.model.source.MineralType;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -23,17 +26,26 @@ public enum CarpenterShopFarmBuildings {
 	private final String name;
 	private final FarmBuildingType farmBuildingType;
 	private final Integer price;
-	private final Map<Product,Integer> cost;
+	private final Map<Salable,Integer> cost;
 	private final Integer dailyLimit;
 	private Integer dailySold = 0;
 
-	CarpenterShopFarmBuildings(String name,FarmBuildingType farmBuildingType,Integer price, Map<Product, Integer> cost, Integer dailyLimit) {
+	CarpenterShopFarmBuildings(String name,FarmBuildingType farmBuildingType,Integer price, Map<Salable, Integer> cost, Integer dailyLimit) {
 		this.name = name;
 		this.price = price;
 		this.farmBuildingType = farmBuildingType;
 		this.cost = cost;
 		this.dailyLimit = dailyLimit;
 	}
+
+    public static List<Item> getItems(){
+        List<Item> items = new ArrayList<>();
+        for (CarpenterShopFarmBuildings value : CarpenterShopFarmBuildings.values()) {
+            boolean available = !Objects.equals(value.dailyLimit, value.dailySold);
+            items.add(new Item(value.farmBuildingType,value.price, value.dailyLimit,available,value.cost));
+        }
+        return items;
+    }
 
 	public static CarpenterShopFarmBuildings getFromName(String name){
 		for (CarpenterShopFarmBuildings value : CarpenterShopFarmBuildings.values()) {
