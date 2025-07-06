@@ -16,7 +16,7 @@ public enum AnimalType implements Product {
     DINOSAUR("dinosaur",1_400, List.of(AnimalProductType.DINOSAUR_EGG), 7, false,GameAsset.DINOSAUR),
     DUCK("duck",1_200, List.of(AnimalProductType.DUCK_EGG, AnimalProductType.DUCK_FEATHER), 2, false,GameAsset.DUCK),
     GOAT("goat",4_000, List.of(AnimalProductType.BIG_GOAT_MILK, AnimalProductType.GOAT_MILK), 2, true,GameAsset.GOAT),
-    HEN("hen",800, List.of(AnimalProductType.HEN_EGG, AnimalProductType.HEN_BIG_EGG), 1, false,GameAsset.WHITE_CHICKEN),
+    HEN("chicken",800, List.of(AnimalProductType.HEN_EGG, AnimalProductType.HEN_BIG_EGG), 1, false,GameAsset.WHITE_CHICKEN),
     PIG("pig",16_000, List.of(AnimalProductType.TRUFFLE), 0, true,GameAsset.PIG),
     RABBIT("rabbit",8_000, List.of(AnimalProductType.RABBIT_LEG, AnimalProductType.RABBIT_WOOL), 4, false,GameAsset.RABBIT),
     SHEEP("sheep",8_000, List.of(AnimalProductType.SHEEP_WOOL), 3, true,GameAsset.SHEEP);

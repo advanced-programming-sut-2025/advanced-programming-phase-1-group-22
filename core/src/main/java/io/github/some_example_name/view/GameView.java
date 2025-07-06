@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.ScreenUtils;
 import io.github.some_example_name.MainGradle;
@@ -34,6 +35,8 @@ public class GameView implements Screen, InputProcessor {
     public static Console Console = new Console(stage);
     public static boolean screenshotting;
     public static boolean captureInput = true;
+    public static boolean positionChoosing = false;
+    public static String building;
 
 
     public GameView() {
@@ -46,8 +49,6 @@ public class GameView implements Screen, InputProcessor {
         game.setVillage(village);
         Animal animal = new Animal(AnimalType.COW,"parsa");
         Player player = new Player(new User("mahdi","","d","mahdi", Gender.MALE));
-        player.getInventory().addProductToBackPack(new Seed(SeedType.APRICOT_SAPLING),1);
-        player.getInventory().addProductToBackPack(new Sundry(SundryType.DELUXE_RETAINING_SOIL),1);
         game.addPlayer(player);
         Player player2 = new Player(new User("ali","","d","ali", Gender.MALE));
         player2.setCurrentCarrying(new Seed(SeedType.JAZZ_SEEDS));
@@ -59,8 +60,6 @@ public class GameView implements Screen, InputProcessor {
         game.setCurrentPlayer(game.getPlayers().get(0));
         completeMap();
         player.getAnimals().add(animal);
-        player.getInventory().addProductToBackPack(new Hay(),4);
-        player.getInventory().addProductToBackPack(MilkPail.getInstance(),1);
         List<Tile> tiles = new ArrayList<>();
         tiles.add(new Tile(player.getTiles().get(0).getX(),player.getTiles().get(0).getY() - 2));
         animal.setTiles(tiles);
@@ -79,7 +78,6 @@ public class GameView implements Screen, InputProcessor {
         gameService.placeItem("preserves_jar", "west");
         gameService.C_AddItem("fish_smoker", "1");
         gameService.placeItem("fish_smoker", "southeast");
-//        stage = new Stage(MainGradle.getInstance().getViewport(), MainGradle.getInstance().getBatch());
     }
 
     private void completeMap() {
@@ -122,6 +120,14 @@ public class GameView implements Screen, InputProcessor {
 
     @Override
     public boolean touchDown(int i, int i1, int i2, int i3) {
+        if (positionChoosing){
+            Vector3 worldCoords = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
+            MainGradle.getInstance().getCamera().unproject(worldCoords);
+            float worldX = worldCoords.x;
+            float worldY = worldCoords.y;
+            positionChoosing = false;
+            controller.getStoreController().build(building, (int) (worldX / App.tileWidth), (int) (worldY / App.tileHeight));
+        }
         return false;
     }
 

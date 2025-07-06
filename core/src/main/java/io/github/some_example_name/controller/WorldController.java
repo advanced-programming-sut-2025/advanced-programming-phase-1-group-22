@@ -228,7 +228,6 @@ public class WorldController {
 
     public void printMap() {
         Game game = App.getInstance().getCurrentGame();
-        Player player = App.getInstance().getCurrentGame().getCurrentPlayer();
         Tile[][] tiles = game.tiles;
         OrthographicCamera camera = MainGradle.getInstance().getCamera();
 
@@ -281,58 +280,13 @@ public class WorldController {
                 }
             }
         }
-//
-//        for (Farm farm : farms) {
-//            for (Structure structure : farm.getStructures()) {
-//                String emoji = switch (structure) {
-//                    case Cottage c          -> "🏡";
-//                    case Lake l             -> "🌊";
-//                    case Quarry q           ->  "🗿";
-//                    case Craft c            -> "🔨";
-//                    case FarmBuilding fb    -> "🏚️";
-//                    default                 -> "  ";
-//                };
-//                emoji = pad2.apply(emoji);
-//                if (!emoji.isBlank()) {
-//                    for (Tile tile : structure.getTiles()) {
-//                        str[tile.getX()][tile.getY()] = emoji;
-//                    }
-//                }
-//            }
-//        }
-//
-//        for (Structure structure : structures) {//                    case AnimalProduct ap   -> "🥚";
-
-//            String emoji = switch (structure) {
-//                case NPC n          -> "👴";
-//                case Player p       -> "🧍";
-//                case Store s        -> "🏬";
-//                case NPCHouse h     -> "🏡";
-//                case Fountain f     -> "🌊";
-//                default             -> "  ";
-//            };
-//            emoji = pad2.apply(emoji);
-//            if (!emoji.isBlank()) {
-//                for (Tile tile : structure.getTiles()) {
-//                    str[tile.getX()][tile.getY()] = emoji;
-//                }
-//            }
-//        }
-
-//        Player player = game.getCurrentPlayer();
-//        str[player.getTiles().get(0).getX()][player.getTiles().get(0).getY()] = pad2.apply("🧍");
-//
-//        int xStart = Math.max(0, x - size / 2);
-//        int yStart = Math.max(0, y - size / 2);
-//        int xEnd   = Math.min(160, x + size / 2);
-//        int yEnd   = Math.min(120, y + size / 2);
-//
-//        for (int i = yEnd - 1; i >= yStart; i--) {
-//            for (int j = xStart; j < xEnd; j++) {
-//                System.out.print(str[j][i]);
-//            }
-//            System.out.println();
-//        }
+        for (Structure structure : App.getInstance().getCurrentGame().getVillage().getStructures()) {
+            if (structure.getSprite() != null){
+                structure.getSprite().setPosition(structure.getTiles().get(0).getX() * App.tileWidth,
+                    structure.getTiles().get(0).getY() * App.tileHeight);
+                structure.getSprite().draw(MainGradle.getInstance().getBatch());
+            }
+        }
     }
 
     private boolean isStructureInBond(Structure structure){

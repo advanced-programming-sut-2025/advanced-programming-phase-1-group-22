@@ -6,10 +6,13 @@ import io.github.some_example_name.model.products.TreesAndFruitsAndSeeds.MadePro
 import io.github.some_example_name.model.records.Response;
 import io.github.some_example_name.model.tools.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Getter
-public enum BlackSmithUpgrade implements Shop {
+public enum BlackSmithUpgrade implements Shop{
     COPPER_AXE(Axe.COPPER, ()->Map.of(MadeProductType.COPPER_BAR, 5), 2000, 1),
     COPPER_HOE(Hoe.COPPER, ()->Map.of(MadeProductType.COPPER_BAR, 5), 2000, 1),
     COPPER_PICKAXE(Pickaxe.COPPER, ()->Map.of(MadeProductType.COPPER_BAR, 5), 2000, 1),
@@ -34,6 +37,7 @@ public enum BlackSmithUpgrade implements Shop {
     IRIDIUM_TRASHCAN(TrashCan.IRIDIUM, ()->Map.of(MadeProductType.IRIDIUM_BAR, 5), 25000, 1),
     IRIDIUM_WATER_CAN(WateringCanType.IRIDIUM, ()->Map.of(MadeProductType.IRIDIUM_BAR, 5), 25000, 1),
     IRIDIUM_TRASH_CAN(TrashCan.IRIDIUM, ()->Map.of(MadeProductType.IRIDIUM_BAR, 5), 12500, 1);
+
     private final Tool tool;
     private Integer dailySold = 0;
     private final Integer cost;
@@ -59,6 +63,15 @@ public enum BlackSmithUpgrade implements Shop {
         this.ingredientsSupplier = ingredient;
         this.cost = cost;
         this.dailyLimit = dailyLimit;
+    }
+
+    public static List<Item> getItems(){
+        List<Item> items = new ArrayList<>();
+        for (BlackSmithUpgrade value : BlackSmithUpgrade.values()) {
+            boolean available = !Objects.equals(value.dailyLimit, value.dailySold);
+            items.add(new Item(value.tool,value.cost, value.dailyLimit,available,value.getIngredients()));
+        }
+        return items;
     }
 
     public static BlackSmithUpgrade getUpgradeByTool(Tool tool) {
@@ -88,35 +101,8 @@ public enum BlackSmithUpgrade implements Shop {
         return res.toString();
     }
 
-    public static Response purchase(String name, Integer count) { return null;
-//        BlackSmithUpgrade salable = null;
-//        for (BlackSmithUpgrade value : BlackSmithUpgrade.values()) {
-//            if (value.getTool().getName().equalsIgnoreCase(name)) {
-//                salable = value;
-//            }
-//        }
-//        if (salable == null) return new Response("Item not found");
-//        if (salable.dailyLimit != -1 && salable.dailyLimit < salable.dailySold + count) {
-//            return new Response("Not enough in stock");
-//        }
-//        Player player = App.getInstance().getCurrentGame().getCurrentPlayer();
-//        for (Map.Entry<Salable,Integer> productIntegerEntry : salable.getIngredients().entrySet()) {
-//            if (!player.getInventory().checkProductAvailabilityInBackPack(productIntegerEntry.getKey().getName(),
-//                    productIntegerEntry.getValue())) {
-//                return new Response("Ingredients not found.");
-//            }
-//        }
-//
-//        if (!player.getInventory().checkProductAvailabilityInBackPack(null, 1)) {
-//            return new Response("Not enough space in your backpack."); //TODO checking the last level tool
-//        }
-//        if (player.getAccount().getGolds() < salable.getCost()) {
-//            return new Response("Not enough golds");
-//        }
-//        player.getAccount().removeGolds(salable.getCost());
-//        salable.dailySold += count;
-//        player.getInventory().addProductToBackPack(salable.tool, count);
-//        return new Response("Bought successfully", true);
+    public static Response purchase(String name, Integer count) {
+        return null;
     }
 
     public void resetDailySold() {

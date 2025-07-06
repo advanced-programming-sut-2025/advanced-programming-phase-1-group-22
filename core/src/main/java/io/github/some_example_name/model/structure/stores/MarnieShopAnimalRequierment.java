@@ -9,12 +9,15 @@ import io.github.some_example_name.model.tools.MilkPail;
 import io.github.some_example_name.model.tools.Shear;
 import io.github.some_example_name.utils.App;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Getter
 public enum MarnieShopAnimalRequierment  implements Shop{
-    HAY(new Hay(),50,-1),MILK_pAIL(MilkPail.getInstance(),1000,1)
-    ,SHEARS(Shear.SHEAR,1000,1);
+    HAY(new Hay(),50,-1),
+    MILK_pAIL(MilkPail.getInstance(),1000,1),
+    SHEARS(Shear.SHEAR,1000,1);
 
     private final Salable product;
     private final Integer price;
@@ -26,6 +29,16 @@ public enum MarnieShopAnimalRequierment  implements Shop{
         this.price = price;
         this.dailyLimit = dailyLimit;
     }
+
+    public static List<Item> getItems(){
+        List<Item> items = new ArrayList<>();
+        for (MarnieShopAnimalRequierment value : MarnieShopAnimalRequierment.values()) {
+            boolean available = value.isAvailable();
+            items.add(new Item(value.product,value.price, value.dailyLimit,available,null));
+        }
+        return items;
+    }
+
     public boolean isAvailable() {
         return !Objects.equals(this.dailyLimit, this.dailySold);
     }

@@ -4,8 +4,13 @@ import lombok.Getter;
 import io.github.some_example_name.model.animal.AnimalType;
 import io.github.some_example_name.model.records.Response;
 import io.github.some_example_name.model.shelter.FarmBuildingType;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
 @Getter
-public enum MarnieShopAnimal {
+public enum MarnieShopAnimal implements Shop{
 	CHICKEN("chicken",AnimalType.HEN,800, FarmBuildingType.COOP,2),
 	COW("cow",AnimalType.COW,1500, FarmBuildingType.BARN,2),
 	GOAT("goat",AnimalType.GOAT,4000, FarmBuildingType.BIG_BARN,2),
@@ -29,6 +34,16 @@ public enum MarnieShopAnimal {
 		this.buildingRequired = buildingRequired;
 		this.dailyLimit = dailyLimit;
 	}
+
+    public static List<Item> getItems(){
+        List<Item> items = new ArrayList<>();
+        for (MarnieShopAnimal value : MarnieShopAnimal.values()) {
+            boolean available = !Objects.equals(value.dailyLimit, value.dailySold);
+            items.add(new Item(value.animalType,value.price, value.dailyLimit,available,null));
+        }
+        return items;
+    }
+
 	public static String showAllProducts() {
 		StringBuilder res = new StringBuilder();
 		for (MarnieShopAnimal value : MarnieShopAnimal.values()) {

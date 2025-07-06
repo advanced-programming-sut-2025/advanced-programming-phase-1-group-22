@@ -13,6 +13,7 @@ import io.github.some_example_name.model.source.Seed;
 import io.github.some_example_name.model.source.SeedType;
 import io.github.some_example_name.utils.App;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -72,6 +73,16 @@ public enum JojaMartShopSeed implements Shop {
 		this.price = price;
 		this.dailyLimit = dailyLimit;
 	}
+
+    public static List<Item> getItems(){
+        List<Item> items = new ArrayList<>();
+        for (JojaMartShopSeed value : JojaMartShopSeed.values()) {
+            boolean available = value.isAvailable();
+            items.add(new Item(value.salable,value.price, value.dailyLimit,available,null));
+        }
+        return items;
+    }
+
 	public static String showAllProducts() {
 		StringBuilder res = new StringBuilder();
 		for (JojaMartShopSeed value : JojaMartShopSeed.values()) {

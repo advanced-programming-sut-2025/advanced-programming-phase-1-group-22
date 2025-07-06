@@ -29,6 +29,7 @@ public class GameViewController {
     private final CarryingController carryingController = new CarryingController();
     private final CameraViewController cameraViewController = new CameraViewController();
     private final AnimalController animalController = new AnimalController();
+    private final StoreController storeController = new StoreController();
     private final GameView view;
     private float nightAlpha = 0.0f;
 
@@ -48,6 +49,24 @@ public class GameViewController {
         toolController.update();
         carryingController.update();
         animalController.update();
+        storeController.update();
+        if (GameView.positionChoosing) {
+            float cameraSpeed = 300 * Gdx.graphics.getDeltaTime();
+
+            if (Gdx.input.isKeyPressed(Input.Keys.W) || Gdx.input.isKeyPressed(Input.Keys.UP)) {
+                MainGradle.getInstance().getCamera().translate(0, cameraSpeed);
+            }
+            if (Gdx.input.isKeyPressed(Input.Keys.S) || Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+                MainGradle.getInstance().getCamera().translate(0, -cameraSpeed);
+            }
+            if (Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+                MainGradle.getInstance().getCamera().translate(-cameraSpeed, 0);
+            }
+            if (Gdx.input.isKeyPressed(Input.Keys.D) || Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+                MainGradle.getInstance().getCamera().translate(cameraSpeed, 0);
+            }
+            MainGradle.getInstance().getCamera().update();
+        }
         OrthographicCamera camera = MainGradle.getInstance().getCamera();
         switch (App.getInstance().getCurrentGame().getFadingInTheNight()) {
             case 1: {

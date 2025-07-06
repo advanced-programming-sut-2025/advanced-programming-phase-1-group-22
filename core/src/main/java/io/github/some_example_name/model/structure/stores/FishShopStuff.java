@@ -12,6 +12,8 @@ import io.github.some_example_name.model.relations.Player;
 import io.github.some_example_name.model.tools.FishingPole;
 import io.github.some_example_name.utils.App;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Getter
@@ -63,6 +65,17 @@ public enum FishShopStuff  implements Shop{
 		this.fishingSkillRequired = fishingSkillRequired;
 		this.dailyLimit = dailyLimit;
 	}
+
+    public static List<Item> getItems(){
+        List<Item> items = new ArrayList<>();
+        for (FishShopStuff value : FishShopStuff.values()) {
+            boolean available = value.isAvailable();
+            if (value.craftingRecipe != null) items.add(new Item(value.craftingRecipe,value.price, value.dailyLimit,available,null));
+            else if (value.fishingPole != null) items.add(new Item(value.fishingPole,value.price, value.dailyLimit,available,null));
+            else if (value.foodType != null) items.add(new Item(value.foodType,value.price, value.dailyLimit,available,null));
+        }
+        return items;
+    }
 
 	public static String showAllProducts() {
 		StringBuilder res = new StringBuilder();

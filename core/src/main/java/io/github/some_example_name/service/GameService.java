@@ -376,21 +376,14 @@ public class GameService {
         return new Response(makeTokenToShowAvailableTools(currentPlayer), true);
     }
 
-    public Response upgradeTool(String toolName) {
+    public Response upgradeTool(Tool upgradeTool) {
         Player currentPlayer = getCurrentPlayer();
-        Tool currentTool = getToolFromPlayerInventory(toolName.trim(), currentPlayer);
-        if (currentTool == null) {
-            return new Response("there is not a tool with this name in inventory");
+        Tool currentTool = upgradeTool.getToolByLevel(upgradeTool.getLevel() - 1);
+        if (upgradeTool instanceof TrashCan){
+            currentTool = currentPlayer.getCurrentTrashCan();
         }
-
-        Tool upgradeTool = currentTool.getToolByLevel(currentTool.getLevel() + 1);
-
-        if (upgradeTool == null) {
-            return new Response("upgrade is not available");
-        }
-
-        if (!isPlayerInStore(StoreType.BLACK_SMITH)) {
-            return new Response("you have to be in blackSmith store to upgrade tools");
+        else if (currentPlayer.getInventory().getProductFromBackPack(currentTool.getName()) == null){
+            return new Response("you don't have a low level tool in your inventory");
         }
 
         BlackSmithUpgrade blackSmithUpgrade = BlackSmithUpgrade.getUpgradeByTool(upgradeTool);
@@ -403,7 +396,7 @@ public class GameService {
             return new Response("you do not have enough resource to upgrade tool");
         }
 
-        if (blackSmithUpgrade.getDailySold() == blackSmithUpgrade.getDailyLimit()) {
+        if (Objects.equals(blackSmithUpgrade.getDailySold(), blackSmithUpgrade.getDailyLimit())) {
             return new Response("Not enough in stock!");
         }
         upgradeTool(currentPlayer, blackSmithUpgrade, currentTool, upgradeTool);
@@ -483,9 +476,9 @@ public class GameService {
         if (carpenterShopFarmBuildings == null) {
             return new Response("there is no farm building with this name");
         }
-        if (!isPlayerInStore(StoreType.CARPENTER_SHOP)) {
-            return new Response("you have to be in Carpenter store to build");
-        }
+//        if (!isPlayerInStore(StoreType.CARPENTER_SHOP)) {
+//            return new Response("you have to be in Carpenter store to build");
+//        }
         Farm currentFarm = getPlayerMainFarm(currentPlayer);
         if (!thisIsInFarm(currentFarm, x, y)) {
             return new Response("you have to chose a place in your farm");
@@ -520,10 +513,11 @@ public class GameService {
         MarnieShopAnimal marnieShopAnimal = MarnieShopAnimal.getFromName(animalType);
         if (marnieShopAnimal == null) {
             return new Response("there is no such animal");
-        } else if (!isPlayerInStore(StoreType.MARNIE_SHOP)) {
-            return new Response("you have to be in Marnie Shop Animal to buy animals");
         }
-        if (marnieShopAnimal.getDailySold() == marnieShopAnimal.getDailyLimit()) {
+//        else if (!isPlayerInStore(StoreType.MARNIE_SHOP)) {
+//            return new Response("you have to be in Marnie Shop Animal to buy animals");
+//        }
+        if (Objects.equals(marnieShopAnimal.getDailySold(), marnieShopAnimal.getDailyLimit())) {
             return new Response("Not enough in stock!");
         }
         Farm currentFarm = getPlayerMainFarm(currentPlayer);
@@ -835,6 +829,7 @@ public class GameService {
                     }
                 }
             }
+            player.setCurrentMenu(Menu.GAME_MAIN_MENU);
             Session.setCurrentMenu(Menu.GAME_MAIN_MENU);
             return;
         }
@@ -894,8 +889,9 @@ public class GameService {
             Salable salable = player.getInventory().getProductFromBackPack(productIntegerEntry.getKey().getName());
             player.getInventory().deleteProductFromBackPack(salable, player, productIntegerEntry.getValue());
         }
-        if (oldtool instanceof WateringCan) {
-            ((WateringCan) oldtool).setWateringCanType((WateringCanType) upgradeTool);
+        if (oldtool instanceof WateringCanType) {
+            WateringCan wateringCan = (WateringCan) player.getInventory().getProductFromBackPack(oldtool.getName());
+            wateringCan.setWateringCanType((WateringCanType) upgradeTool);
         }else if(oldtool instanceof TrashCan){
             player.setCurrentTrashCan((TrashCan) upgradeTool);
         }else {
@@ -983,7 +979,7 @@ public class GameService {
         if (carpenterShopFarmBuildings.getPrice() > player.getAccount().getGolds()) {
             return false;
         }
-        for (Map.Entry<Product, Integer> productIntegerEntry : carpenterShopFarmBuildings.getCost().entrySet()) {
+        for (Map.Entry<Salable, Integer> productIntegerEntry : carpenterShopFarmBuildings.getCost().entrySet()) {
             Salable salable = player.getInventory().getProductFromBackPack(productIntegerEntry.getKey().getName());
             if (salable == null) {
                 return false;
@@ -1027,7 +1023,7 @@ public class GameService {
     private void payForBuild(CarpenterShopFarmBuildings carpenterShopFarmBuildings, Player player) {
         int oldGold = player.getAccount().getGolds();
         player.getAccount().setGolds(oldGold - carpenterShopFarmBuildings.getPrice());
-        for (Map.Entry<Product, Integer> productIntegerEntry : carpenterShopFarmBuildings.getCost().entrySet()) {
+        for (Map.Entry<Salable, Integer> productIntegerEntry : carpenterShopFarmBuildings.getCost().entrySet()) {
             Salable salable = player.getInventory().getProductFromBackPack(productIntegerEntry.getKey().getName());
             player.getInventory().deleteProductFromBackPack(salable, player, productIntegerEntry.getValue());
         }
@@ -1059,7 +1055,7 @@ public class GameService {
                 }
             }
         }
-        return "your barn is full";
+        return "your barn is full or you don't have a barn yet";
     }
 
     private String addNewCoopAnimal(Farm farm, Animal animal, Player player,
@@ -1079,7 +1075,7 @@ public class GameService {
                 }
             }
         }
-        return "your coop is full";
+        return "your coop is full or you don't have a coop yet";
     }
 
     private Tile getAFreeTileInBarnOrCoop(FarmBuilding farmBuilding) {
@@ -2130,8 +2126,7 @@ public class GameService {
         return new Response(recipe.getIngredients().getName() + " cooked successfully.");
     }
 
-    private Response isStoreOpen() {
-        StoreType storeType = app.getCurrentGame().getCurrentPlayer().getStoreType();
+    public Response isStoreOpen(StoreType storeType) {
         if (new TimeAndDate(0, storeType.getOpenDoorTime()).compareDailyTime(app.getCurrentGame().getTimeAndDate()) < 0 ||
                 new TimeAndDate(0, storeType.getCloseDoorTime()).compareDailyTime(app.getCurrentGame().getTimeAndDate()) > 0) {
             return new Response("Store closed.");
@@ -2140,22 +2135,16 @@ public class GameService {
     }
 
     public Response showAllProducts() {
-        Response response = isStoreOpen();
-        if (!response.shouldBeBack()) return response;
         Player player = app.getCurrentGame().getCurrentPlayer();
         return player.getStoreType().showAllProducts();
     }
 
     public Response showAllAvailableProducts() {
-        Response response = isStoreOpen();
-        if (!response.shouldBeBack()) return response;
         Player player = app.getCurrentGame().getCurrentPlayer();
         return player.getStoreType().showAvailableProducts();
     }
 
     public Response purchase(String name, String count) {
-        Response response = isStoreOpen();
-        if (!response.shouldBeBack()) return response;
         Player player = app.getCurrentGame().getCurrentPlayer();
         return player.getStoreType().purchase(name, Integer.parseInt(count));
     }

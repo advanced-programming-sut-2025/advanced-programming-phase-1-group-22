@@ -35,7 +35,9 @@ public class AnimalController {
     private final WorldController worldController = new WorldController();
 
     public void update() {
-        handleInputs();
+        if (GameView.captureInput){
+            handleInputs();
+        }
         float delta = Gdx.graphics.getDeltaTime();
         for (int i = heartEffects.size - 1; i >= 0; i--) {
             HeartEffect heartEffect = heartEffects.get(i);
