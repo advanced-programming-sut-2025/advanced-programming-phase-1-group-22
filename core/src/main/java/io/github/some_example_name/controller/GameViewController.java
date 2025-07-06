@@ -3,23 +3,11 @@ package io.github.some_example_name.controller;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.Group;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.utils.Align;
 import io.github.some_example_name.MainGradle;
-import io.github.some_example_name.model.Salable;
-import io.github.some_example_name.model.relations.Player;
 import io.github.some_example_name.utils.App;
 import io.github.some_example_name.utils.GameAsset;
 import io.github.some_example_name.view.GameView;
-import io.github.some_example_name.view.mainMenu.PopUp;
 import lombok.Getter;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 public class GameViewController {
@@ -30,6 +18,7 @@ public class GameViewController {
     private final CameraViewController cameraViewController = new CameraViewController();
     private final AnimalController animalController = new AnimalController();
     private final StoreController storeController = new StoreController();
+    private final ShippingBinController shippingBinController = new ShippingBinController();
     private final GameView view;
     private float nightAlpha = 0.0f;
 
@@ -50,6 +39,7 @@ public class GameViewController {
         carryingController.update();
         animalController.update();
         storeController.update();
+        shippingBinController.update();
         if (GameView.positionChoosing) {
             float cameraSpeed = 300 * Gdx.graphics.getDeltaTime();
 

@@ -4,21 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d95100ff-6e61-4571-9e87-dcef3d963dba" name="Changes" comment="add store menu">
-      <change afterPath="$PROJECT_DIR$/assets/Barn_Interior.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/Big_Barn_Interior.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/Big_Coop_Interior.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/Deluxe_Barn_Interior.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/Deluxe_Coop_Interior.png" afterDir="false" />
+    <list default="true" id="d95100ff-6e61-4571-9e87-dcef3d963dba" name="Changes" comment="complete animals">
+      <change afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/controller/ShippingBinController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/view/mainMenu/ShippingBinMenu.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/assets.txt" beforeDir="false" afterPath="$PROJECT_DIR$/assets/assets.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/reports/problems/problems-report.html" beforeDir="false" afterPath="$PROJECT_DIR$/build/reports/problems/problems-report.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/build/libs/core-1.0.0.jar" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/libs/core-1.0.0.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/controller/WorldController.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/controller/WorldController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/shelter/FarmBuilding.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/shelter/FarmBuilding.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/shelter/FarmBuildingType.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/shelter/FarmBuildingType.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/service/GameService.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/service/GameService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/utils/GameAsset.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/utils/GameAsset.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lwjgl3/build/resources/main/assets.txt" beforeDir="false" afterPath="$PROJECT_DIR$/lwjgl3/build/resources/main/assets.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/controller/GameViewController.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/controller/GameViewController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/tools/BackPack.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/tools/BackPack.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -330,7 +323,15 @@
       <option name="project" value="LOCAL" />
       <updated>1751818460162</updated>
     </task>
-    <option name="localTasksCounter" value="23" />
+    <task id="LOCAL-00023" summary="complete animals">
+      <option name="closed" value="true" />
+      <created>1751821628596</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1751821628596</updated>
+    </task>
+    <option name="localTasksCounter" value="24" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -369,16 +370,12 @@
     <MESSAGE value="added shortcuts to carrying salables" />
     <MESSAGE value="merge" />
     <MESSAGE value="add store menu" />
-    <option name="LAST_COMMIT_MESSAGE" value="add store menu" />
+    <MESSAGE value="complete animals" />
+    <option name="LAST_COMMIT_MESSAGE" value="complete animals" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/view/mainMenu/FridgeMenu.java</url>
-          <line>59</line>
-          <option name="timeStamp" value="28" />
-        </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/controller/CameraViewController.java</url>
           <line>267</line>

@@ -54,6 +54,21 @@ public class BackPack implements JsonPreparable {
         }
     }
 
+    public void justDelete(Salable product,int itemNumber){
+        if (product == null) {
+            return;
+        }
+        Salable equivalentProduct = findEquivalentProduct(product);
+        if (equivalentProduct != null) {
+            if (products.get(equivalentProduct) == itemNumber) {
+                products.remove(equivalentProduct);
+            } else if (products.get(product) > itemNumber) {
+                int oldItemNumber = products.getOrDefault(equivalentProduct, 0);
+                products.put(equivalentProduct, oldItemNumber - itemNumber);
+            }
+        }
+    }
+
     public void addProductToBackPack(Salable product, int itemNumber) {
         Salable existingProduct = findEquivalentProduct(product);
         if (existingProduct != null) {
