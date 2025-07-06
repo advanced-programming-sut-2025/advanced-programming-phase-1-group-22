@@ -2980,9 +2980,11 @@ Weather/Storm.png
 Willy_Happy.png
 abigel.png
 bar.png
+dialog.png
 energyBarEmpty.jpg
 harvey.png
 lia.png
+lia_Icon.png
 robin.png
 sebastian.png
 skin/craftacular-ui.atlas

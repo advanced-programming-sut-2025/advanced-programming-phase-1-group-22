@@ -23,7 +23,7 @@ import java.util.Map;
 @Getter
 @ToString
 public enum NPCType {
-    SEBASTIAN("sebastian", GameAsset.SEBASTIAN_,GameAsset.CABIN1,
+    SEBASTIAN("sebastian", GameAsset.SEBASTIAN_,GameAsset.CABIN1,GameAsset.SEBASTIAN,
             () -> List.of(AnimalProductType.SHEEP_WOOL, FoodType.PUMPKIN_PIE, FoodType.PIZZA),
             () -> List.of(
                     new Mission(() -> Map.of(MineralType.IRON, 50), () -> Map.of(MineralType.DIAMOND, 2), 0),
@@ -32,7 +32,7 @@ public enum NPCType {
             ),
             1),
 
-    ABIGIL("ebigel", GameAsset.ABIGEL_,GameAsset.CABIN2,
+    ABIGIL("ebigel", GameAsset.ABIGEL_,GameAsset.CABIN2,GameAsset.ABIGAIL,
             () -> List.of(MineralType.IRON_ORE, MineralType.STONE, MadeProductType.COFFE),
             () -> List.of(
                     new Mission(() -> Map.of(MadeProductType.GOLD_BAR, 1), () -> Map.of(MineralType.GOLD, 1), 0),
@@ -41,7 +41,7 @@ public enum NPCType {
             ),
             2),
 
-    HARVEY("harvey", GameAsset.HARVEY_,GameAsset.CABIN3,
+    HARVEY("harvey", GameAsset.HARVEY_,GameAsset.CABIN3,GameAsset.HARVEY,
             () -> List.of(MadeProductType.PICKLES, MadeProductType.WINE, MadeProductType.COFFE),
             () -> List.of(
                     new Mission(() -> Map.of(MineralType.GOLD, 12), () -> Map.of(MineralType.GOLD, 750), 0),
@@ -50,7 +50,7 @@ public enum NPCType {
             ),
             3),
 
-    LIA("lia", GameAsset.LIA_,GameAsset.CABIN4,
+    LIA("lia", GameAsset.LIA_,GameAsset.CABIN4,GameAsset.LIA_ICON,
             () -> List.of(MadeProductType.WINE, CropType.GRAPE, FoodType.SALAD),
             () -> List.of(
                     new Mission(() -> Map.of(MineralType.HARD_WOOD, 10), () -> Map.of(MineralType.GOLD, 500), 0),
@@ -59,7 +59,7 @@ public enum NPCType {
             ),
             4),
 
-    RABIN("rabin", GameAsset.ROBIN_,GameAsset.CABIN5,
+    RABIN("rabin", GameAsset.ROBIN_,GameAsset.CABIN5,GameAsset.ROBIN,
             () -> List.of(FoodType.SPAGHETTI, MineralType.WOOD, MadeProductType.IRON_BAR),
             () -> List.of(
                     new Mission(() -> Map.of(MineralType.WOOD, 80), () -> Map.of(MineralType.GOLD, 1000), 0),
@@ -72,6 +72,7 @@ public enum NPCType {
     private final String name;
     private final Texture textureCharacter;
     private final Texture textureHouse;
+    private final Texture textureIcon;
     private String personality;
     private final List<Mission> missions = new ArrayList<>();
     private final int missionSeasonDis;
@@ -104,11 +105,12 @@ public enum NPCType {
         return missions;
     }
 
-    NPCType(String name, Texture textureCharacter,Texture textureHouse, IngredientsSupplier ingredientsSupplier,
+    NPCType(String name, Texture textureCharacter,Texture textureHouse,Texture textureIcon, IngredientsSupplier ingredientsSupplier,
             MissionsSupplier missionsSupplier, int missionSeasonDis) {
         this.name = name;
         this.textureCharacter = textureCharacter;
         this.textureHouse = textureHouse;
+        this.textureIcon = textureIcon;
         this.ingredientsSupplier = ingredientsSupplier;
         this.missionsSupplier = missionsSupplier;
         this.missionSeasonDis = missionSeasonDis;

@@ -8,6 +8,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 public class GameAsset {
+    public static final Texture LIA_ICON = new Texture("lia_Icon.png");
+    public static final Texture DIALOG_BOX = new Texture("dialog.png");
     public static final Texture LIA_ = new Texture("lia.png");
     public static final Texture ROBIN_ = new Texture("robin.png");
     public static final Texture SEBASTIAN_ = new Texture("sebastian.png");
