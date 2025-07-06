@@ -9,11 +9,13 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Timer;
 import io.github.some_example_name.MainGradle;
 import io.github.some_example_name.model.*;
+import io.github.some_example_name.model.animal.Animal;
 import io.github.some_example_name.model.craft.Craft;
 import io.github.some_example_name.model.dto.SpriteHolder;
 import io.github.some_example_name.model.products.TreesAndFruitsAndSeeds.Tree;
 import io.github.some_example_name.model.records.Response;
 import io.github.some_example_name.model.relations.Player;
+import io.github.some_example_name.model.shelter.FarmBuilding;
 import io.github.some_example_name.model.source.Crop;
 import io.github.some_example_name.model.structure.Structure;
 import io.github.some_example_name.model.structure.farmInitialElements.Lake;
@@ -29,6 +31,7 @@ import io.github.some_example_name.view.mainMenu.CraftPopUp;
 import io.github.some_example_name.view.mainMenu.FridgeMenu;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class WorldController {
@@ -227,6 +230,7 @@ public class WorldController {
     }
 
     public void printMap() {
+        Player player = App.getInstance().getCurrentGame().getCurrentPlayer();
         Game game = App.getInstance().getCurrentGame();
         Tile[][] tiles = game.tiles;
         OrthographicCamera camera = MainGradle.getInstance().getCamera();
@@ -263,6 +267,25 @@ public class WorldController {
                                 structure.getTiles().get(0).getY() * App.tileHeight);
                             sprite.draw(MainGradle.getInstance().getBatch());
                         }
+                        else if (structure instanceof Animal){
+                            if (isAnimalBuildingCollision(farm.getStructures(),(Animal) structure,player)){
+                                structure.getSprite().setPosition(structure.getTiles().get(0).getX() * App.tileWidth,
+                                    structure.getTiles().get(0).getY() * App.tileHeight);
+                                structure.getSprite().draw(MainGradle.getInstance().getBatch());
+                            }
+                        }
+                        else if (structure instanceof FarmBuilding){
+                            if (collision(player,(FarmBuilding) structure)){
+                                Sprite sprite = ((FarmBuilding)structure).getSpriteInterior();
+                                sprite.setPosition(structure.getTiles().get(0).getX() * App.tileWidth,
+                                    structure.getTiles().get(0).getY() * App.tileHeight);
+                                sprite.draw(MainGradle.getInstance().getBatch());
+                            }else {
+                                structure.getSprite().setPosition(structure.getTiles().get(0).getX() * App.tileWidth,
+                                    structure.getTiles().get(0).getY() * App.tileHeight);
+                                structure.getSprite().draw(MainGradle.getInstance().getBatch());
+                            }
+                        }
                         else {
                             structure.getSprite().setPosition(structure.getTiles().get(0).getX() * App.tileWidth,
                                 structure.getTiles().get(0).getY() * App.tileHeight);
@@ -293,6 +316,22 @@ public class WorldController {
         OrthographicCamera camera = MainGradle.getInstance().getCamera();
         for (Tile tile : structure.getTiles()) {
             if (camera.frustum.pointInFrustum(tile.getX() * App.tileWidth,tile.getY() * App.tileHeight,0)) return true;
+        }
+        return false;
+    }
+
+    private boolean collision(Player player, FarmBuilding farmBuilding){
+        return player.getTiles().get(0).getX() >= farmBuilding.getTiles().get(0).getX() &&
+            player.getTiles().get(0).getX() <= farmBuilding.getTiles().get(0).getX() + farmBuilding.getFarmBuildingType().getWidth() &&
+            player.getTiles().get(0).getY() >= farmBuilding.getTiles().get(0).getY() &&
+            player.getTiles().get(0).getY() <= farmBuilding.getTiles().get(0).getY() + farmBuilding.getFarmBuildingType().getWidth();
+    }
+
+    private boolean isAnimalBuildingCollision(List<Structure> structures, Animal animal,Player player){
+        for (Structure structure : structures) {
+            if (structure instanceof FarmBuilding && ((FarmBuilding)structure).getAnimals().contains(animal)){
+                if (collision(player,(FarmBuilding) structure)) return true;
+            }
         }
         return false;
     }

@@ -282,6 +282,9 @@ Bait/Violet_Bait.png
 Bait/White_Bait.png
 Bait/Wild_Bait.png
 Bait/Yellow_Bait.png
+Barn_Interior.png
+Big_Barn_Interior.png
+Big_Coop_Interior.png
 Blacksmith.png
 Blacksmith_Interior.png
 Book/Animal_Catalogue.png
@@ -1240,6 +1243,8 @@ Decor/Wood_Floor_Tile_Winter.png
 Decor/Wood_Path.png
 Decor/Wood_Path_Tile.png
 Decor/Wood_Path_Tile_Winter.png
+Deluxe_Barn_Interior.png
+Deluxe_Coop_Interior.png
 Emoji/Emojis000.png
 Emoji/Emojis001.png
 Emoji/Emojis002.png
