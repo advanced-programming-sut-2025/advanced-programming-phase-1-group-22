@@ -14,6 +14,8 @@ import io.github.some_example_name.model.craft.Craft;
 import io.github.some_example_name.model.dto.SpriteHolder;
 import io.github.some_example_name.model.products.TreesAndFruitsAndSeeds.Tree;
 import io.github.some_example_name.model.records.Response;
+import io.github.some_example_name.model.relations.NPC;
+import io.github.some_example_name.model.relations.NPCHouse;
 import io.github.some_example_name.model.relations.Player;
 import io.github.some_example_name.model.shelter.FarmBuilding;
 import io.github.some_example_name.model.source.Crop;
@@ -42,8 +44,9 @@ public class WorldController {
     ArrayList<Sprite> snowDrops = new ArrayList<>();
     float delta = 0f;
     private final OrthographicCamera camera = MainGradle.getInstance().getCamera();
+
     {
-        Random rand  = new Random();
+        Random rand = new Random();
         for (int i = 0; i < camera.viewportWidth / GameAsset.SNOW.getWidth(); i++) {
             for (int j = 0; j <= 6 * camera.viewportHeight / GameAsset.SNOW.getHeight(); j++) {
                 Sprite sprite = new Sprite(GameAsset.SNOW);
@@ -71,7 +74,7 @@ public class WorldController {
         }
     }
 
-    public void showResponse(Response response){
+    public void showResponse(Response response) {
         if (response.shouldBeBack()) notifier.showMessage(response.message(), GameNotifier.MessageType.SUCCESS);
         else notifier.showMessage(response.message(), GameNotifier.MessageType.ERROR);
     }
@@ -81,8 +84,8 @@ public class WorldController {
         if (!GameView.screenshotting && rand.nextInt(25) == 4) {
             Sprite sprite = new Sprite(GameAsset.RAIN[0][0]);
             sprite.setPosition(
-                MainGradle.getInstance().getCamera().position.x - camera.viewportWidth/2f + rand.nextFloat(camera.viewportWidth + 1),
-                MainGradle.getInstance().getCamera().position.y + camera.viewportHeight/2f
+                MainGradle.getInstance().getCamera().position.x - camera.viewportWidth / 2f + rand.nextFloat(camera.viewportWidth + 1),
+                MainGradle.getInstance().getCamera().position.y + camera.viewportHeight / 2f
             );
             sprite.setScale(1.875f);
             rainDrops.add(new SpriteContainer(sprite));
@@ -120,10 +123,10 @@ public class WorldController {
     }
 
     private void handleSnowDrops() {
-        float offset = MainGradle.getInstance().getCamera().position.x - camera.viewportWidth/2f;
+        float offset = MainGradle.getInstance().getCamera().position.x - camera.viewportWidth / 2f;
         for (Sprite snowDrop : snowDrops.stream().toList()) {
-            snowDrop.setY(snowDrop.getY() - 400*Gdx.graphics.getDeltaTime());
-            if (snowDrop.getY() + snowDrop.getHeight() < MainGradle.getInstance().getCamera().position.y - camera.viewportHeight/2f - 20) {
+            snowDrop.setY(snowDrop.getY() - 400 * Gdx.graphics.getDeltaTime());
+            if (snowDrop.getY() + snowDrop.getHeight() < MainGradle.getInstance().getCamera().position.y - camera.viewportHeight / 2f - 20) {
                 if (!GameView.screenshotting) {
                     snowDrop.setY(MainGradle.getInstance().getCamera().position.y + camera.viewportHeight / 2f);
                 }
@@ -137,10 +140,10 @@ public class WorldController {
     private void handleStorms() {
         Random rand = new Random();
         if (!GameView.screenshotting && rand.nextInt(200) == 4) {
-            Sprite sprite = new Sprite(GameAsset.STORM[rand.nextInt(0,2)][rand.nextInt(0,4)]);
+            Sprite sprite = new Sprite(GameAsset.STORM[rand.nextInt(0, 2)][rand.nextInt(0, 4)]);
             sprite.setPosition(
-                MainGradle.getInstance().getCamera().position.x - camera.viewportWidth/2f + rand.nextFloat(camera.viewportWidth),
-                MainGradle.getInstance().getCamera().position.y + camera.viewportHeight/2f
+                MainGradle.getInstance().getCamera().position.x - camera.viewportWidth / 2f + rand.nextFloat(camera.viewportWidth),
+                MainGradle.getInstance().getCamera().position.y + camera.viewportHeight / 2f
             );
             sprite.setScale(0.938f);
             storms.add(new SpriteContainer(sprite));
@@ -221,9 +224,9 @@ public class WorldController {
     }
 
     private Pair distanceFromClick(Tile tile) {
-        Vector3 mouse = new Vector3(GameView.screenX, GameView.screenY,0);
+        Vector3 mouse = new Vector3(GameView.screenX, GameView.screenY, 0);
         MainGradle.getInstance().getCamera().unproject(mouse);
-        Vector2 mouseWorld = new Vector2(mouse.x,mouse.y);
+        Vector2 mouseWorld = new Vector2(mouse.x, mouse.y);
         int mouseTileX = (int) Math.floor(mouseWorld.x / App.tileWidth);
         int mouseTileY = (int) Math.floor(mouseWorld.y / App.tileHeight);
         return new Pair(mouseTileX - tile.getX(), mouseTileY - tile.getY());
@@ -237,66 +240,62 @@ public class WorldController {
 
         for (int i = 0; i < 160; i++) {
             for (int j = 0; j < 120; j++) {
-                if (camera.frustum.pointInFrustum(i * App.tileWidth,j * App.tileHeight,0)){
+                if (camera.frustum.pointInFrustum(i * App.tileWidth, j * App.tileHeight, 0)) {
                     MainGradle.getInstance().getBatch().draw(tiles[i][j].getTileType().getTexture(),
-                        i * App.tileWidth, j * App.tileHeight,App.tileWidth,App.tileHeight);
+                        i * App.tileWidth, j * App.tileHeight, App.tileWidth, App.tileHeight);
                 }
             }
         }
 
         for (Farm farm : game.getVillage().getFarms()) {
             for (Structure structure : farm.getStructures()) {
-                if (isStructureInBond(structure)){
-                    if (structure.getSprite() != null){
-                        if (structure instanceof Lake){
+                if (isStructureInBond(structure)) {
+                    if (structure.getSprite() != null) {
+                        if (structure instanceof Lake) {
                             for (Tile tile : structure.getTiles()) {
-                                structure.getSprite().setSize(App.tileWidth,App.tileHeight);
+                                structure.getSprite().setSize(App.tileWidth, App.tileHeight);
                                 structure.getSprite().setPosition(tile.getX() * App.tileWidth,
                                     tile.getY() * App.tileHeight);
                                 structure.getSprite().draw(MainGradle.getInstance().getBatch());
                             }
-                        }else if (structure instanceof Crop crop){
+                        } else if (structure instanceof Crop crop) {
                             Sprite sprite = crop.getSprite();
                             sprite.setPosition(structure.getTiles().get(0).getX() * App.tileWidth,
                                 structure.getTiles().get(0).getY() * App.tileHeight);
                             sprite.draw(MainGradle.getInstance().getBatch());
-                        }
-                        else if (structure instanceof Tree tree){
+                        } else if (structure instanceof Tree tree) {
                             Sprite sprite = tree.getSprite();
                             sprite.setPosition(structure.getTiles().get(0).getX() * App.tileWidth,
                                 structure.getTiles().get(0).getY() * App.tileHeight);
                             sprite.draw(MainGradle.getInstance().getBatch());
-                        }
-                        else if (structure instanceof Animal){
-                            if (isAnimalBuildingCollision(farm.getStructures(),(Animal) structure,player)){
+                        } else if (structure instanceof Animal) {
+                            if (isAnimalBuildingCollision(farm.getStructures(), (Animal) structure, player)) {
                                 structure.getSprite().setPosition(structure.getTiles().get(0).getX() * App.tileWidth,
                                     structure.getTiles().get(0).getY() * App.tileHeight);
                                 structure.getSprite().draw(MainGradle.getInstance().getBatch());
                             }
-                        }
-                        else if (structure instanceof FarmBuilding){
-                            if (collision(player,(FarmBuilding) structure)){
-                                Sprite sprite = ((FarmBuilding)structure).getSpriteInterior();
+                        } else if (structure instanceof FarmBuilding) {
+                            if (collision(player, (FarmBuilding) structure)) {
+                                Sprite sprite = ((FarmBuilding) structure).getSpriteInterior();
                                 sprite.setPosition(structure.getTiles().get(0).getX() * App.tileWidth,
                                     structure.getTiles().get(0).getY() * App.tileHeight);
                                 sprite.draw(MainGradle.getInstance().getBatch());
-                            }else {
+                            } else {
                                 structure.getSprite().setPosition(structure.getTiles().get(0).getX() * App.tileWidth,
                                     structure.getTiles().get(0).getY() * App.tileHeight);
                                 structure.getSprite().draw(MainGradle.getInstance().getBatch());
                             }
-                        }
-                        else {
+                        } else {
                             structure.getSprite().setPosition(structure.getTiles().get(0).getX() * App.tileWidth,
                                 structure.getTiles().get(0).getY() * App.tileHeight);
                             structure.getSprite().draw(MainGradle.getInstance().getBatch());
                         }
                     }
-                    if (structure.getSprites() != null){
+                    if (structure.getSprites() != null) {
                         for (SpriteHolder sprite : structure.getSprites()) {
                             sprite.getSprite().setPosition(
                                 (sprite.getOffset().getX() + structure.getTiles().get(0).getX()) * App.tileWidth,
-                                (sprite.getOffset().getY() + structure.getTiles().get(0).getY()) * App.tileHeight );
+                                (sprite.getOffset().getY() + structure.getTiles().get(0).getY()) * App.tileHeight);
                             sprite.getSprite().draw(MainGradle.getInstance().getBatch());
                         }
                     }
@@ -304,33 +303,49 @@ public class WorldController {
             }
         }
         for (Structure structure : App.getInstance().getCurrentGame().getVillage().getStructures()) {
-            if (structure.getSprite() != null){
-                structure.getSprite().setPosition(structure.getTiles().get(0).getX() * App.tileWidth,
-                    structure.getTiles().get(0).getY() * App.tileHeight);
-                structure.getSprite().draw(MainGradle.getInstance().getBatch());
+            if (structure.getSprite() != null) {
+                if (structure instanceof NPC npc) {
+                    if (npc.isHaveDialog()) {
+                        npc.getSprite().setPosition(structure.getTiles().get(0).getX() * App.tileWidth,
+                            structure.getTiles().get(0).getY() * App.tileHeight);
+                        npc.getSprite().draw(MainGradle.getInstance().getBatch());
+                        npc.getSpriteDialogBox().setPosition(structure.getTiles().get(0).getX() * App.tileWidth,
+                            structure.getTiles().get(0).getY() * App.tileHeight + npc.getSprite().getHeight());
+                        npc.getSpriteDialogBox().draw(MainGradle.getInstance().getBatch());
+                    } else {
+                        structure.getSprite().setPosition(structure.getTiles().get(0).getX() * App.tileWidth,
+                            structure.getTiles().get(0).getY() * App.tileHeight);
+                        structure.getSprite().draw(MainGradle.getInstance().getBatch());
+                    }
+                } else {
+                    structure.getSprite().setPosition(structure.getTiles().get(0).getX() * App.tileWidth,
+                        structure.getTiles().get(0).getY() * App.tileHeight);
+                    structure.getSprite().draw(MainGradle.getInstance().getBatch());
+                }
             }
         }
     }
 
-    private boolean isStructureInBond(Structure structure){
+    private boolean isStructureInBond(Structure structure) {
         OrthographicCamera camera = MainGradle.getInstance().getCamera();
         for (Tile tile : structure.getTiles()) {
-            if (camera.frustum.pointInFrustum(tile.getX() * App.tileWidth,tile.getY() * App.tileHeight,0)) return true;
+            if (camera.frustum.pointInFrustum(tile.getX() * App.tileWidth, tile.getY() * App.tileHeight, 0))
+                return true;
         }
         return false;
     }
 
-    private boolean collision(Player player, FarmBuilding farmBuilding){
+    private boolean collision(Player player, FarmBuilding farmBuilding) {
         return player.getTiles().get(0).getX() >= farmBuilding.getTiles().get(0).getX() &&
             player.getTiles().get(0).getX() <= farmBuilding.getTiles().get(0).getX() + farmBuilding.getFarmBuildingType().getWidth() &&
             player.getTiles().get(0).getY() >= farmBuilding.getTiles().get(0).getY() &&
             player.getTiles().get(0).getY() <= farmBuilding.getTiles().get(0).getY() + farmBuilding.getFarmBuildingType().getWidth();
     }
 
-    private boolean isAnimalBuildingCollision(List<Structure> structures, Animal animal,Player player){
+    private boolean isAnimalBuildingCollision(List<Structure> structures, Animal animal, Player player) {
         for (Structure structure : structures) {
-            if (structure instanceof FarmBuilding && ((FarmBuilding)structure).getAnimals().contains(animal)){
-                if (collision(player,(FarmBuilding) structure)) return true;
+            if (structure instanceof FarmBuilding && ((FarmBuilding) structure).getAnimals().contains(animal)) {
+                if (collision(player, (FarmBuilding) structure)) return true;
             }
         }
         return false;

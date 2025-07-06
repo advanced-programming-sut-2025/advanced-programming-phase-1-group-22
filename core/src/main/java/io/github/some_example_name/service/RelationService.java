@@ -306,33 +306,33 @@ public class RelationService {
         return new Response("Happy accepting marriage ask");
     }
 
-    public Response meetNpc(String npcName) {
-        game = App.getInstance().getCurrentGame();
-        currentPlayer = game.getCurrentPlayer();
-        NPCType npcType = null;
-        for (NPCType value : NPCType.values()) {
-            if (value.getName().equals(npcName)) {
-                npcType = value;
-            }
-        }
-        NPC npc1 = null;
-        for (NPC npc : game.getNpcs()) {
-            if (npc.getType().equals(npcType)) {
-                npc1 = npc;
-            }
-        }
-        if (npc1 == null) {
-            return new Response("npc not found");
-        }
-        boolean areNeighbors = twoActorsAreNeighbors(currentPlayer, npc1, 2);
-        if (!areNeighbors) {
-            return new Response("the other player is not next You");
-        }
-        lastTalkedNPC = npc1;
-        Friendship friendShipBetweenTwoActors = getFriendShipBetweenTwoActors(npc1);
+    public Response meetNpc(NPC npc) {
+//        game = App.getInstance().getCurrentGame();
+//        currentPlayer = game.getCurrentPlayer();
+//        NPCType npcType = null;
+//        for (NPCType value : NPCType.values()) {
+//            if (value.getName().equals(npcName)) {
+//                npcType = value;
+//            }
+//        }
+//        NPC npc1 = null;
+//        for (NPC npc : game.getNpcs()) {
+//            if (npc.getType().equals(npcType)) {
+//                npc1 = npc;
+//            }
+//        }
+//        if (npc1 == null) {
+//            return new Response("npc not found");
+//        }
+//        boolean areNeighbors = twoActorsAreNeighbors(currentPlayer, npc1, 2);
+//        if (!areNeighbors) {
+//            return new Response("the other player is not next You");
+//        }
+        lastTalkedNPC = npc;
+        Friendship friendShipBetweenTwoActors = getFriendShipBetweenTwoActors(npc);
         Dialog dialog = Dialog.getDialog(game.getTimeAndDate(), friendShipBetweenTwoActors.getFriendShipLevel());
         changeFriendShipLevelUp(friendShipBetweenTwoActors, 20);
-        return new Response(dialog.getDialog());
+        return new Response(dialog.getDialog(),true);
     }
 
     public void changeFriendShipLevelUp(Friendship friendShipBetweenTwoActors, int x) {

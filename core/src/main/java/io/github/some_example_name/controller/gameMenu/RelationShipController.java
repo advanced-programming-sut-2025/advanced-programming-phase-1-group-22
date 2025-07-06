@@ -77,7 +77,7 @@ public class RelationShipController {
 
     public Response meetNpc(String... params) {
         String npcName = params[0];
-        return relationService.meetNpc(npcName);
+        return Response.empty();
     }
 
     public Response giftNpc(String... params) {
