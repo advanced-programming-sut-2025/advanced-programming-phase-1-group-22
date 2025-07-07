@@ -4,7 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.MathUtils;
 import io.github.some_example_name.MainGradle;
-import io.github.some_example_name.model.Notification;
+import io.github.some_example_name.model.AnimatedSprite;
+import io.github.some_example_name.model.Direction;
 import io.github.some_example_name.model.relations.Player;
 import io.github.some_example_name.service.GameService;
 import io.github.some_example_name.utils.App;
@@ -27,8 +28,11 @@ public class PlayerController {
         this.worldController = worldController;
     }
 
-    public void update(){
+    public void update(float delta){
         Player currentPlayer = App.getInstance().getCurrentGame().getCurrentPlayer();
+        if (currentPlayer.getSprite() instanceof AnimatedSprite) {
+            ((AnimatedSprite) currentPlayer.getSprite()).update(delta);
+        }
         currentPlayer.getSprite().setPosition(currentPlayer.getTiles().get(0).getX() * App.tileWidth,
             currentPlayer.getTiles().get(0).getY() * App.tileHeight);
         currentPlayer.getSprite().draw(MainGradle.getInstance().getBatch());
@@ -57,19 +61,25 @@ public class PlayerController {
         if (timeSinceLastMove >= 0.1f) {
             if (Gdx.input.isKeyPressed(Input.Keys.W)) {
                 gameService.walk(playerX, playerY + 1);
+                App.getInstance().getCurrentGame().getCurrentPlayer().setDirection(Direction.NORTH);
                 timeSinceLastMove = 0f;
-            }
+            } else
             if (Gdx.input.isKeyPressed(Input.Keys.A)) {
                 gameService.walk(playerX - 1, playerY);
+                App.getInstance().getCurrentGame().getCurrentPlayer().setDirection(Direction.WEST);
                 timeSinceLastMove = 0f;
-            }
+            } else
             if (Gdx.input.isKeyPressed(Input.Keys.S)) {
                 gameService.walk(playerX, playerY - 1);
+                App.getInstance().getCurrentGame().getCurrentPlayer().setDirection(Direction.SOUTH);
                 timeSinceLastMove = 0f;
-            }
+            } else
             if (Gdx.input.isKeyPressed(Input.Keys.D)) {
                 gameService.walk(playerX + 1, playerY);
+                App.getInstance().getCurrentGame().getCurrentPlayer().setDirection(Direction.EAST);
                 timeSinceLastMove = 0f;
+            } else {
+                ((AnimatedSprite)App.getInstance().getCurrentGame().getCurrentPlayer().getSprite()).setLooping(false);
             }
         }
     }

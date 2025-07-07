@@ -101,7 +101,7 @@ public class GameView implements Screen, InputProcessor {
     public void render(float v) {
         ScreenUtils.clear(0, 0, 0, 1);
         MainGradle.getInstance().getBatch().begin();
-        controller.update();
+        controller.update(v);
         MainGradle.getInstance().getBatch().end();
         stage.act(v);
         stage.draw();

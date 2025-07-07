@@ -1,21 +1,21 @@
 package io.github.some_example_name.model.relations;
 
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.utils.Timer;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.some_example_name.utils.GameAsset;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 import io.github.some_example_name.model.*;
 import io.github.some_example_name.model.abilitiy.Ability;
 import io.github.some_example_name.model.animal.Animal;
 import io.github.some_example_name.model.craft.Craft;
 import io.github.some_example_name.model.exception.InvalidInputException;
-import io.github.some_example_name.model.gameSundry.Sundry;
-import io.github.some_example_name.model.gameSundry.SundryType;
 import io.github.some_example_name.model.receipe.CookingRecipe;
 import io.github.some_example_name.model.receipe.CraftingRecipe;
 import io.github.some_example_name.model.records.Response;
@@ -48,6 +48,8 @@ public class Player extends Actor implements JsonPreparable {
 	private BackPack inventory;
 	private Buff buff;
 	private Ability buffAbility;
+    private Direction direction = Direction.SOUTH;
+    private boolean dirChanged = true;
 	private Map<Ability, Integer> abilities = new HashMap<>();
 	private Account account = new Account();
 	private List<ShippingBin> shippingBinList = new ArrayList<>();
@@ -63,7 +65,7 @@ public class Player extends Actor implements JsonPreparable {
 	private Menu currentMenu = Menu.COTTAGE;
     private TrashCan currentTrashCan;
     private Boolean isWedding = false;
-    private Sprite sprite;
+    private AnimatedSprite sprite;
     private ArrayList<Notification<com.badlogic.gdx.scenes.scene2d.Actor, Actor>> notifications = new ArrayList<>();
 	@JsonProperty("abilitiesMap")
 	private ObjectMapWrapper abilitiesWrapper;
@@ -103,8 +105,6 @@ public class Player extends Actor implements JsonPreparable {
 		craftingRecipes.put(CraftingRecipe.FURNACE_RECIPE, true);
 		craftingRecipes.put(CraftingRecipe.SCARECROW_RECIPE, true);
 		addBasicTools();
-        this.sprite = new Sprite(GameAsset.SCARECROW);
-        this.sprite.setSize((float) App.tileWidth, (float) (App.tileHeight * 1.5));
 	}
 
 	private Pair position;
@@ -358,4 +358,24 @@ public class Player extends Actor implements JsonPreparable {
 		getTiles().clear();
 		getTiles().add(App.getInstance().getCurrentGame().getTiles()[path.get(max).getX()][path.get(max).getY()]);
 	}
+
+    public Sprite getSprite() {
+        if (dirChanged) {
+            dirChanged = false;
+            this.sprite = playerType.getWalking(direction);
+            this.sprite.setSize((float) App.tileWidth, (float) (App.tileHeight * 1.5));
+        }
+        return sprite;
+    }
+
+    public void setDirection(Direction direction) {
+        if (this.sprite.isLooping() || this.direction != direction) dirChanged = true;
+        this.sprite.setLooping(true);
+        this.direction = direction;
+    }
+
+    @Override
+    public TextureRegion getAvatar() {
+        return playerType.getAvatar();
+    }
 }

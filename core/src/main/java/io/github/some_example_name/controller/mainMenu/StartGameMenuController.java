@@ -59,8 +59,8 @@ public class StartGameMenuController {
                         if (farm == -1) {//TODO check if the farm is not unique
                             view.alert("Another person has chosen this farm.", 5);
                         }
-                        int character = view.getPlayerSelection().getSelectedIndex();
-                        if (character == -1) {//TODO check if the farm is not unique
+                        String character = view.getPlayerSelection().getSelected();
+                        if (character == null) {//TODO check if the farm is not unique
                             view.alert("Another person has chosen this player.", 5);
                         }
                         Player player = null;
@@ -74,7 +74,7 @@ public class StartGameMenuController {
                             view.alert("Something went wrong", 5);
                         } else {
                             player.setFarmType(FarmType.values()[farm]);
-                            player.setPlayerType(PlayerType.values()[character]);
+                            player.setPlayerType(PlayerType.findInstance(character));
                             view.setState(2);
                         }
                     }

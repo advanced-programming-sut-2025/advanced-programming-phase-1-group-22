@@ -36,7 +36,7 @@ public class GameViewController {
         this.view = view;
     }
 
-    public void update(){
+    public void update(float delta){
         if (GameView.screenshotting) {
             if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
                 GameView.screenshotting = false;
@@ -44,7 +44,7 @@ public class GameViewController {
             }
         }
         worldController.update();
-        playerController.update();
+        playerController.update(delta);
         toolController.update();
         carryingController.update();
         animalController.update();
