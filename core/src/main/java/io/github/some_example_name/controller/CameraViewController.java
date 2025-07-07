@@ -264,7 +264,7 @@ public class CameraViewController {
             if (currentToolIndex == null) currentToolIndex = -1;
             player.setCurrentCarrying(items.get(++currentToolIndex % Math.min(12, player.getInventory().getProducts().size())));
         }
-        if (GameView.scrollY != 0) { //todo check whether it's working
+        if (GameView.scrollY != 0) {
             int mod = Math.min(12, player.getInventory().getProducts().size());
             if (mod != 0) {
                 if (currentToolIndex == null) currentToolIndex = GameView.scrollY > 0 ? mod - 1 : 0;

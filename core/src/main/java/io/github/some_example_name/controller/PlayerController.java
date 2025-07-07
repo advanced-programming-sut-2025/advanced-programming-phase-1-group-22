@@ -11,6 +11,7 @@ import io.github.some_example_name.utils.GameAsset;
 import io.github.some_example_name.view.GameView;
 import io.github.some_example_name.view.mainMenu.FridgeMenu;
 import io.github.some_example_name.view.mainMenu.InventoryMenu;
+import io.github.some_example_name.view.mainMenu.ToolMenu;
 import lombok.Getter;
 
 @Getter
@@ -19,6 +20,7 @@ public class PlayerController {
     WorldController worldController;
     private float timeSinceLastMove = 0;
     private InventoryMenu inventoryMenu = new InventoryMenu();
+    private final ToolMenu toolMenu = new ToolMenu();
 
     public PlayerController(WorldController worldController) {
         this.worldController = worldController;
@@ -105,6 +107,9 @@ public class PlayerController {
         if (Gdx.input.isKeyJustPressed(Input.Keys.C)) {
             inventoryMenu.setTabIndex(5);
             inventoryMenu.createMenu(GameView.stage,GameAsset.SKIN, getWorldController());
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.L)){
+            toolMenu.createMenu(GameView.stage,GameAsset.SKIN,worldController);
         }
     }
 }
