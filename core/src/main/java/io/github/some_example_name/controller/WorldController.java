@@ -258,6 +258,11 @@ public class WorldController {
                                     tile.getY() * App.tileHeight);
                                 structure.getSprite().draw(MainGradle.getInstance().getBatch());
                             }
+                        } else if (structure instanceof GreenHouse greenHouse) {
+                            Sprite sprite = greenHouse.getSprite();
+                            sprite.setPosition(structure.getTiles().get(0).getX() * App.tileWidth,
+                                structure.getTiles().get(0).getY() * App.tileHeight);
+                            sprite.draw(MainGradle.getInstance().getBatch());
                         } else if (structure instanceof Crop crop) {
                             Sprite sprite = crop.getSprite();
                             sprite.setPosition(structure.getTiles().get(0).getX() * App.tileWidth,
