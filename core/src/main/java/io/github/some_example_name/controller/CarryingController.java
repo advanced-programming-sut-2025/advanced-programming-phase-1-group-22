@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import io.github.some_example_name.MainGradle;
+import io.github.some_example_name.model.Direction;
 import io.github.some_example_name.model.Salable;
 import io.github.some_example_name.model.Tile;
 import io.github.some_example_name.model.gameSundry.Sundry;
@@ -57,11 +58,19 @@ public class CarryingController {
         if (Gdx.input.isKeyJustPressed(Input.Keys.C) || Gdx.input.justTouched()){
             if (carrying instanceof Seed || carrying instanceof MixedSeeds){
                 handlePlanting(carrying,currentPlayer, dx,dy);
-            }
-            if (carrying instanceof Sundry && ((Sundry)carrying).getSundryType().getName().contains("Soil")){
-                handleFertilize(carrying,currentPlayer,dx,dy);
+            } else if (carrying instanceof Sundry && ((Sundry)carrying).getSundryType().getName().contains("Soil")) {
+                handleFertilize(carrying, currentPlayer, dx, dy);
+            } else if (carrying != null)  {
+                if (dy <= 1 && dx <= 1) placeItem(carrying, dx, dy);
             }
         }
+    }
+
+    private void placeItem(Salable item, int xTransmit, int yTransmit){
+        WorldController worldController = new WorldController();
+        GameService gameService = new GameService();
+        Direction direction = Direction.getByXAndY(xTransmit, yTransmit);
+        if (direction!=null) worldController.showResponse(gameService.placeItem(item, direction));
     }
 
     private void handleFertilize(Salable carrying,Player player,int dx, int dy){

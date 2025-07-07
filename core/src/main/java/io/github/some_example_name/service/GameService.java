@@ -78,7 +78,7 @@ public class GameService {
 
     public Response exitGame() {
         if (!app.getCurrentGame().getCurrentPlayer().getUser().getUsername().equals(Session.getCurrentUser().getUsername())) {
-            return new Response("You are not allowed to exit; the player who has started the app.getCurrentGame() can" +
+            return new Response("You are not allowed to exit; the player who has started the game can" +
                     " end it");
         }
         String filePath = Session.getCurrentUser().getUsername();
@@ -105,13 +105,17 @@ public class GameService {
                     System.out.println("Are you in favor termination? Y/n");
             }
         }
+        return finalTermination();
+    }
+
+    public Response finalTermination() {
         App.getInstance().getGames().remove(app.getCurrentGame());
         Session.setCurrentMenu(Menu.MAIN);
         for (Player player : app.getCurrentGame().getPlayers()) {
             player.getUser().setIsPlaying(null);
             player.getUser().setNumberOfPlayedGames(player.getUser().getNumberOfPlayedGames() + 1);
             player.getUser().setHighestMoneyEarned(
-                    Math.max(player.getUser().getHighestMoneyEarned(), player.getAccount().getGolds())
+                Math.max(player.getUser().getHighestMoneyEarned(), player.getAccount().getGolds())
             );
             userRepository.save(player.getUser());
         }
@@ -1289,11 +1293,17 @@ public class GameService {
         if (product == null) return new Response(itemName + " not found in your backpack.");
         Direction dir = Direction.getByName(direction);
         if (dir == null) return new Response(direction + " not recognized as a direction.");
+        return placeItem(product, dir);
+    }
+
+
+    public Response placeItem(Salable product, Direction dir) {
+        Player player = app.getCurrentGame().getCurrentPlayer();
         Tile tile = app.getCurrentGame().tiles[player.getTiles().get(0).getX() + dir.getXTransmit()]
-                [player.getTiles().get(0).getY() + dir.getYTransmit()];
+            [player.getTiles().get(0).getY() + dir.getYTransmit()];
         if (tile.getIsFilled()) return new Response("The tile you're trying to put the item on, is filled");
         if (!(product instanceof Structure))
-            return new Response(itemName + " Cannot be put on ground"); //TODO Some objects are not structure but must be put on ground
+            return new Response(product.getName() + " Cannot be put on ground"); //TODO Some objects are not structure but must be put on ground
         player.getInventory().deleteProductFromBackPack(product, player, 1);
         ((Structure) product).getTiles().add(tile);
         Farm currentFarm = getPlayerInWitchFarm(player);
@@ -1333,7 +1343,7 @@ public class GameService {
                 }
                 case GRASS_STARTER: {
                     ((Craft) product).getTiles().get(0).setTileType(TileType.GRASS);
-                    return new Response(itemName + " is put on the ground.", true);
+                    return new Response(product.getName() + " is put on the ground.", true);
                 }
             }
         }
@@ -1341,7 +1351,7 @@ public class GameService {
         setScareCrowAndSprinklerForAll();
         tile.setIsFilled(true);
         tile.setIsPassable(false);
-        return new Response(itemName + " is put on the ground.", true);
+        return new Response(product.getName() + " is put on the ground.", true);
     }
 
     public Response C_AddItem(String name, String count) {
@@ -1963,7 +1973,7 @@ public class GameService {
                 + " " + player.getMaxEnergy(), true);
     }
 
-    private void updateRecipes() {
+    public void updateRecipes() {
         Player player = app.getCurrentGame().getCurrentPlayer();
         switch (player.getAbilityLevel(Ability.MINING)) {
             case 4:
