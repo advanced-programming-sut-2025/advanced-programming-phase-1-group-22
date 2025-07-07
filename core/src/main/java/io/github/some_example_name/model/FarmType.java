@@ -26,12 +26,14 @@ public enum FarmType {
     }
 
     public void initial(){
-        switch (this) {
-            case GRASS_FARM -> GrassFarmInit();
-            case BLUE_FARM -> BlueFarmInit();
-            case FLOWER_FARM -> FlowerFarmInit();
-            case ROCKY_FARM -> RockyFarmInit();
-            case DESERT_FARM -> DesertFarmInit();
+        if (structures.isEmpty()) {
+            switch (this) {
+                case GRASS_FARM -> GrassFarmInit();
+                case BLUE_FARM -> BlueFarmInit();
+                case FLOWER_FARM -> FlowerFarmInit();
+                case ROCKY_FARM -> RockyFarmInit();
+                case DESERT_FARM -> DesertFarmInit();
+            }
         }
     }
 

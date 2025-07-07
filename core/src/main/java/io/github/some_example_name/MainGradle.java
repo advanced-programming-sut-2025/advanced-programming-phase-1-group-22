@@ -7,7 +7,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import io.github.some_example_name.controller.mainMenu.StartGameMenuController;
+import io.github.some_example_name.utils.GameAsset;
 import io.github.some_example_name.view.GameView;
+import io.github.some_example_name.view.mainMenu.StartGameMenu;
 import lombok.Getter;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
@@ -33,7 +36,7 @@ public class MainGradle extends Game {
         viewport = new FitViewport(1920, 1080, camera);
         viewport.apply();
         batch = new SpriteBatch();
-        instance.setScreen(new GameView());
+        instance.setScreen(new StartGameMenu(new StartGameMenuController(), GameAsset.SKIN_MENU, 0));
     }
 
     @Override

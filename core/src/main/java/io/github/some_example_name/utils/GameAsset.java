@@ -23,6 +23,7 @@ public class GameAsset {
     public static final Texture SOCIAL_TAB = new Texture("Inventory/socail_tab.png");
     public static final Texture EXIT_BUTTON = new Texture("Inventory/exit.png");
     public static final Skin SKIN = new Skin(Gdx.files.internal("skin/craftacular-ui.json"));
+    public static final Skin SKIN_MENU = new Skin(Gdx.files.internal("skinMenu/pixthulhu-ui.json"));
     public static final Texture BARN = new Texture("Farm_Buildings/Barn.png");
     public static final Texture BIG_BARN = new Texture("Farm_Buildings/Big_Barn.png");
     public static final Texture DELUXE_BARN = new Texture("Farm_Buildings/Deluxe_Barn.png");
@@ -2425,4 +2426,16 @@ public class GameAsset {
     public static final TextureRegion[][] RAIN = TextureRegion.split(new Texture("Weather/Rain.png"), 41, 130);
     public static final TextureRegion[][] STORM = TextureRegion.split(new Texture("Weather/Storm.png"), 192, 384);
     public static final Texture SNOW = new Texture("Weather/Snow.png");
+    public static final Texture ABIGAIL_FULL = new Texture("Player/Abigail.png");
+    public static final Texture ALEX_FULL = new Texture("Player/Alex.png");
+    public static final Texture ELLIOT_FULL = new Texture("Player/Elliot.png");
+    public static final Texture EMILY_FULL = new Texture("Player/Emily.png");
+    public static final Texture HALEY_FULL = new Texture("Player/Haley.png");
+    public static final Texture HARVEY_FULL = new Texture("Player/Harvey.png");
+    public static final Texture LEAH_FULL = new Texture("Player/Leah.png");
+    public static final Texture MARU_FULL = new Texture("Player/Maru.png");
+    public static final Texture PENNY_FULL = new Texture("Player/Penny.png");
+    public static final Texture SAM_FULL = new Texture("Player/Sam.png");
+    public static final Texture SEBASTIAN_FULL = new Texture("Player/Sebastian.png");
+    public static final Texture SHANE_FULL = new Texture("Player/Shane.png");
 }

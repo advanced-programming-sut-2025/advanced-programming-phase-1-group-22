@@ -120,6 +120,7 @@ public class Farm implements JsonPreparable {
     }
 
     public void getClone() {
+        farmType.initial();
         for (HardCodeFarmElements structure : farmType.getStructures()) {
             HardCodeFarmElements cloneEl = structure.cloneEl();
             transmission(cloneEl);

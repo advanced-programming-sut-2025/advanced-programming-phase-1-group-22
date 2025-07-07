@@ -109,6 +109,7 @@ public class Player extends Actor implements JsonPreparable {
 
 	private Pair position;
 	private FarmType farmType;
+    private PlayerType playerType;
 
 	public void removeEnergy(int amount) {
 		changeEnergy(-amount);
