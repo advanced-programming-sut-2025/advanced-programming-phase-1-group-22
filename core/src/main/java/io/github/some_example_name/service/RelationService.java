@@ -331,7 +331,7 @@ public class RelationService {
         lastTalkedNPC = npc;
         Friendship friendShipBetweenTwoActors = getFriendShipBetweenTwoActors(npc);
         Dialog dialog = Dialog.getDialog(game.getTimeAndDate(), friendShipBetweenTwoActors.getFriendShipLevel());
-        changeFriendShipLevelUp(friendShipBetweenTwoActors, 20);
+        friendShipBetweenTwoActors.setXp(Math.min(friendShipBetweenTwoActors.getXp() + 20,799));
         return new Response(dialog.getDialog(),true);
     }
 
@@ -374,29 +374,29 @@ public class RelationService {
         }
     }
 
-    public Response giftNPC(String npcName, String item) {
+    public Response giftNPC(NPC npc, String item) {
         game = App.getInstance().getCurrentGame();
         currentPlayer = game.getCurrentPlayer();
-        NPCType npcType = null;
-        for (NPCType value : NPCType.values()) {
-            if (value.getName().equals(npcName)) {
-                npcType = value;
-            }
-        }
-        NPC npc1 = null;
-        for (NPC npc : game.getNpcs()) {
-            if (npc.getType().equals(npcType)) {
-                npc1 = npc;
-            }
-        }
-        if (npc1 == null) {
-            return new Response("npc not found");
-        }
-        boolean areNeighbors = twoActorsAreNeighbors(currentPlayer, npc1, 2);
-        if (!areNeighbors) {
-            return new Response("the other player is not next You");
-        }
-        Friendship friendShipBetweenTwoActors = getFriendShipBetweenTwoActors(npc1);
+//        NPCType npcType = null;
+//        for (NPCType value : NPCType.values()) {
+//            if (value.getName().equals(npcName)) {
+//                npcType = value;
+//            }
+//        }
+//        NPC npc1 = null;
+//        for (NPC npc : game.getNpcs()) {
+//            if (npc.getType().equals(npcType)) {
+//                npc1 = npc;
+//            }
+//        }
+//        if (npc1 == null) {
+//            return new Response("npc not found");
+//        }
+//        boolean areNeighbors = twoActorsAreNeighbors(currentPlayer, npc1, 2);
+//        if (!areNeighbors) {
+//            return new Response("the other player is not next You");
+//        }
+        Friendship friendShipBetweenTwoActors = getFriendShipBetweenTwoActors(npc);
         Map.Entry<Salable, Integer> itemFromInventory = currentPlayer.getItemFromInventory(item);
         if (itemFromInventory == null) {
             return new Response("item not found");
@@ -408,15 +408,14 @@ public class RelationService {
         if (gift instanceof Tool) {
             return new Response("gift can not be tool!");
         }
-        boolean isFavorite = false;
-        for (Salable favorite : npcType.getFavorites()) {
-            if (favorite.getName().equals(gift.getName())) {
-                changeFriendShipLevelUp(friendShipBetweenTwoActors, 200);
-                isFavorite = true;
+        for (Salable favorite : npc.getType().getFavorites()) {
+            if (favorite.getName().equals(item)) {
+                friendShipBetweenTwoActors.setXp(Math.min(friendShipBetweenTwoActors.getXp() + 200,799));
             }
         }
-        if (isFavorite) {
-            changeFriendShipLevelUp(friendShipBetweenTwoActors, 50);
+        if (!npc.isGiftedToday()) {
+            friendShipBetweenTwoActors.setXp(Math.min(friendShipBetweenTwoActors.getXp() + 50,799));
+            npc.setGiftedToday(true);
         }
         currentPlayer.getInventory().deleteProductFromBackPack(itemFromInventory.getKey(), currentPlayer, 1);
         return new Response("gift gived successfully");
@@ -432,6 +431,18 @@ public class RelationService {
             }
         }
         return new Response(stringBuilder.toString());
+    }
+
+    public Friendship getFriendShip(Actor actor1,Actor actor2){
+        game = App.getInstance().getCurrentGame();
+        currentPlayer = game.getCurrentPlayer();
+        for (Friendship friendship : game.getFriendships()) {
+            if ((friendship.getSecondPlayer().equals(actor1) && friendship.getFirstPlayer().equals(actor2)) ||
+                (friendship.getSecondPlayer().equals(actor2) && friendship.getFirstPlayer().equals(actor1))) {
+                return friendship;
+            }
+        }
+        return null;
     }
 
     public Response questsList() {

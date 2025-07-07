@@ -6,14 +6,13 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector3;
 import io.github.some_example_name.MainGradle;
-import io.github.some_example_name.model.Farm;
 import io.github.some_example_name.model.relations.NPC;
-import io.github.some_example_name.model.shelter.ShippingBin;
 import io.github.some_example_name.model.structure.Structure;
 import io.github.some_example_name.utils.App;
 import io.github.some_example_name.utils.GameAsset;
 import io.github.some_example_name.view.GameView;
 import io.github.some_example_name.view.mainMenu.DialogMenu;
+import io.github.some_example_name.view.mainMenu.NPCMenu;
 
 public class NPCController {
     private final WorldController worldController = new WorldController();
@@ -36,6 +35,20 @@ public class NPCController {
                     if (collisionWithDialog(npc.getSpriteDialogBox(), worldX, worldY)) {
                         DialogMenu dialogMenu = new DialogMenu(npc);
                         dialogMenu.createMenu(GameView.stage, GameAsset.SKIN, worldController);
+                    }
+                }
+            }
+        }
+        if (Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT)){
+            Vector3 worldCoords = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
+            MainGradle.getInstance().getCamera().unproject(worldCoords);
+            float worldX = worldCoords.x;
+            float worldY = worldCoords.y;
+            for (Structure structure : App.getInstance().getCurrentGame().getVillage().getStructures()) {
+                if (structure instanceof NPC npc){
+                    if (collision(npc,worldX,worldY)){
+                        NPCMenu npcMenu = new NPCMenu(npc);
+                        npcMenu.createMenu(GameView.stage,GameAsset.SKIN,worldController);
                     }
                 }
             }
