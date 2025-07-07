@@ -123,6 +123,7 @@ public class Village implements JsonPreparable {
             for (int j = 77; j < 83; j++) {
                 fountain.getTiles().add(App.getInstance().getCurrentGame().tiles[j][i]);
                 App.getInstance().getCurrentGame().tiles[j][i].setIsFilled(true);
+                App.getInstance().getCurrentGame().tiles[j][i].setIsPassable(false);
             }
         }
         structures.add(fountain);

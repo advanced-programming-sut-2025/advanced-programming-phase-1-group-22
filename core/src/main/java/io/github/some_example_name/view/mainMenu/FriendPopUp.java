@@ -1,0 +1,118 @@
+package io.github.some_example_name.view.mainMenu;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
+import io.github.some_example_name.MainGradle;
+import io.github.some_example_name.controller.WorldController;
+import io.github.some_example_name.model.Salable;
+import io.github.some_example_name.model.craft.Craft;
+import io.github.some_example_name.model.enums.Gender;
+import io.github.some_example_name.model.records.Response;
+import io.github.some_example_name.model.relations.Player;
+import io.github.some_example_name.service.RelationService;
+import io.github.some_example_name.utils.App;
+import io.github.some_example_name.view.GameView;
+import lombok.Setter;
+
+@Setter
+public class FriendPopUp extends PopUp { //TODO UNCHECKED
+    private Player player;
+
+    public void createMenu(Stage stage, Skin skin, WorldController worldController) {
+        super.createMenu(stage, skin, worldController);
+        createInventory(skin, getMenuGroup(), stage);
+    }
+
+    @Override
+    protected void handleDragRelease(InputEvent event, float x, float y, int pointer, Image itemImage, Salable item, Image dragImage, Boolean flag) {}
+
+    private void close(Window window) {
+        GameView.captureInput = true;
+        window.remove();
+    }
+
+    private void createInventory(Skin skin, Group menuGroup, Stage stage) {
+        OrthographicCamera camera = MainGradle.getInstance().getCamera();
+
+        Window window = new Window("", skin);
+        window.setSize(camera.viewportWidth * 0.3f, camera.viewportHeight * 0.35f);
+        window.setMovable(false);
+
+        Table info = new Table();
+
+        info.pack();
+        info.add(new Image(player.getAvatar())).size(70).padRight(10);
+        info.add(new Label(player.getUser().getNickname(), skin)).width(100).row();
+        TextButton hug = new TextButton("Hug!", skin);
+        TextButton flower = new TextButton("Give Flower!", skin);
+        TextButton marry = new TextButton("Ask Marriage!", skin);
+        info.add(flower).colspan(2).expandX().row();
+        info.add(hug).colspan(2).expandX().row();
+        if (App.getInstance().getCurrentGame().getCurrentPlayer().getUser().getGender() == Gender.MALE &&
+            player.getUser().getGender() == Gender.FEMALE) {
+            info.add(marry).colspan(2).expandX().row();
+        }
+        hug.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                getController().showResponse(RelationService.getInstance().hug(player.getUser().getUsername()));
+                return true;
+            }
+        });
+
+        flower.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                getController().showResponse(RelationService.getInstance().giveGift(
+                    player.getUser().getUsername(), "flower", 1));
+                return true;
+            }
+        });
+
+        marry.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                getController().showResponse(RelationService.getInstance().marry(player.getUser().getUsername(), "Wedding Ring"));
+                return true;
+            }
+        });
+
+        Table content = new Table();
+        content.setFillParent(true);
+        content.add(info).width(window.getWidth()).height(window.getHeight() - 100).padBottom(20).padTop(50).row();
+
+
+        window.add(content).fill().pad(10);
+        Group group = new Group() {
+            @Override
+            public void act(float delta) {
+                window.setPosition(
+                    (player.getTiles().get(0).getX() + 1) * App.tileWidth,
+                    player.getTiles().get(0).getY() * App.tileHeight
+                );
+                if (Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY)) {
+                    if (!Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)) close(window);
+                }
+                if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
+                    Vector3 mouse = new Vector3(GameView.screenX, GameView.screenY,0);
+                    MainGradle.getInstance().getCamera().unproject(mouse);
+                    Vector2 mouseWorld = new Vector2(mouse.x,mouse.y);
+                    if (mouseWorld.x < window.getX() || mouseWorld.x > window.getX() + window.getWidth() ||
+                        mouseWorld.y < window.getY() || mouseWorld.y > window.getY() + window.getHeight()) close(window);
+                }
+
+                super.act(delta);
+            }
+        };
+        group.addActor(window);
+        menuGroup.addActor(group);
+    }
+}

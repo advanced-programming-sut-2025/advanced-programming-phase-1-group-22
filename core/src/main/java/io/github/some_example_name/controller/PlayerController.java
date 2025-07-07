@@ -7,6 +7,8 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
 import io.github.some_example_name.MainGradle;
 import io.github.some_example_name.model.Farm;
+import io.github.some_example_name.model.AnimatedSprite;
+import io.github.some_example_name.model.Direction;
 import io.github.some_example_name.model.relations.Player;
 import io.github.some_example_name.model.shelter.ShippingBin;
 import io.github.some_example_name.model.source.Seed;
@@ -17,6 +19,8 @@ import io.github.some_example_name.utils.GameAsset;
 import io.github.some_example_name.view.GameView;
 import io.github.some_example_name.view.mainMenu.FridgeMenu;
 import io.github.some_example_name.view.mainMenu.InventoryMenu;
+import io.github.some_example_name.view.mainMenu.NotificationMenu;
+import io.github.some_example_name.view.mainMenu.TerminateMenu;
 import io.github.some_example_name.view.mainMenu.ToolMenu;
 import lombok.Getter;
 
@@ -35,8 +39,11 @@ public class PlayerController {
         this.worldController = worldController;
     }
 
-    public void update(){
+    public void update(float delta){
         Player currentPlayer = App.getInstance().getCurrentGame().getCurrentPlayer();
+        if (currentPlayer.getSprite() instanceof AnimatedSprite) {
+            ((AnimatedSprite) currentPlayer.getSprite()).update(delta);
+        }
         currentPlayer.getSprite().setPosition(currentPlayer.getTiles().get(0).getX() * App.tileWidth,
             currentPlayer.getTiles().get(0).getY() * App.tileHeight);
         currentPlayer.getSprite().draw(MainGradle.getInstance().getBatch());
@@ -67,32 +74,43 @@ public class PlayerController {
         if (timeSinceLastMove >= 0.1f) {
             if (Gdx.input.isKeyPressed(Input.Keys.W)) {
                 gameService.walk(playerX, playerY + 1);
+                App.getInstance().getCurrentGame().getCurrentPlayer().setDirection(Direction.NORTH);
                 timeSinceLastMove = 0f;
-            }
+            } else
             if (Gdx.input.isKeyPressed(Input.Keys.A)) {
                 gameService.walk(playerX - 1, playerY);
+                App.getInstance().getCurrentGame().getCurrentPlayer().setDirection(Direction.WEST);
                 timeSinceLastMove = 0f;
-            }
+            } else
             if (Gdx.input.isKeyPressed(Input.Keys.S)) {
                 gameService.walk(playerX, playerY - 1);
+                App.getInstance().getCurrentGame().getCurrentPlayer().setDirection(Direction.SOUTH);
                 timeSinceLastMove = 0f;
-            }
+            } else
             if (Gdx.input.isKeyPressed(Input.Keys.D)) {
                 gameService.walk(playerX + 1, playerY);
+                App.getInstance().getCurrentGame().getCurrentPlayer().setDirection(Direction.EAST);
                 timeSinceLastMove = 0f;
+            } else {
+                ((AnimatedSprite)App.getInstance().getCurrentGame().getCurrentPlayer().getSprite()).setLooping(false);
             }
         }
     }
 
     private void handleInputs(){
         if (Gdx.input.isKeyJustPressed(Input.Keys.T)){
-            //TODO Talk Menu
+            inventoryMenu.setTabIndex(2);
+            inventoryMenu.createMenu(GameView.stage,GameAsset.SKIN, getWorldController());
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)){
             GameView.Console.handleGlobalKey(GameView.stage);
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.X) || Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT)) {
             //TODO Investigate?
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.BACKSPACE)) {
+            TerminateMenu terminateMenu = new TerminateMenu();
+            terminateMenu.createMenu(GameView.stage,GameAsset.SKIN, getWorldController());
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.E) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             inventoryMenu.setTabIndex(0);
@@ -103,7 +121,9 @@ public class PlayerController {
             fridgeMenu.createMenu(GameView.stage,GameAsset.SKIN, getWorldController());
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.F)) {
-            //TODO open Journal?
+            NotificationMenu notificationMenu = new NotificationMenu();
+            notificationMenu.createMenu(GameView.stage,GameAsset.SKIN, getWorldController());
+            //TODO OPEN JOURNAL?
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.M)) {
             inventoryMenu.setTabIndex(3);
@@ -113,7 +133,7 @@ public class PlayerController {
             inventoryMenu.setTabIndex(4);
             inventoryMenu.createMenu(GameView.stage,GameAsset.SKIN, getWorldController());
         }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.C)) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.V)) {
             inventoryMenu.setTabIndex(5);
             inventoryMenu.createMenu(GameView.stage,GameAsset.SKIN, getWorldController());
         }

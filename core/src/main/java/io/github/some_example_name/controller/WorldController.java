@@ -23,6 +23,7 @@ import io.github.some_example_name.model.structure.Structure;
 import io.github.some_example_name.model.structure.farmInitialElements.Lake;
 import io.github.some_example_name.model.structure.farmInitialElements.GreenHouse;
 import io.github.some_example_name.service.GameService;
+import io.github.some_example_name.service.RelationService;
 import io.github.some_example_name.utils.App;
 import io.github.some_example_name.utils.GameAsset;
 import io.github.some_example_name.view.GameNotifier;
@@ -31,6 +32,7 @@ import io.github.some_example_name.view.Menu;
 import io.github.some_example_name.view.mainMenu.ArtisanMenu;
 import io.github.some_example_name.view.mainMenu.CraftPopUp;
 import io.github.some_example_name.view.mainMenu.FridgeMenu;
+import io.github.some_example_name.view.mainMenu.FriendPopUp;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -208,6 +210,18 @@ public class WorldController {
                                 }
                             }
                         }
+                    } else if (structure instanceof Player) {
+                        if (distanceFromClick(structure.getTiles().getFirst()).isOrigin()) {
+                            if (RelationService.getInstance().twoActorsAreNeighbors(
+                                App.getInstance().getCurrentGame().getCurrentPlayer(),
+                                (Player) structure, 1
+                            )) {
+                                FriendPopUp friendPopUp = new FriendPopUp();
+                                friendPopUp.setPlayer((Player) structure);
+                                friendPopUp.createMenu(GameView.stage, GameAsset.SKIN, this);
+                            }
+                        }
+
                     }
                 }
             }

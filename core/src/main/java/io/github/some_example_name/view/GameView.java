@@ -21,6 +21,7 @@ import io.github.some_example_name.model.source.Seed;
 import io.github.some_example_name.model.source.SeedType;
 import io.github.some_example_name.model.tools.MilkPail;
 import io.github.some_example_name.service.GameService;
+import io.github.some_example_name.service.RelationService;
 import io.github.some_example_name.utils.App;
 
 import java.util.ArrayList;
@@ -38,70 +39,6 @@ public class GameView implements Screen, InputProcessor {
     public static boolean positionChoosing = false;
     public static String building;
 
-
-    public GameView() {
-        Game game = new Game();
-        App app = App.getInstance();
-        app.setCurrentGame(game);
-        game.start();
-        Village village = new Village();
-        village.initAfterLoad();
-        game.setVillage(village);
-        Animal animal = new Animal(AnimalType.COW,"parsa");
-        Player player = new Player(new User("mahdi","","d","mahdi", Gender.MALE));
-        game.addPlayer(player);
-        Player player2 = new Player(new User("ali","","d","ali", Gender.MALE));
-        player2.setCurrentCarrying(new Seed(SeedType.JAZZ_SEEDS));
-        game.addPlayer(player2);
-        FarmType.BLUE_FARM.initial();
-        player.setFarmType(FarmType.BLUE_FARM);
-        FarmType.FLOWER_FARM.initial();
-        player2.setFarmType(FarmType.FLOWER_FARM);
-        game.setCurrentPlayer(game.getPlayers().get(0));
-        completeMap();
-        player.getAnimals().add(animal);
-        List<Tile> tiles = new ArrayList<>();
-        tiles.add(new Tile(player.getTiles().get(0).getX(),player.getTiles().get(0).getY() - 2));
-        animal.setTiles(tiles);
-        for (Farm farm : game.getVillage().getFarms()) {
-            if (farm.getPlayers().contains(player)) farm.getStructures().add(animal);
-        }
-
-        GameService gameService = new GameService();
-        gameService.C_AddDollars("1000");
-        gameService.C_AddItem("wood", "1000");
-        gameService.C_AddItem("pizza", "1");
-        gameService.C_AddItem("bee_house", "2");
-        gameService.placeItem("bee_house", "south");
-        gameService.placeItem("furnace", "southwest");
-        gameService.C_AddItem("preserves_jar", "1");
-        gameService.placeItem("preserves_jar", "west");
-        gameService.C_AddItem("fish_smoker", "1");
-        gameService.placeItem("fish_smoker", "southeast");
-    }
-
-    private void completeMap() {
-        Game game = App.getInstance().getCurrentGame();
-        Village village = game.getVillage();
-        for (int i = 0; i < 4; i++) {
-            Player player = game.getPlayers().size() <= i ? null : game.getPlayers().get(i);
-            Farm farm;
-            if (player != null) {
-                farm = new Farm(player, player.getFarmType());
-                village.getStructures().add(player);
-            } else {
-                Random random = new Random();
-                farm = new Farm(null, FarmType.values()[random.nextInt(0, 4)]);
-            }
-            village.getFarms().add(farm);
-        }
-        village.fillFarms();
-        for (Farm farm : village.getFarms()) {
-            if (farm.getPlayers().isEmpty()) continue;
-            Tile tile = farm.getCottage().getTiles().get(0);
-            farm.getPlayers().get(0).getTiles().add(tile);
-        }
-    }
 
     @Override
     public boolean keyDown(int i) {
@@ -176,7 +113,7 @@ public class GameView implements Screen, InputProcessor {
     public void render(float v) {
         ScreenUtils.clear(0, 0, 0, 1);
         MainGradle.getInstance().getBatch().begin();
-        controller.update();
+        controller.update(v);
         MainGradle.getInstance().getBatch().end();
         stage.act(v);
         stage.draw();

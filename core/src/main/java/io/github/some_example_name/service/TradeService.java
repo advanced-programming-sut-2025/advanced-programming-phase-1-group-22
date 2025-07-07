@@ -1,6 +1,7 @@
 package io.github.some_example_name.service;
 
 import io.github.some_example_name.model.Game;
+import io.github.some_example_name.model.NotificationType;
 import io.github.some_example_name.model.Salable;
 import io.github.some_example_name.model.dto.TradePriceDto;
 import io.github.some_example_name.model.dto.TradeProductDto;
@@ -68,7 +69,8 @@ public class TradeService {
         }
         Trade trade1 = new Trade(player, currentPlayer, itemName, amount, price, true);
         Trade trade2 = new Trade(player, currentPlayer, itemName, amount, price, false);
-        player.notify(new Response("%s offered you a new trade".formatted(currentPlayer.getUser().getUsername())));
+        player.notify(new Response("%s offered you a new trade".formatted(currentPlayer.getUser().getUsername())),
+            NotificationType.TRADE, currentPlayer);
         player.getGootenTradeList().add(trade1);
         currentPlayer.getGootenTradeList().add(trade2);
         return new Response("trade offer added with price requirement");
@@ -108,7 +110,9 @@ public class TradeService {
         }
         Trade trade1 = new Trade(player, currentPlayer, itemName, amount, targetAmount, targetItem, true);
         Trade trade2 = new Trade(player, currentPlayer, itemName, amount, targetAmount, targetItem, false);
-        player.notify(new Response("%s offered you a new trade".formatted(currentPlayer.getUser().getUsername())));
+        player.notify
+            (new Response("%s offered you a new trade".formatted(currentPlayer.getUser().getUsername())),
+                NotificationType.TRADE, currentPlayer);
         player.getGootenTradeList().add(trade1);
         currentPlayer.getGootenTradeList().add(trade2);
         return new Response("trade offer added with product requirement");
@@ -133,7 +137,8 @@ public class TradeService {
         }
         Trade trade1 = new Trade(currentPlayer, player, itemName, amount, price, true);
         Trade trade2 = new Trade(currentPlayer, player, itemName, amount, price, false);
-        player.notify(new Response("%s requested you a new trade".formatted(currentPlayer.getUser().getUsername())));
+        player.notify(new Response("%s requested you a new trade".formatted(currentPlayer.getUser().getUsername())),
+            NotificationType.TRADE, currentPlayer);
         player.getGootenTradeList().add(trade1);
         currentPlayer.getGootenTradeList().add(trade2);
         return new Response("trade request added with price offering");
@@ -170,7 +175,8 @@ public class TradeService {
         }
         Trade trade1 = new Trade(currentPlayer, player, itemName, amount, targetAmount, targetItem, true);
         Trade trade2 = new Trade(currentPlayer, player, itemName, amount, targetAmount, targetItem, false);
-        player.notify(new Response("%s requested you a new trade".formatted(currentPlayer.getUser().getUsername())));
+        player.notify(new Response("%s requested you a new trade".formatted(currentPlayer.getUser().getUsername())),
+            NotificationType.TRADE, currentPlayer);
         player.getGootenTradeList().add(trade1);
         currentPlayer.getGootenTradeList().add(trade2);
         return new Response("trade request added with product offering");

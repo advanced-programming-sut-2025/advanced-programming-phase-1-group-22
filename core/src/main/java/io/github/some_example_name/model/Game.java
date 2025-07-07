@@ -44,7 +44,7 @@ public class Game implements Serializable {
     private int fadingInTheNight = 0;
 
     public void start() {
-        timeAndDate = new TimeAndDate(1, 8);
+        timeAndDate = new TimeAndDate(1, 9);
         for (int i = 0; i < 160; i++) {
             for (int i1 = 0; i1 < 120; i1++) {
                 tiles[i][i1] = new Tile(i, i1);
