@@ -20,6 +20,7 @@ import io.github.some_example_name.MainGradle;
 import io.github.some_example_name.controller.PlayerController;
 import io.github.some_example_name.controller.WorldController;
 import io.github.some_example_name.model.Farm;
+import io.github.some_example_name.model.PlayerType;
 import io.github.some_example_name.model.Salable;
 import io.github.some_example_name.model.Tile;
 import io.github.some_example_name.model.abilitiy.Ability;
@@ -756,6 +757,41 @@ public class InventoryMenu extends PopUp {
 
             table.add(row).row();
         }
+        for (Friendship friendship : friendships) {
+            NPC npc;
+            if (friendship.getFirstPlayer() == player) {
+                if (friendship.getSecondPlayer() instanceof NPC) {
+                    npc = (NPC) friendship.getSecondPlayer();
+                } else continue;
+            } else if (friendship.getSecondPlayer() == player) {
+                if (friendship.getFirstPlayer() instanceof NPC) {
+                    npc = (NPC) friendship.getFirstPlayer();
+                } else continue;
+            } else continue;
+            if (friendship.getFirstPlayer() instanceof NPC) {
+                Table row = new Table();
+                row.align(Align.left);
+                row.defaults().space(15);
+
+                Image icon;
+                icon = new Image(npc.getType().getTextureIcon());
+                icon.setSize(128, 128);
+                row.add(icon).size(128).padLeft(20);
+
+                Label name = new Label(npc.getName(), skin);
+                row.add(name).width(150).left();
+
+                ProgressBar bar = new ProgressBar(0, (friendship.getFriendShipLevel() + 1) * 200, 1, false, skin);
+                bar.setValue(friendship.getXp());
+                bar.setWidth(300);
+                row.add(bar).width(300);
+
+                Label levelLabel = new Label("Level: " + friendship.getFriendShipLevel(), skin);
+                row.add(levelLabel).width(80);
+
+                table.add(row).row();
+            }
+        }
 
         Table content = new Table();
         content.setFillParent(true);
@@ -819,56 +855,6 @@ public class InventoryMenu extends PopUp {
                         break;
                     }
                 }
-                super.act(delta);
-            }
-        };
-
-        group.addActor(window);
-        group.addActor(exitButton);
-        group.addActor(tabs);
-        menuGroup.addActor(group);
-    }
-
-    private void createMapMenu(Skin skin,Group menuGroup,Table tabs) {
-        float scale = 0.03125f;
-        int minimapWidth = (int) (160 * 160 * scale);
-        int minimapHeight = (int) (120 * 160 * scale);
-
-        MiniMapRenderer miniMap = new MiniMapRenderer(minimapWidth, minimapHeight);
-
-        miniMap.render(() -> {
-            drawMiniTiles(miniMap.getBatch(), scale);
-            drawMiniStructures(miniMap.getBatch(), scale);
-        });
-
-        Window window = new Window("Mini Map", skin);
-        window.setSize(900, 600);
-        window.setMovable(false);
-        window.setPosition(
-            (MainGradle.getInstance().getCamera().viewportWidth - window.getWidth()) / 2f,
-            (MainGradle.getInstance().getCamera().viewportHeight - window.getHeight()) / 2f
-        );
-
-        ArrayList<Actor> array = new ArrayList<>();
-        array.add(window);
-        array.add(tabs);
-        ImageButton exitButton = provideExitButton(array);
-
-        Group group = new Group() {
-            @Override
-            public void act(float delta) {
-                window.setPosition(
-                    (camera.viewportWidth - window.getWidth()) / 2f + camera.position.x - camera.viewportWidth / 2,
-                    (camera.viewportHeight - window.getHeight()) / 2f + camera.position.y - camera.viewportHeight / 2
-                );
-                exitButton.setPosition(
-                    window.getX() + window.getWidth() - exitButton.getWidth() / 2f + 16,
-                    window.getY() + window.getHeight() - exitButton.getHeight() / 2f
-                );
-                tabs.setPosition(
-                    window.getX(),
-                    window.getY() + window.getHeight() - tabs.getHeight() / 2f + 70
-                );
                 super.act(delta);
             }
         };
