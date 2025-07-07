@@ -13,6 +13,7 @@ import io.github.some_example_name.view.GameView;
 import io.github.some_example_name.view.mainMenu.FridgeMenu;
 import io.github.some_example_name.view.mainMenu.InventoryMenu;
 import io.github.some_example_name.view.mainMenu.NotificationMenu;
+import io.github.some_example_name.view.mainMenu.TerminateMenu;
 import lombok.Getter;
 
 @Getter
@@ -75,13 +76,18 @@ public class PlayerController {
 
     private void handleInputs(){
         if (Gdx.input.isKeyJustPressed(Input.Keys.T)){
-            //TODO Talk Menu
+            inventoryMenu.setTabIndex(2);
+            inventoryMenu.createMenu(GameView.stage,GameAsset.SKIN, getWorldController());
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)){
             GameView.Console.handleGlobalKey(GameView.stage);
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.X) || Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT)) {
             //TODO Investigate?
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.BACKSPACE)) {
+            TerminateMenu terminateMenu = new TerminateMenu();
+            terminateMenu.createMenu(GameView.stage,GameAsset.SKIN, getWorldController());
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.E) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             inventoryMenu.setTabIndex(0);

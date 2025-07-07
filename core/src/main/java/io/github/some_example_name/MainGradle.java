@@ -36,7 +36,12 @@ public class MainGradle extends Game {
         viewport = new FitViewport(1920, 1080, camera);
         viewport.apply();
         batch = new SpriteBatch();
-        instance.setScreen(new StartGameMenu(new StartGameMenuController(), GameAsset.SKIN_MENU, 0));
+        initialMenu();
+    }
+
+    public void initialMenu() {
+        GameView.captureInput = true;
+        instance.setScreen(new StartGameMenu(GameAsset.SKIN_MENU, 0));
     }
 
     @Override

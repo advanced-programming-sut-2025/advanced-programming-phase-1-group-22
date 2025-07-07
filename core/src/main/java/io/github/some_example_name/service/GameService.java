@@ -78,7 +78,7 @@ public class GameService {
 
     public Response exitGame() {
         if (!app.getCurrentGame().getCurrentPlayer().getUser().getUsername().equals(Session.getCurrentUser().getUsername())) {
-            return new Response("You are not allowed to exit; the player who has started the app.getCurrentGame() can" +
+            return new Response("You are not allowed to exit; the player who has started the game can" +
                     " end it");
         }
         String filePath = Session.getCurrentUser().getUsername();
@@ -105,13 +105,17 @@ public class GameService {
                     System.out.println("Are you in favor termination? Y/n");
             }
         }
+        return finalTermination();
+    }
+
+    public Response finalTermination() {
         App.getInstance().getGames().remove(app.getCurrentGame());
         Session.setCurrentMenu(Menu.MAIN);
         for (Player player : app.getCurrentGame().getPlayers()) {
             player.getUser().setIsPlaying(null);
             player.getUser().setNumberOfPlayedGames(player.getUser().getNumberOfPlayedGames() + 1);
             player.getUser().setHighestMoneyEarned(
-                    Math.max(player.getUser().getHighestMoneyEarned(), player.getAccount().getGolds())
+                Math.max(player.getUser().getHighestMoneyEarned(), player.getAccount().getGolds())
             );
             userRepository.save(player.getUser());
         }

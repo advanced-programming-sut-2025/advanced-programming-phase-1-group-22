@@ -20,6 +20,14 @@ import java.util.ArrayList;
 @Setter
 public class StartGameMenuController {
     private StartGameMenu view;
+    private static StartGameMenuController instance;
+
+    public static StartGameMenuController getInstance() {
+        if (instance == null) {
+            instance = new StartGameMenuController();
+        }
+        return instance;
+    }
 
     public void handleMainMenuButtons() {
         if (view != null) {
@@ -35,7 +43,7 @@ public class StartGameMenuController {
                             view.setState(1);
                             return;
                         } else {
-                            view.alert("You've got a unfinished game.",5);
+                            view.alert("You've got an unfinished game.",5);
                         }
                         view.getNewGameButton().setChecked(false);
                     }
@@ -78,7 +86,7 @@ public class StartGameMenuController {
                         App.getInstance().getCurrentGame().getPlayers().get(1).setFarmType(FarmType.FLOWER_FARM);
                     }
                     GameInitService.getInstance().initGame();
-                    MainGradle.getInstance().setScreen(new GameView());
+                    view.setScreen(new GameView());
                 }
             }
         }
