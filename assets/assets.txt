@@ -2173,7 +2173,6 @@ Pierre's_General_Store_Interior.png
 Pierre_Happy.png
 Pierres_shop.png
 Plank_Cabin_Stage_3.png
-Ranch.png
 Player/Abigail.png
 Player/Alex.png
 Player/Elliot.png
@@ -2186,6 +2185,7 @@ Player/Penny.png
 Player/Sam.png
 Player/Sebastian.png
 Player/Shane.png
+Ranch.png
 Rarecrow/Rarecrow_1.png
 Rarecrow/Rarecrow_2.png
 Rarecrow/Rarecrow_3.png

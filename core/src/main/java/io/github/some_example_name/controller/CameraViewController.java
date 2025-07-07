@@ -270,7 +270,7 @@ public class CameraViewController {
             int mod = Math.min(12, player.getInventory().getProducts().size());
             if (mod != 0) {
                 if (currentToolIndex == null) currentToolIndex = GameView.scrollY > 0 ? mod - 1 : 0;
-                currentToolIndex += (int) Math.ceil(GameView.scrollY);
+                currentToolIndex += (int) Math.ceil(GameView.scrollY / 3);
                 currentToolIndex %= mod;
                 currentToolIndex += mod;
                 currentToolIndex %= mod;
