@@ -8,7 +8,9 @@ import io.github.some_example_name.model.structure.stores.PierreShop;
 import io.github.some_example_name.model.tools.Tool;
 import io.github.some_example_name.utils.App;
 
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 public class RelationService {
@@ -470,10 +472,81 @@ public class RelationService {
         return new Response(stringBuilder.toString());
     }
 
+    public Map<Mission,Boolean> getMissions(NPC npc){
+        Map<Mission,Boolean> missions = new HashMap<>();
+        game = App.getInstance().getCurrentGame();
+        Friendship friendShipBetweenTwoActors = getFriendShipBetweenTwoActors(npc);
+        int level = friendShipBetweenTwoActors.getFriendShipLevel();
+        if (level < 1) {
+            missions.put(npc.getType().getMissions().get(0),true);
+            missions.put(npc.getType().getMissions().get(1),false);
+            missions.put(npc.getType().getMissions().get(2),false);
+        }
+        if (level < 2) {
+            missions.put(npc.getType().getMissions().get(0),true);
+            missions.put(npc.getType().getMissions().get(1),true);
+            missions.put(npc.getType().getMissions().get(2),false);
+            if (game.getTimeAndDate().getSeason().ordinal() - friendShipBetweenTwoActors.getTimeFromGettingFirstLevel().getSeason().ordinal() >= npc.getType().getMissionSeasonDis()) {
+                missions.put(npc.getType().getMissions().get(0),true);
+                missions.put(npc.getType().getMissions().get(1),true);
+                missions.put(npc.getType().getMissions().get(2),true);
+            }
+        }
+        if (level >= 2) {
+            missions.put(npc.getType().getMissions().get(0),true);
+            missions.put(npc.getType().getMissions().get(1),true);
+            missions.put(npc.getType().getMissions().get(2),true);
+        }
+
+        return missions;
+    }
+
     public Response friendShip_CH(int n) {
         Friendship friendShipBetweenTwoActors = getFriendShipBetweenTwoActors(lastTalkedNPC);
         friendShipBetweenTwoActors.setFriendShipLevel(n);
         return new Response("friendship changed to 3");
+    }
+
+    public Response completeMission(Mission mission,NPC npc) {
+        game = App.getInstance().getCurrentGame();
+        currentPlayer = game.getCurrentPlayer();
+
+        if (mission.getDoer() != null) {
+            return new Response("mission is already done");
+        }
+
+        boolean canPrepare = true;
+        Map<Salable, Integer> request = mission.getRequest();
+        Map<Salable, Integer> reward = mission.getReward();
+        for (Map.Entry<Salable, Integer> salableIntegerEntry : request.entrySet()) {
+            Salable salable = currentPlayer.getInventory().getProductFromBackPack(salableIntegerEntry.getKey().getName());
+            if (salable == null) {
+                canPrepare = false;
+                break;
+            }
+            if (currentPlayer.getInventory().getProducts().get(salable) < salableIntegerEntry.getValue()) {
+                canPrepare = false;
+                break;
+            }
+        }
+        if (!canPrepare) {
+            return new Response("you don't have all required items");
+        }
+        for (Map.Entry<Salable, Integer> salableIntegerEntry : request.entrySet()) {
+            int value = salableIntegerEntry.getValue();
+            Salable salable = salableIntegerEntry.getKey();
+            currentPlayer.getInventory().justDelete(salable,value);
+        }
+        Friendship friendShipBetweenTwoActors = getFriendShipBetweenTwoActors(npc);
+        int multi;
+        multi = friendShipBetweenTwoActors.getFriendShipLevel() == 2 ? 2 : 1;
+        for (Map.Entry<Salable, Integer> salableIntegerEntry : reward.entrySet()) {
+            int value = salableIntegerEntry.getValue();
+            Salable salable = salableIntegerEntry.getKey();
+            currentPlayer.getInventory().addProductToBackPack(salable,multi * value);
+        }
+        mission.setDoer(currentPlayer);
+        return new Response("mission completed");
     }
 
     public Response doMission(int missionId) {

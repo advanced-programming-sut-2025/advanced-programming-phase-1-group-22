@@ -25,4 +25,9 @@ public class NPC extends Actor {
         this.spriteDialogBox = new Sprite(GameAsset.DIALOG_BOX);
         this.spriteDialogBox.setSize(App.tileWidth / 2f, App.tileHeight / 2f);
     }
+
+    @Override
+    public String getName() {
+        return type.getName();
+    }
 }
