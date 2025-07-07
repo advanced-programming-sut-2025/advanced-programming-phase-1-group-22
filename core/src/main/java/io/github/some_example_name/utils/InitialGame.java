@@ -28,7 +28,6 @@ public class InitialGame {
         for (int i = 0; i < users.size(); i++) {
             Player player = new Player(users.get(i));
             game.addPlayer(player);
-
         }
         game.setCurrentPlayer(game.getPlayers().get(0));
         Session.setCurrentMenu(Menu.MAP_SELECTION);

@@ -38,50 +38,50 @@ public class GameView implements Screen, InputProcessor {
 
 
     public GameView() {
-        Game game = new Game();
-        App app = App.getInstance();
-        app.setCurrentGame(game);
-        game.start();
-        Village village = new Village();
-        village.initAfterLoad();
-        game.setVillage(village);
-        Animal animal = new Animal(AnimalType.COW,"parsa");
-        Player player = new Player(new User("mahdi","","d","mahdi", Gender.MALE));
-        player.getInventory().addProductToBackPack(new Seed(SeedType.APRICOT_SAPLING),1);
-        player.getInventory().addProductToBackPack(new Sundry(SundryType.DELUXE_RETAINING_SOIL),1);
-        game.addPlayer(player);
-        Player player2 = new Player(new User("ali","","d","ali", Gender.MALE));
-        player2.setCurrentCarrying(new Seed(SeedType.JAZZ_SEEDS));
-        game.addPlayer(player2);
-        FarmType.BLUE_FARM.initial();
-        player.setFarmType(FarmType.BLUE_FARM);
-        FarmType.FLOWER_FARM.initial();
-        player2.setFarmType(FarmType.FLOWER_FARM);
-        game.setCurrentPlayer(game.getPlayers().get(0));
-        completeMap();
-        player.getAnimals().add(animal);
-        player.getInventory().addProductToBackPack(new Hay(),4);
-        player.getInventory().addProductToBackPack(MilkPail.getInstance(),1);
-        List<Tile> tiles = new ArrayList<>();
-        tiles.add(new Tile(player.getTiles().get(0).getX(),player.getTiles().get(0).getY() - 2));
-        animal.setTiles(tiles);
-        for (Farm farm : game.getVillage().getFarms()) {
-            if (farm.getPlayers().contains(player)) farm.getStructures().add(animal);
-        }
-
-        GameService gameService = new GameService();
-        gameService.C_AddDollars("1000");
-        gameService.C_AddItem("wood", "1000");
-        gameService.C_AddItem("pizza", "1");
-        gameService.C_AddItem("bee_house", "2");
-        gameService.placeItem("bee_house", "south");
-        gameService.placeItem("furnace", "southwest");
-        gameService.C_AddItem("preserves_jar", "1");
-        gameService.placeItem("preserves_jar", "west");
-        gameService.C_AddItem("fish_smoker", "1");
-        gameService.placeItem("fish_smoker", "southeast");
-        RelationService.getInstance().giveGift("ali", "bee_house", 1);
-        gameService.nextTurn();
+//        Game game = new Game();
+//        App app = App.getInstance();
+//        app.setCurrentGame(game);
+//        game.start();
+//        Village village = new Village();
+//        village.initAfterLoad();
+//        game.setVillage(village);
+//        Animal animal = new Animal(AnimalType.COW,"parsa");
+//        Player player = new Player(new User("mahdi","","d","mahdi", Gender.MALE));
+//        player.getInventory().addProductToBackPack(new Seed(SeedType.APRICOT_SAPLING),1);
+//        player.getInventory().addProductToBackPack(new Sundry(SundryType.DELUXE_RETAINING_SOIL),1);
+//        game.addPlayer(player);
+//        Player player2 = new Player(new User("ali","","d","ali", Gender.MALE));
+//        player2.setCurrentCarrying(new Seed(SeedType.JAZZ_SEEDS));
+//        game.addPlayer(player2);
+//        FarmType.BLUE_FARM.initial();
+//        player.setFarmType(FarmType.BLUE_FARM);
+//        FarmType.FLOWER_FARM.initial();
+//        player2.setFarmType(FarmType.FLOWER_FARM);
+//        game.setCurrentPlayer(game.getPlayers().get(0));
+//        completeMap();
+//        player.getAnimals().add(animal);
+//        player.getInventory().addProductToBackPack(new Hay(),4);
+//        player.getInventory().addProductToBackPack(MilkPail.getInstance(),1);
+//        List<Tile> tiles = new ArrayList<>();
+//        tiles.add(new Tile(player.getTiles().get(0).getX(),player.getTiles().get(0).getY() - 2));
+//        animal.setTiles(tiles);
+//        for (Farm farm : game.getVillage().getFarms()) {
+//            if (farm.getPlayers().contains(player)) farm.getStructures().add(animal);
+//        }
+//
+//        GameService gameService = new GameService();
+//        gameService.C_AddDollars("1000");
+//        gameService.C_AddItem("wood", "1000");
+//        gameService.C_AddItem("pizza", "1");
+//        gameService.C_AddItem("bee_house", "2");
+//        gameService.placeItem("bee_house", "south");
+//        gameService.placeItem("furnace", "southwest");
+//        gameService.C_AddItem("preserves_jar", "1");
+//        gameService.placeItem("preserves_jar", "west");
+//        gameService.C_AddItem("fish_smoker", "1");
+//        gameService.placeItem("fish_smoker", "southeast");
+//        RelationService.getInstance().giveGift("ali", "bee_house", 1);
+//        gameService.nextTurn();
 //        stage = new Stage(MainGradle.getInstance().getViewport(), MainGradle.getInstance().getBatch());
     }
 
