@@ -8,10 +8,7 @@ import io.github.some_example_name.model.structure.stores.PierreShop;
 import io.github.some_example_name.model.tools.Tool;
 import io.github.some_example_name.utils.App;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class RelationService {
     private NPC lastTalkedNPC = null;
@@ -445,6 +442,19 @@ public class RelationService {
             }
         }
         return null;
+    }
+
+    public Map<Friendship,Actor> getFriendShips(Actor actor){
+        Map<Friendship,Actor> friendships = new HashMap<>();
+        for (Friendship friendship : App.getInstance().getCurrentGame().getFriendships()) {
+            if (friendship.getFirstPlayer().equals(actor)){
+                friendships.put(friendship,friendship.getSecondPlayer());
+            }
+            else if (friendship.getSecondPlayer().equals(actor)){
+                friendships.put(friendship,friendship.getFirstPlayer());
+            }
+        }
+        return friendships;
     }
 
     public Response questsList() {
