@@ -423,32 +423,35 @@ public class GameService {
         return new Response(currentTool.useTool(currentPlayer, currentTile), true);
     }
 
-    public Response pickFromFloor(String direction) {
+    public Response pickFromFloor(Structure currentStructure) {
         Player currentPlayer = getCurrentPlayer();
-        Direction currentDirection = Direction.getByName(direction);
-        if (currentDirection == null) {
-            return new Response("wrong direction");
-        }
-        Tile currentTile = getTileByXAndY(currentPlayer.getTiles().get(0).getX() + currentDirection.getXTransmit(),
-                currentPlayer.getTiles().get(0).getY() + currentDirection.getYTransmit());
-        if (currentTile == null) {
-            return new Response("out of bound");
-        }
-        List<Structure> structures = App.getInstance().getCurrentGame().getVillage().findStructuresByTile(currentTile);
-        Structure currentStructure = null;
-        for (Structure structure : structures) {
-            if (structure.getIsPickable()) {
-                currentStructure = structure;
-            }
-        }
-        if (currentStructure == null) {
-            return new Response("there is nothing to pick on the floor");
-        }
+//        Direction currentDirection = Direction.getByName(direction);
+//        if (currentDirection == null) {
+//            return new Response("wrong direction");
+//        }
+//        Tile currentTile = getTileByXAndY(currentPlayer.getTiles().get(0).getX() + currentDirection.getXTransmit(),
+//                currentPlayer.getTiles().get(0).getY() + currentDirection.getYTransmit());
+//        if (currentTile == null) {
+//            return new Response("out of bound");
+//        }
+//        List<Structure> structures = App.getInstance().getCurrentGame().getVillage().findStructuresByTile(currentTile);
+//        Structure currentStructure = null;
+//        for (Structure structure : structures) {
+//            if (structure.getIsPickable()) {
+//                currentStructure = structure;
+//            }
+//        }
+//        if (currentStructure == null) {
+//            return new Response("there is nothing to pick on the floor");
+//        }
         boolean flag = tryToPickUp(currentPlayer, currentStructure);
         if (!flag) {
             return new Response("your backpack is full");
         }
-        currentTile.setIsPassable(true);
+        for (Tile tile : currentStructure.getTiles()) {
+            tile.setIsPassable(true);
+            tile.setIsFilled(false);
+        }
         return new Response("you picked up a " + ((Salable) currentStructure).getName(), true);
     }
 

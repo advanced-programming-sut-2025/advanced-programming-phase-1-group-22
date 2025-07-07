@@ -2,9 +2,15 @@ package io.github.some_example_name.controller;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector3;
 import io.github.some_example_name.MainGradle;
+import io.github.some_example_name.model.Farm;
 import io.github.some_example_name.model.relations.Player;
+import io.github.some_example_name.model.shelter.ShippingBin;
+import io.github.some_example_name.model.source.Seed;
+import io.github.some_example_name.model.structure.Structure;
 import io.github.some_example_name.service.GameService;
 import io.github.some_example_name.utils.App;
 import io.github.some_example_name.utils.GameAsset;
@@ -13,6 +19,9 @@ import io.github.some_example_name.view.mainMenu.FridgeMenu;
 import io.github.some_example_name.view.mainMenu.InventoryMenu;
 import io.github.some_example_name.view.mainMenu.ToolMenu;
 import lombok.Getter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 public class PlayerController {
@@ -111,5 +120,30 @@ public class PlayerController {
         if (Gdx.input.isKeyJustPressed(Input.Keys.L)){
             toolMenu.createMenu(GameView.stage,GameAsset.SKIN,worldController);
         }
+        if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)){
+            Vector3 worldCoords = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
+            MainGradle.getInstance().getCamera().unproject(worldCoords);
+            float worldX = worldCoords.x;
+            float worldY = worldCoords.y;
+            for (Farm farm : App.getInstance().getCurrentGame().getVillage().getFarms()) {
+                List<Seed> toRemove = new ArrayList<>();
+                for (Structure structure : new ArrayList<>(farm.getStructures())) {
+                    if (structure instanceof Seed seed) {
+                        if (collision(seed, worldX, worldY)) {
+                            toRemove.add(seed);
+                        }
+                    }
+                }
+                for (Seed seed : toRemove) {
+                    worldController.showResponse(gameService.pickFromFloor(seed));
+                }
+            }
+        }
+    }
+
+    private boolean collision(Structure structure, float worldX, float worldY) {
+        Sprite sprite = structure.getSprite();
+        sprite.setPosition(structure.getTiles().get(0).getX() * App.tileWidth, structure.getTiles().get(0).getY() * App.tileHeight);
+        return worldX >= sprite.getX() && worldX <= sprite.getX() + sprite.getWidth() && worldY >= sprite.getY() && worldY <= sprite.getY() + sprite.getHeight();
     }
 }
