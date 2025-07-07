@@ -11,7 +11,10 @@ import com.badlogic.gdx.utils.Align;
 import io.github.some_example_name.MainGradle;
 import io.github.some_example_name.controller.WorldController;
 import io.github.some_example_name.model.Salable;
+import io.github.some_example_name.model.enums.Season;
+import io.github.some_example_name.model.records.Response;
 import io.github.some_example_name.model.relations.Friendship;
+import io.github.some_example_name.model.relations.Mission;
 import io.github.some_example_name.model.relations.NPC;
 import io.github.some_example_name.model.relations.Player;
 import io.github.some_example_name.model.tools.BackPack;
@@ -20,6 +23,7 @@ import io.github.some_example_name.utils.App;
 import io.github.some_example_name.utils.GameAsset;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 public class NPCMenu extends PopUp {
     private final NPC npc;
@@ -69,7 +73,8 @@ public class NPCMenu extends PopUp {
         listQuest.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-
+                getMenuGroup().clear();
+                createMissionMenu();
             }
         });
         NPC.add(icon).size(256).center().row();
@@ -357,6 +362,161 @@ public class NPCMenu extends PopUp {
             }
         };
         group.addActor(window);
+        group.addActor(exitButton);
+        getMenuGroup().addActor(group);
+    }
+
+    private void createMissionMenu() {
+        OrthographicCamera camera = MainGradle.getInstance().getCamera();
+        Window window = new Window("Quests", skin);
+        window.setSize(700, 500);
+        window.setMovable(false);
+
+        Table questTable = new Table();
+        questTable.align(Align.top);
+        questTable.defaults().pad(10);
+
+        Map<Mission, Boolean> missions = relationService.getMissions(npc);
+        Player player = App.getInstance().getCurrentGame().getCurrentPlayer();
+        Season season = App.getInstance().getCurrentGame().getTimeAndDate().getSeason();
+        Friendship friendship = relationService.getFriendShip(player, npc);
+        int count = 1;
+        for (Map.Entry<Mission, Boolean> missionBooleanEntry : missions.entrySet()) {
+            boolean unlocked = missionBooleanEntry.getValue() && missionBooleanEntry.getKey().isAvailable(friendship.getFriendShipLevel(), season);
+            TextButton questBtn = new TextButton("Mission " + count, skin);
+            questBtn.setColor(unlocked ? Color.WHITE : Color.GRAY);
+            questBtn.setDisabled(!unlocked);
+            questBtn.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    createMissionDetailWindow(missionBooleanEntry.getKey(), unlocked);
+                }
+            });
+            questTable.add(questBtn).width(500).height(60).row();
+            count += 1;
+        }
+
+        window.add(questTable).expand().fill();
+
+        ImageButton exitButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(GameAsset.EXIT_BUTTON)));
+        exitButton.setSize(32, 32);
+        exitButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                getMenuGroup().clear();
+                createMenu(stage, skin, getController());
+            }
+        });
+
+        Group group = new Group() {
+            @Override
+            public void act(float delta) {
+                window.setPosition(
+                    (camera.viewportWidth - window.getWidth()) / 2f + camera.position.x - camera.viewportWidth / 2,
+                    (camera.viewportHeight - window.getHeight()) / 2f + camera.position.y - camera.viewportHeight / 2
+                );
+                exitButton.setPosition(
+                    window.getX() + window.getWidth() - exitButton.getWidth() / 2f + 16,
+                    window.getY() + window.getHeight() - exitButton.getHeight() / 2f
+                );
+                super.act(delta);
+            }
+        };
+        group.addActor(window);
+        group.addActor(exitButton);
+        getMenuGroup().addActor(group);
+    }
+
+    private void createMissionDetailWindow(Mission mission, boolean unlocked) {
+        Window missionWindow = new Window("mission", skin);
+        missionWindow.setSize(800, 600);
+        missionWindow.setModal(true);
+        missionWindow.setMovable(false);
+
+        Table content = new Table(skin);
+        content.defaults().pad(10);
+
+        boolean done = mission.getDoer() != null;
+        Label doneLabel = new Label("Status: " + (done ? "Completed by " + mission.getDoer().getName() : "Not completed"), skin);
+
+        Label levelLabel;
+        if (mission.getRequiredLevel() != null) {
+            levelLabel = new Label("Required Level: " + mission.getRequiredLevel(), skin);
+        } else {
+            levelLabel = new Label("Required Season: " + mission.getRequiredSeason().name(), skin);
+        }
+
+        Label reqLabel = new Label("Required Items:", skin);
+        Table reqTable = new Table();
+        for (Map.Entry<Salable, Integer> entry : mission.getRequest().entrySet()) {
+            Salable item = entry.getKey();
+            int count = entry.getValue();
+            reqTable.add(new Image(item.getTexture())).size(64);
+            reqTable.add(new Label(item.getName(), skin)).padRight(20);
+            reqTable.add(new Label("x" + count, skin)).padRight(20);
+        }
+
+        Label rewardLabel = new Label("Rewards:", skin);
+        Table rewardTable = new Table();
+        for (Map.Entry<Salable, Integer> entry : mission.getReward().entrySet()) {
+            Salable item = entry.getKey();
+            int count = entry.getValue();
+            rewardTable.add(new Image(item.getTexture())).size(64);
+            rewardTable.add(new Label(item.getName(), skin)).padRight(20);
+            rewardTable.add(new Label("x" + count, skin)).padRight(20);
+        }
+
+        ImageButton exitButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(GameAsset.EXIT_BUTTON)));
+        exitButton.setSize(32, 32);
+        exitButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                missionWindow.remove();
+                exitButton.remove();
+            }
+        });
+
+        TextButton doMission = new TextButton("Do", skin);
+        doMission.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (unlocked) {
+                    getController().showResponse(relationService.completeMission(mission, npc));
+                } else {
+                    getController().showResponse(new Response("mission is not available"));
+                }
+                missionWindow.remove();
+                exitButton.remove();
+            }
+        });
+
+        content.add(doneLabel).left().row();
+        content.add(levelLabel).left().row();
+        content.add(reqLabel).left().row();
+        content.add(reqTable).left().row();
+        content.add(rewardLabel).left().row();
+        content.add(rewardTable).left().row();
+        content.add(doMission).left().row();
+
+        missionWindow.add(content).expand().fill().pad(20);
+
+        Group group = new Group() {
+            @Override
+            public void act(float delta) {
+                missionWindow.setPosition(
+                    (MainGradle.getInstance().getCamera().viewportWidth - missionWindow.getWidth()) / 2f +
+                        MainGradle.getInstance().getCamera().position.x - MainGradle.getInstance().getCamera().viewportWidth / 2,
+                    (MainGradle.getInstance().getCamera().viewportHeight - missionWindow.getHeight()) / 2f +
+                        MainGradle.getInstance().getCamera().position.y - MainGradle.getInstance().getCamera().viewportHeight / 2
+                );
+                exitButton.setPosition(
+                    missionWindow.getX() + missionWindow.getWidth() - exitButton.getWidth() / 2f + 16,
+                    missionWindow.getY() + missionWindow.getHeight() - exitButton.getHeight() / 2f
+                );
+                super.act(delta);
+            }
+        };
+        group.addActor(missionWindow);
         group.addActor(exitButton);
         getMenuGroup().addActor(group);
     }

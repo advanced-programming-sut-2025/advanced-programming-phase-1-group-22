@@ -354,4 +354,9 @@ public class Player extends Actor implements JsonPreparable {
 		getTiles().clear();
 		getTiles().add(App.getInstance().getCurrentGame().getTiles()[path.get(max).getX()][path.get(max).getY()]);
 	}
+
+    @Override
+    public String getName() {
+        return user.getUsername();
+    }
 }

@@ -52,7 +52,7 @@ public class Friendship implements JsonPreparable {
     }
 
     public Integer getFriendShipLevel() {
-        if (secondPlayer instanceof NPC || firstPlayer instanceof Player) {
+        if (secondPlayer instanceof NPC || firstPlayer instanceof NPC) {
             return friendShipLevel + xp / 200;
         }
         return friendShipLevel + xp / 100;
@@ -61,12 +61,12 @@ public class Friendship implements JsonPreparable {
     @Override
     public String toString() {
         return "Friendship{" +
-                ", friend=" + secondPlayer +
-                ", friendShipLevel=" + friendShipLevel +
-                ", xp=" + xp +
-                '}';
+            ", friend=" + secondPlayer +
+            ", friendShipLevel=" + friendShipLevel +
+            ", xp=" + xp +
+            '}';
     }
-    // اینها برای ذخیره‌سازی
+
     private ObjectWrapper firstPlayerWrapper;
     private ObjectWrapper secondPlayerWrapper;
     private List<ObjectWrapper> giftWrappers;
@@ -77,7 +77,6 @@ public class Friendship implements JsonPreparable {
         this.firstPlayerWrapper = new ObjectWrapper(firstPlayer, mapper);
         this.secondPlayerWrapper = new ObjectWrapper(secondPlayer, mapper);
 
-        // هدایا
         this.giftWrappers = new ArrayList<>();
         if (gifts != null) {
             for (Gift gift : gifts) {
@@ -85,7 +84,6 @@ public class Friendship implements JsonPreparable {
             }
         }
 
-        // دیالوگ‌ها
         this.dialogEntries = new ArrayList<>();
         if (dialogs != null) {
             for (Map.Entry<String, Actor> entry : dialogs.entrySet()) {
@@ -100,7 +98,6 @@ public class Friendship implements JsonPreparable {
         this.firstPlayer = (Actor) firstPlayerWrapper.toObject(mapper);
         this.secondPlayer = (Actor) secondPlayerWrapper.toObject(mapper);
 
-        // هدایا
         this.gifts = new ArrayList<>();
         if (giftWrappers != null) {
             for (ObjectWrapper wrapper : giftWrappers) {
@@ -108,12 +105,11 @@ public class Friendship implements JsonPreparable {
             }
         }
 
-        // دیالوگ‌ها
         this.dialogs = new HashMap<>();
         if (dialogEntries != null) {
             for (ObjectMapWrapper.Entry entry : dialogEntries) {
                 Actor actor = (Actor) entry.objectWrapper.toObject(mapper);
-                dialogs.put(String.valueOf(entry.amount), actor); // `amount` اینجا کلید هست نه مقدار
+                dialogs.put(String.valueOf(entry.amount), actor);
             }
         }
     }
