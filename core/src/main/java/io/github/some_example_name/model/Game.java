@@ -90,6 +90,11 @@ public class Game implements Serializable {
                 }
             }
         }
+        for (Structure structure : App.getInstance().getCurrentGame().getVillage().getStructures()) {
+            if (structure instanceof NPC npc){
+                npc.setGiftedToday(false);
+            }
+        }
         giveRewardToLevelThreeFriends();
         manageHarvest();
         TimeAndDate timeAndDate = this.getTimeAndDate();

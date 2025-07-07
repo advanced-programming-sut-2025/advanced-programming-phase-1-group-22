@@ -83,7 +83,7 @@ public class RelationShipController {
     public Response giftNpc(String... params) {
         String npcName = params[0];
         String item = params[1];
-        return relationService.giftNPC(npcName, item);
+        return Response.empty();
     }
 
     public Response showNpcFriendship(String... params) {

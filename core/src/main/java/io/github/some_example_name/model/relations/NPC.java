@@ -16,6 +16,7 @@ public class NPC extends Actor {
     private Sprite sprite;
     private boolean haveDialog = false;
     private Sprite spriteDialogBox;
+    private boolean giftedToday = false;
 
     public NPC(NPCType type) {
         this.type = type;
