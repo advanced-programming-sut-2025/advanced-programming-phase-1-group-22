@@ -146,7 +146,7 @@ public class GameMenuController extends MenuController {
 
     public Response pickFromFloor(String[] params) {
         String direction = params[0];
-        return gameService.pickFromFloor(direction);
+        return Response.empty();
     }
 
     public Response fishing(String[] parms) {
