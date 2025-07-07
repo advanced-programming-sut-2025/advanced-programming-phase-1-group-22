@@ -27,11 +27,14 @@ import io.github.some_example_name.model.cook.FoodType;
 import io.github.some_example_name.model.receipe.CookingRecipe;
 import io.github.some_example_name.model.receipe.CraftingRecipe;
 import io.github.some_example_name.model.records.Response;
+import io.github.some_example_name.model.relations.Friendship;
+import io.github.some_example_name.model.relations.NPC;
 import io.github.some_example_name.model.relations.Player;
 import io.github.some_example_name.model.structure.Structure;
 import io.github.some_example_name.model.structure.farmInitialElements.Lake;
 import io.github.some_example_name.model.tools.BackPack;
 import io.github.some_example_name.service.GameService;
+import io.github.some_example_name.service.RelationService;
 import io.github.some_example_name.utils.App;
 import io.github.some_example_name.utils.GameAsset;
 import io.github.some_example_name.view.MiniMapRenderer;
@@ -73,8 +76,8 @@ public class InventoryMenu extends PopUp {
         tab3.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-//                getMenuGroup().clear();
-//                createSocialMenu();
+                getMenuGroup().clear();
+                createSocialMenu(skin, getMenuGroup(), tabs);
             }
         });
         Image tab4 = new Image(GameAsset.MAP_TAB);
@@ -82,7 +85,7 @@ public class InventoryMenu extends PopUp {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 getMenuGroup().clear();
-                createMapMenu(skin,getMenuGroup(),tabs);
+                createMapMenu(skin, getMenuGroup(), tabs);
             }
         });
         Image tab5 = new Image(GameAsset.CRAFTING_TAB);
@@ -90,14 +93,16 @@ public class InventoryMenu extends PopUp {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 getMenuGroup().clear();
-                createCraftingMenu(skin, tabs, getMenuGroup(), stage);            }
+                createCraftingMenu(skin, tabs, getMenuGroup(), stage);
+            }
         });
         Image tab6 = new Image(GameAsset.COOKING_TAB);
         tab6.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 getMenuGroup().clear();
-                createCookingMenu(skin, tabs, getMenuGroup(), stage);            }
+                createCookingMenu(skin, tabs, getMenuGroup(), stage);
+            }
         });
 
         tabs.add(tab1);
@@ -110,7 +115,7 @@ public class InventoryMenu extends PopUp {
         switch (tabIndex) {
             case 0 -> createInventory(skin, tabs, getMenuGroup(), stage);
             case 1 -> createSkillMenu(skin, getMenuGroup(), tabs);
-            case 2 -> createSkillMenu(skin, getMenuGroup(), tabs);
+            case 2 -> createSocialMenu(skin, getMenuGroup(), tabs);
             case 3 -> createMapMenu(skin, getMenuGroup(), tabs);
             case 4 -> createCraftingMenu(skin, tabs, getMenuGroup(), stage);
             case 5 -> createCookingMenu(skin, tabs, getMenuGroup(), stage);
@@ -169,7 +174,7 @@ public class InventoryMenu extends PopUp {
         refreshInventory(stage, inventory, currentPlayer, slotTexture, currentPlayer, trashCan, scrollPane);
     }
 
-    private void createInventory(Skin skin, Table tabs, Group menuGroup,Stage stage) {
+    private void createInventory(Skin skin, Table tabs, Group menuGroup, Stage stage) {
         Player currentPlayer = App.getInstance().getCurrentGame().getCurrentPlayer();
         Window window = new Window("", skin);
         window.setSize(700, 500);
@@ -181,7 +186,7 @@ public class InventoryMenu extends PopUp {
 
         if (currentPlayer.getCurrentTrashCan() != null) {
             trashCan = new ImageButton(new TextureRegionDrawable(currentPlayer.getCurrentTrashCan().getTexture()));
-        }else {
+        } else {
             trashCan = new ImageButton(new TextureRegionDrawable(new TextureRegion(GameAsset.WORM_BIN)));
         }
         inventory = new Table();
@@ -201,7 +206,7 @@ public class InventoryMenu extends PopUp {
         if (backPack.getBackPackType().getIsInfinite()) {
             maxRow = Math.max(5, backPack.getProducts().size() / maxCol + 1);
         } else {
-            maxRow = (int)Math.ceil((double) backPack.getBackPackType().getCapacity() / maxCol);
+            maxRow = (int) Math.ceil((double) backPack.getBackPackType().getCapacity() / maxCol);
         }
 
         for (int row = 0; row < maxRow; row++) {
@@ -299,7 +304,7 @@ public class InventoryMenu extends PopUp {
         menuGroup.addActor(group);
     }
 
-    private void createCraftingMenu(Skin skin, Table tabs, Group menuGroup,Stage stage) {
+    private void createCraftingMenu(Skin skin, Table tabs, Group menuGroup, Stage stage) {
         OrthographicCamera camera = MainGradle.getInstance().getCamera();
         Window window = new Window("", skin);
         window.setSize(camera.viewportWidth * 0.7f, camera.viewportHeight * 0.5f);
@@ -377,11 +382,10 @@ public class InventoryMenu extends PopUp {
         }
 
 
-
         Table content = new Table();
         content.setFillParent(true);
-        content.add(craftingRecipes).width(window.getWidth()*0.6f).height(window.getHeight()*0.8f).padBottom(20).padTop(50);
-        content.add(info).width(window.getWidth()*0.3f).height(window.getHeight()*0.8f).padBottom(20).padTop(50).row();
+        content.add(craftingRecipes).width(window.getWidth() * 0.6f).height(window.getHeight() * 0.8f).padBottom(20).padTop(50);
+        content.add(info).width(window.getWidth() * 0.3f).height(window.getHeight() * 0.8f).padBottom(20).padTop(50).row();
 
         window.add(content).expand().fill().pad(10);
         Group group = new Group() {
@@ -411,7 +415,7 @@ public class InventoryMenu extends PopUp {
         menuGroup.addActor(group);
     }
 
-    private void createCookingMenu(Skin skin, Table tabs, Group menuGroup,Stage stage) {
+    private void createCookingMenu(Skin skin, Table tabs, Group menuGroup, Stage stage) {
         OrthographicCamera camera = MainGradle.getInstance().getCamera();
         Window window = new Window("", skin);
         window.setSize(camera.viewportWidth * 0.7f, camera.viewportHeight * 0.5f);
@@ -489,11 +493,10 @@ public class InventoryMenu extends PopUp {
         }
 
 
-
         Table content = new Table();
         content.setFillParent(true);
-        content.add(cookingRecipes).width(window.getWidth()*0.6f).height(window.getHeight()*0.8f).padBottom(20).padTop(50);
-        content.add(info).width(window.getWidth()*0.3f).height(window.getHeight()*0.8f).padBottom(20).padTop(50).row();
+        content.add(cookingRecipes).width(window.getWidth() * 0.6f).height(window.getHeight() * 0.8f).padBottom(20).padTop(50);
+        content.add(info).width(window.getWidth() * 0.3f).height(window.getHeight() * 0.8f).padBottom(20).padTop(50).row();
 
         window.add(content).expand().fill().pad(10);
         Group group = new Group() {
@@ -574,7 +577,7 @@ public class InventoryMenu extends PopUp {
             });
 
             float currentXP = abilityIntegerEntry.getValue();
-            float maxXP = Math.min(player.getAbilityLevel(abilityIntegerEntry.getKey()) + 1,4) * 100 + 50;
+            float maxXP = Math.min(player.getAbilityLevel(abilityIntegerEntry.getKey()) + 1, 4) * 100 + 50;
             int level = player.getAbilityLevel(abilityIntegerEntry.getKey());
 
             ProgressBar xpBar = new ProgressBar(0, maxXP, 1, false, skin);
@@ -595,12 +598,12 @@ public class InventoryMenu extends PopUp {
         }
 
         Image iconHeart = new Image(GameAsset.SECRET_HEART);
-        Label heart = new Label("energy",skin);
+        Label heart = new Label("energy", skin);
         ProgressBar xpBar = new ProgressBar(0, player.getMaxEnergy(), 1, false, skin);
         xpBar.setValue(player.getEnergy());
         xpBar.setAnimateDuration(0.2f);
         xpBar.setWidth(300);
-        Label infinite = new Label("",skin);
+        Label infinite = new Label("", skin);
         if (player.getEnergyIsInfinite()) infinite.setText("infinite");
         Table row = new Table();
         row.defaults().pad(10).align(Align.left);
@@ -650,11 +653,95 @@ public class InventoryMenu extends PopUp {
         menuGroup.addActor(group);
     }
 
-    private void createSocialMenu() {
+    private void createSocialMenu(Skin skin, Group menuGroup, Table tabs) {
+        OrthographicCamera camera = MainGradle.getInstance().getCamera();
+        Window window = new Window("Friendship List", skin);
+        window.setSize(900, 600);
+        window.setMovable(false);
 
+        Table mainTable = new Table();
+        mainTable.align(Align.top);
+        mainTable.defaults().pad(10);
+
+        Player currentPlayer = App.getInstance().getCurrentGame().getCurrentPlayer();
+        Map<Friendship, io.github.some_example_name.model.Actor> friendships = RelationService.getInstance().getFriendShips(currentPlayer);
+        for (Map.Entry<Friendship, io.github.some_example_name.model.Actor> friendshipActorEntry : friendships.entrySet()) {
+            Friendship friendship = friendshipActorEntry.getKey();
+            io.github.some_example_name.model.Actor actor = friendshipActorEntry.getValue();
+
+            Table row = new Table();
+            row.align(Align.left);
+            row.defaults().space(15);
+
+            Image icon;
+            if (friendshipActorEntry.getValue() instanceof NPC npc) {
+                icon = new Image(npc.getType().getTextureIcon());
+                icon.setSize(128, 128);
+                row.add(icon).size(128).padLeft(20);
+            } else {
+                icon = new Image(GameAsset.LEO_ICON);
+                icon.setSize(128, 128);
+                row.add(icon).size(128).padLeft(20);
+            }
+
+            Label name = new Label(actor.getName(), skin);
+            row.add(name).width(150).left();
+
+            ProgressBar bar = new ProgressBar(0, (friendship.getFriendShipLevel() + 1) * 200, 1, false, skin);
+            bar.setValue(friendship.getXp());
+            bar.setWidth(300);
+            row.add(bar).width(300);
+
+            Label levelLabel = new Label("Level: " + friendship.getFriendShipLevel(), skin);
+            row.add(levelLabel).width(80);
+
+            mainTable.add(row).expandX().fillX().row();
+        }
+
+        ScrollPane scrollPane = new ScrollPane(mainTable, skin);
+        scrollPane.setFadeScrollBars(false);
+        scrollPane.setScrollbarsOnTop(true);
+        scrollPane.setScrollingDisabled(true, false);
+        scrollPane.setScrollBarPositions(true, true);
+        scrollPane.setForceScroll(false, true);
+
+        Table content = new Table();
+        content.setFillParent(true);
+        content.add(scrollPane).expand().fill().pad(20);
+
+        window.add(content).expand().fill().pad(10);
+
+        ArrayList<Actor> array = new ArrayList<>();
+        array.add(window);
+        array.add(tabs);
+        ImageButton exitButton = provideExitButton(array);
+
+        Group group = new Group() {
+            @Override
+            public void act(float delta) {
+                window.setPosition(
+                    (camera.viewportWidth - window.getWidth()) / 2f + camera.position.x - camera.viewportWidth / 2,
+                    (camera.viewportHeight - window.getHeight()) / 2f + camera.position.y - camera.viewportHeight / 2
+                );
+                exitButton.setPosition(
+                    window.getX() + window.getWidth() - exitButton.getWidth() / 2f + 16,
+                    window.getY() + window.getHeight() - exitButton.getHeight() / 2f
+                );
+                tabs.setPosition(
+                    window.getX(),
+                    window.getY() + window.getHeight() - tabs.getHeight() / 2f + 70
+                );
+                super.act(delta);
+            }
+        };
+
+        group.addActor(window);
+        group.addActor(exitButton);
+        group.addActor(tabs);
+        menuGroup.addActor(group);
     }
 
-    private void createMapMenu(Skin skin,Group menuGroup,Table tabs) {
+    private void createMapMenu(Skin skin, Group menuGroup, Table tabs) {
         float scale = 0.03125f;
         int minimapWidth = (int) (160 * 160 * scale);
         int minimapHeight = (int) (120 * 160 * scale);
