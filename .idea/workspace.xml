@@ -4,10 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d95100ff-6e61-4571-9e87-dcef3d963dba" name="Changes" comment="add quest">
+    <list default="true" id="d95100ff-6e61-4571-9e87-dcef3d963dba" name="Changes" comment="add social menu">
+      <change afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/view/MiniMapActor.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/build/libs/core-1.0.0.jar" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/libs/core-1.0.0.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/service/RelationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/service/RelationService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/view/mainMenu/InventoryMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/view/mainMenu/InventoryMenu.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -376,7 +376,15 @@
       <option name="project" value="LOCAL" />
       <updated>1751885103923</updated>
     </task>
-    <option name="localTasksCounter" value="29" />
+    <task id="LOCAL-00029" summary="add social menu">
+      <option name="closed" value="true" />
+      <created>1751888525657</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1751888525657</updated>
+    </task>
+    <option name="localTasksCounter" value="30" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -394,7 +402,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="added greenhouse build" />
     <MESSAGE value="calibrated camera objects and added energy bar" />
     <MESSAGE value="dynamic cottage menu" />
     <MESSAGE value="uploaded assets" />
@@ -419,7 +426,8 @@
     <MESSAGE value="add dialog" />
     <MESSAGE value="add gift" />
     <MESSAGE value="add quest" />
-    <option name="LAST_COMMIT_MESSAGE" value="add quest" />
+    <MESSAGE value="add social menu" />
+    <option name="LAST_COMMIT_MESSAGE" value="add social menu" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

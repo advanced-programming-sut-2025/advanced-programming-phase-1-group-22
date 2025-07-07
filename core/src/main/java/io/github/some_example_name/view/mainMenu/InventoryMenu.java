@@ -37,6 +37,7 @@ import io.github.some_example_name.service.GameService;
 import io.github.some_example_name.service.RelationService;
 import io.github.some_example_name.utils.App;
 import io.github.some_example_name.utils.GameAsset;
+import io.github.some_example_name.view.MiniMapActor;
 import io.github.some_example_name.view.MiniMapRenderer;
 import lombok.Setter;
 
@@ -742,104 +743,46 @@ public class InventoryMenu extends PopUp {
     }
 
     private void createMapMenu(Skin skin, Group menuGroup, Table tabs) {
-        float scale = 0.03125f;
-        int minimapWidth = (int) (160 * 160 * scale);
-        int minimapHeight = (int) (120 * 160 * scale);
-
-        MiniMapRenderer miniMap = new MiniMapRenderer(minimapWidth, minimapHeight);
-
-        miniMap.render(() -> {
-            drawMiniTiles(miniMap.getBatch(), scale);
-            drawMiniStructures(miniMap.getBatch(), scale);
-        });
-
         Window window = new Window("Mini Map", skin);
         window.setSize(900, 600);
         window.setMovable(false);
-        window.setPosition(
-            (MainGradle.getInstance().getCamera().viewportWidth - window.getWidth()) / 2f,
-            (MainGradle.getInstance().getCamera().viewportHeight - window.getHeight()) / 2f
-        );
+        OrthographicCamera camera = MainGradle.getInstance().getCamera();
 
-        ArrayList<Actor> array = new ArrayList<>();
-        array.add(window);
-        array.add(tabs);
-        ImageButton exitButton = provideExitButton(array);
+        float scale = 0.3f;
+        MiniMapActor miniMapActor = new MiniMapActor(scale);
 
-        Image mapImage = new Image(miniMap.getTexture());
-        mapImage.setSize(minimapWidth, minimapHeight);
-
+        ScrollPane scrollPane = new ScrollPane(miniMapActor, skin);
+        scrollPane.setFadeScrollBars(false);
+        scrollPane.setScrollingDisabled(false, false);
+        scrollPane.setScrollbarsOnTop(true);
 
         Table content = new Table();
         content.setFillParent(true);
-        content.add(mapImage).center().expand();
+        content.add(scrollPane).expand().fill().pad(10);
+
         window.add(content).expand().fill();
+
+        ImageButton exitButton = provideExitButton(new ArrayList<>(java.util.List.of(window, tabs)));
 
         Group group = new Group() {
             @Override
             public void act(float delta) {
                 window.setPosition(
-                    (MainGradle.getInstance().getCamera().viewportWidth - window.getWidth()) / 2f +
-                        MainGradle.getInstance().getCamera().position.x - MainGradle.getInstance().getCamera().viewportWidth / 2,
-                    (MainGradle.getInstance().getCamera().viewportHeight - window.getHeight()) / 2f +
-                        MainGradle.getInstance().getCamera().position.y - MainGradle.getInstance().getCamera().viewportHeight / 2
+                    (camera.viewportWidth - window.getWidth()) / 2f + camera.position.x - camera.viewportWidth / 2,
+                    (camera.viewportHeight - window.getHeight()) / 2f + camera.position.y - camera.viewportHeight / 2
                 );
                 exitButton.setPosition(
                     window.getX() + window.getWidth() - exitButton.getWidth() / 2f + 16,
                     window.getY() + window.getHeight() - exitButton.getHeight() / 2f
                 );
-                tabs.setPosition(
-                    window.getX(),
-                    window.getY() + window.getHeight() - tabs.getHeight() / 2f + 70
-                );
-
+                tabs.setPosition(window.getX(), window.getY() + window.getHeight() + 70);
                 super.act(delta);
             }
         };
+
         group.addActor(window);
         group.addActor(exitButton);
         group.addActor(tabs);
         menuGroup.addActor(group);
-    }
-
-    private void drawMiniTiles(Batch batch, float scale) {
-        Tile[][] tiles = App.getInstance().getCurrentGame().tiles;
-
-        for (int i = 0; i < tiles.length; i++) {
-            for (int j = 0; j < tiles[0].length; j++) {
-                Texture tex = tiles[i][j].getTileType().getTexture();
-                if (tex != null) {
-                    batch.draw(tex,
-                        i * App.tileWidth * scale,
-                        j * App.tileHeight * scale,
-                        App.tileWidth * scale,
-                        App.tileHeight * scale);
-                }
-            }
-        }
-    }
-
-    private void drawMiniStructures(Batch batch, float scale) {
-        for (Farm farm : App.getInstance().getCurrentGame().getVillage().getFarms()) {
-            for (Structure structure : farm.getStructures()) {
-                if (structure.getSprite() != null) {
-                    if (structure instanceof Lake) {
-                        for (Tile tile : structure.getTiles()) {
-                            Sprite sprite = new Sprite(structure.getSprite());
-                            sprite.setSize(App.tileWidth * scale, App.tileHeight * scale);
-                            sprite.setPosition(tile.getX() * App.tileWidth * scale,
-                                tile.getY() * App.tileHeight * scale);
-                            sprite.draw(batch);
-                        }
-                    } else {
-                        Sprite sprite = new Sprite(structure.getSprite());
-                        sprite.setSize(App.tileWidth * scale, App.tileHeight * scale);
-                        sprite.setPosition(structure.getTiles().get(0).getX() * App.tileWidth * scale,
-                            structure.getTiles().get(0).getY() * App.tileHeight * scale);
-                        sprite.draw(batch);
-                    }
-                }
-            }
-        }
     }
 }
