@@ -34,7 +34,7 @@ public class GameViewController {
                 GameView.captureInput = true;
             }
         }
-        worldController.update();
+        worldController.update(delta);
         playerController.update(delta);
         toolController.update();
         carryingController.update();

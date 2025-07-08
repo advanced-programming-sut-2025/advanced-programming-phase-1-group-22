@@ -55,9 +55,13 @@ public enum PlayerType {
         this.miniOffsetY = miniOffsetY;
         directions =  new HashMap<>();
         directions.put(Direction.NORTH, 2);
+        directions.put(Direction.NORTHEAST, 1);
+        directions.put(Direction.SOUTHEAST, 1);
         directions.put(Direction.EAST, 1);
         directions.put(Direction.SOUTH, 0);
+        directions.put(Direction.NORTHWEST, 3);
         directions.put(Direction.WEST, 3);
+        directions.put(Direction.SOUTHWEST, 3);
     }
 
     public static PlayerType findInstance(String character) {

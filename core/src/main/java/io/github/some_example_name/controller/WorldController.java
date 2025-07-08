@@ -3,7 +3,9 @@ package io.github.some_example_name.controller;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Timer;
@@ -40,10 +42,12 @@ import java.util.Random;
 
 public class WorldController {
     private final GameNotifier notifier;
-    GameService gameService = new GameService();
-    ArrayList<SpriteContainer> rainDrops = new ArrayList<>();
-    ArrayList<SpriteContainer> storms = new ArrayList<>();
-    ArrayList<Sprite> snowDrops = new ArrayList<>();
+    private GameService gameService = new GameService();
+    private ArrayList<SpriteContainer> rainDrops = new ArrayList<>();
+    private ArrayList<SpriteContainer> storms = new ArrayList<>();
+    private ArrayList<Sprite> snowDrops = new ArrayList<>();
+    private SpriteHolder flower;
+    private Direction flowerDirection;
     float delta = 0f;
     private final OrthographicCamera camera = MainGradle.getInstance().getCamera();
 
@@ -63,9 +67,9 @@ public class WorldController {
         notifier = new GameNotifier(GameView.stage, GameAsset.SKIN);
     }
 
-    public void update() {
+    public void update(float delta) {
         delta += Gdx.graphics.getDeltaTime();
-        printMap();
+        printMap(delta);
         switch (App.getInstance().getCurrentGame().getVillage().getWeather()) {
             case SNOWY -> handleSnowDrops();
             case RAINY -> handleRainDrops();
@@ -245,7 +249,7 @@ public class WorldController {
         return new Pair(mouseTileX - tile.getX(), mouseTileY - tile.getY());
     }
 
-    public void printMap() {
+    public void printMap(float delta) {
         Player player = App.getInstance().getCurrentGame().getCurrentPlayer();
         Game game = App.getInstance().getCurrentGame();
         Tile[][] tiles = game.tiles;
@@ -350,6 +354,11 @@ public class WorldController {
                 }
             }
         }
+        if (flower != null) {
+            flower.getSprite().setX(flower.getSprite().getX() + flowerDirection.getXTransmit() * App.tileWidth * delta / 4);
+            flower.getSprite().setY(flower.getSprite().getY() + flowerDirection.getYTransmit() * App.tileHeight * delta / 4);
+            flower.getSprite().draw(MainGradle.getInstance().getBatch());
+        }
     }
 
     private boolean isStructureInBond(Structure structure) {
@@ -375,5 +384,23 @@ public class WorldController {
             }
         }
         return false;
+    }
+
+    public void drawFlower(Direction direction) {
+        flower = new SpriteHolder(new AnimatedSprite(
+            new Animation<>(0.1f, new TextureRegion(GameAsset.FLOWER))), new Tuple<>(0f,0f));
+        flower.getSprite().setScale(0.4f);
+        ((AnimatedSprite) flower.getSprite()).setLooping(false);
+        Player player = App.getInstance().getCurrentGame().getCurrentPlayer();
+        flower.getSprite().setPosition(
+            (flower.getOffset().getX() + player.getTiles().get(0).getX()) * App.tileWidth,
+            (flower.getOffset().getY() + player.getTiles().get(0).getY()) * App.tileHeight);
+        flowerDirection = direction;
+        Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+                flower = null;
+            }
+        }, 2);
     }
 }
