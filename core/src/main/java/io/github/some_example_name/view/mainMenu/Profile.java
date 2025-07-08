@@ -195,7 +195,15 @@ public class Profile extends Menu {
 
         changePasswordTable.add(new Label("New Password: ", skin)).padRight(10);
         TextField newPasswordField = new TextField("", skin);
-        changePasswordTable.add(newPasswordField).width(400).row();
+        changePasswordTable.add(newPasswordField).width(400).padRight(10);
+        TextButton randomPassword = new TextButton("Random Password", skin);
+        randomPassword.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                newPasswordField.setText(controller.getRandomPassword());
+            }
+        });
+        changePasswordTable.add(randomPassword).width(400).row();
         changePasswordTable.add(new Label("Old Password: ", skin)).padRight(10);
         TextField oldPasswordField = new TextField("", skin);
         changePasswordTable.add(oldPasswordField).width(400).row();
