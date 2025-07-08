@@ -250,6 +250,11 @@ public class CameraViewController {
             GameView.captureInput = false;
             GameView.screenshotting = true;
         }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.GRAVE)) {
+            player.setCurrentCarrying(null);
+            currentToolIndex = -1;
+
+        }
         int[] shortcuts = {Input.Keys.NUM_1, Input.Keys.NUM_2, Input.Keys.NUM_3, Input.Keys.NUM_4, Input.Keys.NUM_5,
             Input.Keys.NUM_6, Input.Keys.NUM_7, Input.Keys.NUM_8, Input.Keys.NUM_9, Input.Keys.NUM_0, Input.Keys.MINUS,
             Input.Keys.EQUALS

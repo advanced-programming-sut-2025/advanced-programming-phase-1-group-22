@@ -52,6 +52,7 @@ import io.github.some_example_name.saveGame.GameSerializer;
 import io.github.some_example_name.utils.App;
 import io.github.some_example_name.utils.HibernateUtil;
 import io.github.some_example_name.variables.Session;
+import io.github.some_example_name.view.GameView;
 import io.github.some_example_name.view.Menu;
 import io.github.some_example_name.view.ViewRender;
 
@@ -271,7 +272,14 @@ public class GameService {
             player.walkTillFaint(walkingStrategy.getDistances(), new Pair(x1, y1));
             player.faint();
             walkingStrategy.getDistances().clear();
-            nextTurn();
+            GameView.captureInput = false;
+            com.badlogic.gdx.utils.Timer.schedule(new com.badlogic.gdx.utils.Timer.Task() {
+                @Override
+                public void run() {
+                    nextTurn();
+                    GameView.captureInput = true;
+                }
+            }, 3);
             return new Response("Not enough energy; you fainted");
         }
         walkingStrategy.getDistances().clear();
