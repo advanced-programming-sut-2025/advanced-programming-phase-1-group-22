@@ -362,6 +362,9 @@ public class Player extends Actor implements JsonPreparable {
     public Sprite getSprite() {
         if (dirChanged) {
             dirChanged = false;
+            if (isFainted) {
+                this.sprite = playerType.getFainting();
+            }
             this.sprite = playerType.getWalking(direction);
             this.sprite.setSize((float) App.tileWidth, (float) (App.tileHeight * 1.5));
         }
