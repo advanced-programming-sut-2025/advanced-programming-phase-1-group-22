@@ -211,7 +211,7 @@ public class WorldController {
                             }
                         }
                     } else if (structure instanceof Player) {
-                        if (distanceFromClick(structure.getTiles().getFirst()).isOrigin()) {
+                        if (distanceFromClick(structure.getTiles().get(0)).isOrigin()) {
                             if (RelationService.getInstance().twoActorsAreNeighbors(
                                 App.getInstance().getCurrentGame().getCurrentPlayer(),
                                 (Player) structure, 1

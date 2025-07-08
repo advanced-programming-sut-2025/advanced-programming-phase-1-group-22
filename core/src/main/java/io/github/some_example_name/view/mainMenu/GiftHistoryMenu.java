@@ -129,7 +129,7 @@ public class GiftHistoryMenu extends PopUp {
 
     private void addRating(Table giftTable, Gift gift, boolean isGifting, int k) {
         for (int i = 0; i < 5; i++) {
-            hearts.getLast().add(null);
+            hearts.get(hearts.size() - 1).add(null);
         }
         defaultRating(giftTable, gift);
         Drawable filled = new TextureRegionDrawable(GameAsset.SECRET_HEART);
@@ -174,8 +174,8 @@ public class GiftHistoryMenu extends PopUp {
         int rate = (gift.getRate() == null) ? 0 : gift.getRate();
         for (int i = 0; i < 5; i++) {
             Drawable drawable = new TextureRegionDrawable(i < rate ? GameAsset.SECRET_HEART : GameAsset.EMPTY_HEART);
-            hearts.getLast().set(i, new ImageButton(drawable));
-            giftTable.add(hearts.getLast().get(i)).padRight(10);
+            hearts.get(hearts.size() - 1).set(i, new ImageButton(drawable));
+            giftTable.add(hearts.get(hearts.size() - 1).get(i)).padRight(10);
         }
         giftTable.row();
     }
