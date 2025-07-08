@@ -5,15 +5,15 @@ import io.github.some_example_name.repository.UserRepo;
 import io.github.some_example_name.service.AccountService;
 import io.github.some_example_name.utils.GeneratePassword;
 import io.github.some_example_name.utils.PasswordHasher;
-import io.github.some_example_name.view.mainMenu.Profile;
+import io.github.some_example_name.view.mainMenu.ProfileMenu;
 
-public class ProfileController {
-    private final Profile view;
+public class ProfileMenuController {
+    private final ProfileMenu view;
     // EntityManager em = HibernateUtil.getEntityManagerFactory().createEntityManager();
     private final AccountService service = new AccountService(new UserRepo(), new PasswordHasher());
 
 
-    public ProfileController(Profile view) {
+    public ProfileMenuController(ProfileMenu view) {
         this.view = view;
     }
 

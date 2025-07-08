@@ -1,43 +1,61 @@
 package io.github.some_example_name.view.mainMenu;
 
-import io.github.some_example_name.command.CommandClass;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import io.github.some_example_name.controller.mainMenu.MainMenuController;
-import io.github.some_example_name.model.records.Response;
-import io.github.some_example_name.view.CommandProcessor;
+import io.github.some_example_name.variables.Session;
 
-import java.util.Map;
-import java.util.function.Function;
+public class MainMenu extends Menu {
+    private final MainMenuController controller = new MainMenuController(this);
+    private final TextButton profileMenu;
+    private final TextButton preGameMenu;
+    private final TextButton logout;
+    private final TextButton back;
 
-import static io.github.some_example_name.command.AccountCommands.*;
-import static io.github.some_example_name.command.GameInitCommands.*;
-
-public class MainMenu implements CommandProcessor {
-    private static MainMenu menu;
-
-    private MainMenu() {
+    public MainMenu(Skin skin) {
+        super(skin);
+        this.title.setText("Main Menu");
+        this.profileMenu = new TextButton("Profile Menu", skin);
+        this.preGameMenu = new TextButton("PreGame Menu", skin);
+        this.logout = new TextButton("Logout", skin);
+        this.back = new TextButton("Back", skin);
     }
-
-    public static MainMenu getInstance() {
-        if (menu == null) {
-            menu = new MainMenu();
-        }
-        return menu;
-    }
-
-    private final MainMenuController controller = new MainMenuController();
-
-    private final Map<CommandClass, Function<String[], Response>> commandsFunctionMap = Map.of(
-            USER_LOGOUT, controller::logout,
-            ENTER_MENU, controller::switchMenu,
-            SHOW_CURRENT_MENU, controller::showCurrentMenu,
-            newGame, controller::newGame,
-            loadGame, controller::loadGame
-
-    );
-
 
     @Override
-    public Map<CommandClass, Function<String[], Response>> getFunctionsMap() {
-        return commandsFunctionMap;
+    protected void showStage() {
+        this.profileMenu.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                setScreen(new ProfileMenu(skin));
+            }
+        });
+        table.add(profileMenu).width(400).row();
+        this.preGameMenu.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                setScreen(new StartGameMenu(skin, 0));
+            }
+        });
+        table.add(preGameMenu).width(400).row();
+        this.logout.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                controller.logout();
+                setScreen(new FirstMenu(skin));
+            }
+        });
+        table.add(logout).width(400).row();
+        this.back.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (!Session.isStayedLoggedIn()) {
+                    controller.logout();
+                }
+                setScreen(new FirstMenu(skin));
+            }
+        });
+        table.add(back).width(400).row();
     }
 }

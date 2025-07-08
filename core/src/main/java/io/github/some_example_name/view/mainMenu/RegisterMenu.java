@@ -138,7 +138,7 @@ public class RegisterMenu extends Menu {
             public void clicked(InputEvent event, float x, float y) {
                 if (controller.register()) {
                     securityDialog.hide();
-                    setScreen(new Main(GameAsset.SKIN_MENU));
+                    setScreen(new MainMenu(GameAsset.SKIN_MENU));
                 }
             }
         });

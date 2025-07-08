@@ -1,7 +1,5 @@
 package io.github.some_example_name.view.mainMenu;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -9,18 +7,11 @@ import io.github.some_example_name.MainGradle;
 import io.github.some_example_name.controller.WorldController;
 import io.github.some_example_name.model.Salable;
 import io.github.some_example_name.model.records.Response;
-import io.github.some_example_name.model.relations.Friendship;
 import io.github.some_example_name.model.relations.Player;
-import io.github.some_example_name.service.GameService;
-import io.github.some_example_name.service.RelationService;
 import io.github.some_example_name.utils.App;
-import io.github.some_example_name.variables.Session;
 import lombok.Setter;
 
 import java.util.ArrayList;
-import java.util.Map;
-
-import static io.github.some_example_name.command.GameCommands.friendship;
 
 @Setter
 public class TerminateMenu extends PopUp {

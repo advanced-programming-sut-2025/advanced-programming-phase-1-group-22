@@ -18,7 +18,6 @@ import io.github.some_example_name.model.products.*;
 import io.github.some_example_name.model.products.TreesAndFruitsAndSeeds.*;
 import io.github.some_example_name.model.products.AnimalProductType;
 import io.github.some_example_name.model.products.Hay;
-import io.github.some_example_name.model.products.Product;
 import io.github.some_example_name.model.products.TreesAndFruitsAndSeeds.FruitType;
 import io.github.some_example_name.model.receipe.CookingRecipe;
 import io.github.some_example_name.model.receipe.CraftingRecipe;
@@ -47,14 +46,11 @@ import io.github.some_example_name.model.tools.BackPack;
 import io.github.some_example_name.model.tools.Tool;
 import io.github.some_example_name.repository.UserRepo;
 import io.github.some_example_name.repository.UserRepository;
-import io.github.some_example_name.repository.UserRepositoryImpl;
 import io.github.some_example_name.saveGame.GameSerializer;
 import io.github.some_example_name.utils.App;
-import io.github.some_example_name.utils.HibernateUtil;
 import io.github.some_example_name.variables.Session;
 import io.github.some_example_name.view.GameView;
 import io.github.some_example_name.view.Menu;
-import io.github.some_example_name.view.ViewRender;
 
 import java.util.*;
 
@@ -62,7 +58,6 @@ public class GameService {
     private static volatile GameService instance;
     App app = App.getInstance();
     UserRepository<User> userRepository;
-    private ViewRender viewRender;
 
     public GameService() {
       //  userRepository = new UserRepositoryImpl(HibernateUtil.getEntityManagerFactory().createEntityManager());
@@ -72,7 +67,6 @@ public class GameService {
     public static GameService getInstance() {
         if (instance == null) {
             instance = new GameService();
-            instance.viewRender = new ViewRender();
         }
         return instance;
     }
@@ -90,28 +84,12 @@ public class GameService {
             user.setIsPlaying(filePath);
             userRepository.save(player.getUser());
         }
-        Session.setCurrentMenu(Menu.MAIN);
         Session.getCurrentUser().setIsPlaying(filePath);
         return new Response("Exited from game.", true);
     }
 
-    public Response terminateGame() {
-        for (int i = 1; i < App.getInstance().getCurrentGame().getPlayers().size(); i++) {
-            switch (viewRender.getResponse().message()) {
-                case "Y":
-                    break;
-                case "n":
-                    return new Response("Termination failed!");
-                default:
-                    System.out.println("Are you in favor termination? Y/n");
-            }
-        }
-        return finalTermination();
-    }
-
     public Response finalTermination() {
         App.getInstance().getGames().remove(app.getCurrentGame());
-        Session.setCurrentMenu(Menu.MAIN);
         for (Player player : app.getCurrentGame().getPlayers()) {
             player.getUser().setIsPlaying(null);
             player.getUser().setNumberOfPlayedGames(player.getUser().getNumberOfPlayedGames() + 1);
@@ -135,7 +113,6 @@ public class GameService {
         }
         app.getCurrentGame().nextPlayer();
         if (app.getCurrentGame().getCurrentPlayer().getIsFainted()) return nextTurn();
-        Session.setCurrentMenu(app.getCurrentGame().getCurrentPlayer().getCurrentMenu());
         return new Response("It's next player's turn", true);
     }
 
@@ -837,27 +814,22 @@ public class GameService {
                         if (player.getTiles().get(0) == tile) {
                             player.setStoreType(((Store) structure).getStoreType());
                             player.setCurrentMenu(Menu.STORE_MENU);
-                            Session.setCurrentMenu(Menu.STORE_MENU);
                             return;
                         }
                     }
                 }
             }
             player.setCurrentMenu(Menu.GAME_MAIN_MENU);
-            Session.setCurrentMenu(Menu.GAME_MAIN_MENU);
             return;
         }
         Cottage cottage = farm.getCottage();
         for (Tile tile : cottage.getTiles()) {
             if (player.getTiles().get(0) == tile) {
                 player.setCurrentMenu(Menu.COTTAGE);
-                Session.setCurrentMenu(Menu.COTTAGE);
                 return;
             }
         }
         player.setCurrentMenu(Menu.GAME_MAIN_MENU);
-        Session.setCurrentMenu(Menu.GAME_MAIN_MENU);
-
     }
 
 

@@ -18,16 +18,13 @@ public interface CommandProcessor {
                     Response response = function.apply(commandProcessor.getParameters(command));
                     if (response.message() != null && !response.message().isEmpty())
                         output.accept(response);
-                       // System.out.println(response.message());
                 } catch (Exception e) {
                    output.accept(new Response(e.getMessage()));
-                    //System.out.println(e.getMessage());
                 }
                 return;
             }
         }
         output.accept(new Response("invalid command!"));
-       // System.out.println("invalid command!");
     }
 
     Map<CommandClass, Function<String[], Response>> getFunctionsMap();

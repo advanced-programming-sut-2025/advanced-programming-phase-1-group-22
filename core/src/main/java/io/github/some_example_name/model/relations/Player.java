@@ -321,7 +321,6 @@ public class Player extends Actor implements JsonPreparable {
 		walkingStrategy.getDistances().clear();
 		this.getTiles().add(App.getInstance().getCurrentGame().tiles[x1][y1]);
 		this.setCurrentMenu(Menu.COTTAGE);
-		Session.setCurrentMenu(Menu.COTTAGE);
 	}
 
 	public void walkTillFaint(Map<Pair, Integer> distances, Pair dest) {
