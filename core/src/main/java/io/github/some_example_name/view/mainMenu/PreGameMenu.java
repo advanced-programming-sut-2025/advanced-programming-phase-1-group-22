@@ -32,7 +32,7 @@ public abstract class PreGameMenu implements Screen {
 
     @Override
     public void show() {
-        stage = new Stage(new ScreenViewport());
+        stage = new Stage(MainGradle.getInstance().getViewport(), MainGradle.getInstance().getBatch());
         Gdx.input.setInputProcessor(stage);
 
         table.setFillParent(true);
@@ -45,12 +45,14 @@ public abstract class PreGameMenu implements Screen {
     public void render(float delta) {
         MainGradle.getInstance().getBatch().begin();
         stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
-        renderStage(delta);
+
         MainGradle.getInstance().getBatch().end();
+        renderStage(delta);
     }
 
     @Override
     public void resize(int width, int height) {
+        if (stage != null) stage.getViewport().update(width, height, true);
     }
 
     @Override
@@ -68,6 +70,7 @@ public abstract class PreGameMenu implements Screen {
 
     @Override
     public void dispose() {
+        if (stage != null) stage.dispose();
     }
 
 
