@@ -18,7 +18,6 @@ import io.github.some_example_name.model.products.*;
 import io.github.some_example_name.model.products.TreesAndFruitsAndSeeds.*;
 import io.github.some_example_name.model.products.AnimalProductType;
 import io.github.some_example_name.model.products.Hay;
-import io.github.some_example_name.model.products.Product;
 import io.github.some_example_name.model.products.TreesAndFruitsAndSeeds.FruitType;
 import io.github.some_example_name.model.receipe.CookingRecipe;
 import io.github.some_example_name.model.receipe.CraftingRecipe;
@@ -47,10 +46,8 @@ import io.github.some_example_name.model.tools.BackPack;
 import io.github.some_example_name.model.tools.Tool;
 import io.github.some_example_name.repository.UserRepo;
 import io.github.some_example_name.repository.UserRepository;
-import io.github.some_example_name.repository.UserRepositoryImpl;
 import io.github.some_example_name.saveGame.GameSerializer;
 import io.github.some_example_name.utils.App;
-import io.github.some_example_name.utils.HibernateUtil;
 import io.github.some_example_name.variables.Session;
 import io.github.some_example_name.view.GameView;
 import io.github.some_example_name.view.Menu;
@@ -122,6 +119,17 @@ public class GameService {
         }
         Session.getCurrentUser().setIsPlaying(null);
         return new Response("The game is terminated", true);
+    }
+
+    public void nextTurnAfterFaint() {
+        com.badlogic.gdx.utils.Timer.schedule(new com.badlogic.gdx.utils.Timer.Task() {
+            @Override
+            public void run() {
+                nextTurn();
+                GameView.captureInput = true;
+            }
+        }, 3);
+        new Response("", true);
     }
 
     public Response nextTurn() {
@@ -268,18 +276,11 @@ public class GameService {
 //            if (confirmation.equals("Y")) break;
 //            if (confirmation.equals("n")) return new Response("You didn't moved");
 //        }
-        if (player.getEnergy() < energy) {
+        if (player.getEnergy() <= energy) {
             player.walkTillFaint(walkingStrategy.getDistances(), new Pair(x1, y1));
             player.faint();
             walkingStrategy.getDistances().clear();
-            GameView.captureInput = false;
-            com.badlogic.gdx.utils.Timer.schedule(new com.badlogic.gdx.utils.Timer.Task() {
-                @Override
-                public void run() {
-                    nextTurn();
-                    GameView.captureInput = true;
-                }
-            }, 3);
+            nextTurnAfterFaint();
             return new Response("Not enough energy; you fainted");
         }
         walkingStrategy.getDistances().clear();
@@ -2075,7 +2076,7 @@ public class GameService {
         }
         if (player.getEnergy() < 2) {
             player.faint();
-            nextTurn();
+            nextTurnAfterFaint();
             return new Response("Not enough energy; you fainted");
         }
         player.removeEnergy(2);
@@ -2136,7 +2137,7 @@ public class GameService {
         }
         if (player.getEnergy() < 3) {
             player.faint();
-            nextTurn();
+            nextTurnAfterFaint();
             return new Response("Not enough energy; you fainted");
         }
         player.removeEnergy(3);
