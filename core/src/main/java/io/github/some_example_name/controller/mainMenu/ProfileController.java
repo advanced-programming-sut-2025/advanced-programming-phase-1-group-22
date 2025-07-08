@@ -3,6 +3,7 @@ package io.github.some_example_name.controller.mainMenu;
 import io.github.some_example_name.model.records.Response;
 import io.github.some_example_name.repository.UserRepo;
 import io.github.some_example_name.service.AccountService;
+import io.github.some_example_name.utils.GeneratePassword;
 import io.github.some_example_name.utils.PasswordHasher;
 import io.github.some_example_name.view.mainMenu.Profile;
 
@@ -58,5 +59,9 @@ public class ProfileController {
         if (response.shouldBeBack()) return true;
         view.alert(response.message(), 5);
         return false;
+    }
+
+    public String getRandomPassword() {
+        return GeneratePassword.generatePassword();
     }
 }
