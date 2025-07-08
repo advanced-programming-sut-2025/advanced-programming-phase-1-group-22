@@ -7,6 +7,8 @@ import io.github.some_example_name.model.enums.Gender;
 import io.github.some_example_name.utils.GameAsset;
 import lombok.Getter;
 
+import java.util.HashMap;
+
 @Getter
 public enum PlayerType {
     ABIGAIL("Abigail", GameAsset.ABIGAIL_FULL, Gender.FEMALE, 66, 128, 56, 65,
@@ -41,6 +43,7 @@ public enum PlayerType {
     private final Gender gender;
     private final String name;
     private final int miniOffsetY;
+    private final HashMap<Direction, Integer> directions;
 
     PlayerType(String name, Texture texture, Gender gender, int avatarX, int avatarY, int avatarWidth, int avatarHeight,
                int miniOffsetY) {
@@ -50,6 +53,11 @@ public enum PlayerType {
         this.avatar = new TextureRegion(texture, avatarX, avatarY, avatarWidth, avatarHeight);
         this.miniTextures = TextureRegion.split(texture, 16, 32);
         this.miniOffsetY = miniOffsetY;
+        directions =  new HashMap<>();
+        directions.put(Direction.NORTH, 2);
+        directions.put(Direction.EAST, 1);
+        directions.put(Direction.SOUTH, 0);
+        directions.put(Direction.WEST, 3);
     }
 
     public static PlayerType findInstance(String character) {
@@ -64,15 +72,16 @@ public enum PlayerType {
     }
 
     public AnimatedSprite getWalking(Direction direction) {
-        int j = switch (direction) {
-            case NORTH -> 2;
-            case EAST -> 1;
-            case WEST -> 3;
-            default -> 0;
-        };
         Animation<TextureRegion> animation = new Animation<>(0.1f,
-            miniTextures[miniOffsetY + j][1], miniTextures[miniOffsetY + j][2], miniTextures[miniOffsetY + j][3],
-            miniTextures[miniOffsetY + j][0]);
+            miniTextures[miniOffsetY + directions.get(direction)][1], miniTextures[miniOffsetY + directions.get(direction)][2],
+            miniTextures[miniOffsetY + directions.get(direction)][3], miniTextures[miniOffsetY +  + directions.get(direction)][0]);
+        return new AnimatedSprite(animation);
+    }
+
+    public AnimatedSprite getFainting() {
+        Animation<TextureRegion> animation = new Animation<>(0.1f,
+            miniTextures[miniOffsetY + directions.get(Direction.SOUTH)][0], miniTextures[miniOffsetY + directions.get(Direction.SOUTH)][3],
+            miniTextures[miniOffsetY + directions.get(Direction.EAST)][3], miniTextures[miniOffsetY + +directions.get(Direction.EAST)][0]);
         return new AnimatedSprite(animation);
     }
 }

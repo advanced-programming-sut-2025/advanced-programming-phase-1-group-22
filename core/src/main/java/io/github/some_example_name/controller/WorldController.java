@@ -210,18 +210,17 @@ public class WorldController {
                                 }
                             }
                         }
-                    } else if (structure instanceof Player) {
-                        if (distanceFromClick(structure.getTiles().get(0)).isOrigin()) {
-                            if (RelationService.getInstance().twoActorsAreNeighbors(
-                                App.getInstance().getCurrentGame().getCurrentPlayer(),
-                                (Player) structure, 1
-                            )) {
-                                FriendPopUp friendPopUp = new FriendPopUp();
-                                friendPopUp.setPlayer((Player) structure);
-                                friendPopUp.createMenu(GameView.stage, GameAsset.SKIN, this);
-                            }
-                        }
-
+                    }
+                }
+            }
+            for (Player player : App.getInstance().getCurrentGame().getPlayers()) {
+                if (App.getInstance().getCurrentGame().getCurrentPlayer() == player) continue;
+                if (distanceFromClick(player.getTiles().get(0)).isOrigin()) {
+                    if (RelationService.getInstance().twoActorsAreNeighbors(
+                        App.getInstance().getCurrentGame().getCurrentPlayer(), player, 1)) {
+                        FriendPopUp friendPopUp = new FriendPopUp();
+                        friendPopUp.setPlayer(player);
+                        friendPopUp.createMenu(GameView.stage, GameAsset.SKIN, this);
                     }
                 }
             }
