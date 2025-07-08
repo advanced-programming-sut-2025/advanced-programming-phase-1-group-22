@@ -247,6 +247,7 @@ public class CameraViewController {
             }
             if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_0)) {
                 gameMenuController.C_AddItem("flower", "2");
+                gameMenuController.C_AddItem("wedding ring", "2");
             }
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.F4)){

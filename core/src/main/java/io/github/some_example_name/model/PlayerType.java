@@ -2,6 +2,7 @@ package io.github.some_example_name.model;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import io.github.some_example_name.model.enums.Gender;
 import io.github.some_example_name.utils.GameAsset;
@@ -92,6 +93,15 @@ public enum PlayerType {
             miniTextures[miniOffsetY + directions.get(Direction.EAST)][3], miniTextures[miniOffsetY + +directions.get(Direction.EAST)][0]);
         AnimatedSprite x = new AnimatedSprite(animation);
         x.setLooping(false);
+        return x;
+    }
+
+    public Sprite getProposal() {
+        Animation<TextureRegion> animation = new Animation<>(0.1f,
+            miniTextures[miniOffsetY][3]);
+        AnimatedSprite x = new AnimatedSprite(animation);
+        x.setLooping(false);
+        x.setScale(1, 0.8f);
         return x;
     }
 }

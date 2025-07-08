@@ -3,7 +3,6 @@ package io.github.some_example_name.view.mainMenu;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Group;
@@ -15,19 +14,15 @@ import com.badlogic.gdx.utils.Timer;
 import io.github.some_example_name.MainGradle;
 import io.github.some_example_name.controller.WorldController;
 import io.github.some_example_name.model.*;
-import io.github.some_example_name.model.craft.Craft;
 import io.github.some_example_name.model.enums.Gender;
 import io.github.some_example_name.model.records.Response;
 import io.github.some_example_name.model.relations.Player;
 import io.github.some_example_name.service.RelationService;
 import io.github.some_example_name.utils.App;
-import io.github.some_example_name.utils.GameAsset;
 import io.github.some_example_name.view.GameView;
 import lombok.Setter;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 @Setter
 public class FriendPopUp extends PopUp { //TODO marriage reject/accept
@@ -87,7 +82,7 @@ public class FriendPopUp extends PopUp { //TODO marriage reject/accept
         marry.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                getController().showResponse(RelationService.getInstance().marry(player.getUser().getUsername(), "Wedding Ring"));
+                handleAskMarriage(player);
                 return true;
             }
         });
@@ -121,6 +116,28 @@ public class FriendPopUp extends PopUp { //TODO marriage reject/accept
         };
         group.addActor(window);
         menuGroup.addActor(group);
+    }
+
+    private void handleAskMarriage(Player player) {
+        Player currentPlayer = App.getInstance().getCurrentGame().getCurrentPlayer();
+        Tile origin = currentPlayer.getTiles().getFirst();
+        Tile dest = App.getInstance().getCurrentGame().tiles[player.getTiles().getFirst().getX()][player.getTiles().getFirst().getY() + 2];
+        currentPlayer.getTiles().clear();
+        currentPlayer.getTiles().add(dest);
+        Direction direction = initialHandle(player, RelationService.getInstance().marry(player.getUser().getUsername(), "Wedding Ring"));
+        if (direction == null) {
+            currentPlayer.getTiles().clear();
+            currentPlayer.getTiles().add(origin);
+            return;
+        }
+        currentPlayer.setDirection(direction);
+        Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+                currentPlayer.setProposal();
+                GameView.captureInput = true;
+            }
+        }, 0.5f);
     }
 
     private Direction initialHandle(Player player, Response resp) {

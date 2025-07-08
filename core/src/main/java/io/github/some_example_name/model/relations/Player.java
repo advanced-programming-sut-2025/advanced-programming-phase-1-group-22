@@ -1,12 +1,8 @@
 package io.github.some_example_name.model.relations;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.utils.Timer;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.some_example_name.model.dto.SpriteHolder;
@@ -402,5 +398,10 @@ public class Player extends Actor implements JsonPreparable {
     @Override
     public String getName() {
         return user.getUsername();
+    }
+
+    public void setProposal() {
+        this.direction = Direction.SOUTH;
+        this.sprites.getFirst().setSprite(playerType.getProposal());
     }
 }
