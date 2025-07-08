@@ -69,7 +69,7 @@ public class WorldController {
     }
 
     public void update(float delta) {
-        delta += Gdx.graphics.getDeltaTime();
+        this.delta += delta;
         printMap(delta);
         switch (App.getInstance().getCurrentGame().getVillage().getWeather()) {
             case SNOWY -> handleSnowDrops();
@@ -411,7 +411,7 @@ public class WorldController {
     }
 
     public void drawHeart() {
-        heart = new SpriteHolder(new AnimatedSprite(new Animation<>(0.25f, GameAsset.BEATING_HEARTS[0][4],
+        heart = new SpriteHolder(new AnimatedSprite(new Animation<>(0.15f, GameAsset.BEATING_HEARTS[0][4],
             GameAsset.BEATING_HEARTS[0][3], GameAsset.BEATING_HEARTS[0][2], GameAsset.BEATING_HEARTS[0][1],
             GameAsset.BEATING_HEARTS[0][0], GameAsset.BEATING_HEARTS[0][1], GameAsset.BEATING_HEARTS[0][2],
             GameAsset.BEATING_HEARTS[0][3])), new Tuple<>(0f,0f));
@@ -419,6 +419,7 @@ public class WorldController {
         Animation<Float> scale = new Animation<>(0.1f, 0.3f, 0.4f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f, 0.9f, 1f);
         ((AnimatedSprite) heart.getSprite()).setScaleAnimation(scale);
         ((AnimatedSprite) heart.getSprite()).setScaleLooping(false);
+        ((AnimatedSprite) heart.getSprite()).setLooping(true);
         Player player = App.getInstance().getCurrentGame().getCurrentPlayer();
         heart.getSprite().setPosition(
             (heart.getOffset().getX() + player.getTiles().get(0).getX()) * App.tileWidth,
@@ -428,6 +429,6 @@ public class WorldController {
             public void run() {
                 heart = null;
             }
-        }, 5);
+        }, 20);
     }
 }

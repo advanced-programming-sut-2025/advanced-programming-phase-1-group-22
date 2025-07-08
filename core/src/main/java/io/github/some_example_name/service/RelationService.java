@@ -323,9 +323,9 @@ public class RelationService {
             return new Response("She's engaged, " + player.getCouple().getName() + " would be mad at you.");
         }
         Friendship friendShipBetweenTwoActors = getFriendShipBetweenTwoActors(player);
-//        if (friendShipBetweenTwoActors.getFriendShipLevel() < 3) {
-//            return new Response("you are not in that level of friendship");
-//        }
+        if (friendShipBetweenTwoActors.getFriendShipLevel() < 3) {
+            return new Response("you are not in that level of friendship");
+        }
         if (!twoActorsAreNeighbors(currentPlayer, player, 1)) {
             return new Response("the other player is not next You");
         }
