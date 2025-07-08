@@ -10,9 +10,10 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.utils.Timer;
 import io.github.some_example_name.MainGradle;
 import io.github.some_example_name.controller.WorldController;
-import io.github.some_example_name.model.Salable;
+import io.github.some_example_name.model.*;
 import io.github.some_example_name.model.craft.Craft;
 import io.github.some_example_name.model.enums.Gender;
 import io.github.some_example_name.model.records.Response;
@@ -22,9 +23,14 @@ import io.github.some_example_name.utils.App;
 import io.github.some_example_name.view.GameView;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 @Setter
 public class FriendPopUp extends PopUp { //TODO UNCHECKED
     private Player player;
+    private Window window;
 
     public void createMenu(Stage stage, Skin skin, WorldController worldController) {
         super.createMenu(stage, skin, worldController);
@@ -42,7 +48,7 @@ public class FriendPopUp extends PopUp { //TODO UNCHECKED
     private void createInventory(Skin skin, Group menuGroup, Stage stage) {
         OrthographicCamera camera = MainGradle.getInstance().getCamera();
 
-        Window window = new Window("", skin);
+        window = new Window("", skin);
         window.setSize(camera.viewportWidth * 0.3f, camera.viewportHeight * 0.35f);
         window.setMovable(false);
 
@@ -63,7 +69,7 @@ public class FriendPopUp extends PopUp { //TODO UNCHECKED
         hug.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                getController().showResponse(RelationService.getInstance().hug(player.getUser().getUsername()));
+                handleHug(player);
                 return true;
             }
         });
@@ -114,5 +120,74 @@ public class FriendPopUp extends PopUp { //TODO UNCHECKED
         };
         group.addActor(window);
         menuGroup.addActor(group);
+    }
+
+    private void handleHug(Player player) {
+        window.remove();
+        Player currentPlayer = App.getInstance().getCurrentGame().getCurrentPlayer();
+        Response resp = RelationService.getInstance().hug(player.getUser().getUsername());
+        if (!resp.shouldBeBack()) {
+            getController().showResponse(resp);
+            return;
+        }
+        GameView.captureInput = false;
+        Direction direction = Direction.getByXAndY(
+            player.getTiles().getFirst().getX() - currentPlayer.getTiles().getFirst().getX(),
+            player.getTiles().getFirst().getY() - currentPlayer.getTiles().getFirst().getY()
+        );
+        if (direction == null) throw new NullPointerException("Direction is null");
+        player.setLazyDirection(direction.reverse());
+        Tile origin = currentPlayer.getTiles().getFirst();
+        currentPlayer.setDirection(direction);
+        currentPlayer.getTiles().clear();
+        currentPlayer.getTiles().addAll(player.getTiles());
+        boolean flag = false;
+        int x = -1, y = -1;
+        for (Player player1 : App.getInstance().getCurrentGame().getPlayers()) {
+            if (player1 == currentPlayer) break;
+            if (player == player1) {
+                flag = true;
+                break;
+            }
+        }
+
+        for (int i = 0; i < App.getInstance().getCurrentGame().getPlayers().size(); i++) {
+            Player player1 = App.getInstance().getCurrentGame().getPlayers().get(i);
+            if (player1 == currentPlayer) x = i;
+            if (player == player1) y = i;
+        }
+        if (flag) {
+            Collections.swap(App.getInstance().getCurrentGame().getPlayers(), x, y);
+        }
+        Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+                currentPlayer.getSprites().getFirst().setOffset(new Tuple<>( -0.1f, 0.1f));
+                currentPlayer.setLazyDirection(Direction.SOUTH);
+                player.setLazyDirection(Direction.NORTH);
+            }
+        }, 0.5f);
+        boolean finalFlag = flag;
+        int finalX = x;
+        int finalY = y;
+        Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+                currentPlayer.getSprites().getFirst().setOffset(new Tuple<>( 0f, 0f));
+                currentPlayer.setDirection(direction);
+                currentPlayer.getTiles().clear();
+                currentPlayer.getTiles().add(origin);
+            }
+        }, 3f);
+        Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+                player.setLazyDirection(direction.reverse());
+                GameView.captureInput = true;
+                if (finalFlag) {
+                    Collections.swap(App.getInstance().getCurrentGame().getPlayers(), finalX, finalY);
+                }
+            }
+        }, 3.3f);
     }
 }
