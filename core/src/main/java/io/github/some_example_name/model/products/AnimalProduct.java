@@ -35,4 +35,9 @@ public class AnimalProduct extends Structure implements Salable {
 
     @Override
     public Integer getContainingEnergy() {return animalProductType.getEnergy();}
+
+    @Override
+    public AnimalProduct copy() {
+        return new AnimalProduct(this.animalProductType);
+    }
 }

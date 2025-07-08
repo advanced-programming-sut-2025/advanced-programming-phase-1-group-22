@@ -2,6 +2,7 @@ package io.github.some_example_name.model.products.TreesAndFruitsAndSeeds;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import io.github.some_example_name.model.products.AnimalProduct;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -38,4 +39,9 @@ public class Fruit implements Salable{
 
     @Override
     public Integer getContainingEnergy() {return fruitType.getEnergy();}
+
+    @Override
+    public Fruit copy() {
+        return new Fruit(fruitType);
+    }
 }

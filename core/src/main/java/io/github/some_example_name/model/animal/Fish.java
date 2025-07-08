@@ -2,6 +2,7 @@ package io.github.some_example_name.model.animal;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import io.github.some_example_name.model.products.AnimalProduct;
 import io.github.some_example_name.utils.App;
 import lombok.Getter;
 import lombok.Setter;
@@ -46,4 +47,9 @@ public class Fish extends Structure implements Salable {
 	public String getName() {
 		return this.fishType.getName();
 	}
+
+    @Override
+    public Fish copy() {
+        return new Fish(this.fishType, this.productQuality);
+    }
 }

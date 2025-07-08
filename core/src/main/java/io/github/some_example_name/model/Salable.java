@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import io.github.some_example_name.model.dto.SpriteHolder;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public interface Salable {
  	String getName();
@@ -20,6 +21,9 @@ public interface Salable {
         return null;
     }
 
+    default Salable copy() {
+        return this;
+    }
 
     default Integer getContainingEnergy() {
 		return 0;

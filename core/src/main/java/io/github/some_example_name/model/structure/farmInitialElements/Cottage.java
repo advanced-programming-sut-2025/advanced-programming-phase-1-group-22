@@ -33,7 +33,7 @@ public class Cottage extends HardCodeFarmElements {
 	}
 
 	@Override
-	public HardCodeFarmElements cloneEl() {
+	public HardCodeFarmElements copyEl() {
 		return new Cottage(this);
 	}
 

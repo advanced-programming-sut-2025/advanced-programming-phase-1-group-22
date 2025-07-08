@@ -2,6 +2,7 @@ package io.github.some_example_name.model.source;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import io.github.some_example_name.model.products.AnimalProduct;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -229,5 +230,10 @@ public class Crop extends HarvestAbleProduct implements Source {
         this.sprite = new Sprite(this.cropType.getTextures().get(level - 1));
         this.sprite.setSize(App.tileWidth / 2f, App.tileHeight / 2f);
         return this.sprite;
+    }
+
+    @Override
+    public Crop copy() {
+        return new Crop(cropType);
     }
 }

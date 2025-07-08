@@ -167,6 +167,8 @@ public class RelationService {
         if (gift == null) {
             return new Response("You don't enough amount of the item : " + itemName);
         }
+        currentPlayer.getInventory().deleteProductFromBackPack(gift, currentPlayer, amount);
+        gift = gift.copy();
         player.getInventory().getProducts().put(gift, amount);
         Friendship friendShipBetweenTwoActors = getFriendShipBetweenTwoActors(player);
         if (gift instanceof Flower) {
@@ -178,7 +180,6 @@ public class RelationService {
             player.notify(new Response("%s sent you a gift".formatted(currentPlayer.getUser().getUsername())),
                 NotificationType.GIFT, currentPlayer);
         }
-        currentPlayer.getInventory().deleteProductFromBackPack(gift, currentPlayer, amount);
         if (player.getCouple() == currentPlayer) {
             currentPlayer.changeEnergy(50);
             player.changeEnergy(50);
@@ -199,6 +200,7 @@ public class RelationService {
         }
         player.getInventory().getProducts().put(gift, amount);
         currentPlayer.getInventory().deleteProductFromBackPack(gift, currentPlayer, amount);
+        gift = gift.copy();
         Friendship friendship = getFriendShipBetweenTwoActors(player);
         friendship.getGifts().add(new Gift(currentPlayer, player, amount, gift, friendship.getGifts().size()));
         player.notify(new Response("%s sent you a gift".formatted(currentPlayer.getUser().getUsername())),
@@ -209,8 +211,10 @@ public class RelationService {
                 friendship.setXp(0);
             }
         }
-        currentPlayer.changeEnergy(50);
-        player.changeEnergy(50);
+        if (currentPlayer.getCouple() == player) {
+            currentPlayer.changeEnergy(50);
+            player.changeEnergy(50);
+        }
         return new Response("Gift gave successfully", true);
     }
 

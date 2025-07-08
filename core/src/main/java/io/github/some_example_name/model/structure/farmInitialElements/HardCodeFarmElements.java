@@ -23,7 +23,7 @@ public abstract class HardCodeFarmElements extends Structure {
 		this.width = hardCodeFarmElements.width;
 	}
 
-	public abstract HardCodeFarmElements cloneEl();
+	public abstract HardCodeFarmElements copyEl();
 
 	public void setTilePairList(List<Pair> tilePairList) {
 		this.tilePairList = tilePairList;

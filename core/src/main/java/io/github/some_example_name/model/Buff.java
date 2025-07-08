@@ -9,7 +9,7 @@ import io.github.some_example_name.model.relations.Player;
 @Getter
 @Setter
 @ToString
-public class Buff {
+public class Buff implements Cloneable {
     private Integer id;
     private Integer maxPower;
     private Ability ability;

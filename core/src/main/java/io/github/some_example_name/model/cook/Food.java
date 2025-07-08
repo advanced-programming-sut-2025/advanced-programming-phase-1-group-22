@@ -2,6 +2,7 @@ package io.github.some_example_name.model.cook;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import io.github.some_example_name.model.products.AnimalProduct;
 import lombok.Getter;
 import lombok.Setter;
 import io.github.some_example_name.model.Salable;
@@ -40,5 +41,10 @@ public class Food implements Salable {
             sprite = new Sprite(foodType.getTexture());
         }
         return sprite;
+    }
+
+    @Override
+    public Food copy() {
+        return new Food(foodType);
     }
 }
