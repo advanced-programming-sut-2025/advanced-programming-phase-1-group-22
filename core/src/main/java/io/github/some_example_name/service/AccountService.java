@@ -7,16 +7,12 @@ import io.github.some_example_name.model.enums.Gender;
 import io.github.some_example_name.model.enums.SecurityQuestion;
 import io.github.some_example_name.model.records.Response;
 import io.github.some_example_name.repository.UserRepository;
-import io.github.some_example_name.utils.GeneratePassword;
-import io.github.some_example_name.utils.GenerateQuestion;
 import io.github.some_example_name.utils.PasswordHasher;
 import io.github.some_example_name.variables.Session;
 import io.github.some_example_name.view.Menu;
-import io.github.some_example_name.view.ViewRender;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.Optional;
-import java.util.Random;
 
 import static io.github.some_example_name.command.UserCommands.EMAIL;
 import static io.github.some_example_name.command.UserCommands.USERNAME;
@@ -86,7 +82,6 @@ public class AccountService {
             response = new Response("success", true);
             Session.setCurrentUser(user.get());
             Session.getCurrentUser().setId(user.get().getId());
-            Session.setCurrentMenu(Menu.MAIN);
         }
         return response;
     }
@@ -106,7 +101,6 @@ public class AccountService {
         }
         Session.setCurrentUser(user.get());
         response = new Response("Logged in successfully", true);
-        Session.setCurrentMenu(Menu.MAIN);
         return response;
     }
 
@@ -191,37 +185,9 @@ public class AccountService {
         return new Response("password changed successfully", true);
     }
 
-    public Response switchMenu(String menu) {
-        if (Session.getCurrentUser() == null) {
-            return new Response("you are not logged in");
-        }
-        if (Session.getCurrentMenu().equals(Menu.PROFILE)) {
-            return new Response("switching menu is impossible!");
-        }
-
-        Session.setCurrentMenu(Menu.valueOf(menu));
-        return new Response("menu changed successfully");
-    }
-
-    public Response exit() {
-        if (Session.getCurrentMenu().equals(Menu.LOGIN)) {
-            Session.setCurrentMenu(Menu.EXIT);
-            if (!Session.isStayedLoggedIn()) {
-                Session.setCurrentUser(null);
-            }
-            return new Response("exited successfully");
-        }
-        return new Response("exit is not possible!");
-    }
-
-    public Response showCurrentMenu() {
-        return new Response(Session.getCurrentMenu().toString());
-    }
-
     public Response logout() {
         Session.setCurrentUser(null);
         Session.setStayedLoggedIn(false);
-        Session.setCurrentMenu(Menu.LOGIN);
         return new Response("logout successfully", true);
     }
 }

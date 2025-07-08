@@ -119,7 +119,6 @@ public class GameInitService {
         }
         game = GameSerializer.loadGame(savedGamePath);
         App.getInstance().setCurrentGame(game);
-        Session.setCurrentMenu(Menu.GAME_MAIN_MENU);
         return new Response("The game has been loaded");
     }
 
@@ -142,7 +141,6 @@ public class GameInitService {
     }
 
     public void initGame() {
-        Session.setCurrentMenu(Menu.COTTAGE);
         completeMap();
     }
 

@@ -13,7 +13,7 @@ import io.github.some_example_name.MainGradle;
 import io.github.some_example_name.model.Salable;
 import io.github.some_example_name.model.records.Response;
 import io.github.some_example_name.utils.GameAsset;
-import io.github.some_example_name.view.gameMenu.CottageMenu;
+import io.github.some_example_name.view.gameMenu.CheatCodeMenu;
 import io.github.some_example_name.view.mainMenu.PopUp;
 import lombok.Getter;
 
@@ -26,7 +26,7 @@ public class Console extends PopUp {
     private final TextButton sendBtn;
     private final OrthographicCamera camera = MainGradle.getInstance().getCamera();
     private final Skin skin = GameAsset.SKIN;
-    private final CommandProcessor commandProcessor = CottageMenu.getInstance();
+    private final CommandProcessor commandProcessor = CheatCodeMenu.getInstance();
 
     private boolean visible = false;
 

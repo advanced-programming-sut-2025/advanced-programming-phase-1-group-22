@@ -35,7 +35,7 @@ public class FirstMenu extends Menu {
         this.loginMenu.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                setScreen(new Login(GameAsset.SKIN_MENU));
+                setScreen(new LoginMenu(GameAsset.SKIN_MENU));
             }
         });
         this.table.add(loginMenu).width(400).row();
@@ -43,7 +43,7 @@ public class FirstMenu extends Menu {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if (Session.getCurrentUser() != null && Session.isStayedLoggedIn()) {
-                    setScreen(new Main(GameAsset.SKIN_MENU));
+                    setScreen(new MainMenu(GameAsset.SKIN_MENU));
                 } else {
                     alert("You should login first", 5);
                 }
