@@ -256,7 +256,8 @@ public class AccountService {
 
     public Response logout() {
         Session.setCurrentUser(null);
+        Session.setStayedLoggedIn(false);
         Session.setCurrentMenu(Menu.LOGIN);
-        return new Response("logout successfully");
+        return new Response("logout successfully", true);
     }
 }
