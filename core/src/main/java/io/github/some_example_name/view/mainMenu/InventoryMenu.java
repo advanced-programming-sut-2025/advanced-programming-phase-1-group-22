@@ -23,6 +23,7 @@ import io.github.some_example_name.model.relations.Friendship;
 import io.github.some_example_name.model.relations.NPC;
 import io.github.some_example_name.model.relations.Player;
 import io.github.some_example_name.model.tools.BackPack;
+import io.github.some_example_name.model.tools.WateringCan;
 import io.github.some_example_name.service.RelationService;
 import io.github.some_example_name.utils.App;
 import io.github.some_example_name.utils.GameAsset;
@@ -42,11 +43,13 @@ public class InventoryMenu extends PopUp {
     private ArrayList<ImageButton> histories = new ArrayList<>();
     private ArrayList<ImageButton> chats = new ArrayList<>();
     private ArrayList<Friendship> friendships = new ArrayList<>();
+
     {
         gifts.add(new ImageButton(new TextureRegionDrawable(new TextureRegion(GameAsset.GIFT))));
         histories.add(new ImageButton(new TextureRegionDrawable(new TextureRegion(GameAsset.CHEST))));
         chats.add(new ImageButton(new TextureRegionDrawable(new TextureRegion(GameAsset.CHAT))));
     }
+
     private static final Table tabs = new Table();
 
     public void createMenu(Stage stage, Skin skin, WorldController worldController) {
@@ -149,9 +152,26 @@ public class InventoryMenu extends PopUp {
                     if (item == currentPlayer.getCurrentCarrying()) itemImage.setColor(1, 1, 1, 1f);
                     else itemImage.setColor(1, 1, 1, 0.5f);
                     Stack stack = new Stack();
-                    stack.add(slot);
-                    stack.add(itemImage);
-                    stack.add(labelContainer);
+                    if (item instanceof WateringCan wateringCan) {
+                        ProgressBar progressBar = new ProgressBar(0, wateringCan.getWateringCanType().getCapacity(), 1, false, skin);
+                        progressBar.setValue(wateringCan.getRemain());
+                        progressBar.setAnimateDuration(0.2f);
+                        progressBar.setSize(80, 5);
+                        progressBar.setTouchable(Touchable.disabled);
+                        progressBar.setColor(Color.BLUE);
+
+                        Table group = new Table();
+                        group.add(itemImage).size(90, 90).row();
+                        group.add(progressBar).width(80).height(8).padTop(4);
+
+                        stack.add(slot);
+                        stack.add(group);
+                        stack.add(labelContainer);
+                    } else {
+                        stack.add(slot);
+                        stack.add(itemImage);
+                        stack.add(labelContainer);
+                    }
                     inventory.add(stack).size(96, 96);
                 } else {
                     inventory.add(slot).size(96, 96);
@@ -241,9 +261,26 @@ public class InventoryMenu extends PopUp {
                     else itemImage.setColor(1, 1, 1, 0.5f);
                     itemImage.setSize(90, 90);
                     Stack stack = new Stack();
-                    stack.add(slot);
-                    stack.add(itemImage);
-                    stack.add(labelContainer);
+                    if (item instanceof WateringCan wateringCan) {
+                        ProgressBar progressBar = new ProgressBar(0, wateringCan.getWateringCanType().getCapacity(), 1, false, skin);
+                        progressBar.setValue(wateringCan.getRemain());
+                        progressBar.setAnimateDuration(0.2f);
+                        progressBar.setSize(80, 5);
+                        progressBar.setTouchable(Touchable.disabled);
+                        progressBar.setColor(Color.BLUE);
+
+                        Table group = new Table();
+                        group.add(itemImage).size(90, 90).row();
+                        group.add(progressBar).width(80).height(8).padTop(4);
+
+                        stack.add(slot);
+                        stack.add(group);
+                        stack.add(labelContainer);
+                    } else {
+                        stack.add(slot);
+                        stack.add(itemImage);
+                        stack.add(labelContainer);
+                    }
                     inventory.add(stack).size(96, 96);
                 } else {
                     inventory.add(slot).size(96, 96);
@@ -302,7 +339,7 @@ public class InventoryMenu extends PopUp {
         menuGroup.addActor(group);
     }
 
-    private void createCraftingMenu(Skin skin, Table tabs, Group menuGroup,Stage stage) {
+    private void createCraftingMenu(Skin skin, Table tabs, Group menuGroup, Stage stage) {
         getGameService().updateRecipes();
         OrthographicCamera camera = MainGradle.getInstance().getCamera();
         Window window = new Window("", skin);
@@ -414,7 +451,7 @@ public class InventoryMenu extends PopUp {
         menuGroup.addActor(group);
     }
 
-    private void createCookingMenu(Skin skin, Table tabs, Group menuGroup,Stage stage) {
+    private void createCookingMenu(Skin skin, Table tabs, Group menuGroup, Stage stage) {
         getGameService().updateRecipes();
         OrthographicCamera camera = MainGradle.getInstance().getCamera();
         Window window = new Window("", skin);
