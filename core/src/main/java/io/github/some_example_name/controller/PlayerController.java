@@ -41,12 +41,13 @@ public class PlayerController {
 
     public void update(float delta){
         Player currentPlayer = App.getInstance().getCurrentGame().getCurrentPlayer();
-        if (currentPlayer.getSprite() instanceof AnimatedSprite) {
-            ((AnimatedSprite) currentPlayer.getSprite()).update(delta);
+        Sprite playerSprite = currentPlayer.getSprites().getFirst().getSprite();
+        if (playerSprite instanceof AnimatedSprite) {
+            ((AnimatedSprite) playerSprite).update(delta);
         }
-        currentPlayer.getSprite().setPosition(currentPlayer.getTiles().get(0).getX() * App.tileWidth,
+        playerSprite.setPosition(currentPlayer.getTiles().get(0).getX() * App.tileWidth,
             currentPlayer.getTiles().get(0).getY() * App.tileHeight);
-        currentPlayer.getSprite().draw(MainGradle.getInstance().getBatch());
+        playerSprite.draw(MainGradle.getInstance().getBatch());
         if (GameView.captureInput && !GameView.positionChoosing) {
             handlePlayerMovement(currentPlayer);
             handleInputs();
@@ -92,7 +93,8 @@ public class PlayerController {
                 App.getInstance().getCurrentGame().getCurrentPlayer().setDirection(Direction.EAST);
                 timeSinceLastMove = 0f;
             } else {
-                ((AnimatedSprite)App.getInstance().getCurrentGame().getCurrentPlayer().getSprite()).setLooping(false);
+                ((AnimatedSprite)App.getInstance().getCurrentGame().getCurrentPlayer()
+                    .getSprites().getFirst().getSprite()).setLooping(false);
             }
         }
     }

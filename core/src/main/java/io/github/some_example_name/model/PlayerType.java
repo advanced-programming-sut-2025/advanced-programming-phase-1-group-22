@@ -82,6 +82,8 @@ public enum PlayerType {
         Animation<TextureRegion> animation = new Animation<>(0.1f,
             miniTextures[miniOffsetY + directions.get(Direction.SOUTH)][0], miniTextures[miniOffsetY + directions.get(Direction.SOUTH)][3],
             miniTextures[miniOffsetY + directions.get(Direction.EAST)][3], miniTextures[miniOffsetY + +directions.get(Direction.EAST)][0]);
-        return new AnimatedSprite(animation);
+        AnimatedSprite x = new AnimatedSprite(animation);
+        x.setLooping(false);
+        return x;
     }
 }
