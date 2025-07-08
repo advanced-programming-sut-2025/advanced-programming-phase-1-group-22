@@ -13,7 +13,7 @@ import java.util.Objects;
 public class LoginController {
     private final Login view;
     // EntityManager em = HibernateUtil.getEntityManagerFactory().createEntityManager();
-    private final AccountService service = new AccountService(new UserRepo(), new ViewRender(), new PasswordHasher());
+    private final AccountService service = new AccountService(new UserRepo(), new PasswordHasher());
 
     public LoginController(Login view) {
         this.view = view;
