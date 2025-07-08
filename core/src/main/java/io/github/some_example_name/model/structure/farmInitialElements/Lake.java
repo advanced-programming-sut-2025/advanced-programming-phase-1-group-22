@@ -24,7 +24,7 @@ public class Lake extends HardCodeFarmElements {
     }
 
     @Override
-    public HardCodeFarmElements cloneEl() {
+    public HardCodeFarmElements copyEl() {
         return new Lake(this);
     }
 }

@@ -36,7 +36,7 @@ public class ShippingBin extends HardCodeFarmElements {
     }
 
     @Override
-    public HardCodeFarmElements cloneEl() {
+    public HardCodeFarmElements copyEl() {
         return new ShippingBin(this);
     }
 

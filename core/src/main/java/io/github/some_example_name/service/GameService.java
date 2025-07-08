@@ -1312,8 +1312,9 @@ public class GameService {
             [player.getTiles().get(0).getY() + dir.getYTransmit()];
         if (tile.getIsFilled()) return new Response("The tile you're trying to put the item on, is filled");
         if (!(product instanceof Structure))
-            return new Response(product.getName() + " Cannot be put on ground"); //TODO Some objects are not structure but must be put on ground
+            return new Response(product.getName() + " Cannot be put on ground");
         player.getInventory().deleteProductFromBackPack(product, player, 1);
+        product = product.copy();
         ((Structure) product).getTiles().add(tile);
         Farm currentFarm = getPlayerInWitchFarm(player);
         if (currentFarm == null) return new Response("You can only place something in a farm");

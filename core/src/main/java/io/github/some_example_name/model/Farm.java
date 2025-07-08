@@ -108,7 +108,7 @@ public class Farm implements JsonPreparable {
         farmXEnd = xCenter + farmType.getLength() / 2;
         farmYEnd = yCenter + farmType.getWidth() / 2;
         setFarmTiles();
-        getClone();
+        getcopy();
         setFence();
         setDoor();
     }
@@ -119,12 +119,12 @@ public class Farm implements JsonPreparable {
         }
     }
 
-    public void getClone() {
+    public void getcopy() {
         farmType.initial();
         for (HardCodeFarmElements structure : farmType.getStructures()) {
-            HardCodeFarmElements cloneEl = structure.cloneEl();
-            transmission(cloneEl);
-            structures.add(cloneEl);
+            HardCodeFarmElements copyEl = structure.copyEl();
+            transmission(copyEl);
+            structures.add(copyEl);
         }
     }
 

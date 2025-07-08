@@ -238,4 +238,9 @@ public class Tree extends HarvestAbleProduct {
         this.sprite.setSize(App.tileWidth * 2,App.tileHeight * 3);
         return this.sprite;
     }
+
+    @Override
+    public Tree copy() {
+        return new Tree(treeType);
+    }
 }

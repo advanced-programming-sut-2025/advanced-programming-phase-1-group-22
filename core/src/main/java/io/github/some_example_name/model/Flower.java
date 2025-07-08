@@ -23,4 +23,9 @@ public class Flower implements Salable {
 
     @Override
     public Integer getContainingEnergy() {return 0;}
+
+    @Override
+    public Salable copy() {
+        return new Flower();
+    }
 }

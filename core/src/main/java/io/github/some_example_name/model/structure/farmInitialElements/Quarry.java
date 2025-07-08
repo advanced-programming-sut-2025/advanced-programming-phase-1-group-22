@@ -19,7 +19,7 @@ public class Quarry extends HardCodeFarmElements {
     }
 
     @Override
-    public HardCodeFarmElements cloneEl() {
+    public HardCodeFarmElements copyEl() {
         return new Quarry(this);
     }
 }

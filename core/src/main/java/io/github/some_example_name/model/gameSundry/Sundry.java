@@ -2,6 +2,7 @@ package io.github.some_example_name.model.gameSundry;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import io.github.some_example_name.model.products.TreesAndFruitsAndSeeds.Fruit;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -32,4 +33,9 @@ public class Sundry implements Salable {
 
     @Override
     public Integer getContainingEnergy() {return sundryType.getContainingEnergy();}
+
+    @Override
+    public Sundry copy() {
+        return new Sundry(sundryType);
+    }
 }

@@ -2,6 +2,7 @@ package io.github.some_example_name.model.products;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import io.github.some_example_name.model.products.TreesAndFruitsAndSeeds.Fruit;
 import io.github.some_example_name.utils.App;
 import io.github.some_example_name.utils.GameAsset;
 import lombok.Getter;
@@ -30,4 +31,9 @@ public class Hay implements Salable {
 
     @Override
     public Integer getContainingEnergy() {return 0;}
+
+    @Override
+    public Hay copy() {
+        return new Hay();
+    }
 }
