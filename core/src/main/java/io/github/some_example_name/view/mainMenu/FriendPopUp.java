@@ -3,6 +3,7 @@ package io.github.some_example_name.view.mainMenu;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Group;
@@ -20,6 +21,7 @@ import io.github.some_example_name.model.records.Response;
 import io.github.some_example_name.model.relations.Player;
 import io.github.some_example_name.service.RelationService;
 import io.github.some_example_name.utils.App;
+import io.github.some_example_name.utils.GameAsset;
 import io.github.some_example_name.view.GameView;
 import lombok.Setter;
 
@@ -28,7 +30,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Setter
-public class FriendPopUp extends PopUp { //TODO UNCHECKED
+public class FriendPopUp extends PopUp { //TODO marriage reject/accept
     private Player player;
     private Window window;
 
@@ -77,8 +79,7 @@ public class FriendPopUp extends PopUp { //TODO UNCHECKED
         flower.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                getController().showResponse(RelationService.getInstance().giveGift(
-                    player.getUser().getUsername(), "flower", 1));
+                handleFlower(player);
                 return true;
             }
         });
@@ -122,21 +123,35 @@ public class FriendPopUp extends PopUp { //TODO UNCHECKED
         menuGroup.addActor(group);
     }
 
-    private void handleHug(Player player) {
+    private Direction initialHandle(Player player, Response resp) {
         window.remove();
         Player currentPlayer = App.getInstance().getCurrentGame().getCurrentPlayer();
-        Response resp = RelationService.getInstance().hug(player.getUser().getUsername());
         if (!resp.shouldBeBack()) {
             getController().showResponse(resp);
-            return;
+            return null;
         }
         GameView.captureInput = false;
         Direction direction = Direction.getByXAndY(
             player.getTiles().getFirst().getX() - currentPlayer.getTiles().getFirst().getX(),
             player.getTiles().getFirst().getY() - currentPlayer.getTiles().getFirst().getY()
         );
-        if (direction == null) throw new NullPointerException("Direction is null");
+        if (direction == null) return null;
         player.setLazyDirection(direction.reverse());
+        currentPlayer.setLazyDirection(direction);
+        return direction;
+    }
+
+    private void handleFlower(Player player) {
+        Direction direction = initialHandle(player,
+            RelationService.getInstance().giveGift(player.getUser().getUsername(), "flower", 1));
+        if (direction == null) return;
+        getController().drawFlower(direction);
+    }
+
+    private void handleHug(Player player) {
+        Direction direction = initialHandle(player, RelationService.getInstance().hug(player.getUser().getUsername()));
+        if (direction == null) return;
+        Player currentPlayer = App.getInstance().getCurrentGame().getCurrentPlayer();
         Tile origin = currentPlayer.getTiles().getFirst();
         currentPlayer.setDirection(direction);
         currentPlayer.getTiles().clear();
