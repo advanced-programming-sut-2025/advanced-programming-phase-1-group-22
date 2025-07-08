@@ -42,7 +42,6 @@ public class MainGradle extends Game {
 
     public void initialMenu() {
         GameView.captureInput = true;
-      //  instance.setScreen(new StartGameMenu(GameAsset.SKIN_MENU, 0));
         instance.setScreen(new FirstMenu(GameAsset.SKIN_MENU));
     }
 
