@@ -3,15 +3,18 @@ package io.github.some_example_name.controller;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import io.github.some_example_name.MainGradle;
 import io.github.some_example_name.model.Salable;
 import io.github.some_example_name.model.relations.Player;
+import io.github.some_example_name.model.tools.WateringCan;
 import io.github.some_example_name.service.GameService;
 import io.github.some_example_name.utils.App;
 import io.github.some_example_name.utils.GameAsset;
@@ -141,8 +144,24 @@ public class CameraViewController {
                     flag = false;
                 }
                 else itemImage.setColor(1f,1f,1f,0.5f);
-                stack.add(itemImage);
-                stack.add(labelContainer);
+                if (item instanceof WateringCan wateringCan) {
+                    ProgressBar progressBar = new ProgressBar(0, wateringCan.getWateringCanType().getCapacity(), 1, false, GameAsset.SKIN);
+                    progressBar.setValue(wateringCan.getRemain());
+                    progressBar.setAnimateDuration(0.2f);
+                    progressBar.setSize(80, 5);
+                    progressBar.setTouchable(Touchable.disabled);
+                    progressBar.setColor(Color.BLUE);
+
+                    Table group = new Table();
+                    group.add(itemImage).size(90, 90).row();
+                    group.add(progressBar).width(80).height(8).padTop(4);
+
+                    stack.add(group);
+                    stack.add(labelContainer);
+                }else {
+                    stack.add(itemImage);
+                    stack.add(labelContainer);
+                }
             }
         }
         if (flag) {

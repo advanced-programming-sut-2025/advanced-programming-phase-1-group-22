@@ -1,5 +1,6 @@
 package io.github.some_example_name.view.mainMenu;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -9,7 +10,9 @@ import io.github.some_example_name.controller.WorldController;
 import io.github.some_example_name.model.Salable;
 import io.github.some_example_name.model.relations.Player;
 import io.github.some_example_name.model.tools.Tool;
+import io.github.some_example_name.model.tools.WateringCan;
 import io.github.some_example_name.utils.App;
+import io.github.some_example_name.utils.GameAsset;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -70,8 +73,24 @@ public class ToolMenu extends PopUp {
                     else itemImage.setColor(1, 1, 1, 0.5f);
                     itemImage.setSize(90, 90);
                     Stack stack = new Stack();
-                    stack.add(slot);
-                    stack.add(itemImage);
+                    if (item instanceof WateringCan wateringCan) {
+                        ProgressBar progressBar = new ProgressBar(0, wateringCan.getWateringCanType().getCapacity(), 1, false, GameAsset.SKIN);
+                        progressBar.setValue(wateringCan.getRemain());
+                        progressBar.setAnimateDuration(0.2f);
+                        progressBar.setSize(80, 5);
+                        progressBar.setTouchable(Touchable.disabled);
+                        progressBar.setColor(Color.BLUE);
+
+                        Table group = new Table();
+                        group.add(itemImage).size(90, 90).row();
+                        group.add(progressBar).width(80).height(8).padTop(4);
+
+                        stack.add(slot);
+                        stack.add(group);
+                    } else {
+                        stack.add(slot);
+                        stack.add(itemImage);
+                    }
                     inventory.add(stack).size(96, 96);
                 } else {
                     inventory.add(slot).size(96, 96);
@@ -144,8 +163,24 @@ public class ToolMenu extends PopUp {
                     if (item == currentPlayer.getCurrentCarrying()) itemImage.setColor(1, 1, 1, 1f);
                     else itemImage.setColor(1, 1, 1, 0.5f);
                     Stack stack = new Stack();
-                    stack.add(slot);
-                    stack.add(itemImage);
+                    if (item instanceof WateringCan wateringCan) {
+                        ProgressBar progressBar = new ProgressBar(0, wateringCan.getWateringCanType().getCapacity(), 1, false, GameAsset.SKIN);
+                        progressBar.setValue(wateringCan.getRemain());
+                        progressBar.setAnimateDuration(0.2f);
+                        progressBar.setSize(80, 5);
+                        progressBar.setTouchable(Touchable.disabled);
+                        progressBar.setColor(Color.BLUE);
+
+                        Table group = new Table();
+                        group.add(itemImage).size(90, 90).row();
+                        group.add(progressBar).width(80).height(8).padTop(4);
+
+                        stack.add(slot);
+                        stack.add(group);
+                    } else {
+                        stack.add(slot);
+                        stack.add(itemImage);
+                    }
                     inventory.add(stack).size(96, 96);
                 } else {
                     inventory.add(slot).size(96, 96);

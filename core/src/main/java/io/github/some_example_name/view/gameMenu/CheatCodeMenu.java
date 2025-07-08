@@ -44,6 +44,7 @@ public class CheatCodeMenu implements CommandProcessor {
         commandsFunctionMap.put(eat, controller::eat);
         commandsFunctionMap.put(buffShow, controller::buffShow);
         commandsFunctionMap.put(CHANGE_FRIENDSHIP, controller::changeFriendship);
+        commandsFunctionMap.put(NEXT_TURN, controller::nextTurn);
     }
 
     public static CheatCodeMenu getInstance() {

@@ -134,4 +134,8 @@ public class CheatCodeMenuController {
         int friendshipLevel = Integer.parseInt(params[0]);
         return relationService.friendShip_CH(friendshipLevel);
     }
+
+    public Response nextTurn(String... strings) {
+        return gameService.nextTurn();
+    }
 }
