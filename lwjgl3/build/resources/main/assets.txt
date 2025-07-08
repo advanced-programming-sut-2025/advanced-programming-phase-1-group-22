@@ -2021,6 +2021,7 @@ Hat/Wearable_Dwarf_Helm.png
 Hat/White_Bow.png
 Hat/White_Turban.png
 Hat/Witch_Hat.png
+Heart/Beating_Heart.png
 Heart/Eight_Hearts.png
 Heart/Eleven_Hearts.png
 Heart/Empty_Heart.png

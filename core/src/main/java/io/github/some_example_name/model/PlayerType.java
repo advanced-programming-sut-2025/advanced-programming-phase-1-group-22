@@ -98,7 +98,7 @@ public enum PlayerType {
 
     public Sprite getProposal() {
         Animation<TextureRegion> animation = new Animation<>(0.1f,
-            miniTextures[miniOffsetY][3]);
+            miniTextures[miniOffsetY + 2][3]);
         AnimatedSprite x = new AnimatedSprite(animation);
         x.setLooping(false);
         x.setScale(1, 0.8f);

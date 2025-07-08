@@ -47,6 +47,7 @@ public class WorldController {
     private ArrayList<SpriteContainer> storms = new ArrayList<>();
     private ArrayList<Sprite> snowDrops = new ArrayList<>();
     private SpriteHolder flower;
+    private SpriteHolder heart;
     private Direction flowerDirection;
     float delta = 0f;
     private final OrthographicCamera camera = MainGradle.getInstance().getCamera();
@@ -359,6 +360,11 @@ public class WorldController {
             flower.getSprite().setY(flower.getSprite().getY() + flowerDirection.getYTransmit() * App.tileHeight * delta / 4);
             flower.getSprite().draw(MainGradle.getInstance().getBatch());
         }
+        if (heart != null) {
+            heart.getSprite().setY(heart.getSprite().getY() + App.tileHeight * delta / 5);
+            heart.getSprite().draw(MainGradle.getInstance().getBatch());
+            ((AnimatedSprite) heart.getSprite()).update(delta);
+        }
     }
 
     private boolean isStructureInBond(Structure structure) {
@@ -402,5 +408,26 @@ public class WorldController {
                 flower = null;
             }
         }, 2);
+    }
+
+    public void drawHeart() {
+        heart = new SpriteHolder(new AnimatedSprite(new Animation<>(0.25f, GameAsset.BEATING_HEARTS[0][4],
+            GameAsset.BEATING_HEARTS[0][3], GameAsset.BEATING_HEARTS[0][2], GameAsset.BEATING_HEARTS[0][1],
+            GameAsset.BEATING_HEARTS[0][0], GameAsset.BEATING_HEARTS[0][1], GameAsset.BEATING_HEARTS[0][2],
+            GameAsset.BEATING_HEARTS[0][3])), new Tuple<>(0f,0f));
+        heart.getSprite().setSize(App.tileWidth/2f, App.tileHeight/2f);
+        Animation<Float> scale = new Animation<>(0.1f, 0.3f, 0.4f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f, 0.9f, 1f);
+        ((AnimatedSprite) heart.getSprite()).setScaleAnimation(scale);
+        ((AnimatedSprite) heart.getSprite()).setScaleLooping(false);
+        Player player = App.getInstance().getCurrentGame().getCurrentPlayer();
+        heart.getSprite().setPosition(
+            (heart.getOffset().getX() + player.getTiles().get(0).getX()) * App.tileWidth,
+            (heart.getOffset().getY() + player.getTiles().get(0).getY()) * App.tileHeight);
+        Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+                heart = null;
+            }
+        }, 5);
     }
 }

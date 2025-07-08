@@ -316,6 +316,12 @@ public class RelationService {
         if (player.getUser().getGender().equals(Gender.MALE)) {
             return new Response("find a girl please!");
         }
+        if (currentPlayer.getCouple() != null) {
+            return new Response("You are already engaged!");
+        }
+        if (player.getCouple() != null) {
+            return new Response("She's engaged, " + player.getCouple().getName() + " would be mad at you.");
+        }
         Friendship friendShipBetweenTwoActors = getFriendShipBetweenTwoActors(player);
 //        if (friendShipBetweenTwoActors.getFriendShipLevel() < 3) {
 //            return new Response("you are not in that level of friendship");
@@ -347,7 +353,7 @@ public class RelationService {
         if (!accept) {
             friendShipBetweenTwoActors.setFriendShipLevel(0);
             player.setDaysOfSadness(7);
-            return new Response("reject marriage to " + player.getUser().getUsername());
+            return new Response("reject marriage to " + player.getUser().getUsername(), true);
         }
 
         // Use Iterator to safely remove items during iteration
@@ -377,9 +383,9 @@ public class RelationService {
         Account wifeAccount = currentPlayer.getAccount();
         Account husbandAccount = player.getAccount();
         husbandAccount.setGolds(husbandAccount.getGolds() + wifeAccount.getGolds());
-        wifeAccount = husbandAccount;
+        currentPlayer.setAccount(husbandAccount);
 
-        return new Response("Happy accepting marriage ask");
+        return new Response("Happy accepting marriage ask", true);
     }
 
     public Response meetNpc(NPC npc) {
