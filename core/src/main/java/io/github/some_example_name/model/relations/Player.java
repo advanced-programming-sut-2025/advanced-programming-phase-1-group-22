@@ -52,7 +52,7 @@ public class Player extends Actor implements JsonPreparable {
 	private Buff buff;
 	private Ability buffAbility;
     private Direction direction = Direction.SOUTH;
-    private boolean dirChanged = true;
+    private boolean dirChanged = false;
 	private Map<Ability, Integer> abilities = new HashMap<>();
 	private Account account = new Account();
 	private List<ShippingBin> shippingBinList = new ArrayList<>();
@@ -120,8 +120,9 @@ public class Player extends Actor implements JsonPreparable {
 
     public void setPlayerType(PlayerType playerType) {
         this.playerType = playerType;
-        sprites.add(new SpriteHolder(playerType.getWalking(Direction.SOUTH), new Tuple<>(0f, 0f)));
-        this.sprites.getFirst().setSize((float) App.tileWidth, (float) (App.tileHeight * 1.5));
+        sprites.add(new SpriteHolder(playerType.getLazy(Direction.SOUTH), new Tuple<>(0f, 0f)));
+        sprites.getFirst().setSize((float) App.tileWidth, (float) (App.tileHeight * 1.5));
+        sprites.getFirst().setChanged(true);
     }
 
     public void faint() {
@@ -387,6 +388,10 @@ public class Player extends Actor implements JsonPreparable {
             this.direction != direction) dirChanged = true;
         if (!isFainted) ((AnimatedSprite) this.sprites.get(0).getSprite()).setLooping(true);
         this.direction = direction;
+    }
+    public void setLazyDirection(Direction direction) {
+        this.direction = direction;
+        this.sprites.getFirst().setSprite(playerType.getLazy(direction));
     }
 
     @Override

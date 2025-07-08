@@ -67,15 +67,19 @@ public enum PlayerType {
         return null;
     }
 
-    public TextureRegion getLazy() {
-        return miniTextures[this.miniOffsetY][0];
-    }
-
     public AnimatedSprite getWalking(Direction direction) {
         Animation<TextureRegion> animation = new Animation<>(0.1f,
             miniTextures[miniOffsetY + directions.get(direction)][1], miniTextures[miniOffsetY + directions.get(direction)][2],
-            miniTextures[miniOffsetY + directions.get(direction)][3], miniTextures[miniOffsetY +  + directions.get(direction)][0]);
+            miniTextures[miniOffsetY + directions.get(direction)][3], miniTextures[miniOffsetY + directions.get(direction)][0]);
         return new AnimatedSprite(animation);
+    }
+
+    public AnimatedSprite getLazy(Direction direction) {
+        Animation<TextureRegion> animation = new Animation<>(0.1f,
+            miniTextures[miniOffsetY + directions.get(direction)][0]);
+        AnimatedSprite x = new AnimatedSprite(animation);
+        x.setLooping(false);
+        return x;
     }
 
     public AnimatedSprite getFainting() {

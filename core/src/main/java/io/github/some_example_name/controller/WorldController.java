@@ -341,6 +341,14 @@ public class WorldController {
                     structure.getSprite().draw(MainGradle.getInstance().getBatch());
                 }
             }
+            if (structure.getSprites() != null) {
+                for (SpriteHolder sprite : structure.getSprites()) {
+                    sprite.getSprite().setPosition(
+                        (sprite.getOffset().getX() + structure.getTiles().get(0).getX()) * App.tileWidth,
+                        (sprite.getOffset().getY() + structure.getTiles().get(0).getY()) * App.tileHeight);
+                    sprite.getSprite().draw(MainGradle.getInstance().getBatch());
+                }
+            }
         }
     }
 

@@ -38,4 +38,8 @@ public enum Direction {
         }
         return null;
     }
+
+    public Direction reverse() {
+        return Direction.getByXAndY(-xTransmit, -yTransmit);
+    }
 }

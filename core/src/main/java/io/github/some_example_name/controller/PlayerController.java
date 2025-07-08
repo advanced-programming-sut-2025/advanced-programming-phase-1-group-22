@@ -45,9 +45,6 @@ public class PlayerController {
         if (playerSprite instanceof AnimatedSprite) {
             ((AnimatedSprite) playerSprite).update(delta);
         }
-        playerSprite.setPosition(currentPlayer.getTiles().get(0).getX() * App.tileWidth,
-            currentPlayer.getTiles().get(0).getY() * App.tileHeight);
-        playerSprite.draw(MainGradle.getInstance().getBatch());
         if (GameView.captureInput && !GameView.positionChoosing) {
             handlePlayerMovement(currentPlayer);
             handleInputs();
