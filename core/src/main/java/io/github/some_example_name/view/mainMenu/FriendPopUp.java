@@ -25,7 +25,7 @@ import lombok.Setter;
 import java.util.Collections;
 
 @Setter
-public class FriendPopUp extends PopUp { //TODO marriage reject/accept
+public class FriendPopUp extends PopUp {
     private Player player;
     private Window window;
 
@@ -60,7 +60,8 @@ public class FriendPopUp extends PopUp { //TODO marriage reject/accept
         info.add(flower).colspan(2).expandX().row();
         info.add(hug).colspan(2).expandX().row();
         if (App.getInstance().getCurrentGame().getCurrentPlayer().getUser().getGender() == Gender.MALE &&
-            player.getUser().getGender() == Gender.FEMALE) {
+            player.getUser().getGender() == Gender.FEMALE &&
+            App.getInstance().getCurrentGame().getCurrentPlayer().getCouple() == null) {
             info.add(marry).colspan(2).expandX().row();
         }
         hug.addListener(new InputListener() {
@@ -121,7 +122,7 @@ public class FriendPopUp extends PopUp { //TODO marriage reject/accept
     private void handleAskMarriage(Player player) {
         Player currentPlayer = App.getInstance().getCurrentGame().getCurrentPlayer();
         Tile origin = currentPlayer.getTiles().getFirst();
-        Tile dest = App.getInstance().getCurrentGame().tiles[player.getTiles().getFirst().getX()][player.getTiles().getFirst().getY() + 2];
+        Tile dest = App.getInstance().getCurrentGame().tiles[player.getTiles().getFirst().getX()][player.getTiles().getFirst().getY() - 1];
         currentPlayer.getTiles().clear();
         currentPlayer.getTiles().add(dest);
         Direction direction = initialHandle(player, RelationService.getInstance().marry(player.getUser().getUsername(), "Wedding Ring"));
@@ -135,9 +136,20 @@ public class FriendPopUp extends PopUp { //TODO marriage reject/accept
             @Override
             public void run() {
                 currentPlayer.setProposal();
-                GameView.captureInput = true;
             }
         }, 0.5f);
+        Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+                do {
+                    getGameService().nextTurn();
+                } while (player != App.getInstance().getCurrentGame().getCurrentPlayer());
+                DoYouMarryMePopUp doYouMarryMePopUp = new DoYouMarryMePopUp();
+                doYouMarryMePopUp.setPlayer(currentPlayer);
+                doYouMarryMePopUp.setOrigin(origin);
+                doYouMarryMePopUp.createMenu(stage, skin, getController());
+            }
+        }, 1);
     }
 
     private Direction initialHandle(Player player, Response resp) {

@@ -401,7 +401,7 @@ public class Player extends Actor implements JsonPreparable {
     }
 
     public void setProposal() {
-        this.direction = Direction.SOUTH;
+        this.direction = Direction.NORTH;
         this.sprites.getFirst().setSprite(playerType.getProposal());
     }
 }

@@ -1686,6 +1686,8 @@ public class GameAsset {
     public static final Texture WHITE_BOW = new Texture("Hat/White_Bow.png");
     public static final Texture WHITE_TURBAN = new Texture("Hat/White_Turban.png");
     public static final Texture WITCH_HAT = new Texture("Hat/Witch_Hat.png");
+    public static final Texture BEATING_HEART = new Texture("Heart/Beating_Heart.png");
+    public static final TextureRegion[][] BEATING_HEARTS = TextureRegion.split(BEATING_HEART, 157, 159);
     public static final Texture EIGHT_HEARTS = new Texture("Heart/Eight_Hearts.png");
     public static final Texture ELEVEN_HEARTS = new Texture("Heart/Eleven_Hearts.png");
     public static final Texture FIVE_HEARTS = new Texture("Heart/Five_Hearts.png");
