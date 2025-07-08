@@ -18,7 +18,7 @@ public class AccountMenuController extends MenuController {
         String username = params[0];
         String password = params[1];
         String stayedLoggedIn = params.length > 2 ? params[2] : null;
-        return accountService.loginUser(username, password, stayedLoggedIn);
+        return Response.empty();
     }
 
     public Response registerUser(String... params) {
