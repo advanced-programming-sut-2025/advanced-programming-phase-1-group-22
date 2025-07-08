@@ -10,6 +10,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import io.github.some_example_name.controller.mainMenu.StartGameMenuController;
 import io.github.some_example_name.utils.GameAsset;
 import io.github.some_example_name.view.GameView;
+import io.github.some_example_name.view.mainMenu.FirstMenu;
 import io.github.some_example_name.view.mainMenu.StartGameMenu;
 import lombok.Getter;
 
@@ -41,7 +42,8 @@ public class MainGradle extends Game {
 
     public void initialMenu() {
         GameView.captureInput = true;
-        instance.setScreen(new StartGameMenu(GameAsset.SKIN_MENU, 0));
+      //  instance.setScreen(new StartGameMenu(GameAsset.SKIN_MENU, 0));
+        instance.setScreen(new FirstMenu(GameAsset.SKIN_MENU));
     }
 
     @Override

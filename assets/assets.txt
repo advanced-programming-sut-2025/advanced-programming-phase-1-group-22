@@ -3000,6 +3000,7 @@ energyBarEmpty.jpg
 harvey.png
 lia.png
 lia_Icon.png
+menu_bg.png
 robin.png
 sebastian.png
 skin/craftacular-ui.atlas

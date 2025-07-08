@@ -29,7 +29,7 @@ public class AccountMenuController extends MenuController {
         String email = params[4];
         String gender = params[5];
         UserDto dto = new UserDto(username, password, passwordConfirm, nickName, email, gender);
-        return accountService.registerUser(dto);
+        return Response.empty();
     }
 
     public Response registerUserRandomPass(String... params) {
@@ -38,7 +38,7 @@ public class AccountMenuController extends MenuController {
         String email = params[2];
         String gender = params[3];
         UserDto user = UserDto.builder().username(username).nickName(nickName).email(email).gender(gender).build();
-        return accountService.registerUserWithRandomPass(user);
+        return Response.empty();
     }
 
     public Response changeUserName(String... params) {
