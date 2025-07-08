@@ -206,37 +206,25 @@ public class AccountService {
 //        return new Response("answer is not correct");
 //    }
 
-    public Response forgetPassword(String username) {
-//        if (Session.getCurrentUser() == null) {
-//            return new Response("you are not logged in");
-//        }
-//        if (!Session.getCurrentUser().getUsername().equals(username)) {
-//            return new Response("invalid username");
-//        }
-        Random random = new Random();
-        int randQuestion = random.nextInt(GenerateQuestion.values().length);
-        GenerateQuestion question = GenerateQuestion.values()[randQuestion];
-        viewRender.showResponse(new Response(question.getQuestion()));
-        Response response = viewRender.getResponse();
-        if (!response.message().equals(question.getAnswer())) {
-            return new Response("answer is not correct");
+    public Response forgetPassword(String username, String answer, String newPassword) {
+        Optional<User> user = userRepository.findByUsername(username);
+        if (user.isEmpty()) {
+            return new Response("User not found");
         }
-        viewRender.showResponse(new Response("Dou you want to enter new password or we generate a password? (1):(2)", true));
-        Response response1 = viewRender.getResponse();
-        if (response1.message().equals("1")) {
-            viewRender.showResponse(new Response("enter new password", true));
-            response1 = viewRender.getResponse();
-            User user = (User) userRepository.findByUsername(username).get();
-            Session.setCurrentUser(user);
-            return changePassword(response1.message(), Session.getCurrentUser().getPassword());
-        } else if (response1.message().equals("2")) {
-            String newPassword = GeneratePassword.generatePassword();
-            viewRender.showResponse(new Response("your password is : " + newPassword, true));
-            User user = (User) userRepository.findByUsername(username).get();
-            Session.setCurrentUser(user);
-            return changePassword(newPassword, Session.getCurrentUser().getPassword());
+        User currentUser = user.get();
+        if (!currentUser.getAnswer().equals(answer)) {
+            return new Response("Your Answer is wrong");
         }
-        return new Response("invalid input!");
+        String oldPassword = currentUser.getPassword();
+        if (!UserCommands.STRONG_PASSWORD.matches(newPassword)) {
+            return new Response("invalid new password");
+        }
+        if (newPassword.equals(oldPassword)) {
+            return new Response("your new password is the same");
+        }
+        userRepository.changePassword(currentUser.getUsername(), newPassword);
+        currentUser.setPassword(newPassword);
+        return new Response("password changed successfully", true);
     }
 
     public Response switchMenu(String menu) {

@@ -1,6 +1,8 @@
 package io.github.some_example_name.repository;
 
 import io.github.some_example_name.model.User;
+import io.github.some_example_name.model.enums.Gender;
+import io.github.some_example_name.model.enums.SecurityQuestion;
 
 import java.io.*;
 import java.util.*;
@@ -112,7 +114,9 @@ public class UserRepo implements UserRepository {
 		return Optional.empty();
 	}
 	public String toCSV(User user) {
-		return user.getUsername() + "," + user.getPassword() + "," + user.getEmail();
+		return user.getUsername() + "," + user.getPassword() + "," + user.getEmail() + "," + user.getNickname() + ","
+            + user.getGender() + "," + user.getSecurityQuestion().getQuestion() + "," + user.getAnswer() + "," +
+            user.getHighestMoneyEarned() + "," + user.getNumberOfPlayedGames() + "," + user.getIsPlaying();
 	}
 
 	public static User fromCSV(String line) {
@@ -121,6 +125,13 @@ public class UserRepo implements UserRepository {
 		user.setUsername(parts[0]);
 		user.setPassword(parts[1]);
 		user.setEmail(parts[2]);
+        user.setNickname(parts[3]);
+        user.setGender(Gender.valueOf(parts[4]));
+        user.setSecurityQuestion(SecurityQuestion.getFromQuestion(parts[5]));
+        user.setAnswer(parts[6]);
+        user.setHighestMoneyEarned(Integer.parseInt(parts[7]));
+        user.setNumberOfPlayedGames(Integer.parseInt(parts[8]));
+        user.setIsPlaying(parts[9]);
 		return user;
 	}
 }

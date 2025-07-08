@@ -1,9 +1,14 @@
 package io.github.some_example_name.view.mainMenu;
 
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Array;
 import io.github.some_example_name.controller.mainMenu.LoginController;
+import io.github.some_example_name.model.enums.SecurityQuestion;
+import io.github.some_example_name.utils.GameAsset;
 import io.github.some_example_name.variables.Session;
 import lombok.Getter;
 
@@ -15,6 +20,14 @@ public class Login extends Menu {
     private final CheckBox stayLoggedIn;
     private final TextButton login;
     private final TextButton back;
+    private final TextButton forgetPassword;
+    private Dialog forgetPasswordDialog;
+    private final TextField answer;
+    private final TextField usernameForDialog;
+    private final TextField newPassword;
+    private final TextButton randomPassword;
+    private final TextButton backFromForgetPasswordWindow;
+    private final TextButton confirm;
 
 
     public Login(Skin skin) {
@@ -25,6 +38,13 @@ public class Login extends Menu {
         this.stayLoggedIn = new CheckBox("Stay logged in", skin);
         this.login = new TextButton("Login", skin);
         this.back = new TextButton("Back", skin);
+        this.forgetPassword = new TextButton("Forget Password", skin);
+        this.usernameForDialog = new TextField("", skin);
+        this.answer = new TextField("", skin);
+        this.newPassword = new TextField("", skin);
+        this.backFromForgetPasswordWindow = new TextButton("Back", skin);
+        this.confirm = new TextButton("Confirm", skin);
+        this.randomPassword = new TextButton("Random Password", skin);
     }
 
     @Override
@@ -32,7 +52,14 @@ public class Login extends Menu {
         this.table.add(new Label("Username: ", skin)).padRight(10);
         this.table.add(username).width(400).row();
         this.table.add(new Label("Password: ", skin)).padRight(10);
-        this.table.add(password).width(400).row();
+        this.table.add(password).width(400).padRight(10);
+        this.forgetPassword.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                forgetPasswordDialog.show(stage);
+            }
+        });
+        this.table.add(forgetPassword).width(400).row();
         this.stayLoggedIn.setChecked(Session.isStayedLoggedIn());
         this.stayLoggedIn.addListener(e -> {
             Session.setStayedLoggedIn(stayLoggedIn.isChecked());
@@ -55,5 +82,45 @@ public class Login extends Menu {
             }
         });
         this.table.add(back).width(400).row();
+        createForgetPasswordWindow();
+    }
+
+    private void createForgetPasswordWindow() {
+        forgetPasswordDialog = new Dialog("Security Question", skin);
+        Table forgetPasswordTable = new Table();
+        forgetPasswordTable.defaults().pad(10);
+
+        forgetPasswordTable.add(new Label("Username: ", skin)).padRight(10);
+        forgetPasswordTable.add(usernameForDialog).width(400).row();
+        forgetPasswordTable.add(new Label("Answer: ", skin)).padRight(10);
+        forgetPasswordTable.add(answer).width(400).row();
+        forgetPasswordTable.add(new Label("New Password: ", skin)).padRight(10);
+        forgetPasswordTable.add(newPassword).width(400).padRight(10);
+        this.randomPassword.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                newPassword.setText(controller.getRandomPassword());
+            }
+        });
+        forgetPasswordTable.add(randomPassword).width(400).row();
+
+        forgetPasswordDialog.getContentTable().add(forgetPasswordTable).pad(20);
+        forgetPasswordDialog.getButtonTable().defaults().pad(10);
+        this.confirm.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (controller.forgetPassword()) {
+                    forgetPasswordDialog.hide();
+                }
+            }
+        });
+        forgetPasswordDialog.button(confirm);
+        this.backFromForgetPasswordWindow.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                forgetPasswordDialog.hide();
+            }
+        });
+        forgetPasswordDialog.button(backFromForgetPasswordWindow);
     }
 }

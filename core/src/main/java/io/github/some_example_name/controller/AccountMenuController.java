@@ -85,6 +85,6 @@ public class AccountMenuController extends MenuController {
 
     public Response forgetPassword(String... params) {
         String username = params[0];
-        return accountService.forgetPassword(username);
+        return Response.empty();
     }
 }
