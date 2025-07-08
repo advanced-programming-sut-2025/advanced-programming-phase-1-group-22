@@ -1,5 +1,6 @@
 package io.github.some_example_name.model;
 
+import io.github.some_example_name.model.enums.SecurityQuestion;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,16 +23,20 @@ public class User {
     private String email;
     private String nickname;
     private Gender gender;
+    private SecurityQuestion securityQuestion;
+    private String answer;
     private Integer highestMoneyEarned = 0;
     private Integer numberOfPlayedGames = 0;
     private String isPlaying;
 
-    public User(String username, String password, String email, String nickname, Gender gender) {
+    public User(String username, String password, String email, String nickname, Gender gender,SecurityQuestion securityQuestion,String answer) {
         this.username = username;
         this.password = password;
         this.email = email;
         this.nickname = nickname;
         this.gender = gender;
+        this.securityQuestion = securityQuestion;
+        this.answer = answer;
     }
 
     @Override

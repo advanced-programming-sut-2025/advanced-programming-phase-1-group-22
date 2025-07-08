@@ -4,6 +4,7 @@ import io.github.some_example_name.command.UserCommands;
 import io.github.some_example_name.model.User;
 import io.github.some_example_name.model.dto.UserDto;
 import io.github.some_example_name.model.enums.Gender;
+import io.github.some_example_name.model.enums.SecurityQuestion;
 import io.github.some_example_name.model.records.Response;
 import io.github.some_example_name.repository.UserRepository;
 import io.github.some_example_name.utils.GeneratePassword;
@@ -32,22 +33,15 @@ public class AccountService {
         this.passwordHasher = passwordHasher;
     }
 
-    public Response registerUser(UserDto dto) {
-        Response response = null;
+    public Response controlBeforeQuestion(UserDto dto) {
+        Response response;
         String username = dto.username();
         String password = dto.password();
         String email = dto.email();
-        String nickName = dto.nickName();
-        String gender = dto.gender();
         String passwordRepeat = dto.passwordConfirmation();
         Optional<User> byUsername = userRepository.findByUsername(username);
         if (byUsername.isPresent()) {
-            viewRender.showResponse(new Response("does this username is ok (yes):(no) ? " + username + "-", true));
-            Response response1 = viewRender.getResponse();
-            if (response1.message().equals("no")) {
-                return Response.empty();
-            }
-
+            return new Response("this username already taken. try " + username + "-" + "or something else");
         }
         if (!USERNAME.matches(username)) {
             return new Response("invalid username");
@@ -59,16 +53,26 @@ public class AccountService {
             return new Response("weak password");
         }
         if (!password.equals(passwordRepeat)) {
-            viewRender.showResponse(new Response("enter password again or be back in register menu", true));
-            Response response1 = viewRender.getResponse();
-            if (!UserCommands.PASSWORD.matches(response1.message())) {
-                return Response.empty();
-            }
+            return new Response("confirm password is not correct");
         }
         if (!UserCommands.EMAIL.matches(email)) {
             return new Response("invalid email");
         }
-        String hashedPassword = null;
+        response = new Response("Ok", true);
+        return response;
+    }
+
+    public Response register(UserDto dto, SecurityQuestion securityQuestion, String answer, String confirmAnswer) {
+        Response response = null;
+        String username = dto.username();
+        String password = dto.password();
+        String email = dto.email();
+        String nickName = dto.nickName();
+        String gender = dto.gender();
+        if (!answer.equals(confirmAnswer)) {
+            return new Response("confirm answer is wrong");
+        }
+        String hashedPassword;
         try {
             hashedPassword = passwordHasher.hashPassword(password);
         } catch (NoSuchAlgorithmException e) {
@@ -77,10 +81,11 @@ public class AccountService {
         if (hashedPassword != null) {
             password = hashedPassword;
         }
-        Optional<User> user = userRepository.save(new User(username, password, email, nickName, Gender.valueOf(gender)));
+
+        Optional<User> user = userRepository.save(new User(username, password, email, nickName, Gender.valueOf(gender), securityQuestion, answer));
 
         if (user.isPresent()) {
-            response = new Response("success");
+            response = new Response("success", true);
             Session.setCurrentUser(user.get());
             Session.getCurrentUser().setId(user.get().getId());
             Session.setCurrentMenu(Menu.MAIN);
@@ -95,8 +100,7 @@ public class AccountService {
             return new Response("User not found");
         }
         try {
-            if (!passwordHasher.verifyPassword(password, user.get().getPassword()) && !user.get().getPassword().equals(password))
-            {
+            if (!passwordHasher.verifyPassword(password, user.get().getPassword()) && !user.get().getPassword().equals(password)) {
                 return new Response("Wrong password");
             }
         } catch (NoSuchAlgorithmException e) {
@@ -269,28 +273,5 @@ public class AccountService {
         Session.setCurrentUser(null);
         Session.setCurrentMenu(Menu.LOGIN);
         return new Response("logout successfully");
-    }
-
-    public Response registerUserWithRandomPass(UserDto user) {
-        Random random = new Random();
-        int randQuestion = random.nextInt(GenerateQuestion.values().length);
-        GenerateQuestion question = GenerateQuestion.values()[randQuestion];
-        viewRender.showResponse(new Response(question.getQuestion()));
-        Response response = viewRender.getResponse();
-        if (!response.message().equals(question.getAnswer())) {
-            return new Response("answer is not correct");
-        }
-        String password = GeneratePassword.generatePassword();
-        viewRender.showResponse(new Response("Do you want to set {%s} as your password? (yes):(no)".formatted(password), true));
-        Response response1 = viewRender.getResponse();
-        if (response1.message().equals("no")) {
-            return Response.empty();
-        }
-        if (response1.message().equals("yes")) {
-            UserDto build = UserDto.builder().username(user.username()).password(password).email(user.email())
-                    .nickName(user.nickName()).gender(user.gender()).build();
-            return registerUser(build);
-        }
-        return new Response("invalid input!");
     }
 }

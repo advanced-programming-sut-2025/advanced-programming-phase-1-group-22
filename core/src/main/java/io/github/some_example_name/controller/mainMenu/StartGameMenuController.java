@@ -6,6 +6,7 @@ import io.github.some_example_name.model.FarmType;
 import io.github.some_example_name.model.PlayerType;
 import io.github.some_example_name.model.User;
 import io.github.some_example_name.model.enums.Gender;
+import io.github.some_example_name.model.enums.SecurityQuestion;
 import io.github.some_example_name.model.relations.Player;
 import io.github.some_example_name.service.GameInitService;
 import io.github.some_example_name.utils.App;
@@ -37,7 +38,7 @@ public class StartGameMenuController {
                         if (Session.getCurrentUser().getIsPlaying() == null) {
                             ArrayList<User> users = new ArrayList<>();
                             users.add(Session.getCurrentUser());
-                            users.add(new User("Clara1234", "noPass", "a@b.c", "Claire", Gender.FEMALE));
+                            users.add(new User("Clara1234", "noPass", "a@b.c", "Claire", Gender.FEMALE, SecurityQuestion.QUESTION1,"snf"));
                             InitialGame initialGame = new InitialGame();
                             initialGame.initial(users);
                             view.setState(1);
