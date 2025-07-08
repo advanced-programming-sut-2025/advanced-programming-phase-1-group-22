@@ -16,7 +16,7 @@ import java.util.Objects;
 public class RegisterMenuController {
     private final RegisterMenu view;
     // EntityManager em = HibernateUtil.getEntityManagerFactory().createEntityManager();
-    private final AccountService service = new AccountService(new UserRepo(), new ViewRender(), new PasswordHasher());
+    private final AccountService service = new AccountService(new UserRepo(), new PasswordHasher());
 
     public RegisterMenuController(RegisterMenu view) {
         this.view = view;

@@ -12,7 +12,7 @@ import io.github.some_example_name.view.ViewRender;
 
 public class AccountMenuController extends MenuController {
    // EntityManager em = HibernateUtil.getEntityManagerFactory().createEntityManager();
-    private final AccountService accountService = new AccountService(new UserRepo(),new ViewRender(),new PasswordHasher());
+    private final AccountService accountService = new AccountService(new UserRepo(),new PasswordHasher());
 
     public Response loginUser(String... params) {
         String username = params[0];

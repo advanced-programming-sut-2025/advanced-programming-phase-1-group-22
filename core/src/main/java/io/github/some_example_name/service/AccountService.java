@@ -23,13 +23,11 @@ import static io.github.some_example_name.command.UserCommands.USERNAME;
 
 public class AccountService {
     private static AccountService instance;
-    private final ViewRender viewRender;
     private final UserRepository<User> userRepository;
     private final PasswordHasher passwordHasher;
 
-    public AccountService(UserRepository<User> userRepository, ViewRender viewRender, PasswordHasher passwordHasher) {
+    public AccountService(UserRepository<User> userRepository, PasswordHasher passwordHasher) {
         this.userRepository = userRepository;
-        this.viewRender = viewRender;
         this.passwordHasher = passwordHasher;
     }
 
@@ -112,27 +110,24 @@ public class AccountService {
         return response;
     }
 
-
     public Response changeUsername(String username) {
-        if (Session.getCurrentUser() == null) {
-            return new Response("you are not logged in");
-        }
         if (Session.getCurrentUser().getUsername().equals(username)) {
-            return new Response("Username is already taken");
+            return new Response("you already have this username");
+        }
+        Optional<User> byUsername = userRepository.findByUsername(username);
+        if (byUsername.isPresent()) {
+            return new Response("this username already taken. try " + username + "-" + "or something else");
         }
         if (!USERNAME.matches(username)) {
             return new Response("invalid username");
         }
         userRepository.changeUsername(Session.getCurrentUser().getUsername(), username);
         Session.getCurrentUser().setUsername(username);
-        return new Response("username changed successfully");
+        return new Response("username changed successfully", true);
 
     }
 
     public Response changePassword(String newPassword, String oldPassword) {
-        if (Session.getCurrentUser() == null) {
-            return new Response("you are not logged in");
-        }
         if (!Session.getCurrentUser().getPassword().equals(oldPassword)) {
             return new Response("your current password is not this: " + oldPassword);
         }
@@ -144,13 +139,10 @@ public class AccountService {
         }
         userRepository.changePassword(Session.getCurrentUser().getUsername(), newPassword);
         Session.getCurrentUser().setPassword(newPassword);
-        return new Response("password changed successfully");
+        return new Response("password changed successfully", true);
     }
 
     public Response changeEmail(String email) {
-        if (Session.getCurrentUser() == null) {
-            return new Response("you are not logged in");
-        }
         if (Session.getCurrentUser().getEmail().equals(email)) {
             return new Response("your email is already taken");
         }
@@ -159,19 +151,16 @@ public class AccountService {
         }
         userRepository.changeEmail(Session.getCurrentUser().getUsername(), email);
         Session.getCurrentUser().setEmail(email);
-        return new Response("email changed successfully");
+        return new Response("email changed successfully", true);
     }
 
     public Response changeNickName(String nickName) {
-        if (Session.getCurrentUser() == null) {
-            return new Response("you are not logged in");
-        }
         if (Session.getCurrentUser().getNickname().equals(nickName)) {
             return new Response("your new nickname is already taken");
         }
         userRepository.changeNickname(Session.getCurrentUser().getUsername(), nickName);
         Session.getCurrentUser().setNickname(nickName);
-        return new Response("nickname changed successfully");
+        return new Response("nickname changed successfully", true);
     }
 
     public Response getUserInfo() {
@@ -180,31 +169,6 @@ public class AccountService {
         }
         return new Response(Session.getCurrentUser().toString());
     }
-
-//    public Response pickQuestion(QuestionDto questionDto) {
-//        String questionNumber = questionDto.questionNumber();
-//        String answer = questionDto.answer();
-//        String answerConfirm = questionDto.answerConfirm();
-//        if (answerConfirm.equals(answer)) {
-//            return new Response("response and repeated response should are not same");
-//        }
-//        if (GenerateQuestion.values()[Integer.parseInt(questionNumber) - 1].getAnswer().equals(answer)) {
-//            String password = GeneratePassword.generatePassword();
-//            viewRender.showResponse(new Response("do you like this password %s ? (yes):(no)" + password, true));
-//            Response response1 = viewRender.getResponse();
-//            if (response1.message().equals("no")) {
-//                viewRender.showResponse(new Response("do you want to see another password ? (yes):(no)", true));
-//                Response response2 = viewRender.getResponse();
-//                while (!response2.message().equals("no")) {
-//                    password = GeneratePassword.generatePassword();
-//                    viewRender.showResponse(new Response("do you like this password %s? (yes):(no)" + password, true));
-//                    response2 = viewRender.getResponse();
-//                }
-//            }
-//
-//        }
-//        return new Response("answer is not correct");
-//    }
 
     public Response forgetPassword(String username, String answer, String newPassword) {
         Optional<User> user = userRepository.findByUsername(username);

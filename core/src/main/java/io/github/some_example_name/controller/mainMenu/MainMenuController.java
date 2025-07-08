@@ -13,7 +13,7 @@ import io.github.some_example_name.view.ViewRender;
 
 public class MainMenuController extends MenuController {
    // EntityManager em = HibernateUtil.getEntityManagerFactory().createEntityManager();
-    private final AccountService accountService = new AccountService(new UserRepo(),new ViewRender(),new PasswordHasher());
+    private final AccountService accountService = new AccountService(new UserRepo(),new PasswordHasher());
     private final GameInitService gameInitService = GameInitService.getInstance();
 
     public Response logout(String[] params) {

@@ -9,7 +9,7 @@ import io.github.some_example_name.view.mainMenu.Main;
 public class MainController {
     private final Main view;
     // EntityManager em = HibernateUtil.getEntityManagerFactory().createEntityManager();
-    private final AccountService service = new AccountService(new UserRepo(), new ViewRender(), new PasswordHasher());
+    private final AccountService service = new AccountService(new UserRepo(), new PasswordHasher());
 
     public MainController(Main view) {
         this.view = view;
