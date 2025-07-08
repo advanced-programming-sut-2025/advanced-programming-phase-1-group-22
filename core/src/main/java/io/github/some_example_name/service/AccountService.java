@@ -93,8 +93,8 @@ public class AccountService {
         return response;
     }
 
-    public Response loginUser(String username, String password, String stayedLoggedIn) {
-        Response response = null;
+    public Response loginUser(String username, String password) {
+        Response response;
         Optional<User> user = userRepository.findByUsername(username);
         if (user.isEmpty()) {
             return new Response("User not found");
@@ -107,10 +107,7 @@ public class AccountService {
             throw new RuntimeException(e);
         }
         Session.setCurrentUser(user.get());
-        response = new Response("Logged in successfully");
-        if (stayedLoggedIn != null && stayedLoggedIn.contains("stay-logged-in")) {
-            Session.setStayedLoggedIn(true);
-        }
+        response = new Response("Logged in successfully", true);
         Session.setCurrentMenu(Menu.MAIN);
         return response;
     }
