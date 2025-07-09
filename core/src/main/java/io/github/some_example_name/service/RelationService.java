@@ -50,7 +50,7 @@ public class RelationService {
 //            return new Response("You can't talk to the other player");
 //        }
         Friendship friendship = getFriendShipBetweenTwoActors(anotherPlayer);
-        friendship.getDialogs().put(message, currentPlayer);
+        friendship.getDialogs().add(new Entry<>(message, currentPlayer));
         if (currentPlayer.getCouple() != null) {
             if (currentPlayer.getCouple().equals(anotherPlayer)) {
                 changeFriendShipLevelUp(friendship, 50);
@@ -66,7 +66,7 @@ public class RelationService {
             NotificationType.TALK,
             currentPlayer
         );
-        return new Response("message sent successfully");
+        return new Response("message sent successfully", true);
     }
 
     public Response talkToAnotherPlayer(Player anotherPlayer, String message) {
@@ -80,7 +80,7 @@ public class RelationService {
 //            return new Response("You can't talk to the other player");
 //        }
         Friendship friendship = getFriendShipBetweenTwoActors(anotherPlayer);
-        friendship.getDialogs().put(message, currentPlayer);
+        friendship.getDialogs().add(new Entry<>(message, currentPlayer));
         if (currentPlayer.getCouple() != null) {
             if (currentPlayer.getCouple().equals(anotherPlayer)) {
                 changeFriendShipLevelUp(friendship, 50);
@@ -93,7 +93,7 @@ public class RelationService {
             new Response("%s called you!".formatted(currentPlayer.getUser().getUsername())),
             NotificationType.TALK, currentPlayer
         );
-        return new Response("message sent successfully");
+        return new Response("message sent successfully", true);
     }
 
 

@@ -7,8 +7,10 @@ import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Timer;
 import io.github.some_example_name.MainGradle;
 import io.github.some_example_name.controller.WorldController;
+import io.github.some_example_name.model.Entry;
 import io.github.some_example_name.model.Salable;
 import io.github.some_example_name.model.records.Response;
 import io.github.some_example_name.model.relations.Dialog;
@@ -30,7 +32,7 @@ public class TalkMenu extends PopUp {
     private Friendship friendship;
     private Player friend;
     private Window window;
-    private float scrollX = 0, scrollY = 0;
+    private Float scrollY;
 
     public void createMenu(Stage stage, Skin skin, WorldController worldController) {
         super.createMenu(stage, skin, worldController);
@@ -66,47 +68,50 @@ public class TalkMenu extends PopUp {
         scrollPane.setScrollingDisabled(false, false);
         scrollPane.setScrollBarPositions(true, true);
         scrollPane.setForceScroll(false, true);
-        scrollPane.setScrollX(scrollX);
-        scrollPane.setScrollY(scrollY);
+        scrollPane.setScrollY(scrollY == null ? 0 : scrollY);
         scrollPane.layout();
         scrollPane.setTouchable(Touchable.enabled);
 
-        inventory.add(new Image(friend.getAvatar())).size(100).padRight(20);
-        inventory.add(new Label(friend.getUser().getNickname(), skin)).colspan(3).width(80).expandX().row();
-        int i = 0;
-        for (Map.Entry<String, io.github.some_example_name.model.Actor> dialog : friendship.getDialogs().entrySet()) {
+        Table otherPlayer = new Table();
+
+        otherPlayer.add(new Image(friend.getAvatar())).size(200).row();
+        otherPlayer.add(new Label(friend.getUser().getNickname(), skin)).width(200).expandX().row();
+        for (Entry<String, io.github.some_example_name.model.Actor> dialog : friendship.getDialogs()) {
             boolean isGifting = dialog.getValue() == currentPlayer;
             Table giftTable = new Table(skin);
-            if (isGifting) giftTable.left();
-            else {
-                inventory.add();
-                inventory.add();
-                giftTable.right();
+            for (String line : wrapString(dialog.getKey(), 20)) {
+                giftTable.add(new Label(line, skin));
+                if (!isGifting) giftTable.right();
+                giftTable.row();
             }
-            for (String line : wrapString(dialog.getKey(), 100)) {
-                giftTable.add(new Label(line, skin)).width(100).expandX().row();
-            }
-            inventory.add(giftTable).colspan(2).expandX();
+            Table rowWrapper = new Table();
+
             if (isGifting) {
-                inventory.add();
-                inventory.add();
+                rowWrapper.add(giftTable).left().expandX();
+                rowWrapper.add();
+            } else {
+                rowWrapper.add();
+                rowWrapper.add(giftTable).right().expandX();
             }
-            inventory.row();
-            i++;
+            inventory.add(rowWrapper).padRight(10).expandX().fillX().row();
         }
 
         ArrayList<Actor> array = new ArrayList<>();
         array.add(window);
         ImageButton exitButton = provideExitButton(array);
 
+
         Table content = new Table();
         content.setFillParent(true);
-        content.add(scrollPane).colspan(2).width(window.getWidth()*0.9f).height(window.getHeight()*0.8f - 100).padBottom(20).padTop(50).row();
+        content.center();
+        content.add(scrollPane).width(window.getWidth() * 0.7f).height(window.getHeight() * 0.8f - 100).padBottom(20).padTop(50);
+        content.add(otherPlayer).width(window.getWidth() * 0.15f).row();
+
 
         TextArea input = new TextArea("", skin);
-        content.add(input).height(window.getHeight()*0.2f).width(window.getWidth() * 0.8f);
+        content.add(input).fillX().height(window.getHeight()*0.1f);
         TextButton send = new TextButton("Send", skin);
-        content.add(send).expandX().row();
+        content.add(send).fillX().height(window.getHeight()*0.1f).row();
 
         window.add(content).fill().pad(10);
         Group group = new Group() {
@@ -129,10 +134,20 @@ public class TalkMenu extends PopUp {
                         Response resp = RelationService.getInstance().talkToAnotherPlayer(friend, message);
                         if (!resp.shouldBeBack()) getController().showResponse(resp);
                         else {
-                            scrollX = scrollPane.getScrollX();
-                            scrollY = scrollPane.getScrollY();
-                            endTask(array, exitButton);
-                            createInventory(skin, menuGroup, stage);
+                            Table giftTable = new Table(skin);
+                            for (String line : wrapString(message, 20)) {
+                                giftTable.add(new Label(line, skin)).row();
+                            }
+                            Table rowWrapper = new Table();
+                            rowWrapper.add(giftTable).left().expandX();
+                            rowWrapper.add();
+                            inventory.add(rowWrapper).expandX().fillX().row();
+                            Timer.schedule(new Timer.Task() {
+                                @Override
+                                public void run() {
+                                    scrollPane.setScrollY(scrollPane.getMaxY());
+                                }
+                            }, 0.2f);
                         }
                     }
                     send.setChecked(false);
@@ -144,5 +159,11 @@ public class TalkMenu extends PopUp {
         group.addActor(window);
         group.addActor(exitButton);
         menuGroup.addActor(group);
+        Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+                scrollPane.setScrollY(scrollY == null ? scrollPane.getMaxY() : Math.max(0, scrollY));
+            }
+        }, 0.2f);
     }
 }
