@@ -2062,8 +2062,10 @@ Inventory/cooking_tab.png
 Inventory/crafting_tab.png
 Inventory/exit.png
 Inventory/map_tab.png
+Inventory/raw.png
 Inventory/skill_tab.png
-Inventory/socail_tab.png
+Inventory/social_icon.png
+Inventory/social_tab.png
 JojaMart_Interior.png
 Jojamart.png
 Marnie's_Ranch_Interior.png

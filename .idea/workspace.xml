@@ -4,36 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d95100ff-6e61-4571-9e87-dcef3d963dba" name="Changes" comment="minor debugging">
+    <list default="true" id="d95100ff-6e61-4571-9e87-dcef3d963dba" name="Changes" comment="cloning objects while gifting and placing on ground">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/reports/problems/problems-report.html" beforeDir="false" afterPath="$PROJECT_DIR$/build/reports/problems/problems-report.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/Inventory/socail_tab.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/assets.txt" beforeDir="false" afterPath="$PROJECT_DIR$/assets/assets.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/build/libs/core-1.0.0.jar" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/libs/core-1.0.0.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/controller/CarryingController.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/controller/CarryingController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/Buff.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/Buff.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/Farm.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/Farm.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/Flower.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/Flower.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/Salable.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/Salable.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/animal/Fish.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/animal/Fish.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/cook/Food.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/cook/Food.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/craft/Craft.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/craft/Craft.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/gameSundry/Sundry.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/gameSundry/Sundry.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/products/AnimalProduct.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/products/AnimalProduct.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/products/Hay.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/products/Hay.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/products/TreesAndFruitsAndSeeds/Fruit.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/products/TreesAndFruitsAndSeeds/Fruit.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/products/TreesAndFruitsAndSeeds/MadeProduct.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/products/TreesAndFruitsAndSeeds/MadeProduct.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/products/TreesAndFruitsAndSeeds/Tree.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/products/TreesAndFruitsAndSeeds/Tree.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/shelter/ShippingBin.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/shelter/ShippingBin.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/source/Crop.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/source/Crop.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/source/Mineral.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/source/Mineral.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/source/MixedSeeds.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/source/MixedSeeds.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/source/Seed.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/source/Seed.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/structure/farmInitialElements/Cottage.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/structure/farmInitialElements/Cottage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/structure/farmInitialElements/GreenHouse.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/structure/farmInitialElements/GreenHouse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/structure/farmInitialElements/HardCodeFarmElements.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/structure/farmInitialElements/HardCodeFarmElements.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/structure/farmInitialElements/Lake.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/structure/farmInitialElements/Lake.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/structure/farmInitialElements/Quarry.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/structure/farmInitialElements/Quarry.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/service/GameService.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/service/GameService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/service/RelationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/service/RelationService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/controller/CameraViewController.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/controller/CameraViewController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/controller/GameViewController.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/controller/GameViewController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/TimeAndDate.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/TimeAndDate.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/utils/GameAsset.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/utils/GameAsset.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lwjgl3/build/resources/main/assets.txt" beforeDir="false" afterPath="$PROJECT_DIR$/lwjgl3/build/resources/main/assets.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -95,27 +75,27 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.Main.executor": "Run",
-    "Gradle.Build Project.executor": "Run",
-    "Gradle.Build Project4.executor": "Run",
-    "Gradle.Project4:core [:core:io.github.some_example_name.lwjgl3.Lwjgl3Launcher.main()].executor": "Run",
-    "Gradle.Project4:lwjgl3 [:lwjgl3:io.github.some_example_name.lwjgl3.Lwjgl3Launcher.main()].executor": "Run",
-    "Gradle.Project:lwjgl3 [:lwjgl3:io.github.some_example_name.lwjgl3.Lwjgl3Launcher.main()].executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "Roham",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "D:/temp/SUT/AP/040302/Project",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.Build Project.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.Build Project4.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.Project4:core [:core:io.github.some_example_name.lwjgl3.Lwjgl3Launcher.main()].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.Project4:lwjgl3 [:lwjgl3:io.github.some_example_name.lwjgl3.Lwjgl3Launcher.main()].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.Project:lwjgl3 [:lwjgl3:io.github.some_example_name.lwjgl3.Lwjgl3Launcher.main()].executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;Roham&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/temp/SUT/AP/040302/Project&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
       <recent name="io.github.some_example_name.model.dto" />
@@ -181,6 +161,7 @@
       <workItem from="1751885384603" duration="27589000" />
       <workItem from="1751922252586" duration="149000" />
       <workItem from="1751971440871" duration="2594000" />
+      <workItem from="1752055053229" duration="4548000" />
     </task>
     <task id="LOCAL-00001" summary="added clock">
       <option name="closed" value="true" />
@@ -486,7 +467,15 @@
       <option name="project" value="LOCAL" />
       <updated>1752016473148</updated>
     </task>
-    <option name="localTasksCounter" value="39" />
+    <task id="LOCAL-00039" summary="cloning objects while gifting and placing on ground">
+      <option name="closed" value="true" />
+      <created>1752018725985</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1752018725985</updated>
+    </task>
+    <option name="localTasksCounter" value="40" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -504,7 +493,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="implementing craft popup" />
     <MESSAGE value="updated assets" />
     <MESSAGE value="merged" />
     <MESSAGE value="adding count label" />
@@ -529,7 +517,8 @@
     <MESSAGE value="implemented responding marriage + animation" />
     <MESSAGE value="uploaded an asset" />
     <MESSAGE value="minor debugging" />
-    <option name="LAST_COMMIT_MESSAGE" value="minor debugging" />
+    <MESSAGE value="cloning objects while gifting and placing on ground" />
+    <option name="LAST_COMMIT_MESSAGE" value="cloning objects while gifting and placing on ground" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -553,6 +542,11 @@
           <url>file://$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/view/mainMenu/FriendPopUp.java</url>
           <line>156</line>
           <option name="timeStamp" value="41" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/service/GameService.java</url>
+          <line>2130</line>
+          <option name="timeStamp" value="43" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

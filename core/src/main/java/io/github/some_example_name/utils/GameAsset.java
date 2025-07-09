@@ -53,7 +53,9 @@ public class GameAsset {
     public static final Texture GREEN_SQUARE = new Texture("Night/Green.png");
     public static final Texture MAP_TAB = new Texture("Inventory/map_tab.png");
     public static final Texture SKILL_TAB = new Texture("Inventory/skill_tab.png");
-    public static final Texture SOCIAL_TAB = new Texture("Inventory/socail_tab.png");
+    public static final Texture SOCIAL_TAB = new Texture("Inventory/social_tab.png");
+    public static final Texture SOCIAL_ICON = new Texture("Inventory/social_icon.png");
+    public static final Texture RAW = new Texture("Inventory/raw.png");
     public static final Texture EXIT_BUTTON = new Texture("Inventory/exit.png");
     public static final Skin SKIN = new Skin(Gdx.files.internal("skin/craftacular-ui.json"));
     public static final Skin SKIN_MENU = new Skin(Gdx.files.internal("skinMenu/pixthulhu-ui.json"));
