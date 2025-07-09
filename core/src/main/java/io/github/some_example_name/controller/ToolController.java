@@ -19,70 +19,92 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ToolController {
-    public void update(){
+    private float animationTime = 0f;
+    private boolean isAnimating = false;
+
+    public void update() {
         Player currentPlayer = App.getInstance().getCurrentGame().getCurrentPlayer();
         Salable carrying = currentPlayer.getCurrentCarrying();
         Tool currentTool;
-        if (carrying instanceof Tool){
+        if (carrying instanceof Tool) {
             currentTool = (Tool) carrying;
-        }else {
+        } else {
             return;
         }
+
+        float baseX = currentPlayer.getTiles().get(0).getX() * App.tileWidth;
+        float baseY = currentPlayer.getTiles().get(0).getY() * App.tileHeight;
+        float offsetY = 0f;
+
+        if (isAnimating) {
+            animationTime += Gdx.graphics.getDeltaTime();
+
+            if (animationTime < 0.1f) {
+                offsetY = -40 * (animationTime / 0.1f);
+            } else if (animationTime < 0.2f) {
+                offsetY = -40 + 40 * ((animationTime - 0.1f) / 0.1f);
+            } else {
+                isAnimating = false;
+            }
+        }
+
         currentTool.getSprite().draw(MainGradle.getInstance().getBatch());
-        currentTool.getSprite().setPosition(currentPlayer.getTiles().get(0).getX() * App.tileWidth,
-            currentPlayer.getTiles().get(0).getY() * App.tileHeight);
+        currentTool.getSprite().setPosition(baseX, baseY + offsetY);
+
         if (GameView.captureInput) {
             handleInput();
         }
     }
 
-    public void handleInput(){
-        if (Gdx.input.isKeyJustPressed(Input.Keys.C) || Gdx.input.justTouched()){
-            handleToolUse(GameView.screenX,GameView.screenY);
+    public void handleInput() {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.C) || Gdx.input.justTouched()) {
+            handleToolUse(GameView.screenX, GameView.screenY);
         }
     }
 
-    public void handleToolRotation(int x, int y){
+    public void handleToolRotation(int x, int y) {
         Player currentPlayer = App.getInstance().getCurrentGame().getCurrentPlayer();
         Salable carrying = currentPlayer.getCurrentCarrying();
         Tool tool;
-        if (carrying instanceof Tool){
+        if (carrying instanceof Tool) {
             tool = (Tool) carrying;
-        }else {
+        } else {
             return;
         }
         Sprite sprite = tool.getSprite();
-        sprite.setRotation(calculateRotation(x,y, sprite.getX(), sprite.getY()));
+        sprite.setRotation(calculateRotation(x, y, sprite.getX(), sprite.getY()));
     }
 
-    public void handleToolUse(int x, int y){
+    public void handleToolUse(int x, int y) {
         Player currentPlayer = App.getInstance().getCurrentGame().getCurrentPlayer();
         Salable carrying = currentPlayer.getCurrentCarrying();
         Tool tool;
-        if (carrying instanceof Tool){
+        if (carrying instanceof Tool) {
             tool = (Tool) carrying;
-        }else {
+        } else {
             return;
         }
-        Vector3 mouse = new Vector3(x,y,0);
+        Vector3 mouse = new Vector3(x, y, 0);
         MainGradle.getInstance().getCamera().unproject(mouse);
-        Vector2 mouseWorld = new Vector2(mouse.x,mouse.y);
+        Vector2 mouseWorld = new Vector2(mouse.x, mouse.y);
         int mouseTileX = (int) Math.floor(mouseWorld.x / App.tileWidth);
         int mouseTileY = (int) Math.floor(mouseWorld.y / App.tileHeight);
         int dx = mouseTileX - currentPlayer.getTiles().get(0).getX();
         int dy = mouseTileY - currentPlayer.getTiles().get(0).getY();
-        if ((Math.abs(dx) <= 1 && Math.abs(dy) <= 1) && !(dx == 0 && dy == 0)){
-            useTool(currentPlayer,tool,dx,dy);
+        if ((Math.abs(dx) <= 1 && Math.abs(dy) <= 1) && !(dx == 0 && dy == 0)) {
+            useTool(currentPlayer, tool, dx, dy);
+            animationTime = 0f;
+            isAnimating = true;
         }
     }
 
-    private void useTool(Player player, Tool tool,int xTransmit, int yTransmit){
+    private void useTool(Player player, Tool tool, int xTransmit, int yTransmit) {
         WorldController worldController = new WorldController();
-        Tile tile = getTileByXAndY(player.getTiles().get(0).getX() + xTransmit,player.getTiles().get(0).getY() + yTransmit);
-        if (tile!=null) worldController.showResponse(new Response(tool.useTool(player,tile)));
+        Tile tile = getTileByXAndY(player.getTiles().get(0).getX() + xTransmit, player.getTiles().get(0).getY() + yTransmit);
+        if (tile != null) worldController.showResponse(new Response(tool.useTool(player, tile)));
     }
 
-    private float calculateRotation(int x,int y, float objectX, float objectY){
+    private float calculateRotation(int x, int y, float objectX, float objectY) {
         Vector3 worldCords = new Vector3(x, y, 0);
         MainGradle.getInstance().getViewport().unproject(worldCords);
         float angle = (float) Math.atan2(worldCords.y - objectY, worldCords.x - objectX);
