@@ -3,6 +3,7 @@ package io.github.some_example_name.controller;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -100,9 +101,7 @@ public class CameraViewController {
                     journalHolder.setDrawable(new TextureRegionDrawable(
                         hasNotifications ? GameAsset.GOLDDISPLAY : GameAsset.RAW
                     ));
-                    journal.getImage().setDrawable(new TextureRegionDrawable(
-                        hasNotifications ? GameAsset.NOTIFICATION : GameAsset.RAW
-                    ));
+                    journal.setColor(hasNotifications ? new Color(1,1,1,1) : new Color(0,0,0,0));
                     journalVisibility = hasNotifications;
                 }
 
@@ -322,6 +321,19 @@ public class CameraViewController {
                     RelationService.getInstance().giveGift(a[(i + 1) % 2], "bee_house", 1);
                     RelationService.getInstance().giveGift(a[(i + 1) % 2], "bee_house", 1);
                     RelationService.getInstance().giveGift(a[(i + 1) % 2], "bee_house", 1);
+                }
+            }
+            if (Gdx.input.isKeyJustPressed(Input.Keys.EQUALS)) {
+                RelationService.getInstance().talkToAnotherPlayer("Clara1234", "bee_house");
+                RelationService.getInstance().talkToAnotherPlayer("Clara1234", "bee_house");
+                String[] a = {"Clara1234", "Roham1234"};
+                for (int i = 0; i < 6; i++) {
+                    gameMenuController.nextTurn();
+                    RelationService.getInstance().talkToAnotherPlayer(a[(i + 1) % 2], "bee_house");
+                    RelationService.getInstance().talkToAnotherPlayer(a[(i + 1) % 2], "bee_house");
+                    RelationService.getInstance().talkToAnotherPlayer(a[(i + 1) % 2], "bee_house");
+                    RelationService.getInstance().talkToAnotherPlayer(a[(i + 1) % 2], "bee_house");
+                    RelationService.getInstance().talkToAnotherPlayer(a[(i + 1) % 2], "01234567891234567890 1234");
                 }
             }
         } else {
