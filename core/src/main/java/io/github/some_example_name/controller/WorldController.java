@@ -21,6 +21,7 @@ import io.github.some_example_name.model.relations.NPCHouse;
 import io.github.some_example_name.model.relations.Player;
 import io.github.some_example_name.model.shelter.FarmBuilding;
 import io.github.some_example_name.model.source.Crop;
+import io.github.some_example_name.model.structure.Lightening;
 import io.github.some_example_name.model.structure.Structure;
 import io.github.some_example_name.model.structure.farmInitialElements.Lake;
 import io.github.some_example_name.model.structure.farmInitialElements.GreenHouse;
@@ -146,6 +147,9 @@ public class WorldController {
 
     private void handleStorms() {
         Random rand = new Random();
+        if (rand.nextInt(2000) == 4) {
+            gameService.C_Thor("" + rand.nextInt(160), "" + rand.nextInt(120));
+        }
         if (!GameView.screenshotting && rand.nextInt(200) == 4) {
             Sprite sprite = new Sprite(GameAsset.STORM[rand.nextInt(0, 2)][rand.nextInt(0, 4)]);
             sprite.setPosition(
@@ -344,6 +348,9 @@ public class WorldController {
                     structure.getSprite().setPosition(structure.getTiles().get(0).getX() * App.tileWidth,
                         structure.getTiles().get(0).getY() * App.tileHeight);
                     structure.getSprite().draw(MainGradle.getInstance().getBatch());
+                    if (structure.getSprite() instanceof AnimatedSprite aSprite) {
+                        aSprite.update(delta);
+                    }
                 }
             }
             if (structure.getSprites() != null) {
@@ -352,6 +359,9 @@ public class WorldController {
                         (sprite.getOffset().getX() + structure.getTiles().get(0).getX()) * App.tileWidth,
                         (sprite.getOffset().getY() + structure.getTiles().get(0).getY()) * App.tileHeight);
                     sprite.getSprite().draw(MainGradle.getInstance().getBatch());
+                    if (sprite.getSprite() instanceof AnimatedSprite aSprite) {
+                        aSprite.update(delta);
+                    }
                 }
             }
         }
