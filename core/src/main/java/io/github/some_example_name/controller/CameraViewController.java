@@ -9,44 +9,108 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import io.github.some_example_name.MainGradle;
 import io.github.some_example_name.model.Salable;
+import io.github.some_example_name.model.Tuple;
 import io.github.some_example_name.model.relations.Player;
 import io.github.some_example_name.service.GameService;
 import io.github.some_example_name.utils.App;
 import io.github.some_example_name.utils.GameAsset;
 import io.github.some_example_name.view.GameView;
+import io.github.some_example_name.view.mainMenu.InventoryMenu;
+import io.github.some_example_name.view.mainMenu.NotificationMenu;
 import io.github.some_example_name.view.mainMenu.PopUp;
 
+import javax.swing.text.html.InlineView;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CameraViewController {
-    GameService gameMenuController = new GameService();
+    private GameService gameMenuController = new GameService();
+    private WorldController worldController;
     private Sprite energyContainer = new Sprite(GameAsset.BUTTON);
     private Sprite energy = new Sprite(GameAsset.GREEN_SQUARE);
     private Sprite eSprite = new Sprite(GameAsset.FILLED_BUTTON);
     private OrthographicCamera camera = MainGradle.getInstance().getCamera();
     private Group inventoryBar;
+    private Table bar;
     private Group energyBar;
     private Image energyBackground;
     private Image energyFill;
     private final List<Stack> itemStacks = new ArrayList<>();
     private List<Salable> items = new ArrayList<>();
     private Integer currentToolIndex;
+    private boolean journalVisibility = false;
 
-    public CameraViewController() {
+    public CameraViewController(WorldController worldController) {
+        this.worldController = worldController;
         initInventoryBar();
         initEnergyBar();
+        initButtons();
     }
 
     public void update() {
-        App.getInstance().getCurrentGame().getTimeAndDate().updateBatch(MainGradle.getInstance().getBatch());
+        Sprite mainClock = App.getInstance().getCurrentGame().getTimeAndDate().updateBatch(
+            MainGradle.getInstance().getBatch());
         updateEnergyBar();
         updateInventoryBar();
+        updateButtons(mainClock);
         if (GameView.captureInput) {
             handleInput();
         }
+    }
+
+    private void updateButtons(Sprite mainClock) {
+        bar.setPosition(mainClock.getX() + mainClock.getWidth() * 0.3f,mainClock.getY() - bar.getHeight());
+    }
+
+    private void initButtons() {
+        Skin skin = GameAsset.SKIN;
+        bar = new Table(skin);
+        bar.top().left();
+
+        ImageButton journal = new ImageButton(new TextureRegionDrawable(GameAsset.RAW));
+        ImageButton social = new ImageButton(new TextureRegionDrawable(GameAsset.SOCIAL_ICON));
+        Image journalHolder = new Image(GameAsset.RAW);
+        Image socialHolder = new Image(GameAsset.GOLDDISPLAY);
+        bar.add(journalHolder).size(50, 20).padRight(70);
+        bar.add(socialHolder).size(50, 20).row();
+        bar.add(journal).size(50, 50).padRight(70);
+        bar.add(social).size(50, 50).row();
+        Group buttons = new Group(){
+            @Override
+            public void act(float delta) {
+                if (social.isChecked()) {
+                    InventoryMenu inventoryMenu = new InventoryMenu();
+                    inventoryMenu.setTabIndex(2);
+                    inventoryMenu.createMenu(GameView.stage, GameAsset.SKIN, worldController);
+                    social.setChecked(false);
+                }
+                boolean hasNotifications = !App.getInstance().getCurrentGame().getCurrentPlayer().getNotifications().isEmpty();
+                if (journal.isChecked()) {
+                    if (hasNotifications) {
+                        NotificationMenu notificationMenu = new NotificationMenu();
+                        notificationMenu.createMenu(GameView.stage, GameAsset.SKIN, worldController);
+                        journal.setChecked(false);
+                    }
+                }
+                if (hasNotifications != journalVisibility) {
+                    journalHolder.setDrawable(new TextureRegionDrawable(
+                        hasNotifications ? GameAsset.GOLDDISPLAY : GameAsset.RAW
+                    ));
+                    journal.getImage().setDrawable(new TextureRegionDrawable(
+                        hasNotifications ? GameAsset.NOTIFICATION : GameAsset.RAW
+                    ));
+                    journalVisibility = hasNotifications;
+                }
+
+                super.act(delta);
+            }
+        };
+        buttons.setSize(bar.getPrefWidth(), bar.getPrefHeight());
+        buttons.addActor(bar);
+        GameView.stage.addActor(buttons);
     }
 
 
@@ -94,9 +158,6 @@ public class CameraViewController {
         energyBar = new Group() {
             @Override
             public void act(float delta) {
-                float screenRight = camera.position.x + camera.viewportWidth / 2f;
-                float screenBottom = camera.position.y - camera.viewportHeight / 2f;
-
                 setPosition(camera.position.x + camera.viewportWidth/2f - energyBar.getWidth()*1.1f,
                     camera.position.y - camera.viewportHeight/2f + energyBar.getHeight()*0.3f);
                 super.act(delta);

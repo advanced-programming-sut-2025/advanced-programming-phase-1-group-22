@@ -15,7 +15,7 @@ public class GameViewController {
     private final PlayerController playerController = new PlayerController(worldController);
     private final ToolController toolController = new ToolController();
     private final CarryingController carryingController = new CarryingController();
-    private final CameraViewController cameraViewController = new CameraViewController();
+    private final CameraViewController cameraViewController = new CameraViewController(worldController);
     private final AnimalController animalController = new AnimalController();
     private final StoreController storeController = new StoreController();
     private final ShippingBinController shippingBinController = new ShippingBinController();
