@@ -17,12 +17,14 @@ import io.github.some_example_name.model.*;
 import io.github.some_example_name.model.enums.Gender;
 import io.github.some_example_name.model.records.Response;
 import io.github.some_example_name.model.relations.Player;
+import io.github.some_example_name.model.structure.Structure;
 import io.github.some_example_name.service.RelationService;
 import io.github.some_example_name.utils.App;
 import io.github.some_example_name.view.GameView;
 import lombok.Setter;
 
 import java.util.Collections;
+import java.util.List;
 
 @Setter
 public class FriendPopUp extends PopUp {
@@ -187,7 +189,8 @@ public class FriendPopUp extends PopUp {
         currentPlayer.getTiles().addAll(player.getTiles());
         boolean flag = false;
         int x = -1, y = -1;
-        for (Player player1 : App.getInstance().getCurrentGame().getPlayers()) {
+        List<Structure> structures = App.getInstance().getCurrentGame().getVillage().getStructures();
+        for (Structure player1 : structures) {
             if (player1 == currentPlayer) break;
             if (player == player1) {
                 flag = true;
@@ -195,13 +198,13 @@ public class FriendPopUp extends PopUp {
             }
         }
 
-        for (int i = 0; i < App.getInstance().getCurrentGame().getPlayers().size(); i++) {
-            Player player1 = App.getInstance().getCurrentGame().getPlayers().get(i);
+        for (int i = 0; i < structures.size(); i++) {
+            Structure player1 = structures.get(i);
             if (player1 == currentPlayer) x = i;
             if (player == player1) y = i;
         }
         if (flag) {
-            Collections.swap(App.getInstance().getCurrentGame().getPlayers(), x, y);
+            Collections.swap(structures, x, y);
         }
         Timer.schedule(new Timer.Task() {
             @Override
@@ -229,7 +232,7 @@ public class FriendPopUp extends PopUp {
                 player.setLazyDirection(direction.reverse());
                 GameView.captureInput = true;
                 if (finalFlag) {
-                    Collections.swap(App.getInstance().getCurrentGame().getPlayers(), finalX, finalY);
+                    Collections.swap(structures, finalX, finalY);
                 }
             }
         }, 3.3f);
