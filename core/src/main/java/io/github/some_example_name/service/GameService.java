@@ -211,8 +211,9 @@ public class GameService {
     public Response greenhouseBuild() {
         Farm farm = null;
         for (int i = 0; i < app.getCurrentGame().getVillage().getFarms().size(); i++) {
-            farm = app.getCurrentGame().getVillage().getFarms().get(i);
-            if (farm.getPlayers().get(0).equals(app.getCurrentGame().getCurrentPlayer())) {
+            Farm farm1 = app.getCurrentGame().getVillage().getFarms().get(i);
+            if (farm1.getTiles().contains(app.getCurrentGame().getCurrentPlayer().getTiles().getFirst())) {
+                farm = farm1;
                 break;
             }
         }

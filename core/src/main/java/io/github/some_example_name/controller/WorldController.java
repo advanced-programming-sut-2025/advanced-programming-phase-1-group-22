@@ -189,9 +189,11 @@ public class WorldController {
                 if (!greenHouse.isBuilt()) {
                     for (Tile tile : greenHouse.getTiles()) {
                         if (distanceFromClick(tile).isOrigin()) {
-                            Response resp = gameService.greenhouseBuild();
-                            if (!resp.shouldBeBack()) {
-                                showResponse(resp);
+                            if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
+                                Response resp = gameService.greenhouseBuild();
+                                if (!resp.shouldBeBack()) {
+                                    showResponse(resp);
+                                }
                             }
                         }
                     }
@@ -238,7 +240,7 @@ public class WorldController {
 
     private Farm currentFarm() {
         for (Farm farm : App.getInstance().getCurrentGame().getVillage().getFarms()) {
-            if (farm.getPlayers().get(0).equals(App.getInstance().getCurrentGame().getCurrentPlayer())) {
+            if (farm.getTiles().contains(App.getInstance().getCurrentGame().getCurrentPlayer().getTiles().getFirst())) {
                 return farm;
             }
         }
