@@ -4,13 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d95100ff-6e61-4571-9e87-dcef3d963dba" name="Changes" comment="tidy up social menu">
+    <list default="true" id="d95100ff-6e61-4571-9e87-dcef3d963dba" name="Changes" comment="tidy up pause menus">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/assets.txt" beforeDir="false" afterPath="$PROJECT_DIR$/assets/assets.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/build/libs/core-1.0.0.jar" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/libs/core-1.0.0.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/receipe/CraftingRecipe.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/receipe/CraftingRecipe.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/view/mainMenu/InventoryMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/view/mainMenu/InventoryMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/view/mainMenu/PopUp.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/view/mainMenu/PopUp.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/controller/CameraViewController.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/controller/CameraViewController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/view/mainMenu/GiftHistoryMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/view/mainMenu/GiftHistoryMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/view/mainMenu/GiftMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/view/mainMenu/GiftMenu.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -158,7 +157,7 @@
       <workItem from="1751885384603" duration="27589000" />
       <workItem from="1751922252586" duration="149000" />
       <workItem from="1751971440871" duration="2594000" />
-      <workItem from="1752055053229" duration="8434000" />
+      <workItem from="1752055053229" duration="12434000" />
     </task>
     <task id="LOCAL-00001" summary="added clock">
       <option name="closed" value="true" />
@@ -496,7 +495,15 @@
       <option name="project" value="LOCAL" />
       <updated>1752060852275</updated>
     </task>
-    <option name="localTasksCounter" value="43" />
+    <task id="LOCAL-00043" summary="tidy up pause menus">
+      <option name="closed" value="true" />
+      <created>1752063814808</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1752063814808</updated>
+    </task>
+    <option name="localTasksCounter" value="44" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -514,7 +521,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="converting popUps from static to dynamic" />
     <MESSAGE value="polymorphism for popup menus" />
     <MESSAGE value="preventing events while popup occurs" />
     <MESSAGE value="added shortcuts to carrying salables" />
@@ -539,7 +545,8 @@
     <MESSAGE value="added notification and social button" />
     <MESSAGE value="uploaded assets" />
     <MESSAGE value="tidy up social menu" />
-    <option name="LAST_COMMIT_MESSAGE" value="tidy up social menu" />
+    <MESSAGE value="tidy up pause menus" />
+    <option name="LAST_COMMIT_MESSAGE" value="tidy up pause menus" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -548,11 +555,6 @@
           <url>file://$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/view/mainMenu/FridgeMenu.java</url>
           <line>59</line>
           <option name="timeStamp" value="28" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/view/mainMenu/NotificationMenu.java</url>
-          <line>75</line>
-          <option name="timeStamp" value="29" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/view/mainMenu/FriendPopUp.java</url>
