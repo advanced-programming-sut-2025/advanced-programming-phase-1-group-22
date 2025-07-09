@@ -2,6 +2,7 @@ package io.github.some_example_name.model.animal;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.Vector2;
 import io.github.some_example_name.utils.App;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,6 +13,8 @@ import io.github.some_example_name.model.Salable;
 import io.github.some_example_name.model.products.AnimalProduct;
 import io.github.some_example_name.model.structure.Structure;
 
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Random;
 
 @Getter
@@ -27,13 +30,15 @@ public class Animal extends Structure implements Salable {
     private Player owner;
     private Texture texture;
     private Sprite sprite;
+    private Queue<Vector2> movementPath = new LinkedList<>();
+    private float timeSinceLastMove = 0f;
 
-    public Animal(AnimalType animalType,String name) {
+    public Animal(AnimalType animalType, String name) {
         this.animalType = animalType;
         this.name = name;
         this.texture = animalType.getTexture();
         this.sprite = new Sprite(animalType.getTexture());
-        this.sprite.setSize(App.tileWidth,App.tileHeight);
+        this.sprite.setSize(App.tileWidth, App.tileHeight);
     }
 
     @Override
@@ -42,21 +47,23 @@ public class Animal extends Structure implements Salable {
     }
 
     @Override
-    public Integer getContainingEnergy() {return 0;}
+    public Integer getContainingEnergy() {
+        return 0;
+    }
 
     @Override
     public int getSellPrice() {
         return this.animalType.getSellPrice();
     }
 
-    public void produceAnimalProduct(){
-        if (!this.isFeed){
+    public void produceAnimalProduct() {
+        if (!this.isFeed) {
             this.todayProduct = null;
             return;
         }
         double quality = generateQuality();
         AnimalProductType animalProductType = this.animalType.getProductList().get(0);
-        if (canHaveSecondProduct()){
+        if (canHaveSecondProduct()) {
             animalProductType = this.animalType.getProductList().get(1);
         }
         AnimalProduct animalProduct = new AnimalProduct(animalProductType);
@@ -66,25 +73,25 @@ public class Animal extends Structure implements Salable {
 
     public void changeFriendShip(int value) {
         int oldValue = this.relationShipQuality;
-        this.setRelationShipQuality(Math.min(1000,Math.max(0,oldValue + value)));
+        this.setRelationShipQuality(Math.min(1000, Math.max(0, oldValue + value)));
     }
 
-    private double generateQuality(){
+    private double generateQuality() {
         Random random = new Random();
-        double R = random.nextDouble(0,1);
+        double R = random.nextDouble(0, 1);
         return ((double) this.relationShipQuality / 1000) * (0.5 + 0.5 * R);
     }
 
-    private boolean canHaveSecondProduct(){
-        if (this.relationShipQuality < 100){
+    private boolean canHaveSecondProduct() {
+        if (this.relationShipQuality < 100) {
             return false;
         }
-        if (this.animalType.getProductList().size() != 2){
+        if (this.animalType.getProductList().size() != 2) {
             return false;
         }
         Random random = new Random();
-        double R = random.nextDouble(0.5,1.5);
+        double R = random.nextDouble(0.5, 1.5);
         double probability = (this.relationShipQuality + (150 * R)) / 1500;
-		return probability > 0.5;
-	}
+        return probability > 0.5;
+    }
 }
