@@ -161,9 +161,9 @@ public class GiftMenu extends PopUp {
         info.pack();
         info.add(new Label(item == null ? "Select an item!" : item.getName(), skin)).colspan(3).center().row();
         TextButton increment = new TextButton("+", skin), decrement = new TextButton("-", skin);
-        info.add(increment).width(20).center();
+        info.add(increment).width(40).center();
         info.add(new TextButton(count.toString(), skin)).width(80).center();
-        info.add(decrement).width(20).center().row();
+        info.add(decrement).width(40).center().row();
         TextButton button = new TextButton("Send as gift to " + friend.getUser().getNickname(), skin);
         info.add(button).colspan(3).padTop(20).center().row();
 

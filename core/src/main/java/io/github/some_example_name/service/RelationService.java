@@ -258,7 +258,7 @@ public class RelationService {
         if (giftFlag == null) {
             return new Response("invalid gift number");
         }
-        return new Response("rate gift successfully");
+        return new Response("rate gift successfully", true);
     }
 
     public Response rateGift(Friendship friendship, Gift gift, int rate) {
@@ -270,7 +270,7 @@ public class RelationService {
 
         gift.setRate(rate);
         friendship.setXp(friendship.getXp() + (rate - 3) * 30 + 15);
-        return new Response("rate gift successfully");
+        return new Response("rate gift successfully", true);
     }
 
     public Response showGiftHistory(String username) {

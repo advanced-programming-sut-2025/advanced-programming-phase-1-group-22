@@ -15,6 +15,7 @@ import io.github.some_example_name.model.Salable;
 import io.github.some_example_name.model.Tuple;
 import io.github.some_example_name.model.relations.Player;
 import io.github.some_example_name.service.GameService;
+import io.github.some_example_name.service.RelationService;
 import io.github.some_example_name.utils.App;
 import io.github.some_example_name.utils.GameAsset;
 import io.github.some_example_name.view.GameView;
@@ -310,42 +311,56 @@ public class CameraViewController {
                 gameMenuController.C_AddItem("flower", "2");
                 gameMenuController.C_AddItem("wedding ring", "2");
             }
-        }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.F4)){
-            GameView.captureInput = false;
-            GameView.screenshotting = true;
-        }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.GRAVE)) {
-            player.setCurrentCarrying(null);
-            currentToolIndex = -1;
-
-        }
-        int[] shortcuts = {Input.Keys.NUM_1, Input.Keys.NUM_2, Input.Keys.NUM_3, Input.Keys.NUM_4, Input.Keys.NUM_5,
-            Input.Keys.NUM_6, Input.Keys.NUM_7, Input.Keys.NUM_8, Input.Keys.NUM_9, Input.Keys.NUM_0, Input.Keys.MINUS,
-            Input.Keys.EQUALS
-        };
-        for (int i = 0; i < shortcuts.length; i++) {
-            if (Gdx.input.isKeyJustPressed(shortcuts[i])) {
-                if (i < player.getInventory().getProducts().size()) {
-                    player.setCurrentCarrying(items.get(i));
-                    currentToolIndex = i;
+            if (Gdx.input.isKeyJustPressed(Input.Keys.MINUS)) {
+                gameMenuController.C_AddItem("bee_house", "5");
+                RelationService.getInstance().giveGift("Clara1234", "bee_house", 2);
+                RelationService.getInstance().giveGift("Clara1234", "bee_house", 2);
+                String[] a = {"Clara1234", "Roham1234"};
+                for (int i = 0; i < 6; i++) {
+                    gameMenuController.nextTurn();
+                    RelationService.getInstance().giveGift(a[(i + 1) % 2], "bee_house", 1);
+                    RelationService.getInstance().giveGift(a[(i + 1) % 2], "bee_house", 1);
+                    RelationService.getInstance().giveGift(a[(i + 1) % 2], "bee_house", 1);
+                    RelationService.getInstance().giveGift(a[(i + 1) % 2], "bee_house", 1);
                 }
             }
-        }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.TAB)) {
-            if (currentToolIndex == null) currentToolIndex = -1;
-            player.setCurrentCarrying(items.get(++currentToolIndex % Math.min(12, player.getInventory().getProducts().size())));
-        }
-        if (GameView.scrollY != 0) {
-            int mod = Math.min(12, player.getInventory().getProducts().size());
-            if (mod != 0) {
-                if (currentToolIndex == null) currentToolIndex = GameView.scrollY > 0 ? mod - 1 : 0;
-                currentToolIndex += (int) Math.ceil(GameView.scrollY / 3);
-                currentToolIndex %= mod;
-                currentToolIndex += mod;
-                currentToolIndex %= mod;
-                player.setCurrentCarrying(items.get(currentToolIndex));
-                GameView.scrollY = 0;
+        } else {
+            if (Gdx.input.isKeyJustPressed(Input.Keys.F4)) {
+                GameView.captureInput = false;
+                GameView.screenshotting = true;
+            }
+            if (Gdx.input.isKeyJustPressed(Input.Keys.GRAVE)) {
+                player.setCurrentCarrying(null);
+                currentToolIndex = -1;
+
+            }
+            int[] shortcuts = {Input.Keys.NUM_1, Input.Keys.NUM_2, Input.Keys.NUM_3, Input.Keys.NUM_4, Input.Keys.NUM_5,
+                Input.Keys.NUM_6, Input.Keys.NUM_7, Input.Keys.NUM_8, Input.Keys.NUM_9, Input.Keys.NUM_0, Input.Keys.MINUS,
+                Input.Keys.EQUALS
+            };
+            for (int i = 0; i < shortcuts.length; i++) {
+                if (Gdx.input.isKeyJustPressed(shortcuts[i])) {
+                    if (i < player.getInventory().getProducts().size()) {
+                        player.setCurrentCarrying(items.get(i));
+                        currentToolIndex = i;
+                    }
+                }
+            }
+            if (Gdx.input.isKeyJustPressed(Input.Keys.TAB)) {
+                if (currentToolIndex == null) currentToolIndex = -1;
+                player.setCurrentCarrying(items.get(++currentToolIndex % Math.min(12, player.getInventory().getProducts().size())));
+            }
+            if (GameView.scrollY != 0) {
+                int mod = Math.min(12, player.getInventory().getProducts().size());
+                if (mod != 0) {
+                    if (currentToolIndex == null) currentToolIndex = GameView.scrollY > 0 ? mod - 1 : 0;
+                    currentToolIndex += (int) Math.ceil(GameView.scrollY / 3);
+                    currentToolIndex %= mod;
+                    currentToolIndex += mod;
+                    currentToolIndex %= mod;
+                    player.setCurrentCarrying(items.get(currentToolIndex));
+                    GameView.scrollY = 0;
+                }
             }
         }
     }
