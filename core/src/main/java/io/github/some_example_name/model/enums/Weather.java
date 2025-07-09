@@ -1,5 +1,9 @@
 package io.github.some_example_name.model.enums;
 
+import com.badlogic.gdx.utils.Timer;
+import io.github.some_example_name.model.Farm;
+import io.github.some_example_name.model.Tile;
+import io.github.some_example_name.model.structure.Lightening;
 import lombok.Getter;
 import io.github.some_example_name.model.Game;
 import io.github.some_example_name.model.TileType;
@@ -30,20 +34,31 @@ public enum Weather {
 
     public void thunderBolt(int x, int y) {
         Game game = App.getInstance().getCurrentGame();
-        game.tiles[x][y].setTileType(TileType.THUNDERED);
-        ArrayList<Structure> structures = game.getVillage().findStructuresByTile(game.tiles[x][y]);
-        for (Structure structure : structures) {
-            if (structure instanceof Tree && !((Tree)structure).getInGreenHouse()) {
-                ((Tree)structure).burn();
+        Lightening lightening = new Lightening();
+        lightening.setTile(game.tiles[x][y]);
+        game.getVillage().getStructures().add(lightening);
+        Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+                game.getVillage().getStructures().remove(lightening);
+                game.tiles[x][y].setTileType(TileType.THUNDERED);
+                ArrayList<Structure> structures = game.getVillage().findStructuresByTile(game.tiles[x][y]);
+                for (Structure structure : structures) {
+                    if (structure instanceof Tree && !((Tree)structure).getInGreenHouse()) {
+                        ((Tree)structure).burn();
+                        breakTree(x, y);
+                    }
+                    if (structure instanceof Trunk) {
+                        ((Trunk)structure).burn();
+                    }
+                    if (structure instanceof Crop && !((Crop)structure).getInGreenHouse()) {
+                        ((Crop)structure).burn();
+                    }
+                }
             }
-            if (structure instanceof Trunk) {
-                ((Trunk)structure).burn();
-            }
-            if (structure instanceof Crop && !((Crop)structure).getInGreenHouse()) {
-                ((Crop)structure).burn();
-            }
-        }
+        }, 0.7f);
     }
+
 
     public void breakTree(int x, int y){
         Game game = App.getInstance().getCurrentGame();

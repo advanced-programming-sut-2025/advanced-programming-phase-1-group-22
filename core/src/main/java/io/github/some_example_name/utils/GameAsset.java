@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 public class GameAsset {
@@ -51,6 +52,7 @@ public class GameAsset {
     public static final Texture BUTTON = new Texture("Inventory/button-.png");
     public static final Texture FILLED_BUTTON = new Texture("Inventory/Filled_Button.png");
     public static final Texture GREEN_SQUARE = new Texture("Night/Green.png");
+    public static final Texture YELLOW_SQUARE = new Texture("Night/Yellow.png");
     public static final Texture MAP_TAB = new Texture("Inventory/map_tab.png");
     public static final Texture SKILL_TAB = new Texture("Inventory/skill_tab.png");
     public static final Texture SOCIAL_TAB = new Texture("Inventory/social_tab.png");
@@ -1763,6 +1765,10 @@ public class GameAsset {
     public static final Texture NOTIFICATION = new Texture("Inventory/Notification.png");
     public static final Texture NIGHT = new Texture("Night/night.jpg");
     public static final Sprite NIGHT_SPRITE = new Sprite(NIGHT);
+    public static final ShaderProgram SHADER = new ShaderProgram(
+        Gdx.files.internal("Night/grayscale.vert"),
+        Gdx.files.internal("Night/grayscale.frag")
+    );
     static {
         NIGHT_SPRITE.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
@@ -2462,6 +2468,7 @@ public class GameAsset {
     public static final Texture WOODEN_BLADE = new Texture("Weapon/Wooden_Blade.png");
     public static final TextureRegion[][] RAIN = TextureRegion.split(new Texture("Weather/Rain.png"), 41, 130);
     public static final TextureRegion[][] STORM = TextureRegion.split(new Texture("Weather/Storm.png"), 192, 384);
+    public static final Texture LIGHTENING = new Texture("Weather/lightening.png");
     public static final Texture SNOW = new Texture("Weather/Snow.png");
     public static final Texture ABIGAIL_FULL = new Texture("Player/Abigail.png");
     public static final Texture ALEX_FULL = new Texture("Player/Alex.png");
@@ -2475,4 +2482,5 @@ public class GameAsset {
     public static final Texture SAM_FULL = new Texture("Player/Sam.png");
     public static final Texture SEBASTIAN_FULL = new Texture("Player/Sebastian.png");
     public static final Texture SHANE_FULL = new Texture("Player/Shane.png");
+
 }

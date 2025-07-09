@@ -236,7 +236,7 @@ public class CameraViewController {
         if (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)) {
             if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) {
                 gameMenuController.C_WeatherSet("STORMY");
-                gameMenuController.C_AdvanceDate("2");
+                gameMenuController.C_AdvanceDate("1");
             }
             if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_3)) {
                 gameMenuController.C_WeatherSet("RAINY");

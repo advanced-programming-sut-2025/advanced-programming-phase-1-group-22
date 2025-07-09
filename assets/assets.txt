@@ -2122,6 +2122,9 @@ Mineral/Tigerseye.png
 Morris.png
 Neighbor_Cabin_Stage_3.png
 Night/Green.png
+Night/Yellow.png
+Night/grayscale.frag
+Night/grayscale.vert
 Night/night.jpg
 Node/Amethyst_Node.png
 Node/Aquamarine_Node.png
@@ -2995,6 +2998,7 @@ Weapon/Wooden_Blade.png
 Weather/Rain.png
 Weather/Snow.png
 Weather/Storm.png
+Weather/lightening.png
 Willy_Happy.png
 abigel.png
 bar.png

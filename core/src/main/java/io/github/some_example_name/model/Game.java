@@ -113,9 +113,6 @@ public class Game implements Serializable {
                     int randY = random.nextInt(farm.getFarmYStart(), farm.getFarmYEnd());
                     weather.thunderBolt(randX, randY);
                 }
-                int randX = random.nextInt(farm.getFarmXStart(), farm.getFarmXEnd());
-                int randY = random.nextInt(farm.getFarmYStart(), farm.getFarmYEnd());
-                weather.breakTree(randX, randY);
             }
         }
         automaticWatering(this.village.getWeather());
