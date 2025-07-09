@@ -7,6 +7,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import io.github.some_example_name.model.Salable;
 import io.github.some_example_name.utils.GameAsset;
+import io.github.some_example_name.view.mainMenu.InventoryMenu;
+import io.github.some_example_name.view.mainMenu.PopUp;
 import lombok.Getter;
 import io.github.some_example_name.model.craft.CraftType;
 import io.github.some_example_name.utils.App;
@@ -73,11 +75,12 @@ public enum CraftingRecipe implements Recipe {
             image.setWidth(50);
             image.setHeight(50);
             info.add(image).width(50).padRight(10);
-            info.add(new Label(ingredient.getValue().toString(), skin)).width(10).padRight(30);
+            info.add(new Label(ingredient.getValue().toString(), skin)).width(20).padRight(30);
             info.add(new Label(ingredient.getKey().getName(), skin)).expandX().fillX().row();
         }
-        info.add(new Label(getCraft().getDescription(), skin)).colspan(3).expandX().fillX().row();
-
+        for (String string : PopUp.wrapString(getCraft().getDescription(), 24)) {
+            info.add(new Label(string, skin)).colspan(3).expandX().fillX().row();
+        }
     }
 
     @Override
