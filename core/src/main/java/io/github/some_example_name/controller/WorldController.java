@@ -286,8 +286,12 @@ public class WorldController {
                             sprite.setPosition(structure.getTiles().get(0).getX() * App.tileWidth,
                                 structure.getTiles().get(0).getY() * App.tileHeight);
                             sprite.draw(MainGradle.getInstance().getBatch());
-                        } else if (structure instanceof Animal) {
-                            if (isAnimalBuildingCollision(farm.getStructures(), (Animal) structure, player)) {
+                        } else if (structure instanceof Animal animal) {
+                            if (isAnimalBuildingCollision(farm.getStructures(), animal, player)) {
+                                structure.getSprite().setPosition(structure.getTiles().get(0).getX() * App.tileWidth,
+                                    structure.getTiles().get(0).getY() * App.tileHeight);
+                                structure.getSprite().draw(MainGradle.getInstance().getBatch());
+                            }else if (animal.getIsAnimalStayOutAllNight()){
                                 structure.getSprite().setPosition(structure.getTiles().get(0).getX() * App.tileWidth,
                                     structure.getTiles().get(0).getY() * App.tileHeight);
                                 structure.getSprite().draw(MainGradle.getInstance().getBatch());

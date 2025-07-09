@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -26,6 +27,8 @@ import io.github.some_example_name.utils.GameAsset;
 import io.github.some_example_name.view.GameView;
 import io.github.some_example_name.view.HeartEffect;
 
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Random;
 
 public class AnimalController {
@@ -35,7 +38,7 @@ public class AnimalController {
     private final WorldController worldController = new WorldController();
 
     public void update() {
-        if (GameView.captureInput){
+        if (GameView.captureInput) {
             handleInputs();
         }
         float delta = Gdx.graphics.getDeltaTime();
@@ -51,8 +54,11 @@ public class AnimalController {
         }
         for (Farm farm : App.getInstance().getCurrentGame().getVillage().getFarms()) {
             for (Structure structure : farm.getStructures()) {
-                if (structure instanceof Animal && isStructureInBond(structure)) {
-                    handleAnimalMovement(((Animal) structure));
+                if (structure instanceof Animal animal && isStructureInBond(structure)) {
+                    if (animal.getIsAnimalStayOutAllNight()) {
+                        handleAnimalMovement(animal);
+                        updateAnimalMovement(Gdx.graphics.getDeltaTime(), animal);
+                    }
                 }
             }
         }
@@ -92,14 +98,39 @@ public class AnimalController {
 
     private void moveAnimal(Animal animal) {
         Random random = new Random();
-        int dx = random.nextInt(-5, 5);
-        int dy = (int) Math.sqrt(Math.pow(5, 2) - Math.pow(dx, 2));
-        if (random.nextInt() % 2 == 0) dy = -dy;
-        Tile tile = getTileByXAndY(animal.getTiles().get(0).getX() + dx, animal.getTiles().get(0).getY() + dy);
-        if (tile != null && !tile.getIsFilled() &&
-            getPlayerMainFarm(App.getInstance().getCurrentGame().getCurrentPlayer()).getTiles().contains(tile)) {
-            animal.getTiles().get(0).setX(animal.getTiles().get(0).getX() + dx);
-            animal.getTiles().get(0).setY(animal.getTiles().get(0).getY() + dy);
+        int totalDistance = 5;
+        int dx = random.nextInt(-1, 2);
+        int dy = random.nextInt(-1, 2);
+        if (dx == 0 && dy == 0) return;
+        Queue<Vector2> path = new LinkedList<>();
+        int currentX = animal.getTiles().get(0).getX();
+        int currentY = animal.getTiles().get(0).getY();
+        for (int i = 1; i <= totalDistance; i++) {
+            int stepX = currentX + dx * i;
+            int stepY = currentY + dy * i;
+            Tile tile = getTileByXAndY(stepX, stepY);
+            if (tile != null && !tile.getIsFilled() &&
+                getPlayerMainFarm(App.getInstance().getCurrentGame().getCurrentPlayer()).getTiles().contains(tile)) {
+                path.add(new Vector2(stepX, stepY));
+            } else {
+                break;
+            }
+        }
+        if (!path.isEmpty()) {
+            animal.setMovementPath(path);
+        }
+    }
+
+    private void updateAnimalMovement(float delta, Animal animal) {
+        animal.setTimeSinceLastMove(animal.getTimeSinceLastMove() + delta);
+
+        if (animal.getMovementPath() != null && !animal.getMovementPath().isEmpty()) {
+            if (animal.getTimeSinceLastMove() > 0.3f) {
+                animal.setTimeSinceLastMove(0);
+                Vector2 nextStep = animal.getMovementPath().poll();
+                animal.getTiles().get(0).setX((int) nextStep.x);
+                animal.getTiles().get(0).setY((int) nextStep.y);
+            }
         }
     }
 
