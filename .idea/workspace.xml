@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d95100ff-6e61-4571-9e87-dcef3d963dba" name="Changes" comment="tidy up some Menus">
+    <list default="true" id="d95100ff-6e61-4571-9e87-dcef3d963dba" name="Changes" comment="night and lightening animation">
       <change afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/structure/Lightening.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/assets/assets.txt" beforeDir="false" afterPath="$PROJECT_DIR$/assets/assets.txt" afterDir="false" />
@@ -167,7 +167,7 @@
       <workItem from="1751971440871" duration="2594000" />
       <workItem from="1752055053229" duration="15516000" />
       <workItem from="1752082081960" duration="8814000" />
-      <workItem from="1752093153986" duration="6581000" />
+      <workItem from="1752093153986" duration="7461000" />
     </task>
     <task id="LOCAL-00001" summary="added clock">
       <option name="closed" value="true" />
@@ -537,7 +537,15 @@
       <option name="project" value="LOCAL" />
       <updated>1752084896297</updated>
     </task>
-    <option name="localTasksCounter" value="47" />
+    <task id="LOCAL-00047" summary="night and lightening animation">
+      <option name="closed" value="true" />
+      <created>1752100608619</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1752100608619</updated>
+    </task>
+    <option name="localTasksCounter" value="48" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -555,7 +563,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="added Scrolling" />
     <MESSAGE value="implemented gift menu" />
     <MESSAGE value="implemented gift history menu" />
     <MESSAGE value="implemented talk menu" />
@@ -580,7 +587,8 @@
     <MESSAGE value="tidy up gifts menus" />
     <MESSAGE value="tidy up talk menu" />
     <MESSAGE value="tidy up some Menus" />
-    <option name="LAST_COMMIT_MESSAGE" value="tidy up some Menus" />
+    <MESSAGE value="night and lightening animation" />
+    <option name="LAST_COMMIT_MESSAGE" value="night and lightening animation" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
