@@ -20,6 +20,7 @@ public class GameViewController {
     private final StoreController storeController = new StoreController();
     private final ShippingBinController shippingBinController = new ShippingBinController();
     private final NPCController npcController = new NPCController();
+    private final FishingController fishingController = new FishingController();
     private final GameView view;
     private float nightAlpha = 0.0f;
 
@@ -42,6 +43,7 @@ public class GameViewController {
         storeController.update();
         shippingBinController.update();
         npcController.update();
+        fishingController.update();
         if (GameView.positionChoosing) {
             float cameraSpeed = 300 * Gdx.graphics.getDeltaTime();
 

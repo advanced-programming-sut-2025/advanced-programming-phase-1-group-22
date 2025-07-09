@@ -444,24 +444,6 @@ public class GameService {
         return new Response("you picked up a " + ((Salable) currentStructure).getName(), true);
     }
 
-    public Response fishing(String name) {
-        Player player = getCurrentPlayer();
-        Tool currentTool;
-        currentTool = (Tool) player.getInventory().getProductFromBackPack(name.trim());
-        if (currentTool == null) {
-            return new Response("you do not carrying fishing pole");
-        }
-        player.setCurrentCarrying(currentTool);
-        if (currentTool.getEnergy(player) > player.getEnergy()) {
-            return new Response("you do not have enough energy to use this tool");
-        }
-        Tile currentTile = isThereAnyLakeAround(player);
-        if (currentTile == null) {
-            return new Response("you have to be around the lake to fishing");
-        }
-        return new Response(currentTool.useTool(player, currentTile), true);
-    }
-
     public Response build(String name, int x, int y) {
         Player currentPlayer = getCurrentPlayer();
         CarpenterShopFarmBuildings carpenterShopFarmBuildings = CarpenterShopFarmBuildings.getFromName(name);

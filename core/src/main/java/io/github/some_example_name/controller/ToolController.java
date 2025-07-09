@@ -11,6 +11,7 @@ import io.github.some_example_name.model.Salable;
 import io.github.some_example_name.model.Tile;
 import io.github.some_example_name.model.records.Response;
 import io.github.some_example_name.model.relations.Player;
+import io.github.some_example_name.model.tools.FishingPole;
 import io.github.some_example_name.model.tools.Tool;
 import io.github.some_example_name.utils.App;
 import io.github.some_example_name.view.GameView;
@@ -79,8 +80,8 @@ public class ToolController {
         Player currentPlayer = App.getInstance().getCurrentGame().getCurrentPlayer();
         Salable carrying = currentPlayer.getCurrentCarrying();
         Tool tool;
-        if (carrying instanceof Tool) {
-            tool = (Tool) carrying;
+        if (carrying instanceof Tool tool1 && !(tool1 instanceof FishingPole)) {
+            tool = tool1;
         } else {
             return;
         }

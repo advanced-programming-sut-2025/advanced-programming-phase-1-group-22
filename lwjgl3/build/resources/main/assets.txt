@@ -2994,7 +2994,9 @@ Weather/Snow.png
 Weather/Storm.png
 Willy_Happy.png
 abigel.png
+background.png
 bar.png
+barMini.png
 dialog.png
 energyBarEmpty.jpg
 harvey.png

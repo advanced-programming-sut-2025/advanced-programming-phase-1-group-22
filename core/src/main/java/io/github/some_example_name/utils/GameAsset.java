@@ -1,6 +1,7 @@
 package io.github.some_example_name.utils;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -8,6 +9,17 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 public class GameAsset {
+    public static final Texture PIXEL;
+
+    static {
+        Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
+        pixmap.setColor(1, 1, 1, 1);
+        pixmap.fill();
+        PIXEL = new Texture(pixmap);
+        pixmap.dispose();
+    }
+    public static final Texture MINI_GAME_BACKGROUND = new Texture("background.png");
+    public static final Texture MINI_GAME_BAR = new Texture("barMini.png");
     public static final Texture BACKGROUND = new Texture("menu_bg.png");
     public static final Texture LIA_ICON = new Texture("lia_Icon.png");
     public static final Texture DIALOG_BOX = new Texture("dialog.png");
