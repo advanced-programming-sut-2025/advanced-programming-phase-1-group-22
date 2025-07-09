@@ -72,6 +72,7 @@ public class InventoryMenu extends PopUp {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 getMenuGroup().clear();
+                tabIndex = 0;
                 createInventory(skin, tabs, getMenuGroup(), stage);
             }
         });
@@ -80,6 +81,7 @@ public class InventoryMenu extends PopUp {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 getMenuGroup().clear();
+                tabIndex = 1;
                 createSkillMenu(skin, getMenuGroup(), tabs);
             }
         });
@@ -88,6 +90,7 @@ public class InventoryMenu extends PopUp {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 getMenuGroup().clear();
+                tabIndex = 2;
                 createSocialMenu(skin, getMenuGroup(), tabs);
             }
         });
@@ -96,6 +99,7 @@ public class InventoryMenu extends PopUp {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 getMenuGroup().clear();
+                tabIndex = 3;
                 createMapMenu(skin, getMenuGroup(), tabs);
             }
         });
@@ -104,6 +108,7 @@ public class InventoryMenu extends PopUp {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 getMenuGroup().clear();
+                tabIndex = 4;
                 createCraftingMenu(skin, tabs, getMenuGroup(), stage);
             }
         });
@@ -112,6 +117,7 @@ public class InventoryMenu extends PopUp {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 getMenuGroup().clear();
+                tabIndex = 5;
                 createCookingMenu(skin, tabs, getMenuGroup(), stage);
             }
         });
@@ -680,6 +686,11 @@ public class InventoryMenu extends PopUp {
         window.setMovable(false);
 
         Table table = new Table();
+        ScrollPane scrollPane = new ScrollPane(table, skin);
+        scrollPane.setFadeScrollBars(false);
+        scrollPane.setScrollingDisabled(false, true);
+        scrollPane.setScrollbarsOnTop(true);
+
         table.defaults().pad(10).left();
 
 
@@ -747,17 +758,17 @@ public class InventoryMenu extends PopUp {
 
             Table row = new Table();
             row.defaults().pad(10).align(Align.left);
-            row.add(iconImage).size(64).padRight(20);
-            row.add(nameLabel).width(100).padRight(20);
+            row.add(iconImage).size(128).padRight(20);
+            row.add(nameLabel).width(150).padRight(20);
             row.add(xpBar).width(300).padRight(20);
-            row.add(levelLabel).width(80).align(Align.right).padRight(20);
+            row.add(levelLabel).width(200).align(Align.right).padRight(20);
             row.add(gift).size(64).padRight(20);
             row.add(history).size(64).padRight(20);
             row.add(chat).size(64);
 
             table.add(row).row();
         }
-        for (Friendship friendship : friendships) {
+        for (Friendship friendship : App.getInstance().getCurrentGame().getFriendships()) {
             NPC npc;
             if (friendship.getFirstPlayer() == player) {
                 if (friendship.getSecondPlayer() instanceof NPC) {
@@ -768,34 +779,32 @@ public class InventoryMenu extends PopUp {
                     npc = (NPC) friendship.getFirstPlayer();
                 } else continue;
             } else continue;
-            if (friendship.getFirstPlayer() instanceof NPC) {
-                Table row = new Table();
-                row.align(Align.left);
-                row.defaults().space(15);
+            Table row = new Table();
+            row.align(Align.left);
+            row.defaults().space(15);
 
-                Image icon;
-                icon = new Image(npc.getType().getTextureIcon());
-                icon.setSize(128, 128);
-                row.add(icon).size(128).padLeft(20);
+            Image icon;
+            icon = new Image(npc.getType().getTextureIcon());
+            icon.setSize(128, 128);
+            row.add(icon).size(128).padLeft(20);
 
-                Label name = new Label(npc.getName(), skin);
-                row.add(name).width(150).left();
+            Label name = new Label(npc.getName(), skin);
+            row.add(name).width(150).left();
 
-                ProgressBar bar = new ProgressBar(0, (friendship.getFriendShipLevel() + 1) * 200, 1, false, skin);
-                bar.setValue(friendship.getXp());
-                bar.setWidth(300);
-                row.add(bar).width(300);
+            ProgressBar bar = new ProgressBar(0, (friendship.getFriendShipLevel() + 1) * 200, 1, false, skin);
+            bar.setValue(friendship.getXp());
+            bar.setWidth(300);
+            row.add(bar).width(300);
 
-                Label levelLabel = new Label("Level: " + friendship.getFriendShipLevel(), skin);
-                row.add(levelLabel).width(80);
+            Label levelLabel = new Label("Level: " + friendship.getFriendShipLevel(), skin);
+            row.add(levelLabel).width(80);
 
-                table.add(row).row();
-            }
+            table.add(row).row();
         }
 
         Table content = new Table();
         content.setFillParent(true);
-        content.add(table).expand().fill().pad(20);
+        content.add(scrollPane).expand().fill().pad(20);
 
         window.add(content).expand().fill();
         window.top();
