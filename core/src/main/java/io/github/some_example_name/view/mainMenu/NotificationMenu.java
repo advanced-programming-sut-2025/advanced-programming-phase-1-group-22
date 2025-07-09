@@ -65,7 +65,7 @@ public class NotificationMenu extends PopUp {
             Image type = new Image(notification.type().getTexture());
             row.add(avatar).size(50).padRight(20);
             row.add(type).size(50).padRight(20);
-            row.add(notification.data()).width(400).padRight(20);
+            row.add(notification.data()).width(camera.viewportWidth * (0.35f) - 250).padRight(20);
             ImageButton readButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(GameAsset.EXIT_BUTTON)));
             row.add(readButton).size(30).row();
             info.add(row).row();

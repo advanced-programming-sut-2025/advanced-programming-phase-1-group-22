@@ -43,7 +43,7 @@ public class CameraViewController {
     private final List<Stack> itemStacks = new ArrayList<>();
     private List<Salable> items = new ArrayList<>();
     private Integer currentToolIndex;
-    private boolean journalVisibility = false;
+    private boolean journalVisibility = true;
 
     public CameraViewController(WorldController worldController) {
         this.worldController = worldController;
@@ -72,9 +72,9 @@ public class CameraViewController {
         bar = new Table(skin);
         bar.top().left();
 
-        ImageButton journal = new ImageButton(new TextureRegionDrawable(GameAsset.RAW));
+        ImageButton journal = new ImageButton(new TextureRegionDrawable(GameAsset.NOTIFICATION));
         ImageButton social = new ImageButton(new TextureRegionDrawable(GameAsset.SOCIAL_ICON));
-        Image journalHolder = new Image(GameAsset.RAW);
+        Image journalHolder = new Image(GameAsset.GOLDDISPLAY);
         Image socialHolder = new Image(GameAsset.GOLDDISPLAY);
         bar.add(journalHolder).size(50, 20).padRight(70);
         bar.add(socialHolder).size(50, 20).row();
@@ -98,10 +98,10 @@ public class CameraViewController {
                     }
                 }
                 if (hasNotifications != journalVisibility) {
+                    journal.setColor(hasNotifications ? new Color(1,1,1,1) : new Color(1,1,1,0));
                     journalHolder.setDrawable(new TextureRegionDrawable(
                         hasNotifications ? GameAsset.GOLDDISPLAY : GameAsset.RAW
                     ));
-                    journal.setColor(hasNotifications ? new Color(1,1,1,1) : new Color(0,0,0,0));
                     journalVisibility = hasNotifications;
                 }
 
