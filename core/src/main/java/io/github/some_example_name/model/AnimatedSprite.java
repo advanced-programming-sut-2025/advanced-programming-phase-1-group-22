@@ -12,6 +12,7 @@ public class AnimatedSprite extends Sprite {
     private Animation<TextureRegion> animation;
     private Animation<Float> rotationAnimation;
     private Animation<Float> scaleAnimation;
+    private Animation<Float> alphaAnimation;
     private boolean scaleLooping = true;
     private float stateTime = 0f;
     @Getter
@@ -30,6 +31,9 @@ public class AnimatedSprite extends Sprite {
         }
         if (scaleAnimation != null) {
             this.setScale(scaleAnimation.getKeyFrame(stateTime, scaleLooping && looping));
+        }
+        if (alphaAnimation != null) {
+            this.setAlpha(alphaAnimation.getKeyFrame(stateTime, scaleLooping && looping));
         }
     }
 }
