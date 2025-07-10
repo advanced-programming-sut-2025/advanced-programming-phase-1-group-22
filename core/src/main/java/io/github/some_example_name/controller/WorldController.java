@@ -241,7 +241,7 @@ public class WorldController {
 
     private Farm currentFarm() {
         for (Farm farm : App.getInstance().getCurrentGame().getVillage().getFarms()) {
-            if (farm.getTiles().contains(App.getInstance().getCurrentGame().getCurrentPlayer().getTiles().getFirst())) {
+            if (farm.getTiles().contains(App.getInstance().getCurrentGame().getCurrentPlayer().getTiles().get(0))) {
                 return farm;
             }
         }
@@ -263,8 +263,8 @@ public class WorldController {
             structure.getTiles().get(0).getY() * App.tileHeight);
         int width = structure.getWidth() == null ? 1 : structure.getWidth();
         int height = structure.getHeight() == null ? 1 : structure.getHeight();
-        sprite.setPosition((width/2f + structure.getTiles().getFirst().getX()) * App.tileWidth - sprite.getWidth()/2,
-            (height/2f + structure.getTiles().getFirst().getY()) * App.tileHeight - sprite.getHeight()/2 );
+        sprite.setPosition((width/2f + structure.getTiles().get(0).getX()) * App.tileWidth - sprite.getWidth()/2,
+            (height/2f + structure.getTiles().get(0).getY()) * App.tileHeight - sprite.getHeight()/2 );
         sprite.draw(MainGradle.getInstance().getBatch());
         if (sprite instanceof AnimatedSprite animatedSprite) {
             animatedSprite.update(delta);
@@ -273,8 +273,8 @@ public class WorldController {
 
     private void drawSpriteHolder(float delta, SpriteHolder sprite, Structure structure) {
         sprite.getSprite().setPosition(
-            (sprite.getOffset().getX() + structure.getTiles().getFirst().getX()) * App.tileWidth,
-            (sprite.getOffset().getY() + structure.getTiles().getFirst().getY()) * App.tileHeight);
+            (sprite.getOffset().getX() + structure.getTiles().get(0).getX()) * App.tileWidth,
+            (sprite.getOffset().getY() + structure.getTiles().get(0).getY()) * App.tileHeight);
         sprite.getSprite().draw(MainGradle.getInstance().getBatch());
         if (sprite.getSprite() instanceof AnimatedSprite animatedSprite) {
             animatedSprite.update(delta);
@@ -285,8 +285,8 @@ public class WorldController {
         ArrayList<SpriteHolder> spriteHolders = structure.getSpriteComponent().getSprites(delta);
         for (SpriteHolder spriteHolder : spriteHolders) {
             spriteHolder.getSprite().setPosition(
-                (sprite.getOffset().getX() + spriteHolder.getOffset().getX() + structure.getTiles().getFirst().getX()) * App.tileWidth,
-                (sprite.getOffset().getY() + spriteHolder.getOffset().getY() + structure.getTiles().getFirst().getY()) * App.tileHeight
+                (sprite.getOffset().getX() + spriteHolder.getOffset().getX() + structure.getTiles().get(0).getX()) * App.tileWidth,
+                (sprite.getOffset().getY() + spriteHolder.getOffset().getY() + structure.getTiles().get(0).getY()) * App.tileHeight
             );
             spriteHolder.getSprite().draw(MainGradle.getInstance().getBatch());
         }

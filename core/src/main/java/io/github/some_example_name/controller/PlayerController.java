@@ -41,7 +41,7 @@ public class PlayerController {
 
     public void update(float delta){
         Player currentPlayer = App.getInstance().getCurrentGame().getCurrentPlayer();
-        Sprite playerSprite = currentPlayer.getSprites().getFirst().getSprite();
+        Sprite playerSprite = currentPlayer.getSprites().get(0).getSprite();
         if (playerSprite instanceof AnimatedSprite) {
             ((AnimatedSprite) playerSprite).update(delta);
         }
@@ -91,7 +91,7 @@ public class PlayerController {
                 timeSinceLastMove = 0f;
             } else {
                 ((AnimatedSprite)App.getInstance().getCurrentGame().getCurrentPlayer()
-                    .getSprites().getFirst().getSprite()).setLooping(false);
+                    .getSprites().get(0).getSprite()).setLooping(false);
             }
         }
     }

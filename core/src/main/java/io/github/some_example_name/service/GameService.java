@@ -192,7 +192,7 @@ public class GameService {
         Farm farm = null;
         for (int i = 0; i < app.getCurrentGame().getVillage().getFarms().size(); i++) {
             Farm farm1 = app.getCurrentGame().getVillage().getFarms().get(i);
-            if (farm1.getTiles().contains(app.getCurrentGame().getCurrentPlayer().getTiles().getFirst())) {
+            if (farm1.getTiles().contains(app.getCurrentGame().getCurrentPlayer().getTiles().get(0))) {
                 farm = farm1;
                 break;
             }
