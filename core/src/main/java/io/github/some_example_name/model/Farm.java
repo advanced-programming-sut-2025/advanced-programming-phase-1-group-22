@@ -42,6 +42,7 @@ public class Farm implements JsonPreparable {
     private Integer farmYStart;
     private Integer farmXEnd;
     private Integer farmYEnd;
+    private Boolean crowAttackToday = false;
     private Integer farmIndex = 0;
     @JsonManagedReference
     private Fridge fridge = new Fridge();

@@ -21,6 +21,7 @@ public class GameViewController {
     private final ShippingBinController shippingBinController = new ShippingBinController();
     private final NPCController npcController = new NPCController();
     private final FishingController fishingController = new FishingController();
+    private final CrowAttackController crowAttackController = new CrowAttackController();
     private final GameView view;
     private float nightAlpha = 0.0f;
 
@@ -28,7 +29,7 @@ public class GameViewController {
         this.view = view;
     }
 
-    public void update(float delta){
+    public void update(float delta) {
         if (GameView.screenshotting) {
             if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
                 GameView.screenshotting = false;
@@ -44,6 +45,7 @@ public class GameViewController {
         shippingBinController.update();
         npcController.update();
         fishingController.update();
+        crowAttackController.update();
         if (GameView.positionChoosing) {
             float cameraSpeed = 300 * Gdx.graphics.getDeltaTime();
 
@@ -64,24 +66,25 @@ public class GameViewController {
         OrthographicCamera camera = MainGradle.getInstance().getCamera();
         switch (App.getInstance().getCurrentGame().getFadingInTheNight()) {
             case 1: {
-                nightAlpha += Gdx.graphics.getDeltaTime()/2.5f;
+                nightAlpha += Gdx.graphics.getDeltaTime() / 2.5f;
                 if (nightAlpha >= 1f) {
                     nightAlpha = 1f;
                 }
                 GameAsset.NIGHT_SPRITE.setAlpha(nightAlpha);
                 GameAsset.NIGHT_SPRITE.setPosition(
-                    camera.position.x - camera.viewportWidth/2f,
-                    camera.position.y - camera.viewportHeight/2f);
+                    camera.position.x - camera.viewportWidth / 2f,
+                    camera.position.y - camera.viewportHeight / 2f);
                 GameAsset.NIGHT_SPRITE.draw(MainGradle.getInstance().getBatch());
-            } break;
+            }
+            break;
             case 2: {
-                nightAlpha -= Gdx.graphics.getDeltaTime()/2.5f;
+                nightAlpha -= Gdx.graphics.getDeltaTime() / 2.5f;
                 if (nightAlpha <= 0) {
                     nightAlpha = 0;
                 }
                 GameAsset.NIGHT_SPRITE.setPosition(
-                    camera.position.x - camera.viewportWidth/2f,
-                    camera.position.y - camera.viewportHeight/2f);
+                    camera.position.x - camera.viewportWidth / 2f,
+                    camera.position.y - camera.viewportHeight / 2f);
                 GameAsset.NIGHT_SPRITE.setAlpha(nightAlpha);
                 GameAsset.NIGHT_SPRITE.draw(MainGradle.getInstance().getBatch());
             }
