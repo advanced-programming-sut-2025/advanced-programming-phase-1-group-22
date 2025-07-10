@@ -4,6 +4,7 @@ import io.github.some_example_name.model.*;
 import io.github.some_example_name.model.enums.Gender;
 import io.github.some_example_name.model.records.Response;
 import io.github.some_example_name.model.relations.*;
+import io.github.some_example_name.model.structure.Structure;
 import io.github.some_example_name.model.structure.stores.PierreShop;
 import io.github.some_example_name.model.tools.Tool;
 import io.github.some_example_name.utils.App;
@@ -117,8 +118,8 @@ public class RelationService {
         currentPlayer = game.getCurrentPlayer();
         for (Friendship friendship : game.getFriendships()) {
             if ((friendship.getFirstPlayer().equals(currentPlayer) &&
-                    friendship.getSecondPlayer().equals(anotherPlayer)) || (friendship.getSecondPlayer().equals(currentPlayer) &&
-                    friendship.getFirstPlayer().equals(anotherPlayer))) {
+                friendship.getSecondPlayer().equals(anotherPlayer)) || (friendship.getSecondPlayer().equals(currentPlayer) &&
+                friendship.getFirstPlayer().equals(anotherPlayer))) {
                 return friendship;
             }
         }
@@ -131,7 +132,7 @@ public class RelationService {
         Tile tile = currentPlayer.getTiles().get(0);
         Tile anotherTile = anotherPlayer.getTiles().get(0);
         return (((tile.getX() <= anotherTile.getX() + dis && tile.getX() >= anotherTile.getX() - dis)
-                && (tile.getY() <= anotherTile.getY() + dis || tile.getY() >= anotherTile.getY() - dis)));
+            && (tile.getY() <= anotherTile.getY() + dis || tile.getY() >= anotherTile.getY() - dis)));
     }
 
     Player getPlayer(String username) {
@@ -403,8 +404,8 @@ public class RelationService {
         lastTalkedNPC = npc;
         Friendship friendShipBetweenTwoActors = getFriendShipBetweenTwoActors(npc);
         Dialog dialog = Dialog.getDialog(game.getTimeAndDate(), friendShipBetweenTwoActors.getFriendShipLevel());
-        friendShipBetweenTwoActors.setXp(Math.min(friendShipBetweenTwoActors.getXp() + 20,799));
-        return new Response(dialog.getDialog(),true);
+        friendShipBetweenTwoActors.setXp(Math.min(friendShipBetweenTwoActors.getXp() + 20, 799));
+        return new Response(dialog.getDialog(), true);
     }
 
     public Integer xpNeededForChangeLevel(Friendship friendship) {
@@ -486,11 +487,11 @@ public class RelationService {
         }
         for (Salable favorite : npc.getType().getFavorites()) {
             if (favorite.getName().equals(item)) {
-                friendShipBetweenTwoActors.setXp(Math.min(friendShipBetweenTwoActors.getXp() + 200,799));
+                friendShipBetweenTwoActors.setXp(Math.min(friendShipBetweenTwoActors.getXp() + 200, 799));
             }
         }
         if (!npc.isGiftedToday()) {
-            friendShipBetweenTwoActors.setXp(Math.min(friendShipBetweenTwoActors.getXp() + 50,799));
+            friendShipBetweenTwoActors.setXp(Math.min(friendShipBetweenTwoActors.getXp() + 50, 799));
             npc.setGiftedToday(true);
         }
         currentPlayer.getInventory().deleteProductFromBackPack(itemFromInventory.getKey(), currentPlayer, 1);
@@ -509,7 +510,7 @@ public class RelationService {
         return new Response(stringBuilder.toString());
     }
 
-    public Friendship getFriendShip(Actor actor1,Actor actor2){
+    public Friendship getFriendShip(Actor actor1, Actor actor2) {
         game = App.getInstance().getCurrentGame();
         currentPlayer = game.getCurrentPlayer();
         for (Friendship friendship : game.getFriendships()) {
@@ -521,68 +522,97 @@ public class RelationService {
         return null;
     }
 
-    public Map<Friendship,Actor> getFriendShips(Actor actor){
-        Map<Friendship,Actor> friendships = new HashMap<>();
-        for (Friendship friendship : App.getInstance().getCurrentGame().getFriendships()) {
-            if (friendship.getFirstPlayer().equals(actor)){
-                friendships.put(friendship,friendship.getSecondPlayer());
+    public Friendship getFriendshipOfNPC(Player player, NPCType npcType) {
+        game = App.getInstance().getCurrentGame();
+        for (Friendship friendship : game.getFriendships()) {
+            if (friendship.getSecondPlayer().equals(player)) {
+                if (friendship.getFirstPlayer() instanceof NPC npc) {
+                    if (npc.getType().equals(npcType)) return friendship;
+                }
             }
-            else if (friendship.getSecondPlayer().equals(actor)){
-                friendships.put(friendship,friendship.getFirstPlayer());
+            if (friendship.getFirstPlayer().equals(player)) {
+                if (friendship.getSecondPlayer() instanceof NPC npc) {
+                    if (npc.getType().equals(npcType)) return friendship;
+                }
+            }
+        }
+        return null;
+    }
+
+    public Map<Friendship, Actor> getFriendShips(Actor actor) {
+        Map<Friendship, Actor> friendships = new HashMap<>();
+        for (Friendship friendship : App.getInstance().getCurrentGame().getFriendships()) {
+            if (friendship.getFirstPlayer().equals(actor)) {
+                friendships.put(friendship, friendship.getSecondPlayer());
+            } else if (friendship.getSecondPlayer().equals(actor)) {
+                friendships.put(friendship, friendship.getFirstPlayer());
             }
         }
         return friendships;
     }
 
-    public Response questsList() {
+    public Map<Mission, Boolean> questsList() {
         game = App.getInstance().getCurrentGame();
         currentPlayer = game.getCurrentPlayer();
-        StringBuilder stringBuilder = new StringBuilder();
-        Friendship friendShipBetweenTwoActors = getFriendShipBetweenTwoActors(lastTalkedNPC);
-        int level = friendShipBetweenTwoActors.getFriendShipLevel();
-        if (lastTalkedNPC.getType().getMissions().isEmpty()) {
-            return new Response("you have no missions");
-        }
-        if (level < 1) {
-            stringBuilder.append(lastTalkedNPC.getType().getMissions().get(0));
-        }
-        if (level < 2) {
-            stringBuilder.append(lastTalkedNPC.getType().getMissions().get(1));
-            if (game.getTimeAndDate().getSeason().ordinal() - friendShipBetweenTwoActors.getTimeFromGettingFirstLevel().getSeason().ordinal() >= lastTalkedNPC.getType().getMissionSeasonDis()) {
-                stringBuilder.append(lastTalkedNPC.getType().getMissions().get(2));
+        Map<Mission, Boolean> questList = new HashMap<>();
+        for (NPCType value : NPCType.values()) {
+            for (Mission mission : value.getMissions()) {
+                mission.setRequester(value);
             }
         }
-        if (level >= 2) {
-            stringBuilder.append(lastTalkedNPC.getType().getMissions());
+        for (Structure structure : App.getInstance().getCurrentGame().getVillage().getStructures()) {
+            if (structure instanceof NPC npc) {
+                Friendship friendShipBetweenTwoActors = getFriendShipBetweenTwoActors(npc);
+                int level = friendShipBetweenTwoActors.getFriendShipLevel();
+                if (level < 1) {
+                    questList.put(npc.getType().getMissions().get(0), true);
+                    questList.put(npc.getType().getMissions().get(1), false);
+                    questList.put(npc.getType().getMissions().get(2), false);
+                }
+                if (level < 2) {
+                    questList.put(npc.getType().getMissions().get(0), true);
+                    questList.put(npc.getType().getMissions().get(1), true);
+                    questList.put(npc.getType().getMissions().get(2), false);
+                    if (game.getTimeAndDate().getSeason().ordinal() - friendShipBetweenTwoActors.getTimeFromGettingFirstLevel().getSeason().ordinal() >= npc.getType().getMissionSeasonDis()) {
+                        questList.put(npc.getType().getMissions().get(0), true);
+                        questList.put(npc.getType().getMissions().get(1), true);
+                        questList.put(npc.getType().getMissions().get(2), true);
+                    }
+                }
+                if (level >= 2) {
+                    questList.put(npc.getType().getMissions().get(0), true);
+                    questList.put(npc.getType().getMissions().get(1), true);
+                    questList.put(npc.getType().getMissions().get(2), true);
+                }
+            }
         }
-
-        return new Response(stringBuilder.toString());
+        return questList;
     }
 
-    public Map<Mission,Boolean> getMissions(NPC npc){
-        Map<Mission,Boolean> missions = new HashMap<>();
+    public Map<Mission, Boolean> getMissions(NPC npc) {
+        Map<Mission, Boolean> missions = new HashMap<>();
         game = App.getInstance().getCurrentGame();
         Friendship friendShipBetweenTwoActors = getFriendShipBetweenTwoActors(npc);
         int level = friendShipBetweenTwoActors.getFriendShipLevel();
         if (level < 1) {
-            missions.put(npc.getType().getMissions().get(0),true);
-            missions.put(npc.getType().getMissions().get(1),false);
-            missions.put(npc.getType().getMissions().get(2),false);
+            missions.put(npc.getType().getMissions().get(0), true);
+            missions.put(npc.getType().getMissions().get(1), false);
+            missions.put(npc.getType().getMissions().get(2), false);
         }
         if (level < 2) {
-            missions.put(npc.getType().getMissions().get(0),true);
-            missions.put(npc.getType().getMissions().get(1),true);
-            missions.put(npc.getType().getMissions().get(2),false);
+            missions.put(npc.getType().getMissions().get(0), true);
+            missions.put(npc.getType().getMissions().get(1), true);
+            missions.put(npc.getType().getMissions().get(2), false);
             if (game.getTimeAndDate().getSeason().ordinal() - friendShipBetweenTwoActors.getTimeFromGettingFirstLevel().getSeason().ordinal() >= npc.getType().getMissionSeasonDis()) {
-                missions.put(npc.getType().getMissions().get(0),true);
-                missions.put(npc.getType().getMissions().get(1),true);
-                missions.put(npc.getType().getMissions().get(2),true);
+                missions.put(npc.getType().getMissions().get(0), true);
+                missions.put(npc.getType().getMissions().get(1), true);
+                missions.put(npc.getType().getMissions().get(2), true);
             }
         }
         if (level >= 2) {
-            missions.put(npc.getType().getMissions().get(0),true);
-            missions.put(npc.getType().getMissions().get(1),true);
-            missions.put(npc.getType().getMissions().get(2),true);
+            missions.put(npc.getType().getMissions().get(0), true);
+            missions.put(npc.getType().getMissions().get(1), true);
+            missions.put(npc.getType().getMissions().get(2), true);
         }
 
         return missions;
@@ -594,7 +624,7 @@ public class RelationService {
         return new Response("friendship changed to 3");
     }
 
-    public Response completeMission(Mission mission,NPC npc) {
+    public Response completeMission(Mission mission, NPC npc) {
         game = App.getInstance().getCurrentGame();
         currentPlayer = game.getCurrentPlayer();
 
@@ -622,7 +652,7 @@ public class RelationService {
         for (Map.Entry<Salable, Integer> salableIntegerEntry : request.entrySet()) {
             int value = salableIntegerEntry.getValue();
             Salable salable = salableIntegerEntry.getKey();
-            currentPlayer.getInventory().justDelete(salable,value);
+            currentPlayer.getInventory().justDelete(salable, value);
         }
         Friendship friendShipBetweenTwoActors = getFriendShipBetweenTwoActors(npc);
         int multi;
@@ -630,7 +660,7 @@ public class RelationService {
         for (Map.Entry<Salable, Integer> salableIntegerEntry : reward.entrySet()) {
             int value = salableIntegerEntry.getValue();
             Salable salable = salableIntegerEntry.getKey();
-            currentPlayer.getInventory().addProductToBackPack(salable,multi * value);
+            currentPlayer.getInventory().addProductToBackPack(salable, multi * value);
         }
         mission.setDoer(currentPlayer);
         return new Response("mission completed");
