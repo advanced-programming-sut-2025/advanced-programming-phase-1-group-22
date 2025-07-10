@@ -3,6 +3,7 @@ package io.github.some_example_name.model;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.github.some_example_name.model.shelter.ShippingBin;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -133,7 +134,7 @@ public class Farm implements JsonPreparable {
         for (Pair pair : farmElements.getTilePairList()) {
             Tile tile = App.getInstance().getCurrentGame().tiles[pair.getX() + farmXStart][pair.getY() + farmYStart];
             tile.setIsFilled(true);
-            if (farmElements instanceof Lake) {
+            if (farmElements instanceof Lake || farmElements instanceof ShippingBin) {
                 tile.setIsPassable(false);
             }
             farmElements.getTiles().add(tile);
@@ -324,7 +325,7 @@ public class Farm implements JsonPreparable {
             for (int j = randX; flag && j < randX + length; j++) {
                 for (int k = randY; flag && k < randY + width; k++) {
                     if (tiles1[j][k].getIsFilled() ||
-                            !tiles1[j][k].getTileType().equals(TileType.PLOWED)) {
+                        !tiles1[j][k].getTileType().equals(TileType.PLOWED)) {
                         flag = false;
                     } else {
                         int rand = random.nextInt(1, 100);
@@ -360,7 +361,7 @@ public class Farm implements JsonPreparable {
 
     public boolean isPairInFarm(Pair pair) {
         return Math.abs(xCenter - pair.getX()) <= (farmType.getLength() / 2) &&
-                Math.abs(yCenter - pair.getY()) <= (farmType.getWidth() / 2);
+            Math.abs(yCenter - pair.getY()) <= (farmType.getWidth() / 2);
     }
 }
 
