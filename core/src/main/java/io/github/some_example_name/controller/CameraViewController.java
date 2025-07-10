@@ -265,7 +265,7 @@ public class CameraViewController {
                 gameMenuController.C_AddItem("cherry sapling", "1");
                 gameMenuController.C_AddItem("deluxe retaining soil", "1");
                 gameMenuController.useTool("south");
-                Tile tile = App.getInstance().getCurrentGame().tiles[App.getInstance().getCurrentGame().getCurrentPlayer().getTiles().getFirst().getX()][App.getInstance().getCurrentGame().getCurrentPlayer().getTiles().getFirst().getY() - 1];
+                Tile tile = App.getInstance().getCurrentGame().tiles[App.getInstance().getCurrentGame().getCurrentPlayer().getTiles().get(0).getX()][App.getInstance().getCurrentGame().getCurrentPlayer().getTiles().get(0).getY() - 1];
                 gameMenuController.plantSeed("cherry sapling", tile);
                 gameMenuController.fertilize("deluxe retaining soil", tile);
                 gameMenuController.toolEquip("normal watering can");
