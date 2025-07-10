@@ -3,6 +3,8 @@ package io.github.some_example_name.model.products.TreesAndFruitsAndSeeds;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import io.github.some_example_name.model.Tuple;
+import io.github.some_example_name.model.dto.SpriteHolder;
 import io.github.some_example_name.utils.GameAsset;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -35,7 +37,8 @@ public class Tree extends HarvestAbleProduct {
     private List<SundryType> fertilizes = new ArrayList<>();
     private Integer numberOfWithoutWaterDays = 0;
     private Integer numberOfStages = 0;
-    private Sprite sprite;
+    private ArrayList<SpriteHolder> sprites = new ArrayList<>();
+    private int spriteSituation = 0;
 
     public Tree(TreeType treeType) {
         this.treeType = treeType;
@@ -44,8 +47,9 @@ public class Tree extends HarvestAbleProduct {
         } else {
             numberOfStages = 0;
         }
-        this.sprite = new Sprite(treeType.getTextures().get(0));
-        this.sprite.setSize(App.tileWidth * 2,App.tileHeight * 3);
+        this.sprites.add(new SpriteHolder(new Sprite(treeType.getTextures().get(0))));
+        this.sprites.getFirst().setOffset(new Tuple<>(-0.5f, 0f));
+        this.sprites.getFirst().setSize(App.tileWidth * 2,App.tileHeight * 3);
     }
 
     public void burn() {
@@ -201,22 +205,22 @@ public class Tree extends HarvestAbleProduct {
     }
 
     @Override
-    public Sprite getSprite() {
-        if (this.isBurn){
-            this.sprite = new Sprite(this.treeType.getBurnTexture());
-            this.sprite.setSize(App.tileWidth * 2,App.tileHeight * 3);
-            return this.sprite;
+    public ArrayList<SpriteHolder> getSprites() {
+        if (this.isBurn && spriteSituation != -1){
+            this.sprites.getFirst().setSprite(new Sprite(this.treeType.getBurnTexture()));
+            spriteSituation = -1;
+            return this.sprites;
         }
         if (this.treeType.getIsForaging()){
-            return this.sprite;
+            return this.sprites;
         }
-        if (canHarvest()){
-            this.sprite = new Sprite(this.treeType.getFruitedTexture());
-            this.sprite.setSize(App.tileWidth * 2,App.tileHeight * 3);
-            return this.sprite;
+        if (canHarvest() && spriteSituation == -2){
+            this.sprites.getFirst().setSprite(new Sprite(this.treeType.getFruitedTexture()));
+            spriteSituation = -2;
+            return this.sprites;
         }
         int level = calculateRegrowthLevel();
-        if (level == 5){
+        if (level == 5 && spriteSituation != level){
             Texture treeSheet = treeType.getTextures().get(4);
             TextureRegion[] trees = new TextureRegion[4];
             for (int i = 0; i < 4; i++) {
@@ -230,13 +234,15 @@ public class Tree extends HarvestAbleProduct {
                 case FALL -> season = 2;
                 case WINTER -> season = 3;
             }
-            this.sprite = new Sprite(trees[season]);
-            this.sprite.setSize(App.tileWidth * 2,App.tileHeight * 3);
-            return this.sprite;
+            this.sprites.getFirst().setSprite(new Sprite(trees[season]));
+            spriteSituation = level;
+            return this.sprites;
         }
-        this.sprite = new Sprite(this.treeType.getTextures().get(level - 1));
-        this.sprite.setSize(App.tileWidth * 2,App.tileHeight * 3);
-        return this.sprite;
+        if (spriteSituation != level) {
+            this.sprites.getFirst().setSprite(new Sprite(this.treeType.getTextures().get(level - 1)));
+            spriteSituation = level;
+        }
+        return this.sprites;
     }
 
     @Override

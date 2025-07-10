@@ -97,24 +97,24 @@ public class Village implements JsonPreparable {
 
         NPCType lia = NPCType.LIA;
         randomNumber = getRandomNumber(29, 37);
-        addNPC(lia, randomNumber, 66, false);
+        addNPC(lia, randomNumber, 66);
 
 
         NPCType ebigil = NPCType.ABIGIL;
         randomNumber = getRandomNumber(100, 112);
-        addNPC(ebigil, randomNumber, 66, false);
+        addNPC(ebigil, randomNumber, 66);
 
         NPCType harvey = NPCType.HARVEY;
         randomNumber = getRandomNumber(132, 145);
-        addNPC(harvey, randomNumber, 66, false);
+        addNPC(harvey, randomNumber, 66);
 
         NPCType rabin = NPCType.RABIN;
         randomNumber = getRandomNumber(30, 40);
-        addNPC(rabin, randomNumber, 49, false);
+        addNPC(rabin, randomNumber, 49);
 
         NPCType sebastian = NPCType.SEBASTIAN;
         randomNumber = getRandomNumber(100, 110);
-        addNPC(sebastian, randomNumber, 49, false);
+        addNPC(sebastian, randomNumber, 49);
 
 
         setPath();
@@ -156,15 +156,12 @@ public class Village implements JsonPreparable {
         structures.add(store);
     }
 
-    public void addNPC(NPCType NPCType, int xStart, int yStart, boolean vertical) {
+    public void addNPC(NPCType NPCType, int xStart, int yStart) {
 //        NPCType.setMissions();
         NPC npc = new NPC(NPCType);
         NPCHouse npcHouse = new NPCHouse(npc);
-        if (vertical) {
-            setTileOfNPCHouse(npcHouse, xStart, yStart, xStart + 4, yStart + 6);
-        } else {
-            setTileOfNPCHouse(npcHouse, xStart, yStart, xStart + 6, yStart + 4);
-        }
+
+        setTileOfNPCHouse(npcHouse, xStart, yStart, xStart + npcHouse.getWidth(), yStart + npcHouse.getHeight());
         App.getInstance().getCurrentGame().getNpcs().add(npc);
         Tile tileByXAndY = getTileByXAndY(npcHouse.getTiles().get(0).getX(), npcHouse.getTiles().get(0).getY() - 1);
         tileByXAndY.setIsFilled(true);

@@ -13,10 +13,12 @@ import lombok.Setter;
 public class NPCHouse extends Structure {
     private NPC owner;
     private Sprite sprite;
+    private Integer width = 4;
+    private Integer height = 6;
 
     public NPCHouse(NPC owner) {
         this.owner = owner;
         this.sprite = new Sprite(owner.getType().getTextureHouse());
-        this.sprite.setSize(4 * App.tileWidth,6 * App.tileHeight);
+        this.sprite.setSize(width * App.tileWidth,height * App.tileHeight);
     }
 }

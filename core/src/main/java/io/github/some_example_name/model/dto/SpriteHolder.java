@@ -42,6 +42,7 @@ public class SpriteHolder {
     }
 
     public void setSize(float width, float height) {
+        changed = true;
         this.width = width;
         this.height = height;
     }

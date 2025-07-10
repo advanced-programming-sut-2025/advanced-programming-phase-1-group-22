@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import io.github.some_example_name.MainGradle;
 import io.github.some_example_name.model.Salable;
+import io.github.some_example_name.model.Tile;
 import io.github.some_example_name.model.Tuple;
 import io.github.some_example_name.model.relations.Player;
 import io.github.some_example_name.model.tools.WateringCan;
@@ -257,8 +258,18 @@ public class CameraViewController {
         Player player = App.getInstance().getCurrentGame().getCurrentPlayer();
         if (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)) {
             if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) {
-                gameMenuController.C_WeatherSet("STORMY");
-                gameMenuController.C_AdvanceDate("1");
+//                gameMenuController.C_WeatherSet("STORMY");
+//                gameMenuController.C_AdvanceDate("1");
+
+                gameMenuController.toolEquip("normal hoe");
+                gameMenuController.C_AddItem("cherry sapling", "1");
+                gameMenuController.C_AddItem("deluxe retaining soil", "1");
+                gameMenuController.useTool("south");
+                Tile tile = App.getInstance().getCurrentGame().tiles[App.getInstance().getCurrentGame().getCurrentPlayer().getTiles().getFirst().getX()][App.getInstance().getCurrentGame().getCurrentPlayer().getTiles().getFirst().getY() - 1];
+                gameMenuController.plantSeed("cherry sapling", tile);
+                gameMenuController.fertilize("deluxe retaining soil", tile);
+                gameMenuController.toolEquip("normal watering can");
+                gameMenuController.useTool("south");
             }
             if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_3)) {
                 gameMenuController.C_WeatherSet("RAINY");
