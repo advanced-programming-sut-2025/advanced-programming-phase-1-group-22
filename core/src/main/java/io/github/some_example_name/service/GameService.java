@@ -750,6 +750,20 @@ public class GameService {
         return new Response(makeStringTokenAbility(currentPlayer), true);
     }
 
+    public Response isCrowAttackToday(){
+        Player player = getCurrentPlayer();
+        Farm farm = getPlayerMainFarm(player);
+        if (farm.getCrowAttackToday()) return new Response("it's done",true);
+        else return new Response("Not yet");
+    }
+
+    public Response setCrowAttack(){
+        Player player = getCurrentPlayer();
+        Farm farm = getPlayerMainFarm(player);
+        farm.setCrowAttackToday(false);
+        return new Response("set",true);
+    }
+
     private String makeStringTokenAbility(Player player) {
         StringBuilder token = new StringBuilder();
         for (Map.Entry<Ability, Integer> abilityIntegerEntry : player.getAbilities().entrySet()) {

@@ -9,28 +9,11 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.ScreenUtils;
 import io.github.some_example_name.MainGradle;
 import io.github.some_example_name.controller.GameViewController;
-import io.github.some_example_name.model.*;
-import io.github.some_example_name.model.animal.Animal;
-import io.github.some_example_name.model.animal.AnimalType;
-import io.github.some_example_name.model.enums.Gender;
-import io.github.some_example_name.model.gameSundry.Sundry;
-import io.github.some_example_name.model.gameSundry.SundryType;
-import io.github.some_example_name.model.products.Hay;
-import io.github.some_example_name.model.relations.Player;
-import io.github.some_example_name.model.source.Seed;
-import io.github.some_example_name.model.source.SeedType;
-import io.github.some_example_name.model.tools.MilkPail;
-import io.github.some_example_name.service.GameService;
-import io.github.some_example_name.service.RelationService;
 import io.github.some_example_name.utils.App;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 
 public class GameView implements Screen, InputProcessor {
     private final GameViewController controller = new GameViewController(this);
-    public static Stage stage =  new Stage(MainGradle.getInstance().getViewport(), MainGradle.getInstance().getBatch());
+    public static Stage stage = new Stage(MainGradle.getInstance().getViewport(), MainGradle.getInstance().getBatch());
     public static int screenX;
     public static int screenY;
     public static Console Console = new Console(stage);
@@ -57,7 +40,7 @@ public class GameView implements Screen, InputProcessor {
 
     @Override
     public boolean touchDown(int i, int i1, int i2, int i3) {
-        if (positionChoosing){
+        if (positionChoosing) {
             Vector3 worldCoords = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
             MainGradle.getInstance().getCamera().unproject(worldCoords);
             float worldX = worldCoords.x;
@@ -87,7 +70,7 @@ public class GameView implements Screen, InputProcessor {
     public boolean mouseMoved(int i, int i1) {
         screenX = i;
         screenY = i1;
-        controller.getToolController().handleToolRotation(i,i1);
+        controller.getToolController().handleToolRotation(i, i1);
         return false;
     }
 
@@ -144,6 +127,6 @@ public class GameView implements Screen, InputProcessor {
 
     @Override
     public void dispose() {
-        if (stage!=null) stage.dispose();
+        if (stage != null) stage.dispose();
     }
 }

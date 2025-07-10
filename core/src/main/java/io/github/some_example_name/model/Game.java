@@ -91,7 +91,7 @@ public class Game implements Serializable {
             }
         }
         for (Structure structure : App.getInstance().getCurrentGame().getVillage().getStructures()) {
-            if (structure instanceof NPC npc){
+            if (structure instanceof NPC npc) {
                 npc.setGiftedToday(false);
             }
         }
@@ -121,14 +121,14 @@ public class Game implements Serializable {
         automaticWatering(this.village.getWeather());
         setWeatherCoefficientEveryDay();
         for (Farm farm : this.getVillage().getFarms()) {
-            crowAttack(farm);
+            farm.setCrowAttackToday(false);
         }
         for (Player player : players) {
             if (!player.getIsFainted()) player.goToCottage();
             player.resetEnergy();
             int total = player.getShippingBinList().stream()
-                    .mapToInt(ShippingBin::CalculatePriceOfShippingBinProducts)
-                    .sum();
+                .mapToInt(ShippingBin::CalculatePriceOfShippingBinProducts)
+                .sum();
             addGoldToPlayerForShippingBin(total, player);
 
             if (player.getBuff() != null) {
@@ -249,7 +249,7 @@ public class Game implements Serializable {
             for (Farm farm : App.getInstance().getCurrentGame().getVillage().getFarms()) {
                 for (Structure structure : farm.getStructures()) {
                     if (structure instanceof HarvestAbleProduct &&
-                            !((HarvestAbleProduct) structure).getInGreenHouse()) {
+                        !((HarvestAbleProduct) structure).getInGreenHouse()) {
                         ((HarvestAbleProduct) structure).setWaterToday(true);
                     }
                 }
@@ -294,36 +294,10 @@ public class Game implements Serializable {
         if (this.getVillage().getWeather().equals(Weather.SNOWY)) {
             weatherCoefficient = 2.0;
         } else if (this.getVillage().getWeather().equals(Weather.RAINY) ||
-                this.getVillage().getWeather().equals(Weather.STORMY)) {
+            this.getVillage().getWeather().equals(Weather.STORMY)) {
             weatherCoefficient = 1.5;
         }
         this.weatherCoefficient = weatherCoefficient;
-    }
-
-    private void crowAttack(Farm farm) {
-        int numberOfHarvest = 0;
-        List<HarvestAbleProduct> harvestAbleProducts = new ArrayList<>();
-        for (Structure structure : farm.getStructures()) {
-            if (structure instanceof HarvestAbleProduct) {
-                harvestAbleProducts.add((HarvestAbleProduct) structure);
-                numberOfHarvest += 1;
-            }
-        }
-        int numberOfCrow = numberOfHarvest / 16;
-        for (int i = 0; i < numberOfCrow; i++) {
-            Random random = new Random();
-            Random random1 = new Random();
-            if (random.nextInt() % 4 == 0) {
-                HarvestAbleProduct harvestAbleProduct = harvestAbleProducts.get(Math.abs(random1.nextInt()) % harvestAbleProducts.size());
-                if (!harvestAbleProduct.getAroundScareCrow() && !harvestAbleProduct.getInGreenHouse()) {
-                    if (harvestAbleProduct instanceof Tree) {
-                        ((Tree) harvestAbleProduct).setAttackByCrow(true);
-                    } else {
-                        App.getInstance().getCurrentGame().getVillage().removeStructure(harvestAbleProduct);
-                    }
-                }
-            }
-        }
     }
 
     private boolean canHoldWater(HarvestAbleProduct harvestAbleProduct) {
