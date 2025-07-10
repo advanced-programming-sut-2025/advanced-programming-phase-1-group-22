@@ -319,17 +319,10 @@ public class WorldController {
                                 structure.getSprite().draw(MainGradle.getInstance().getBatch());
                             }
                         } else if (structure instanceof Animal animal) {
-
-                            if (isAnimalBuildingCollision(farm.getStructures(), animal, player)) {
-                                structure.getSprite().setPosition(structure.getTiles().get(0).getX() * App.tileWidth,
-                                    structure.getTiles().get(0).getY() * App.tileHeight);
-                                structure.getSprite().draw(MainGradle.getInstance().getBatch());
-                            }else if (animal.getIsAnimalStayOutAllNight()){
-                                structure.getSprite().setPosition(structure.getTiles().get(0).getX() * App.tileWidth,
-                                    structure.getTiles().get(0).getY() * App.tileHeight);
-                                structure.getSprite().draw(MainGradle.getInstance().getBatch());
+                            if (isAnimalBuildingCollision(farm.getStructures(), animal, player) ||
+                                animal.getIsAnimalStayOutAllNight()) {
+                                drawRawSprite(delta, structure.getSprite(), structure);
                             }
-
                         } else if (structure instanceof FarmBuilding farmBuilding) {
                             if (collision(player, farmBuilding)) {
                                 drawRawSprite(delta, ((FarmBuilding) structure).getSpriteInterior(), structure);
