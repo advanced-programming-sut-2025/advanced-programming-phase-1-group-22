@@ -123,15 +123,15 @@ public class FriendPopUp extends PopUp {
 
     private void handleAskMarriage(Player player) {
         Player currentPlayer = App.getInstance().getCurrentGame().getCurrentPlayer();
-        Tile origin = currentPlayer.getTiles().getFirst();
-        Tile dest = App.getInstance().getCurrentGame().tiles[player.getTiles().getFirst().getX()][player.getTiles().getFirst().getY() - 1];
+        Tile origin = currentPlayer.getTiles().get(0);
+        Tile dest = App.getInstance().getCurrentGame().tiles[player.getTiles().get(0).getX()][player.getTiles().get(0).getY() - 1];
         Direction dir = Direction.getByXAndY(
-            dest.getX() - currentPlayer.getTiles().getFirst().getX(),
-            dest.getY() - currentPlayer.getTiles().getFirst().getY()
+            dest.getX() - currentPlayer.getTiles().get(0).getX(),
+            dest.getY() - currentPlayer.getTiles().get(0).getY()
         );
         if (dir == null) {
-            if (dest.getY() - currentPlayer.getTiles().getFirst().getY() == -2 &&
-                Math.abs(dest.getX() - currentPlayer.getTiles().getFirst().getX()) <= 1) {
+            if (dest.getY() - currentPlayer.getTiles().get(0).getY() == -2 &&
+                Math.abs(dest.getX() - currentPlayer.getTiles().get(0).getX()) <= 1) {
                 dir = Direction.SOUTH;
             } else {
                 return;
@@ -182,8 +182,8 @@ public class FriendPopUp extends PopUp {
         }
         GameView.captureInput = false;
         Direction direction = Direction.getByXAndY(
-            player.getTiles().getFirst().getX() - currentPlayer.getTiles().getFirst().getX(),
-            player.getTiles().getFirst().getY() - currentPlayer.getTiles().getFirst().getY()
+            player.getTiles().get(0).getX() - currentPlayer.getTiles().get(0).getX(),
+            player.getTiles().get(0).getY() - currentPlayer.getTiles().get(0).getY()
         );
         if (direction == null) return null;
         player.setLazyDirection(direction.reverse());
@@ -202,7 +202,7 @@ public class FriendPopUp extends PopUp {
         Direction direction = initialHandle(player, RelationService.getInstance().hug(player.getUser().getUsername()));
         if (direction == null) return;
         Player currentPlayer = App.getInstance().getCurrentGame().getCurrentPlayer();
-        Tile origin = currentPlayer.getTiles().getFirst();
+        Tile origin = currentPlayer.getTiles().get(0);
         currentPlayer.setDirection(direction);
         currentPlayer.setDirChanged(true);
         Timer.schedule(new Timer.Task() {
@@ -235,7 +235,7 @@ public class FriendPopUp extends PopUp {
         Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
-                currentPlayer.getSprites().getFirst().setOffset(new Tuple<>( -0.1f, 0.1f));
+                currentPlayer.getSprites().get(0).setOffset(new Tuple<>( -0.1f, 0.1f));
                 currentPlayer.setLazyDirection(Direction.SOUTH);
                 player.setLazyDirection(Direction.NORTH);
             }
@@ -246,7 +246,7 @@ public class FriendPopUp extends PopUp {
         Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
-                currentPlayer.getSprites().getFirst().setOffset(new Tuple<>( 0f, 0f));
+                currentPlayer.getSprites().get(0).setOffset(new Tuple<>( 0f, 0f));
                 currentPlayer.setDirection(direction);
                 currentPlayer.setDirChanged(true);
                 currentPlayer.getTiles().clear();

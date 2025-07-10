@@ -117,13 +117,13 @@ public class Player extends Actor implements JsonPreparable {
     public void setPlayerType(PlayerType playerType) {
         this.playerType = playerType;
         sprites.add(new SpriteHolder(playerType.getLazy(Direction.SOUTH), new Tuple<>(0f, 0f)));
-        sprites.getFirst().setSize((float) App.tileWidth, (float) (App.tileHeight * 1.5));
-        sprites.getFirst().setChanged(true);
+        sprites.get(0).setSize((float) App.tileWidth, (float) (App.tileHeight * 1.5));
+        sprites.get(0).setChanged(true);
     }
 
     public void faint() {
-        this.sprites.getFirst().setSprite(playerType.getFainting());
-        ((AnimatedSprite)this.sprites.getFirst().getSprite()).setRotationAnimation(
+        this.sprites.get(0).setSprite(playerType.getFainting());
+        ((AnimatedSprite)this.sprites.get(0).getSprite()).setRotationAnimation(
             new Animation<>(0.1f, 0f, 0f, 45f, 90f)
         );
         GameView.captureInput = false;
@@ -372,22 +372,22 @@ public class Player extends Actor implements JsonPreparable {
 
     public ArrayList<SpriteHolder> getSprites() {
         if (dirChanged) {
-            ((AnimatedSprite)this.sprites.getFirst().getSprite()).setRotationAnimation(null);
+            ((AnimatedSprite)this.sprites.get(0).getSprite()).setRotationAnimation(null);
             dirChanged = false;
-            this.sprites.getFirst().setSprite(playerType.getWalking(direction));
+            this.sprites.get(0).setSprite(playerType.getWalking(direction));
         }
         return sprites;
     }
 
     public void setDirection(Direction direction) {
-        if (((AnimatedSprite) this.sprites.getFirst().getSprite()).isLooping() ||
+        if (((AnimatedSprite) this.sprites.get(0).getSprite()).isLooping() ||
             this.direction != direction) dirChanged = true;
         if (!isFainted) ((AnimatedSprite) this.sprites.get(0).getSprite()).setLooping(true);
         this.direction = direction;
     }
     public void setLazyDirection(Direction direction) {
         this.direction = direction;
-        this.sprites.getFirst().setSprite(playerType.getLazy(direction));
+        this.sprites.get(0).setSprite(playerType.getLazy(direction));
     }
 
     @Override
@@ -402,6 +402,6 @@ public class Player extends Actor implements JsonPreparable {
 
     public void setProposal() {
         this.direction = Direction.NORTH;
-        this.sprites.getFirst().setSprite(playerType.getProposal());
+        this.sprites.get(0).setSprite(playerType.getProposal());
     }
 }

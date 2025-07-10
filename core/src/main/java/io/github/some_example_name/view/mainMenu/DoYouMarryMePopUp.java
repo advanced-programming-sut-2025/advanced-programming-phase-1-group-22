@@ -108,7 +108,7 @@ public class DoYouMarryMePopUp extends PopUp {
         player.setDirection(Direction.NORTH);
         player.getTiles().clear();
         player.getTiles().addAll(currentPlayer.getTiles());
-        player.getSprites().getFirst().setOffset(new Tuple<>(-0.4f, 0f));
+        player.getSprites().get(0).setOffset(new Tuple<>(-0.4f, 0f));
         Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
