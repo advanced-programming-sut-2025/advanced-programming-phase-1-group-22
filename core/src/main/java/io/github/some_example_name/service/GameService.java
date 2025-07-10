@@ -406,7 +406,7 @@ public class GameService {
         Tool currentTool = getCurrentTool(currentPlayer);
         if (currentTool == null) {
             return new Response("you do not carrying any tool");
-        } else if (currentTool.getEnergy(currentPlayer) < currentPlayer.getEnergy()) {
+        } else if (currentTool.getEnergy(currentPlayer) > currentPlayer.getEnergy()) {
             currentPlayer.faint();
             nextTurnAfterFaint();
             return new Response("you do not have enough energy to use this tool");
