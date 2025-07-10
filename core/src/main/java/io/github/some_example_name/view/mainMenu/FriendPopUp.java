@@ -185,8 +185,15 @@ public class FriendPopUp extends PopUp {
         Player currentPlayer = App.getInstance().getCurrentGame().getCurrentPlayer();
         Tile origin = currentPlayer.getTiles().getFirst();
         currentPlayer.setDirection(direction);
-        currentPlayer.getTiles().clear();
-        currentPlayer.getTiles().addAll(player.getTiles());
+        currentPlayer.setDirChanged(true);
+        Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+                currentPlayer.getTiles().clear();
+                currentPlayer.getTiles().addAll(player.getTiles());
+            }
+        }, 0.3f);
+
         boolean flag = false;
         int x = -1, y = -1;
         List<Structure> structures = App.getInstance().getCurrentGame().getVillage().getStructures();
@@ -213,7 +220,7 @@ public class FriendPopUp extends PopUp {
                 currentPlayer.setLazyDirection(Direction.SOUTH);
                 player.setLazyDirection(Direction.NORTH);
             }
-        }, 0.5f);
+        }, 0.8f);
         boolean finalFlag = flag;
         int finalX = x;
         int finalY = y;
@@ -222,10 +229,11 @@ public class FriendPopUp extends PopUp {
             public void run() {
                 currentPlayer.getSprites().getFirst().setOffset(new Tuple<>( 0f, 0f));
                 currentPlayer.setDirection(direction);
+                currentPlayer.setDirChanged(true);
                 currentPlayer.getTiles().clear();
                 currentPlayer.getTiles().add(origin);
             }
-        }, 3f);
+        }, 3.3f);
         Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
@@ -235,6 +243,6 @@ public class FriendPopUp extends PopUp {
                     Collections.swap(structures, finalX, finalY);
                 }
             }
-        }, 3.3f);
+        }, 3.6f);
     }
 }

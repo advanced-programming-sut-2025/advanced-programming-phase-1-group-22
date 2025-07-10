@@ -12,7 +12,8 @@ public enum Direction {
 	NORTHWEST("northwest",-1,1),
 	NORTHEAST("northeast",1,1),
 	SOUTHWEST("southwest",-1,-1),
-	SOUTHEAST("southeast",1,-1);
+	SOUTHEAST("southeast",1,-1),
+	CENTRE("centre",0,0);
 	private final String name;
 	private final Integer xTransmit;
 	private final Integer yTransmit;

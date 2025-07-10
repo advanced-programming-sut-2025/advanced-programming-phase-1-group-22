@@ -406,7 +406,7 @@ public class WorldController {
 
     public void drawFlower(Direction direction) {
         flower = new SpriteHolder(new AnimatedSprite(
-            new Animation<>(0.1f, new TextureRegion(GameAsset.FLOWER))), new Tuple<>(0f,0f));
+            new Animation<>(0.1f, new TextureRegion(GameAsset.FLOWER))), new Tuple<>(0.5f,0f));
         flower.getSprite().setScale(0.4f);
         ((AnimatedSprite) flower.getSprite()).setLooping(false);
         Player player = App.getInstance().getCurrentGame().getCurrentPlayer();
