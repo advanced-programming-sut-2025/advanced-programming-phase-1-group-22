@@ -7,7 +7,7 @@
     <list default="true" id="d95100ff-6e61-4571-9e87-dcef3d963dba" name="Changes" comment="handle smooth ask marriage">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/build/libs/core-1.0.0.jar" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/libs/core-1.0.0.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/view/mainMenu/FriendPopUp.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/view/mainMenu/FriendPopUp.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/service/GameService.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/service/GameService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -159,15 +159,7 @@
       <workItem from="1752082081960" duration="8814000" />
       <workItem from="1752093153986" duration="7500000" />
       <workItem from="1752101048755" duration="6829000" />
-      <workItem from="1752144063393" duration="417000" />
-    </task>
-    <task id="LOCAL-00004" summary="calibrated camera objects and added energy bar">
-      <option name="closed" value="true" />
-      <created>1751456170719</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1751456170719</updated>
+      <workItem from="1752144063393" duration="2128000" />
     </task>
     <task id="LOCAL-00005" summary="dynamic cottage menu">
       <option name="closed" value="true" />
@@ -553,7 +545,15 @@
       <option name="project" value="LOCAL" />
       <updated>1752108625838</updated>
     </task>
-    <option name="localTasksCounter" value="53" />
+    <task id="LOCAL-00053" summary="handle smooth ask marriage">
+      <option name="closed" value="true" />
+      <created>1752144596526</created>
+      <option name="number" value="00053" />
+      <option name="presentableId" value="LOCAL-00053" />
+      <option name="project" value="LOCAL" />
+      <updated>1752144596527</updated>
+    </task>
+    <option name="localTasksCounter" value="54" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -571,7 +571,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="implemented notifying" />
     <MESSAGE value="implemented NotificationMenu" />
     <MESSAGE value="implemented friendsPopup" />
     <MESSAGE value="handling placeItem" />
@@ -596,7 +595,8 @@
     <MESSAGE value="handle z-index during the hug" />
     <MESSAGE value="handle methods in spouse's farm" />
     <MESSAGE value="handle smooth hug and give flower" />
-    <option name="LAST_COMMIT_MESSAGE" value="handle smooth hug and give flower" />
+    <MESSAGE value="handle smooth ask marriage" />
+    <option name="LAST_COMMIT_MESSAGE" value="handle smooth ask marriage" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
