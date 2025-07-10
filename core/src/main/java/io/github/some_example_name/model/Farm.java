@@ -264,7 +264,7 @@ public class Farm implements JsonPreparable {
                     }
                 }
             }
-            if (flag) {
+            if (flag && !tiles2.isEmpty()) {
                 if (!isPassible) {
                     for (Tile tile : tiles2) {
                         tile.setIsPassable(false);
@@ -336,7 +336,7 @@ public class Farm implements JsonPreparable {
                     }
                 }
             }
-            if (flag) {
+            if (flag && !tiles2.isEmpty()) {
                 structure.getTiles().addAll(tiles2);
                 this.getStructures().add(structure);
                 return;

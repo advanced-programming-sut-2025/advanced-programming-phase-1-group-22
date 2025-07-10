@@ -48,8 +48,8 @@ public class Tree extends HarvestAbleProduct {
             numberOfStages = 0;
         }
         this.sprites.add(new SpriteHolder(new Sprite(treeType.getTextures().get(0))));
-        this.sprites.getFirst().setOffset(new Tuple<>(-0.5f, 0f));
-        this.sprites.getFirst().setSize(App.tileWidth * 2,App.tileHeight * 3);
+        this.sprites.get(0).setOffset(new Tuple<>(-0.5f, 0f));
+        this.sprites.get(0).setSize(App.tileWidth * 2,App.tileHeight * 3);
     }
 
     public void burn() {
@@ -63,6 +63,7 @@ public class Tree extends HarvestAbleProduct {
     public int calculateRegrowthLevel() {
         int level = 1;
         TimeAndDate now = App.getInstance().getCurrentGame().getTimeAndDate();
+        if (startPlanting == null) return level;
         int spendDays = now.getTotalDays() - this.startPlanting.getDay();
         if (this.treeType.getHarvestStages() != null) {
             int sum = 0;
@@ -207,7 +208,7 @@ public class Tree extends HarvestAbleProduct {
     @Override
     public ArrayList<SpriteHolder> getSprites() {
         if (this.isBurn && spriteSituation != -1){
-            this.sprites.getFirst().setSprite(new Sprite(this.treeType.getBurnTexture()));
+            this.sprites.get(0).setSprite(new Sprite(this.treeType.getBurnTexture()));
             spriteSituation = -1;
             return this.sprites;
         }
@@ -215,7 +216,7 @@ public class Tree extends HarvestAbleProduct {
             return this.sprites;
         }
         if (canHarvest() && spriteSituation == -2){
-            this.sprites.getFirst().setSprite(new Sprite(this.treeType.getFruitedTexture()));
+            this.sprites.get(0).setSprite(new Sprite(this.treeType.getFruitedTexture()));
             spriteSituation = -2;
             return this.sprites;
         }
@@ -234,12 +235,12 @@ public class Tree extends HarvestAbleProduct {
                 case FALL -> season = 2;
                 case WINTER -> season = 3;
             }
-            this.sprites.getFirst().setSprite(new Sprite(trees[season]));
+            this.sprites.get(0).setSprite(new Sprite(trees[season]));
             spriteSituation = level;
             return this.sprites;
         }
         if (spriteSituation != level) {
-            this.sprites.getFirst().setSprite(new Sprite(this.treeType.getTextures().get(level - 1)));
+            this.sprites.get(0).setSprite(new Sprite(this.treeType.getTextures().get(level - 1)));
             spriteSituation = level;
         }
         return this.sprites;

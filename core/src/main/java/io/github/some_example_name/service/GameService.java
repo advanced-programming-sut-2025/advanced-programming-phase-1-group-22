@@ -686,7 +686,7 @@ public class GameService {
         if (harvestableProduct instanceof Tree) currentTile.setIsPassable(false);
         harvestableProduct.setTiles(List.of(currentTile));
         TimeAndDate timeAndDate = new TimeAndDate();
-        timeAndDate.setDay(App.getInstance().getCurrentGame().getTimeAndDate().getDay());
+        timeAndDate.setDay(App.getInstance().getCurrentGame().getTimeAndDate().getTotalDays());
         harvestableProduct.setStartPlanting(timeAndDate);
         currentFarm.getStructures().add(harvestableProduct);
         if (isThereGreenHouseForHarvest(currentTile)) {
