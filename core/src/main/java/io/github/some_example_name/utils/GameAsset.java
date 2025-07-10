@@ -2361,6 +2361,7 @@ public class GameAsset {
     public static final Texture WILD_TREE_STUMP_FALL = new Texture("Trees/Wild_Tree_stump_Fall.png");
     public static final Texture WILD_TREE_STUMP_SPRING = new Texture("Trees/Wild_Tree_stump_Spring.png");
     public static final Texture WILD_TREE_STUMP_WINTER = new Texture("Trees/Wild_Tree_stump_Winter.png");
+    public static final Texture PELICAN_TOWN = new Texture("Village/Pelican_Town.png");
     public static final Texture ABIGAIL = new Texture("Villagers/Abigail.png");
     public static final Texture ALEX = new Texture("Villagers/Alex.png");
     public static final Texture BIRDIE = new Texture("Villagers/Birdie.png");

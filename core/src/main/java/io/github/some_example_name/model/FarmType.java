@@ -1,7 +1,6 @@
 package io.github.some_example_name.model;
 
 import lombok.Getter;
-import lombok.ToString;
 import io.github.some_example_name.model.structure.farmInitialElements.*;
 
 import java.util.ArrayList;
@@ -54,8 +53,8 @@ public enum FarmType {
     }
 
     public void setTilePairs(HardCodeFarmElements hardCodeFarmElements, Pair pair) {
-        for (int i = pair.getX(); i <= pair.getX() + hardCodeFarmElements.getLength(); i++) {
-            for (int j = pair.getY(); j <= pair.getY() + hardCodeFarmElements.getWidth(); j++) {
+        for (int i = pair.getX(); i <= pair.getX() + hardCodeFarmElements.getWidth(); i++) {
+            for (int j = pair.getY(); j <= pair.getY() + hardCodeFarmElements.getHeight(); j++) {
                 hardCodeFarmElements.getTilePairList().add(new Pair(i, j));
             }
         }

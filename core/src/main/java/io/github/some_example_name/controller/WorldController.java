@@ -13,6 +13,7 @@ import io.github.some_example_name.MainGradle;
 import io.github.some_example_name.model.*;
 import io.github.some_example_name.model.animal.Animal;
 import io.github.some_example_name.model.craft.Craft;
+import io.github.some_example_name.model.dto.SpriteComponent;
 import io.github.some_example_name.model.dto.SpriteHolder;
 import io.github.some_example_name.model.products.TreesAndFruitsAndSeeds.Tree;
 import io.github.some_example_name.model.records.Response;
@@ -256,6 +257,41 @@ public class WorldController {
         return new Pair(mouseTileX - tile.getX(), mouseTileY - tile.getY());
     }
 
+    private void drawRawSprite(float delta, Sprite sprite, Structure structure) {
+
+        sprite.setPosition(structure.getTiles().get(0).getX() * App.tileWidth,
+            structure.getTiles().get(0).getY() * App.tileHeight);
+        int width = structure.getWidth() == null ? 1 : structure.getWidth();
+        int height = structure.getHeight() == null ? 1 : structure.getHeight();
+        sprite.setPosition((width/2f + structure.getTiles().getFirst().getX()) * App.tileWidth - sprite.getWidth()/2,
+            (height/2f + structure.getTiles().getFirst().getY()) * App.tileHeight - sprite.getHeight()/2 );
+        sprite.draw(MainGradle.getInstance().getBatch());
+        if (sprite instanceof AnimatedSprite animatedSprite) {
+            animatedSprite.update(delta);
+        }
+    }
+
+    private void drawSpriteHolder(float delta, SpriteHolder sprite, Structure structure) {
+        sprite.getSprite().setPosition(
+            (sprite.getOffset().getX() + structure.getTiles().getFirst().getX()) * App.tileWidth,
+            (sprite.getOffset().getY() + structure.getTiles().getFirst().getY()) * App.tileHeight);
+        sprite.getSprite().draw(MainGradle.getInstance().getBatch());
+        if (sprite.getSprite() instanceof AnimatedSprite animatedSprite) {
+            animatedSprite.update(delta);
+        }
+    }
+
+    private void drawSpriteComponent(float delta, SpriteComponent sprite, Structure structure) {
+        ArrayList<SpriteHolder> spriteHolders = structure.getSpriteComponent().getSprites(delta);
+        for (SpriteHolder spriteHolder : spriteHolders) {
+            spriteHolder.getSprite().setPosition(
+                (sprite.getOffset().getX() + spriteHolder.getOffset().getX() + structure.getTiles().getFirst().getX()) * App.tileWidth,
+                (sprite.getOffset().getY() + spriteHolder.getOffset().getY() + structure.getTiles().getFirst().getY()) * App.tileHeight
+            );
+            spriteHolder.getSprite().draw(MainGradle.getInstance().getBatch());
+        }
+    }
+
     public void printMap(float delta) {
         Player player = App.getInstance().getCurrentGame().getCurrentPlayer();
         Game game = App.getInstance().getCurrentGame();
@@ -275,58 +311,34 @@ public class WorldController {
             for (Structure structure : farm.getStructures()) {
                 if (isStructureInBond(structure)) {
                     if (structure.getSprite() != null) {
-                        if (structure instanceof Lake) {
+                        if (structure instanceof Lake lake) {
                             for (Tile tile : structure.getTiles()) {
                                 structure.getSprite().setSize(App.tileWidth, App.tileHeight);
                                 structure.getSprite().setPosition(tile.getX() * App.tileWidth,
                                     tile.getY() * App.tileHeight);
                                 structure.getSprite().draw(MainGradle.getInstance().getBatch());
                             }
-                        } else if (structure instanceof GreenHouse greenHouse) {
-                            Sprite sprite = greenHouse.getSprite();
-                            sprite.setPosition(structure.getTiles().get(0).getX() * App.tileWidth,
-                                structure.getTiles().get(0).getY() * App.tileHeight);
-                            sprite.draw(MainGradle.getInstance().getBatch());
-                        } else if (structure instanceof Crop crop) {
-                            Sprite sprite = crop.getSprite();
-                            sprite.setPosition(structure.getTiles().get(0).getX() * App.tileWidth,
-                                structure.getTiles().get(0).getY() * App.tileHeight);
-                            sprite.draw(MainGradle.getInstance().getBatch());
-                        } else if (structure instanceof Tree tree) {
-                            Sprite sprite = tree.getSprite();
-                            sprite.setPosition(structure.getTiles().get(0).getX() * App.tileWidth,
-                                structure.getTiles().get(0).getY() * App.tileHeight);
-                            sprite.draw(MainGradle.getInstance().getBatch());
-                        } else if (structure instanceof Animal) {
-                            if (isAnimalBuildingCollision(farm.getStructures(), (Animal) structure, player)) {
-                                structure.getSprite().setPosition(structure.getTiles().get(0).getX() * App.tileWidth,
-                                    structure.getTiles().get(0).getY() * App.tileHeight);
-                                structure.getSprite().draw(MainGradle.getInstance().getBatch());
+                        } else if (structure instanceof Animal animal) {
+                            if (isAnimalBuildingCollision(farm.getStructures(), animal, player)) {
+                                drawRawSprite(delta, structure.getSprite(), structure);
                             }
-                        } else if (structure instanceof FarmBuilding) {
-                            if (collision(player, (FarmBuilding) structure)) {
-                                Sprite sprite = ((FarmBuilding) structure).getSpriteInterior();
-                                sprite.setPosition(structure.getTiles().get(0).getX() * App.tileWidth,
-                                    structure.getTiles().get(0).getY() * App.tileHeight);
-                                sprite.draw(MainGradle.getInstance().getBatch());
+                        } else if (structure instanceof FarmBuilding farmBuilding) {
+                            if (collision(player, farmBuilding)) {
+                                drawRawSprite(delta, ((FarmBuilding) structure).getSpriteInterior(), structure);
                             } else {
-                                structure.getSprite().setPosition(structure.getTiles().get(0).getX() * App.tileWidth,
-                                    structure.getTiles().get(0).getY() * App.tileHeight);
-                                structure.getSprite().draw(MainGradle.getInstance().getBatch());
+                                drawRawSprite(delta, structure.getSprite(), structure);
                             }
                         } else {
-                            structure.getSprite().setPosition(structure.getTiles().get(0).getX() * App.tileWidth,
-                                structure.getTiles().get(0).getY() * App.tileHeight);
-                            structure.getSprite().draw(MainGradle.getInstance().getBatch());
+                            drawRawSprite(delta, structure.getSprite(), structure);
                         }
                     }
                     if (structure.getSprites() != null) {
                         for (SpriteHolder sprite : structure.getSprites()) {
-                            sprite.getSprite().setPosition(
-                                (sprite.getOffset().getX() + structure.getTiles().get(0).getX()) * App.tileWidth,
-                                (sprite.getOffset().getY() + structure.getTiles().get(0).getY()) * App.tileHeight);
-                            sprite.getSprite().draw(MainGradle.getInstance().getBatch());
+                            drawSpriteHolder(delta, sprite, structure);
                         }
+                    }
+                    if (structure.getSpriteComponent() != null) {
+                        drawSpriteComponent(delta, structure.getSpriteComponent(), structure);
                     }
                 }
             }
@@ -334,37 +346,23 @@ public class WorldController {
         for (Structure structure : App.getInstance().getCurrentGame().getVillage().getStructures()) {
             if (structure.getSprite() != null) {
                 if (structure instanceof NPC npc) {
+                    drawRawSprite(delta, structure.getSprite(), structure);
                     if (npc.isHaveDialog()) {
-                        npc.getSprite().setPosition(structure.getTiles().get(0).getX() * App.tileWidth,
-                            structure.getTiles().get(0).getY() * App.tileHeight);
-                        npc.getSprite().draw(MainGradle.getInstance().getBatch());
                         npc.getSpriteDialogBox().setPosition(structure.getTiles().get(0).getX() * App.tileWidth,
                             structure.getTiles().get(0).getY() * App.tileHeight + npc.getSprite().getHeight());
                         npc.getSpriteDialogBox().draw(MainGradle.getInstance().getBatch());
-                    } else {
-                        structure.getSprite().setPosition(structure.getTiles().get(0).getX() * App.tileWidth,
-                            structure.getTiles().get(0).getY() * App.tileHeight);
-                        structure.getSprite().draw(MainGradle.getInstance().getBatch());
                     }
                 } else {
-                    structure.getSprite().setPosition(structure.getTiles().get(0).getX() * App.tileWidth,
-                        structure.getTiles().get(0).getY() * App.tileHeight);
-                    structure.getSprite().draw(MainGradle.getInstance().getBatch());
-                    if (structure.getSprite() instanceof AnimatedSprite aSprite) {
-                        aSprite.update(delta);
-                    }
+                    drawRawSprite(delta, structure.getSprite(), structure);
                 }
             }
             if (structure.getSprites() != null) {
                 for (SpriteHolder sprite : structure.getSprites()) {
-                    sprite.getSprite().setPosition(
-                        (sprite.getOffset().getX() + structure.getTiles().get(0).getX()) * App.tileWidth,
-                        (sprite.getOffset().getY() + structure.getTiles().get(0).getY()) * App.tileHeight);
-                    sprite.getSprite().draw(MainGradle.getInstance().getBatch());
-                    if (sprite.getSprite() instanceof AnimatedSprite aSprite) {
-                        aSprite.update(delta);
-                    }
+                    drawSpriteHolder(delta, sprite, structure);
                 }
+            }
+            if (structure.getSpriteComponent() != null) {
+                drawSpriteComponent(delta, structure.getSpriteComponent(), structure);
             }
         }
         if (flower != null) {

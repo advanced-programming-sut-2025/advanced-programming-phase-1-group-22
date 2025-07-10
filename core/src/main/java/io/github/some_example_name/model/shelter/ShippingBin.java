@@ -9,9 +9,7 @@ import lombok.ToString;
 import io.github.some_example_name.model.Salable;
 import io.github.some_example_name.model.structure.farmInitialElements.HardCodeFarmElements;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Getter
@@ -29,8 +27,8 @@ public class ShippingBin extends HardCodeFarmElements {
     }
 
     public ShippingBin() {
+        super.setHeight(1);
         super.setWidth(1);
-        super.setLength(1);
         this.sprite = new Sprite(GameAsset.SHIPPINGBIN);
         this.sprite.setSize(App.tileWidth,App.tileHeight);
     }
