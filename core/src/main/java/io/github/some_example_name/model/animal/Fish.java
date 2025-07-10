@@ -55,10 +55,6 @@ public class Fish extends Structure implements Salable {
     public Fish copy() {
         return new Fish(this.fishType, this.productQuality);
     }
-    @Override
-    public String getName() {
-        return this.fishType.getName();
-    }
 
     public float updatePositionY(float positionY) {
         this.coefficientSpeed = 1;
