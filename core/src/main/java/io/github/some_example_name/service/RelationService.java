@@ -298,9 +298,9 @@ public class RelationService {
             return new Response("the other player is not next You");
         }
         Friendship friendShipBetweenTwoActors = getFriendShipBetweenTwoActors(player);
-        if (friendShipBetweenTwoActors.getFriendShipLevel() < 2) {
-            return new Response("you are not in that level of friendship");
-        }
+//        if (friendShipBetweenTwoActors.getFriendShipLevel() < 2) {
+//            return new Response("you are not in that level of friendship");
+//        }
         changeFriendShipLevelUp(friendShipBetweenTwoActors, 60);
         currentPlayer.changeEnergy(50);
         player.changeEnergy(50);

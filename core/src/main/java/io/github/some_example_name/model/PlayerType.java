@@ -56,6 +56,7 @@ public enum PlayerType {
         this.miniOffsetY = miniOffsetY;
         directions =  new HashMap<>();
         directions.put(Direction.NORTH, 2);
+        directions.put(Direction.CENTRE, 0);
         directions.put(Direction.NORTHEAST, 1);
         directions.put(Direction.SOUTHEAST, 1);
         directions.put(Direction.EAST, 1);
