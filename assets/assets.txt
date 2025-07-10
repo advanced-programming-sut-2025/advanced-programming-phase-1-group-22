@@ -3012,6 +3012,8 @@ sebastian.png
 skin/craftacular-ui.atlas
 skin/craftacular-ui.json
 skin/craftacular-ui.png
+skin/craftacular-ui0.png
+skin/craftacular-ui1.png
 skin/font-bold-export.fnt
 skin/font-export.fnt
 skin/font-title-export.fnt
