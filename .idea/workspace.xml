@@ -4,13 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d95100ff-6e61-4571-9e87-dcef3d963dba" name="Changes" comment="handle methods in spouse's farm">
+    <list default="true" id="d95100ff-6e61-4571-9e87-dcef3d963dba" name="Changes" comment="handle smooth ask marriage">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/reports/problems/problems-report.html" beforeDir="false" afterPath="$PROJECT_DIR$/build/reports/problems/problems-report.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/build/libs/core-1.0.0.jar" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/libs/core-1.0.0.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/controller/WorldController.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/controller/WorldController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/Direction.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/Direction.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/service/RelationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/service/RelationService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/view/mainMenu/FriendPopUp.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/view/mainMenu/FriendPopUp.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -162,15 +158,8 @@
       <workItem from="1752055053229" duration="15516000" />
       <workItem from="1752082081960" duration="8814000" />
       <workItem from="1752093153986" duration="7500000" />
-      <workItem from="1752101048755" duration="5547000" />
-    </task>
-    <task id="LOCAL-00003" summary="added greenhouse build">
-      <option name="closed" value="true" />
-      <created>1751397194408</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1751397194408</updated>
+      <workItem from="1752101048755" duration="6829000" />
+      <workItem from="1752144063393" duration="417000" />
     </task>
     <task id="LOCAL-00004" summary="calibrated camera objects and added energy bar">
       <option name="closed" value="true" />
@@ -556,7 +545,15 @@
       <option name="project" value="LOCAL" />
       <updated>1752104548791</updated>
     </task>
-    <option name="localTasksCounter" value="52" />
+    <task id="LOCAL-00052" summary="handle smooth hug and give flower">
+      <option name="closed" value="true" />
+      <created>1752108625838</created>
+      <option name="number" value="00052" />
+      <option name="presentableId" value="LOCAL-00052" />
+      <option name="project" value="LOCAL" />
+      <updated>1752108625838</updated>
+    </task>
+    <option name="localTasksCounter" value="53" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -574,7 +571,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="implemented talk menu" />
     <MESSAGE value="implemented notifying" />
     <MESSAGE value="implemented NotificationMenu" />
     <MESSAGE value="implemented friendsPopup" />
@@ -599,7 +595,8 @@
     <MESSAGE value="night and lightening animation" />
     <MESSAGE value="handle z-index during the hug" />
     <MESSAGE value="handle methods in spouse's farm" />
-    <option name="LAST_COMMIT_MESSAGE" value="handle methods in spouse's farm" />
+    <MESSAGE value="handle smooth hug and give flower" />
+    <option name="LAST_COMMIT_MESSAGE" value="handle smooth hug and give flower" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -610,19 +607,14 @@
           <option name="timeStamp" value="28" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/view/mainMenu/FriendPopUp.java</url>
-          <line>124</line>
-          <option name="timeStamp" value="40" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/view/mainMenu/FriendPopUp.java</url>
-          <line>158</line>
-          <option name="timeStamp" value="41" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/enums/Weather.java</url>
           <line>38</line>
           <option name="timeStamp" value="43" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/view/mainMenu/FriendPopUp.java</url>
+          <line>132</line>
+          <option name="timeStamp" value="45" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
