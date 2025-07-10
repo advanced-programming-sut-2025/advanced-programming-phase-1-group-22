@@ -19,20 +19,20 @@ import java.util.Map;
 @ToString
 public class ShippingBin extends HardCodeFarmElements {
     private final FarmBuildingType farmBuildingType = FarmBuildingType.SHIPPING_BIN;
-    private Map<Salable,Integer> salable = new HashMap<>();
+    private Map<Salable, Integer> salable = new HashMap<>();
     private Sprite sprite;
 
     public ShippingBin(ShippingBin shippingBin) {
         super(shippingBin);
         this.sprite = new Sprite(GameAsset.SHIPPINGBIN);
-        this.sprite.setSize(App.tileWidth,App.tileHeight);
+        this.sprite.setSize(App.tileWidth * 2, App.tileHeight * 2);
     }
 
     public ShippingBin() {
         super.setWidth(1);
         super.setLength(1);
         this.sprite = new Sprite(GameAsset.SHIPPINGBIN);
-        this.sprite.setSize(App.tileWidth,App.tileHeight);
+        this.sprite.setSize(App.tileWidth * 2, App.tileHeight * 2);
     }
 
     @Override
@@ -40,7 +40,7 @@ public class ShippingBin extends HardCodeFarmElements {
         return new ShippingBin(this);
     }
 
-    public Integer CalculatePriceOfShippingBinProducts(){
+    public Integer CalculatePriceOfShippingBinProducts() {
         int price = 0;
 
         for (Map.Entry<Salable, Integer> salableIntegerEntry : salable.entrySet()) {
