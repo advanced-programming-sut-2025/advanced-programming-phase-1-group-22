@@ -125,33 +125,52 @@ public class FriendPopUp extends PopUp {
         Player currentPlayer = App.getInstance().getCurrentGame().getCurrentPlayer();
         Tile origin = currentPlayer.getTiles().getFirst();
         Tile dest = App.getInstance().getCurrentGame().tiles[player.getTiles().getFirst().getX()][player.getTiles().getFirst().getY() - 1];
-        currentPlayer.getTiles().clear();
-        currentPlayer.getTiles().add(dest);
-        Direction direction = initialHandle(player, RelationService.getInstance().marry(player.getUser().getUsername(), "Wedding Ring"));
-        if (direction == null) {
-            currentPlayer.getTiles().clear();
-            currentPlayer.getTiles().add(origin);
-            return;
+        Direction dir = Direction.getByXAndY(
+            dest.getX() - currentPlayer.getTiles().getFirst().getX(),
+            dest.getY() - currentPlayer.getTiles().getFirst().getY()
+        );
+        if (dir == null) {
+            if (dest.getY() - currentPlayer.getTiles().getFirst().getY() == -2 &&
+                Math.abs(dest.getX() - currentPlayer.getTiles().getFirst().getX()) <= 1) {
+                dir = Direction.SOUTH;
+            } else {
+                return;
+            }
         }
-        currentPlayer.setDirection(direction);
+        currentPlayer.setDirection(dir);
+        currentPlayer.setDirChanged(true);
         Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
-                currentPlayer.setProposal();
+                currentPlayer.getTiles().clear();
+                currentPlayer.getTiles().add(dest);
+                Direction direction = initialHandle(player, RelationService.getInstance().marry(player.getUser().getUsername(), "Wedding Ring"));
+                if (direction == null) {
+                    currentPlayer.getTiles().clear();
+                    currentPlayer.getTiles().add(origin);
+                    return;
+                }
+                currentPlayer.setDirection(direction);
+                Timer.schedule(new Timer.Task() {
+                    @Override
+                    public void run() {
+                        currentPlayer.setProposal();
+                    }
+                }, 0.5f);
+                Timer.schedule(new Timer.Task() {
+                    @Override
+                    public void run() {
+                        do {
+                            getGameService().nextTurn();
+                        } while (player != App.getInstance().getCurrentGame().getCurrentPlayer());
+                        DoYouMarryMePopUp doYouMarryMePopUp = new DoYouMarryMePopUp();
+                        doYouMarryMePopUp.setPlayer(currentPlayer);
+                        doYouMarryMePopUp.setOrigin(origin);
+                        doYouMarryMePopUp.createMenu(stage, skin, getController());
+                    }
+                }, 1);
             }
-        }, 0.5f);
-        Timer.schedule(new Timer.Task() {
-            @Override
-            public void run() {
-                do {
-                    getGameService().nextTurn();
-                } while (player != App.getInstance().getCurrentGame().getCurrentPlayer());
-                DoYouMarryMePopUp doYouMarryMePopUp = new DoYouMarryMePopUp();
-                doYouMarryMePopUp.setPlayer(currentPlayer);
-                doYouMarryMePopUp.setOrigin(origin);
-                doYouMarryMePopUp.createMenu(stage, skin, getController());
-            }
-        }, 1);
+        }, 0.2f);
     }
 
     private Direction initialHandle(Player player, Response resp) {
