@@ -14,9 +14,16 @@ public class SpriteHolder {
     private Tuple<Float> offset;
     private float width, height;
 
-    public  SpriteHolder(Sprite sprite, Tuple<Float> offset){
+    public SpriteHolder(Sprite sprite, Tuple<Float> offset){
         this.sprite = sprite;
         this.offset = offset;
+        width = sprite.getWidth();
+        height = sprite.getHeight();
+    }
+
+    public SpriteHolder(Sprite sprite){
+        this.sprite = sprite;
+        this.offset = new Tuple<>(0f, 0f);
         width = sprite.getWidth();
         height = sprite.getHeight();
     }

@@ -18,8 +18,8 @@ public class Lake extends HardCodeFarmElements {
     }
 
     public Lake() {
+        super.setHeight(-1);
         super.setWidth(-1);
-        super.setLength(-1);
         this.sprite = new Sprite(GameAsset.WATER);
     }
 

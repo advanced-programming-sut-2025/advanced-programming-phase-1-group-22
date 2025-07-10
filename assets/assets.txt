@@ -2877,6 +2877,7 @@ Trees/Wild_Tree_stump_Fall.png
 Trees/Wild_Tree_stump_Spring.png
 Trees/Wild_Tree_stump_Winter.png
 Trees/Wood.png
+Village/Pelican_Town.png
 Villagers/Abigail.png
 Villagers/Alex.png
 Villagers/Birdie.png
