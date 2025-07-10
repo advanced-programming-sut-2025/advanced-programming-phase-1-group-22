@@ -426,7 +426,9 @@ public class GameService {
         Tool currentTool = getCurrentTool(currentPlayer);
         if (currentTool == null) {
             return new Response("you do not carrying any tool");
-        } else if (currentTool.getEnergy(currentPlayer) > currentPlayer.getEnergy()) {
+        } else if (currentTool.getEnergy(currentPlayer) < currentPlayer.getEnergy()) {
+            currentPlayer.faint();
+            nextTurnAfterFaint();
             return new Response("you do not have enough energy to use this tool");
         }
         Tile currentTile = getTileByXAndY(currentPlayer.getTiles().get(0).getX() + currentDirection.getXTransmit(),
@@ -434,7 +436,12 @@ public class GameService {
         if (currentTile == null) {
             return new Response("out of bond");
         }
-        return new Response(currentTool.useTool(currentPlayer, currentTile), true);
+        Response resp = new Response(currentTool.useTool(currentPlayer, currentTile), true);
+        if (currentPlayer.getEnergy() == 0) {
+            currentPlayer.faint();
+            nextTurnAfterFaint();
+        } else if (currentPlayer.getEnergyPerTurn() <= 0) nextTurn();
+        return resp;
     }
 
     public Response pickFromFloor(Structure currentStructure) {
@@ -2084,7 +2091,11 @@ public class GameService {
         player.removeEnergy(2);
         recipe.getCraft().removeIngredients(player);
         player.getInventory().addProductToBackPack(new Craft(recipe.getCraft(), null, null), 1);
-        if (player.getEnergyPerTurn() <= 0) nextTurn();
+        if (player.getEnergy() == 0) {
+            player.faint();
+            nextTurnAfterFaint();
+        }
+        else if (player.getEnergyPerTurn() <= 0) nextTurn();
         return new Response(recipe.getCraft().getName() + " crafted successfully.");
     }
 
@@ -2145,7 +2156,10 @@ public class GameService {
         player.removeEnergy(3);
         recipe.getIngredients().removeIngredients(fridge, player);
         player.getInventory().addProductToBackPack(new Food(recipe.getIngredients()), 1);
-        if (player.getEnergyPerTurn() <= 0) nextTurn();
+        if (player.getEnergy() == 0) {
+            player.faint();
+            nextTurnAfterFaint();
+        } else if (player.getEnergyPerTurn() <= 0) nextTurn();
         return new Response(recipe.getIngredients().getName() + " cooked successfully.");
     }
 
