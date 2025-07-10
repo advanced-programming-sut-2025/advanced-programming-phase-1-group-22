@@ -27,8 +27,8 @@ public class GreenHouse extends HardCodeFarmElements {
     }
 
     public GreenHouse() {
-        super.setLength(8);
-        super.setWidth(7);
+        super.setWidth(8);
+        super.setHeight(7);
         this.sprite = new Sprite(GameAsset.GREENHOUSE_UNBUILT);
         this.sprite.setSize(this.farmBuildingType.getWidth() * App.tileWidth,this.farmBuildingType.getHeight() * App.tileHeight);
     }
@@ -47,7 +47,7 @@ public class GreenHouse extends HardCodeFarmElements {
 
 
     @Override
-    public HardCodeFarmElements cloneEl() {
+    public HardCodeFarmElements copyEl() {
         return new GreenHouse(this);
     }
 

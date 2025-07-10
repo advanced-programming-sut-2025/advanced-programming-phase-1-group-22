@@ -10,21 +10,26 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.utils.Timer;
 import io.github.some_example_name.MainGradle;
 import io.github.some_example_name.controller.WorldController;
-import io.github.some_example_name.model.Salable;
-import io.github.some_example_name.model.craft.Craft;
+import io.github.some_example_name.model.*;
 import io.github.some_example_name.model.enums.Gender;
 import io.github.some_example_name.model.records.Response;
 import io.github.some_example_name.model.relations.Player;
+import io.github.some_example_name.model.structure.Structure;
 import io.github.some_example_name.service.RelationService;
 import io.github.some_example_name.utils.App;
 import io.github.some_example_name.view.GameView;
 import lombok.Setter;
 
+import java.util.Collections;
+import java.util.List;
+
 @Setter
-public class FriendPopUp extends PopUp { //TODO UNCHECKED
+public class FriendPopUp extends PopUp {
     private Player player;
+    private Window window;
 
     public void createMenu(Stage stage, Skin skin, WorldController worldController) {
         super.createMenu(stage, skin, worldController);
@@ -42,7 +47,7 @@ public class FriendPopUp extends PopUp { //TODO UNCHECKED
     private void createInventory(Skin skin, Group menuGroup, Stage stage) {
         OrthographicCamera camera = MainGradle.getInstance().getCamera();
 
-        Window window = new Window("", skin);
+        window = new Window("", skin);
         window.setSize(camera.viewportWidth * 0.3f, camera.viewportHeight * 0.35f);
         window.setMovable(false);
 
@@ -57,13 +62,14 @@ public class FriendPopUp extends PopUp { //TODO UNCHECKED
         info.add(flower).colspan(2).expandX().row();
         info.add(hug).colspan(2).expandX().row();
         if (App.getInstance().getCurrentGame().getCurrentPlayer().getUser().getGender() == Gender.MALE &&
-            player.getUser().getGender() == Gender.FEMALE) {
+            player.getUser().getGender() == Gender.FEMALE &&
+            App.getInstance().getCurrentGame().getCurrentPlayer().getCouple() == null) {
             info.add(marry).colspan(2).expandX().row();
         }
         hug.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                getController().showResponse(RelationService.getInstance().hug(player.getUser().getUsername()));
+                handleHug(player);
                 return true;
             }
         });
@@ -71,8 +77,7 @@ public class FriendPopUp extends PopUp { //TODO UNCHECKED
         flower.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                getController().showResponse(RelationService.getInstance().giveGift(
-                    player.getUser().getUsername(), "flower", 1));
+                handleFlower(player);
                 return true;
             }
         });
@@ -80,7 +85,7 @@ public class FriendPopUp extends PopUp { //TODO UNCHECKED
         marry.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                getController().showResponse(RelationService.getInstance().marry(player.getUser().getUsername(), "Wedding Ring"));
+                handleAskMarriage(player);
                 return true;
             }
         });
@@ -114,5 +119,149 @@ public class FriendPopUp extends PopUp { //TODO UNCHECKED
         };
         group.addActor(window);
         menuGroup.addActor(group);
+    }
+
+    private void handleAskMarriage(Player player) {
+        Player currentPlayer = App.getInstance().getCurrentGame().getCurrentPlayer();
+        Tile origin = currentPlayer.getTiles().getFirst();
+        Tile dest = App.getInstance().getCurrentGame().tiles[player.getTiles().getFirst().getX()][player.getTiles().getFirst().getY() - 1];
+        Direction dir = Direction.getByXAndY(
+            dest.getX() - currentPlayer.getTiles().getFirst().getX(),
+            dest.getY() - currentPlayer.getTiles().getFirst().getY()
+        );
+        if (dir == null) {
+            if (dest.getY() - currentPlayer.getTiles().getFirst().getY() == -2 &&
+                Math.abs(dest.getX() - currentPlayer.getTiles().getFirst().getX()) <= 1) {
+                dir = Direction.SOUTH;
+            } else {
+                return;
+            }
+        }
+        currentPlayer.setDirection(dir);
+        currentPlayer.setDirChanged(true);
+        Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+                currentPlayer.getTiles().clear();
+                currentPlayer.getTiles().add(dest);
+                Direction direction = initialHandle(player, RelationService.getInstance().marry(player.getUser().getUsername(), "Wedding Ring"));
+                if (direction == null) {
+                    currentPlayer.getTiles().clear();
+                    currentPlayer.getTiles().add(origin);
+                    return;
+                }
+                currentPlayer.setDirection(direction);
+                Timer.schedule(new Timer.Task() {
+                    @Override
+                    public void run() {
+                        currentPlayer.setProposal();
+                    }
+                }, 0.5f);
+                Timer.schedule(new Timer.Task() {
+                    @Override
+                    public void run() {
+                        do {
+                            getGameService().nextTurn();
+                        } while (player != App.getInstance().getCurrentGame().getCurrentPlayer());
+                        DoYouMarryMePopUp doYouMarryMePopUp = new DoYouMarryMePopUp();
+                        doYouMarryMePopUp.setPlayer(currentPlayer);
+                        doYouMarryMePopUp.setOrigin(origin);
+                        doYouMarryMePopUp.createMenu(stage, skin, getController());
+                    }
+                }, 1);
+            }
+        }, 0.2f);
+    }
+
+    private Direction initialHandle(Player player, Response resp) {
+        window.remove();
+        Player currentPlayer = App.getInstance().getCurrentGame().getCurrentPlayer();
+        if (!resp.shouldBeBack()) {
+            getController().showResponse(resp);
+            return null;
+        }
+        GameView.captureInput = false;
+        Direction direction = Direction.getByXAndY(
+            player.getTiles().getFirst().getX() - currentPlayer.getTiles().getFirst().getX(),
+            player.getTiles().getFirst().getY() - currentPlayer.getTiles().getFirst().getY()
+        );
+        if (direction == null) return null;
+        player.setLazyDirection(direction.reverse());
+        currentPlayer.setLazyDirection(direction);
+        return direction;
+    }
+
+    private void handleFlower(Player player) {
+        Direction direction = initialHandle(player,
+            RelationService.getInstance().giveGift(player.getUser().getUsername(), "flower", 1));
+        if (direction == null) return;
+        getController().drawFlower(direction);
+    }
+
+    private void handleHug(Player player) {
+        Direction direction = initialHandle(player, RelationService.getInstance().hug(player.getUser().getUsername()));
+        if (direction == null) return;
+        Player currentPlayer = App.getInstance().getCurrentGame().getCurrentPlayer();
+        Tile origin = currentPlayer.getTiles().getFirst();
+        currentPlayer.setDirection(direction);
+        currentPlayer.setDirChanged(true);
+        Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+                currentPlayer.getTiles().clear();
+                currentPlayer.getTiles().addAll(player.getTiles());
+            }
+        }, 0.3f);
+
+        boolean flag = false;
+        int x = -1, y = -1;
+        List<Structure> structures = App.getInstance().getCurrentGame().getVillage().getStructures();
+        for (Structure player1 : structures) {
+            if (player1 == currentPlayer) break;
+            if (player == player1) {
+                flag = true;
+                break;
+            }
+        }
+
+        for (int i = 0; i < structures.size(); i++) {
+            Structure player1 = structures.get(i);
+            if (player1 == currentPlayer) x = i;
+            if (player == player1) y = i;
+        }
+        if (flag) {
+            Collections.swap(structures, x, y);
+        }
+        Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+                currentPlayer.getSprites().getFirst().setOffset(new Tuple<>( -0.1f, 0.1f));
+                currentPlayer.setLazyDirection(Direction.SOUTH);
+                player.setLazyDirection(Direction.NORTH);
+            }
+        }, 0.8f);
+        boolean finalFlag = flag;
+        int finalX = x;
+        int finalY = y;
+        Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+                currentPlayer.getSprites().getFirst().setOffset(new Tuple<>( 0f, 0f));
+                currentPlayer.setDirection(direction);
+                currentPlayer.setDirChanged(true);
+                currentPlayer.getTiles().clear();
+                currentPlayer.getTiles().add(origin);
+            }
+        }, 3.3f);
+        Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+                player.setLazyDirection(direction.reverse());
+                GameView.captureInput = true;
+                if (finalFlag) {
+                    Collections.swap(structures, finalX, finalY);
+                }
+            }
+        }, 3.6f);
     }
 }

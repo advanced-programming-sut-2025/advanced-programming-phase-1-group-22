@@ -4,13 +4,24 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d95100ff-6e61-4571-9e87-dcef3d963dba" name="Changes" comment="add quest list to inventory menu">
+    <list default="true" id="d95100ff-6e61-4571-9e87-dcef3d963dba" name="Changes" comment="handling and editing assets">
+      <change afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/dto/SpriteComponent.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/reports/problems/problems-report.html" beforeDir="false" afterPath="$PROJECT_DIR$/build/reports/problems/problems-report.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/assets.txt" beforeDir="false" afterPath="$PROJECT_DIR$/assets/assets.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/build/libs/core-1.0.0.jar" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/libs/core-1.0.0.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/Farm.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/Farm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/controller/WorldController.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/controller/WorldController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/FarmType.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/FarmType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/Fountain.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/Fountain.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/dto/SpriteHolder.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/dto/SpriteHolder.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/shelter/ShippingBin.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/shelter/ShippingBin.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/structure/Structure.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/structure/Structure.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/structure/farmInitialElements/Cottage.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/structure/farmInitialElements/Cottage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/structure/farmInitialElements/GreenHouse.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/structure/farmInitialElements/GreenHouse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/structure/farmInitialElements/HardCodeFarmElements.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/structure/farmInitialElements/HardCodeFarmElements.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/structure/farmInitialElements/Lake.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/structure/farmInitialElements/Lake.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/structure/farmInitialElements/Quarry.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/structure/farmInitialElements/Quarry.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/utils/GameAsset.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/utils/GameAsset.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lwjgl3/build/resources/main/assets.txt" beforeDir="false" afterPath="$PROJECT_DIR$/lwjgl3/build/resources/main/assets.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -59,8 +70,8 @@
 }</component>
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/advanced-programming-sut-2025/advanced-programming-phase-1-group-22.git&quot;,
-    &quot;accountId&quot;: &quot;6dfd5896-35af-4905-a843-c0bfce2ce8d8&quot;
+    &quot;url&quot;: &quot;https://github.com/advanced-programming-sut-2025/advanced-programming-phase-1-group-22&quot;,
+    &quot;accountId&quot;: &quot;b9efcc9e-e39f-461c-9d13-6b57ad5013fb&quot;
   }
 }</component>
   <component name="ProjectColorInfo">{
@@ -72,36 +83,35 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.Build Project.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.Build Project4.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.Download Sources.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.Project4:core [:core:io.github.some_example_name.lwjgl3.Lwjgl3Launcher.main()].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.Project4:lwjgl3 [:lwjgl3:io.github.some_example_name.lwjgl3.Lwjgl3Launcher.main()].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.Project:lwjgl3 [:lwjgl3:io.github.some_example_name.lwjgl3.Lwjgl3Launcher.main()].executor&quot;: &quot;Debug&quot;,
-    &quot;Gradle.advanced-programming-phase-1-group-22:lwjgl3 [:lwjgl3:io.github.some_example_name.lwjgl3.Lwjgl3Launcher.main()].executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;mahdi&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/temp/SUT/AP/040302/Project&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.Main.executor": "Run",
+    "Gradle.Build Project.executor": "Run",
+    "Gradle.Build Project4.executor": "Run",
+    "Gradle.Project4:core [:core:io.github.some_example_name.lwjgl3.Lwjgl3Launcher.main()].executor": "Run",
+    "Gradle.Project4:lwjgl3 [:lwjgl3:io.github.some_example_name.lwjgl3.Lwjgl3Launcher.main()].executor": "Run",
+    "Gradle.Project:lwjgl3 [:lwjgl3:io.github.some_example_name.lwjgl3.Lwjgl3Launcher.main()].executor": "Debug",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "Roham",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "D:/temp/SUT/AP/040302/Project",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
       <recent name="io.github.some_example_name.model.dto" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
-      <recent name="io.github.some_example_name.view.mainMenu" />
+      <recent name="io.github.some_example_name.model.dto" />
       <recent name="io.github.some_example_name.model" />
+      <recent name="io.github.some_example_name.view.mainMenu" />
       <recent name="io.github.some_example_name.controller" />
     </key>
   </component>
@@ -110,7 +120,7 @@
       <option name="ALTERNATIVE_JRE_PATH" value="21" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
       <option name="MAIN_CLASS_NAME" value="io.github.some_example_name.lwjgl3.Lwjgl3Launcher" />
-      <module name="advanced-programming-phase-1-group-22.lwjgl3.main" />
+      <module name="Project.lwjgl3.main" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -160,54 +170,11 @@
       <workItem from="1751885384603" duration="27589000" />
       <workItem from="1751922252586" duration="149000" />
       <workItem from="1751971440871" duration="2594000" />
-    </task>
-    <task id="LOCAL-00001" summary="added clock">
-      <option name="closed" value="true" />
-      <created>1751385950225</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1751385950225</updated>
-    </task>
-    <task id="LOCAL-00002" summary="added night fade">
-      <option name="closed" value="true" />
-      <created>1751392408581</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1751392408581</updated>
-    </task>
-    <task id="LOCAL-00003" summary="added greenhouse build">
-      <option name="closed" value="true" />
-      <created>1751397194408</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1751397194408</updated>
-    </task>
-    <task id="LOCAL-00004" summary="calibrated camera objects and added energy bar">
-      <option name="closed" value="true" />
-      <created>1751456170719</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1751456170719</updated>
-    </task>
-    <task id="LOCAL-00005" summary="dynamic cottage menu">
-      <option name="closed" value="true" />
-      <created>1751460230419</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1751460230419</updated>
-    </task>
-    <task id="LOCAL-00006" summary="uploaded assets">
-      <option name="closed" value="true" />
-      <created>1751460382501</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1751460382501</updated>
+      <workItem from="1752055053229" duration="15516000" />
+      <workItem from="1752082081960" duration="8814000" />
+      <workItem from="1752093153986" duration="7500000" />
+      <workItem from="1752101048755" duration="6829000" />
+      <workItem from="1752144063393" duration="19233000" />
     </task>
     <task id="LOCAL-00007" summary="asset refactor">
       <option name="closed" value="true" />
@@ -409,111 +376,199 @@
       <option name="project" value="LOCAL" />
       <updated>1751901497451</updated>
     </task>
-    <task id="LOCAL-00032" summary="add register menu">
+    <task id="LOCAL-00032" summary="implemented fainting">
       <option name="closed" value="true" />
-      <created>1751987247862</created>
+      <created>1751988697627</created>
       <option name="number" value="00032" />
       <option name="presentableId" value="LOCAL-00032" />
       <option name="project" value="LOCAL" />
-      <updated>1751987247862</updated>
+      <updated>1751988697628</updated>
     </task>
-    <task id="LOCAL-00033" summary="add login menu">
+    <task id="LOCAL-00033" summary="implemented hug animation">
       <option name="closed" value="true" />
-      <created>1751990540866</created>
+      <created>1752001507514</created>
       <option name="number" value="00033" />
       <option name="presentableId" value="LOCAL-00033" />
       <option name="project" value="LOCAL" />
-      <updated>1751990540866</updated>
+      <updated>1752001507514</updated>
     </task>
-    <task id="LOCAL-00034" summary="add forget password to login menu">
+    <task id="LOCAL-00034" summary="implemented giving flower animation">
       <option name="closed" value="true" />
-      <created>1751992981303</created>
+      <created>1752009392732</created>
       <option name="number" value="00034" />
       <option name="presentableId" value="LOCAL-00034" />
       <option name="project" value="LOCAL" />
-      <updated>1751992981303</updated>
+      <updated>1752009392732</updated>
     </task>
-    <task id="LOCAL-00035" summary="add main menu">
+    <task id="LOCAL-00035" summary="implemented asking for marriage animation">
       <option name="closed" value="true" />
-      <created>1751994045994</created>
+      <created>1752011448195</created>
       <option name="number" value="00035" />
       <option name="presentableId" value="LOCAL-00035" />
       <option name="project" value="LOCAL" />
-      <updated>1751994045994</updated>
+      <updated>1752011448196</updated>
     </task>
-    <task id="LOCAL-00036" summary="add profile Menu">
+    <task id="LOCAL-00036" summary="implemented responding marriage + animation">
       <option name="closed" value="true" />
-      <created>1752009323428</created>
+      <created>1752015614422</created>
       <option name="number" value="00036" />
       <option name="presentableId" value="LOCAL-00036" />
       <option name="project" value="LOCAL" />
-      <updated>1752009323428</updated>
+      <updated>1752015614422</updated>
     </task>
-    <task id="LOCAL-00037" summary="add random password to profile">
+    <task id="LOCAL-00037" summary="uploaded an asset">
       <option name="closed" value="true" />
-      <created>1752009749295</created>
+      <created>1752015672865</created>
       <option name="number" value="00037" />
       <option name="presentableId" value="LOCAL-00037" />
       <option name="project" value="LOCAL" />
-      <updated>1752009749295</updated>
+      <updated>1752015672865</updated>
     </task>
-    <task id="LOCAL-00038" summary="refactor manus and controllers">
+    <task id="LOCAL-00038" summary="minor debugging">
       <option name="closed" value="true" />
-      <created>1752013562030</created>
+      <created>1752016473148</created>
       <option name="number" value="00038" />
       <option name="presentableId" value="LOCAL-00038" />
       <option name="project" value="LOCAL" />
-      <updated>1752013562030</updated>
+      <updated>1752016473148</updated>
     </task>
-    <task id="LOCAL-00039" summary="add water bar">
+    <task id="LOCAL-00039" summary="cloning objects while gifting and placing on ground">
       <option name="closed" value="true" />
-      <created>1752016227359</created>
+      <created>1752018725985</created>
       <option name="number" value="00039" />
       <option name="presentableId" value="LOCAL-00039" />
       <option name="project" value="LOCAL" />
-      <updated>1752016227359</updated>
+      <updated>1752018725985</updated>
     </task>
-    <task id="LOCAL-00040" summary="add Tool animation">
+    <task id="LOCAL-00040" summary="added notification and social button">
       <option name="closed" value="true" />
-      <created>1752019704049</created>
+      <created>1752059869282</created>
       <option name="number" value="00040" />
       <option name="presentableId" value="LOCAL-00040" />
       <option name="project" value="LOCAL" />
-      <updated>1752019704049</updated>
+      <updated>1752059869282</updated>
     </task>
-    <task id="LOCAL-00041" summary="complete animal movement">
+    <task id="LOCAL-00041" summary="uploaded assets">
       <option name="closed" value="true" />
-      <created>1752023797025</created>
+      <created>1752059909198</created>
       <option name="number" value="00041" />
       <option name="presentableId" value="LOCAL-00041" />
       <option name="project" value="LOCAL" />
-      <updated>1752023797025</updated>
+      <updated>1752059909198</updated>
     </task>
-    <task id="LOCAL-00042" summary="add fishing mini game">
+    <task id="LOCAL-00042" summary="tidy up social menu">
       <option name="closed" value="true" />
-      <created>1752076097734</created>
+      <created>1752060852275</created>
       <option name="number" value="00042" />
       <option name="presentableId" value="LOCAL-00042" />
       <option name="project" value="LOCAL" />
-      <updated>1752076097734</updated>
+      <updated>1752060852275</updated>
     </task>
-    <task id="LOCAL-00043" summary="add crow attack">
+    <task id="LOCAL-00043" summary="tidy up pause menus">
       <option name="closed" value="true" />
-      <created>1752130375793</created>
+      <created>1752063814808</created>
       <option name="number" value="00043" />
       <option name="presentableId" value="LOCAL-00043" />
       <option name="project" value="LOCAL" />
-      <updated>1752130375793</updated>
+      <updated>1752063814808</updated>
     </task>
-    <task id="LOCAL-00044" summary="add quest list to inventory menu">
+    <task id="LOCAL-00044" summary="tidy up gifts menus">
       <option name="closed" value="true" />
-      <created>1752132892856</created>
+      <created>1752067948150</created>
       <option name="number" value="00044" />
       <option name="presentableId" value="LOCAL-00044" />
       <option name="project" value="LOCAL" />
-      <updated>1752132892856</updated>
+      <updated>1752067948150</updated>
     </task>
-    <option name="localTasksCounter" value="45" />
+    <task id="LOCAL-00045" summary="tidy up talk menu">
+      <option name="closed" value="true" />
+      <created>1752083420922</created>
+      <option name="number" value="00045" />
+      <option name="presentableId" value="LOCAL-00045" />
+      <option name="project" value="LOCAL" />
+      <updated>1752083420922</updated>
+    </task>
+    <task id="LOCAL-00046" summary="tidy up some Menus">
+      <option name="closed" value="true" />
+      <created>1752084896297</created>
+      <option name="number" value="00046" />
+      <option name="presentableId" value="LOCAL-00046" />
+      <option name="project" value="LOCAL" />
+      <updated>1752084896297</updated>
+    </task>
+    <task id="LOCAL-00047" summary="night and lightening animation">
+      <option name="closed" value="true" />
+      <created>1752100608619</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1752100608619</updated>
+    </task>
+    <task id="LOCAL-00048" summary="night and lightening animation">
+      <option name="closed" value="true" />
+      <created>1752100975375</created>
+      <option name="number" value="00048" />
+      <option name="presentableId" value="LOCAL-00048" />
+      <option name="project" value="LOCAL" />
+      <updated>1752100975375</updated>
+    </task>
+    <task id="LOCAL-00049" summary="night and lightening animation">
+      <option name="closed" value="true" />
+      <created>1752101071785</created>
+      <option name="number" value="00049" />
+      <option name="presentableId" value="LOCAL-00049" />
+      <option name="project" value="LOCAL" />
+      <updated>1752101071785</updated>
+    </task>
+    <task id="LOCAL-00050" summary="handle z-index during the hug">
+      <option name="closed" value="true" />
+      <created>1752103501039</created>
+      <option name="number" value="00050" />
+      <option name="presentableId" value="LOCAL-00050" />
+      <option name="project" value="LOCAL" />
+      <updated>1752103501039</updated>
+    </task>
+    <task id="LOCAL-00051" summary="handle methods in spouse's farm">
+      <option name="closed" value="true" />
+      <created>1752104548791</created>
+      <option name="number" value="00051" />
+      <option name="presentableId" value="LOCAL-00051" />
+      <option name="project" value="LOCAL" />
+      <updated>1752104548791</updated>
+    </task>
+    <task id="LOCAL-00052" summary="handle smooth hug and give flower">
+      <option name="closed" value="true" />
+      <created>1752108625838</created>
+      <option name="number" value="00052" />
+      <option name="presentableId" value="LOCAL-00052" />
+      <option name="project" value="LOCAL" />
+      <updated>1752108625838</updated>
+    </task>
+    <task id="LOCAL-00053" summary="handle smooth ask marriage">
+      <option name="closed" value="true" />
+      <created>1752144596526</created>
+      <option name="number" value="00053" />
+      <option name="presentableId" value="LOCAL-00053" />
+      <option name="project" value="LOCAL" />
+      <updated>1752144596527</updated>
+    </task>
+    <task id="LOCAL-00054" summary="handle tangent energy fainting">
+      <option name="closed" value="true" />
+      <created>1752146270057</created>
+      <option name="number" value="00054" />
+      <option name="presentableId" value="LOCAL-00054" />
+      <option name="project" value="LOCAL" />
+      <updated>1752146270057</updated>
+    </task>
+    <task id="LOCAL-00055" summary="handling and editing assets">
+      <option name="closed" value="true" />
+      <created>1752155136850</created>
+      <option name="number" value="00055" />
+      <option name="presentableId" value="LOCAL-00055" />
+      <option name="project" value="LOCAL" />
+      <updated>1752155136850</updated>
+    </task>
+    <option name="localTasksCounter" value="56" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -531,42 +586,57 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="preventing events while popup occurs" />
-    <MESSAGE value="added shortcuts to carrying salables" />
-    <MESSAGE value="added Scrolling" />
-    <MESSAGE value="implemented gift menu" />
-    <MESSAGE value="implemented gift history menu" />
-    <MESSAGE value="implemented talk menu" />
-    <MESSAGE value="implemented notifying" />
-    <MESSAGE value="implemented NotificationMenu" />
-    <MESSAGE value="implemented friendsPopup" />
     <MESSAGE value="handling placeItem" />
     <MESSAGE value="implemented start menu" />
     <MESSAGE value="implemented terminate menu and refactor start menu" />
-    <MESSAGE value="add register menu" />
-    <MESSAGE value="add login menu" />
-    <MESSAGE value="add forget password to login menu" />
-    <MESSAGE value="add main menu" />
-    <MESSAGE value="add profile Menu" />
-    <MESSAGE value="add random password to profile" />
-    <MESSAGE value="refactor manus and controllers" />
-    <MESSAGE value="add water bar" />
-    <MESSAGE value="add Tool animation" />
-    <MESSAGE value="complete animal movement" />
-    <MESSAGE value="add fishing mini game" />
-    <MESSAGE value="add crow attack" />
-    <MESSAGE value="add quest list to inventory menu" />
-    <option name="LAST_COMMIT_MESSAGE" value="add quest list to inventory menu" />
+    <MESSAGE value="implemented fainting" />
+    <MESSAGE value="implemented hug animation" />
+    <MESSAGE value="implemented giving flower animation" />
+    <MESSAGE value="implemented asking for marriage animation" />
+    <MESSAGE value="implemented responding marriage + animation" />
+    <MESSAGE value="uploaded an asset" />
+    <MESSAGE value="minor debugging" />
+    <MESSAGE value="cloning objects while gifting and placing on ground" />
+    <MESSAGE value="added notification and social button" />
+    <MESSAGE value="uploaded assets" />
+    <MESSAGE value="tidy up social menu" />
+    <MESSAGE value="tidy up pause menus" />
+    <MESSAGE value="tidy up gifts menus" />
+    <MESSAGE value="tidy up talk menu" />
+    <MESSAGE value="tidy up some Menus" />
+    <MESSAGE value="night and lightening animation" />
+    <MESSAGE value="handle z-index during the hug" />
+    <MESSAGE value="handle methods in spouse's farm" />
+    <MESSAGE value="handle smooth hug and give flower" />
+    <MESSAGE value="handle smooth ask marriage" />
+    <MESSAGE value="handle tangent energy fainting" />
+    <MESSAGE value="handling and editing assets" />
+    <option name="LAST_COMMIT_MESSAGE" value="handling and editing assets" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/controller/WorldController.java</url>
-          <line>121</line>
-          <option name="timeStamp" value="26" />
+          <url>file://$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/view/mainMenu/FridgeMenu.java</url>
+          <line>59</line>
+          <option name="timeStamp" value="28" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/model/enums/Weather.java</url>
+          <line>38</line>
+          <option name="timeStamp" value="43" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/view/mainMenu/FriendPopUp.java</url>
+          <line>132</line>
+          <option name="timeStamp" value="45" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
+    <watches-manager>
+      <configuration name="GradleRunConfiguration">
+        <watch expression="App.getInstance().getCurrentGame().getVillage().getStructures()" language="JAVA" />
+      </configuration>
+    </watches-manager>
   </component>
 </project>

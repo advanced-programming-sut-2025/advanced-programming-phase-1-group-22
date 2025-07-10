@@ -71,6 +71,9 @@ public class CarryingController {
         GameService gameService = new GameService();
         Direction direction = Direction.getByXAndY(xTransmit, yTransmit);
         if (direction!=null) worldController.showResponse(gameService.placeItem(item, direction));
+        if (!App.getInstance().getCurrentGame().getCurrentPlayer().getInventory().getProducts().containsKey(item)) {
+            App.getInstance().getCurrentGame().getCurrentPlayer().setCurrentCarrying(null);
+        }
     }
 
     private void handleFertilize(Salable carrying,Player player,int dx, int dy){

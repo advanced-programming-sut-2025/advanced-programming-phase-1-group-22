@@ -11,45 +11,111 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import io.github.some_example_name.MainGradle;
 import io.github.some_example_name.model.Salable;
+import io.github.some_example_name.model.Tuple;
 import io.github.some_example_name.model.relations.Player;
 import io.github.some_example_name.model.tools.WateringCan;
 import io.github.some_example_name.service.GameService;
+import io.github.some_example_name.service.RelationService;
 import io.github.some_example_name.utils.App;
 import io.github.some_example_name.utils.GameAsset;
 import io.github.some_example_name.view.GameView;
+import io.github.some_example_name.view.mainMenu.InventoryMenu;
+import io.github.some_example_name.view.mainMenu.NotificationMenu;
 import io.github.some_example_name.view.mainMenu.PopUp;
 
+import javax.swing.text.html.InlineView;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CameraViewController {
-    GameService gameMenuController = new GameService();
+    private GameService gameMenuController = new GameService();
+    private WorldController worldController;
     private Sprite energyContainer = new Sprite(GameAsset.BUTTON);
     private Sprite energy = new Sprite(GameAsset.GREEN_SQUARE);
     private Sprite eSprite = new Sprite(GameAsset.FILLED_BUTTON);
     private OrthographicCamera camera = MainGradle.getInstance().getCamera();
     private Group inventoryBar;
+    private Table bar;
     private Group energyBar;
     private Image energyBackground;
     private Image energyFill;
     private final List<Stack> itemStacks = new ArrayList<>();
     private List<Salable> items = new ArrayList<>();
     private Integer currentToolIndex;
+    private boolean journalVisibility = true;
 
-    public CameraViewController() {
+    public CameraViewController(WorldController worldController) {
+        this.worldController = worldController;
         initInventoryBar();
         initEnergyBar();
+        initButtons();
     }
 
     public void update() {
-        App.getInstance().getCurrentGame().getTimeAndDate().updateBatch(MainGradle.getInstance().getBatch());
+        Sprite mainClock = App.getInstance().getCurrentGame().getTimeAndDate().updateBatch(
+            MainGradle.getInstance().getBatch());
         updateEnergyBar();
         updateInventoryBar();
+        updateButtons(mainClock);
         if (GameView.captureInput) {
             handleInput();
         }
+        if (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) && Gdx.input.isKeyJustPressed(Input.Keys.CAPS_LOCK)) {
+            GameView.captureInput = !GameView.captureInput;
+        }
+    }
+
+    private void updateButtons(Sprite mainClock) {
+        bar.setPosition(mainClock.getX() + mainClock.getWidth() * 0.3f,mainClock.getY() - bar.getHeight());
+    }
+
+    private void initButtons() {
+        Skin skin = GameAsset.SKIN;
+        bar = new Table(skin);
+        bar.top().left();
+
+        ImageButton journal = new ImageButton(new TextureRegionDrawable(GameAsset.NOTIFICATION));
+        ImageButton social = new ImageButton(new TextureRegionDrawable(GameAsset.SOCIAL_ICON));
+        Image journalHolder = new Image(GameAsset.GOLDDISPLAY);
+        Image socialHolder = new Image(GameAsset.GOLDDISPLAY);
+        bar.add(journalHolder).size(50, 20).padRight(70);
+        bar.add(socialHolder).size(50, 20).row();
+        bar.add(journal).size(50, 50).padRight(70);
+        bar.add(social).size(50, 50).row();
+        Group buttons = new Group(){
+            @Override
+            public void act(float delta) {
+                if (social.isChecked()) {
+                    InventoryMenu inventoryMenu = new InventoryMenu();
+                    inventoryMenu.setTabIndex(2);
+                    inventoryMenu.createMenu(GameView.stage, GameAsset.SKIN, worldController);
+                    social.setChecked(false);
+                }
+                boolean hasNotifications = !App.getInstance().getCurrentGame().getCurrentPlayer().getNotifications().isEmpty();
+                if (journal.isChecked()) {
+                    if (hasNotifications) {
+                        NotificationMenu notificationMenu = new NotificationMenu();
+                        notificationMenu.createMenu(GameView.stage, GameAsset.SKIN, worldController);
+                        journal.setChecked(false);
+                    }
+                }
+                if (hasNotifications != journalVisibility) {
+                    journal.setColor(hasNotifications ? new Color(1,1,1,1) : new Color(1,1,1,0));
+                    journalHolder.setDrawable(new TextureRegionDrawable(
+                        hasNotifications ? GameAsset.GOLDDISPLAY : GameAsset.RAW
+                    ));
+                    journalVisibility = hasNotifications;
+                }
+
+                super.act(delta);
+            }
+        };
+        buttons.setSize(bar.getPrefWidth(), bar.getPrefHeight());
+        buttons.addActor(bar);
+        GameView.stage.addActor(buttons);
     }
 
 
@@ -78,35 +144,34 @@ public class CameraViewController {
     }
 
     private void initEnergyBar(){
-        Texture texture = GameAsset.ENERGY_BAR;
+        Texture texture = GameAsset.GREEN_SQUARE;
         Texture texture1 = GameAsset.ENERGY_BAR_EMPTY;
         OrthographicCamera camera = MainGradle.getInstance().getCamera();
-        TextureRegion backgroundRegion = new TextureRegion(texture1, 0, 0, 101, 580);
-        TextureRegion fillRegion = new TextureRegion(texture, 9, 26, 18, 160);
+        TextureRegion backgroundRegion = new TextureRegion(texture1);
+        TextureRegion fillRegion = new TextureRegion(texture);
         energyBackground = new Image(backgroundRegion);
+        energyBackground.setSize(camera.viewportWidth * 0.03f,
+            camera.viewportHeight * 0.3f);
         energyFill = new Image(fillRegion);
-        energyFill.setSize(camera.viewportWidth * 0.03f,
-            camera.viewportHeight * 0.2f / 160 * 200);
-        energyFill.setPosition(9, 10);
+        energyFill.setSize(energyBackground.getWidth() * 0.5f,
+            energyBackground.getHeight() / 215 * 170);
+        energyFill.setPosition(energyBackground.getWidth() * 0.25f, energyBackground.getHeight() * 8 / 215);
 
         Stack energyStack = new Stack();
-        energyStack.setSize(50, 260);
+        energyStack.setSize(energyBackground.getWidth(), energyBackground.getHeight());
         energyStack.add(energyBackground);
         energyStack.add(energyFill);
 
         energyBar = new Group() {
             @Override
             public void act(float delta) {
-                float screenRight = camera.position.x + camera.viewportWidth / 2f;
-                float screenBottom = camera.position.y - camera.viewportHeight / 2f;
-
                 setPosition(camera.position.x + camera.viewportWidth/2f - energyBar.getWidth()*1.1f,
                     camera.position.y - camera.viewportHeight/2f + energyBar.getHeight()*0.3f);
                 super.act(delta);
             }
         };
 
-        energyBar.setSize(50, 260);
+        energyBar.setSize(energyBackground.getWidth(), energyBackground.getHeight());
         energyBar.addActor(energyStack);
         GameView.stage.addActor(energyBar);
     }
@@ -115,13 +180,12 @@ public class CameraViewController {
         Player player = App.getInstance().getCurrentGame().getCurrentPlayer();
         float energyPercent = (float) player.getEnergy() / player.getMaxEnergy();
 
-        float fullHeight = 160f;
+        float fullHeight = energyBackground.getHeight() * 175 / 215;
         float currentHeight = fullHeight * energyPercent;
 
-        energyFill.setSize(30, currentHeight);
+        energyFill.setSize(energyBackground.getWidth() * 0.5f, currentHeight);
         energyBackground.setScale(1, player.getMaxEnergy()/200f);
-
-        energyFill.setPosition(9,10);
+        energyFill.setPosition(energyBackground.getWidth() * 0.25f, energyBackground.getHeight() * 3 / 215);
     }
 
     private void updateInventoryBar(){
@@ -194,7 +258,7 @@ public class CameraViewController {
         if (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)) {
             if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) {
                 gameMenuController.C_WeatherSet("STORMY");
-                gameMenuController.C_AdvanceDate("2");
+                gameMenuController.C_AdvanceDate("1");
             }
             if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_3)) {
                 gameMenuController.C_WeatherSet("RAINY");
@@ -264,42 +328,73 @@ public class CameraViewController {
             if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_9)) {
                 gameMenuController.placeItem("bee_house", "south");
             }
-        }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.F4)){
-            GameView.captureInput = false;
-            GameView.screenshotting = true;
-        }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.GRAVE)) {
-            player.setCurrentCarrying(null);
-            currentToolIndex = -1;
-
-        }
-        int[] shortcuts = {Input.Keys.NUM_1, Input.Keys.NUM_2, Input.Keys.NUM_3, Input.Keys.NUM_4, Input.Keys.NUM_5,
-            Input.Keys.NUM_6, Input.Keys.NUM_7, Input.Keys.NUM_8, Input.Keys.NUM_9, Input.Keys.NUM_0, Input.Keys.MINUS,
-            Input.Keys.EQUALS
-        };
-        for (int i = 0; i < shortcuts.length; i++) {
-            if (Gdx.input.isKeyJustPressed(shortcuts[i])) {
-                if (i < player.getInventory().getProducts().size()) {
-                    player.setCurrentCarrying(items.get(i));
-                    currentToolIndex = i;
+            if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_0)) {
+                gameMenuController.C_AddItem("flower", "2");
+                gameMenuController.C_AddItem("wedding ring", "2");
+            }
+            if (Gdx.input.isKeyJustPressed(Input.Keys.MINUS)) {
+                gameMenuController.C_AddItem("bee_house", "5");
+                RelationService.getInstance().giveGift("Clara1234", "bee_house", 2);
+                RelationService.getInstance().giveGift("Clara1234", "bee_house", 2);
+                String[] a = {"Clara1234", "Roham1234"};
+                for (int i = 0; i < 6; i++) {
+                    gameMenuController.nextTurn();
+                    RelationService.getInstance().giveGift(a[(i + 1) % 2], "bee_house", 1);
+                    RelationService.getInstance().giveGift(a[(i + 1) % 2], "bee_house", 1);
+                    RelationService.getInstance().giveGift(a[(i + 1) % 2], "bee_house", 1);
+                    RelationService.getInstance().giveGift(a[(i + 1) % 2], "bee_house", 1);
                 }
             }
-        }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.TAB)) {
-            if (currentToolIndex == null) currentToolIndex = -1;
-            player.setCurrentCarrying(items.get(++currentToolIndex % Math.min(12, player.getInventory().getProducts().size())));
-        }
-        if (GameView.scrollY != 0) {
-            int mod = Math.min(12, player.getInventory().getProducts().size());
-            if (mod != 0) {
-                if (currentToolIndex == null) currentToolIndex = GameView.scrollY > 0 ? mod - 1 : 0;
-                currentToolIndex += (int) Math.ceil(GameView.scrollY / 3);
-                currentToolIndex %= mod;
-                currentToolIndex += mod;
-                currentToolIndex %= mod;
-                player.setCurrentCarrying(items.get(currentToolIndex));
-                GameView.scrollY = 0;
+            if (Gdx.input.isKeyJustPressed(Input.Keys.EQUALS)) {
+                RelationService.getInstance().talkToAnotherPlayer("Clara1234", "bee_house");
+                RelationService.getInstance().talkToAnotherPlayer("Clara1234", "bee_house");
+                String[] a = {"Clara1234", "Roham1234"};
+                for (int i = 0; i < 6; i++) {
+                    gameMenuController.nextTurn();
+                    RelationService.getInstance().talkToAnotherPlayer(a[(i + 1) % 2], "bee_house");
+                    RelationService.getInstance().talkToAnotherPlayer(a[(i + 1) % 2], "bee_house");
+                    RelationService.getInstance().talkToAnotherPlayer(a[(i + 1) % 2], "bee_house");
+                    RelationService.getInstance().talkToAnotherPlayer(a[(i + 1) % 2], "bee_house");
+                    RelationService.getInstance().talkToAnotherPlayer(a[(i + 1) % 2], "01234567891234567890 1234");
+                }
+            }
+        } else {
+            if (Gdx.input.isKeyJustPressed(Input.Keys.F4)) {
+                GameView.captureInput = false;
+                GameView.screenshotting = true;
+            }
+            if (Gdx.input.isKeyJustPressed(Input.Keys.GRAVE)) {
+                player.setCurrentCarrying(null);
+                currentToolIndex = -1;
+
+            }
+            int[] shortcuts = {Input.Keys.NUM_1, Input.Keys.NUM_2, Input.Keys.NUM_3, Input.Keys.NUM_4, Input.Keys.NUM_5,
+                Input.Keys.NUM_6, Input.Keys.NUM_7, Input.Keys.NUM_8, Input.Keys.NUM_9, Input.Keys.NUM_0, Input.Keys.MINUS,
+                Input.Keys.EQUALS
+            };
+            for (int i = 0; i < shortcuts.length; i++) {
+                if (Gdx.input.isKeyJustPressed(shortcuts[i])) {
+                    if (i < player.getInventory().getProducts().size()) {
+                        player.setCurrentCarrying(items.get(i));
+                        currentToolIndex = i;
+                    }
+                }
+            }
+            if (Gdx.input.isKeyJustPressed(Input.Keys.TAB)) {
+                if (currentToolIndex == null) currentToolIndex = -1;
+                player.setCurrentCarrying(items.get(++currentToolIndex % Math.min(12, player.getInventory().getProducts().size())));
+            }
+            if (GameView.scrollY != 0) {
+                int mod = Math.min(12, player.getInventory().getProducts().size());
+                if (mod != 0) {
+                    if (currentToolIndex == null) currentToolIndex = GameView.scrollY > 0 ? mod - 1 : 0;
+                    currentToolIndex += (int) Math.ceil(GameView.scrollY / 3);
+                    currentToolIndex %= mod;
+                    currentToolIndex += mod;
+                    currentToolIndex %= mod;
+                    player.setCurrentCarrying(items.get(currentToolIndex));
+                    GameView.scrollY = 0;
+                }
             }
         }
     }

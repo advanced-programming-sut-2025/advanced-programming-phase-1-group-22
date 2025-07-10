@@ -2021,6 +2021,7 @@ Hat/Wearable_Dwarf_Helm.png
 Hat/White_Bow.png
 Hat/White_Turban.png
 Hat/Witch_Hat.png
+Heart/Beating_Heart.png
 Heart/Eight_Hearts.png
 Heart/Eleven_Hearts.png
 Heart/Empty_Heart.png
@@ -2061,8 +2062,10 @@ Inventory/cooking_tab.png
 Inventory/crafting_tab.png
 Inventory/exit.png
 Inventory/map_tab.png
+Inventory/raw.png
 Inventory/skill_tab.png
-Inventory/socail_tab.png
+Inventory/social_icon.png
+Inventory/social_tab.png
 JojaMart_Interior.png
 Jojamart.png
 Marnie's_Ranch_Interior.png
@@ -2119,6 +2122,9 @@ Mineral/Tigerseye.png
 Morris.png
 Neighbor_Cabin_Stage_3.png
 Night/Green.png
+Night/Yellow.png
+Night/grayscale.frag
+Night/grayscale.vert
 Night/night.jpg
 Node/Amethyst_Node.png
 Node/Aquamarine_Node.png
@@ -2871,6 +2877,7 @@ Trees/Wild_Tree_stump_Fall.png
 Trees/Wild_Tree_stump_Spring.png
 Trees/Wild_Tree_stump_Winter.png
 Trees/Wood.png
+Village/Pelican_Town.png
 Villagers/Abigail.png
 Villagers/Alex.png
 Villagers/Birdie.png
@@ -2992,6 +2999,7 @@ Weapon/Wooden_Blade.png
 Weather/Rain.png
 Weather/Snow.png
 Weather/Storm.png
+Weather/lightening.png
 Willy_Happy.png
 abigel.png
 background.png
@@ -3008,6 +3016,8 @@ sebastian.png
 skin/craftacular-ui.atlas
 skin/craftacular-ui.json
 skin/craftacular-ui.png
+skin/craftacular-ui0.png
+skin/craftacular-ui1.png
 skin/font-bold-export.fnt
 skin/font-export.fnt
 skin/font-title-export.fnt

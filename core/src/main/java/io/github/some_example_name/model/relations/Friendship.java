@@ -2,6 +2,8 @@ package io.github.some_example_name.model.relations;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.github.some_example_name.model.Entry;
+import io.github.some_example_name.model.Tuple;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,6 +14,7 @@ import io.github.some_example_name.saveGame.JsonPreparable;
 import io.github.some_example_name.saveGame.ObjectMapWrapper;
 import io.github.some_example_name.saveGame.ObjectWrapper;
 
+import javax.swing.text.html.parser.Entity;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,7 +30,7 @@ public class Friendship implements JsonPreparable {
     private List<Gift> gifts;
     private Integer friendShipLevel;
     private Integer xp;
-    private Map<String, Actor> dialogs;
+    private ArrayList<Entry<String, Actor>> dialogs;
     @JsonBackReference
     private TimeAndDate lastSeen = new TimeAndDate(1, 9, Season.SPRING, 0);
     @JsonBackReference
@@ -40,7 +43,7 @@ public class Friendship implements JsonPreparable {
         this.gifts = new ArrayList<>();
         this.friendShipLevel = 0;
         this.xp = 0;
-        this.dialogs = new HashMap<>();
+        this.dialogs = new ArrayList<>();
     }
 
     public void talkToNPC() {
@@ -86,9 +89,9 @@ public class Friendship implements JsonPreparable {
 
         this.dialogEntries = new ArrayList<>();
         if (dialogs != null) {
-            for (Map.Entry<String, Actor> entry : dialogs.entrySet()) {
+            for (Entry<String, Actor> entry : dialogs) {
                 ObjectWrapper actorWrapper = new ObjectWrapper(entry.getValue(), mapper);
-                dialogEntries.add(new ObjectMapWrapper.Entry(actorWrapper, entry.getKey())); // مقدار به عنوان string
+                dialogEntries.add(new ObjectMapWrapper.Entry(actorWrapper, entry.getKey()));
             }
         }
     }
@@ -105,11 +108,11 @@ public class Friendship implements JsonPreparable {
             }
         }
 
-        this.dialogs = new HashMap<>();
+        this.dialogs = new ArrayList<>();
         if (dialogEntries != null) {
             for (ObjectMapWrapper.Entry entry : dialogEntries) {
                 Actor actor = (Actor) entry.objectWrapper.toObject(mapper);
-                dialogs.put(String.valueOf(entry.amount), actor);
+                dialogs.add(new Entry<>(String.valueOf(entry.amount), actor));
             }
         }
     }

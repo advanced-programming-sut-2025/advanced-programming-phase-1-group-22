@@ -88,9 +88,10 @@ public class TerminateMenu extends PopUp {
                     pauseButton.setChecked(false);
                     pauseButton.remove();
                     endButton.remove();
-                    inventory.add(label).width(100).colspan(2).row();
-                    inventory.add(inFavor).width(50).padRight(20);
-                    inventory.add(against).width(50).row();
+                    inventory.center();
+                    inventory.add(label).expandX().colspan(2).row();
+                    inventory.add(inFavor).width(200).padRight(20);
+                    inventory.add(against).width(200).row();
                     endButton.setChecked(false);
                 }
 

@@ -1,14 +1,13 @@
 package io.github.some_example_name.model.relations;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.utils.Timer;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.github.some_example_name.model.dto.SpriteHolder;
 import io.github.some_example_name.utils.GameAsset;
+import io.github.some_example_name.view.GameView;
 import lombok.Getter;
 import lombok.Setter;
 import io.github.some_example_name.model.*;
@@ -49,7 +48,7 @@ public class Player extends Actor implements JsonPreparable {
 	private Buff buff;
 	private Ability buffAbility;
     private Direction direction = Direction.SOUTH;
-    private boolean dirChanged = true;
+    private boolean dirChanged = false;
 	private Map<Ability, Integer> abilities = new HashMap<>();
 	private Account account = new Account();
 	private List<ShippingBin> shippingBinList = new ArrayList<>();
@@ -65,7 +64,7 @@ public class Player extends Actor implements JsonPreparable {
 	private Menu currentMenu = Menu.COTTAGE;
     private TrashCan currentTrashCan;
     private Boolean isWedding = false;
-    private AnimatedSprite sprite;
+    private ArrayList<SpriteHolder> sprites = new ArrayList<>();
     private ArrayList<Notification<com.badlogic.gdx.scenes.scene2d.Actor, Actor>> notifications = new ArrayList<>();
 	@JsonProperty("abilitiesMap")
 	private ObjectMapWrapper abilitiesWrapper;
@@ -115,7 +114,19 @@ public class Player extends Actor implements JsonPreparable {
 		changeEnergy(-amount);
 	}
 
-	public void faint() {
+    public void setPlayerType(PlayerType playerType) {
+        this.playerType = playerType;
+        sprites.add(new SpriteHolder(playerType.getLazy(Direction.SOUTH), new Tuple<>(0f, 0f)));
+        sprites.getFirst().setSize((float) App.tileWidth, (float) (App.tileHeight * 1.5));
+        sprites.getFirst().setChanged(true);
+    }
+
+    public void faint() {
+        this.sprites.getFirst().setSprite(playerType.getFainting());
+        ((AnimatedSprite)this.sprites.getFirst().getSprite()).setRotationAnimation(
+            new Animation<>(0.1f, 0f, 0f, 45f, 90f)
+        );
+        GameView.captureInput = false;
 		isFainted = true;
 		energy = 0;
 	}
@@ -354,27 +365,29 @@ public class Player extends Actor implements JsonPreparable {
 				}
 			}
 		}
-		int max = (energy)*20;
+		int max = Math.min(path.size() - 1, (energy)*20);
 		getTiles().clear();
 		getTiles().add(App.getInstance().getCurrentGame().getTiles()[path.get(max).getX()][path.get(max).getY()]);
 	}
 
-    public Sprite getSprite() {
+    public ArrayList<SpriteHolder> getSprites() {
         if (dirChanged) {
+            ((AnimatedSprite)this.sprites.getFirst().getSprite()).setRotationAnimation(null);
             dirChanged = false;
-            if (isFainted) {
-                this.sprite = playerType.getFainting();
-            }
-            this.sprite = playerType.getWalking(direction);
-            this.sprite.setSize((float) App.tileWidth, (float) (App.tileHeight * 1.5));
+            this.sprites.getFirst().setSprite(playerType.getWalking(direction));
         }
-        return sprite;
+        return sprites;
     }
 
     public void setDirection(Direction direction) {
-        if (this.sprite.isLooping() || this.direction != direction) dirChanged = true;
-        this.sprite.setLooping(true);
+        if (((AnimatedSprite) this.sprites.getFirst().getSprite()).isLooping() ||
+            this.direction != direction) dirChanged = true;
+        if (!isFainted) ((AnimatedSprite) this.sprites.get(0).getSprite()).setLooping(true);
         this.direction = direction;
+    }
+    public void setLazyDirection(Direction direction) {
+        this.direction = direction;
+        this.sprites.getFirst().setSprite(playerType.getLazy(direction));
     }
 
     @Override
@@ -385,5 +398,10 @@ public class Player extends Actor implements JsonPreparable {
     @Override
     public String getName() {
         return user.getUsername();
+    }
+
+    public void setProposal() {
+        this.direction = Direction.NORTH;
+        this.sprites.getFirst().setSprite(playerType.getProposal());
     }
 }

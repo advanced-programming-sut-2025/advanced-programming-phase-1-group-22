@@ -1,6 +1,5 @@
 package io.github.some_example_name.model;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -193,7 +192,7 @@ public class TimeAndDate {
     }
 
 
-    public void updateBatch(SpriteBatch batch) {
+    public Sprite updateBatch(SpriteBatch batch) {
         OrthographicCamera camera = MainGradle.getInstance().getCamera();
         float width = 366;
         float height = 300;
@@ -223,6 +222,7 @@ public class TimeAndDate {
             GameAsset.MAIN_FONT.draw(batch, "" + golds % 10,
                 mainClock.getX() + width * (0.826f - 0.082f*i), mainClock.getY() + height * 0.17f);
         }
+        return mainClock;
     }
 
     public void setWeatherSprite(Weather weather) {

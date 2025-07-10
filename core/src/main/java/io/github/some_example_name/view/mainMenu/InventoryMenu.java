@@ -65,7 +65,8 @@ public class InventoryMenu extends PopUp {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 getMenuGroup().clear();
-                createInventory(skin, tabs, getMenuGroup(), stage);
+                tabIndex = 0;
+                createInventory(skin, getMenuGroup(), stage);
             }
         });
         Image tab2 = new Image(GameAsset.SKILL_TAB);
@@ -73,6 +74,7 @@ public class InventoryMenu extends PopUp {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 getMenuGroup().clear();
+                tabIndex = 1;
                 createSkillMenu(skin, getMenuGroup(), tabs);
             }
         });
@@ -81,6 +83,7 @@ public class InventoryMenu extends PopUp {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 getMenuGroup().clear();
+                tabIndex = 2;
                 createSocialMenu(skin, getMenuGroup(), tabs);
             }
         });
@@ -89,6 +92,7 @@ public class InventoryMenu extends PopUp {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 getMenuGroup().clear();
+                tabIndex = 3;
                 createMapMenu(skin, getMenuGroup(), tabs);
             }
         });
@@ -97,6 +101,7 @@ public class InventoryMenu extends PopUp {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 getMenuGroup().clear();
+                tabIndex = 4;
                 createCraftingMenu(skin, tabs, getMenuGroup(), stage);
             }
         });
@@ -105,6 +110,7 @@ public class InventoryMenu extends PopUp {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 getMenuGroup().clear();
+                tabIndex = 5;
                 createCookingMenu(skin, tabs, getMenuGroup(), stage);
             }
         });
@@ -117,7 +123,7 @@ public class InventoryMenu extends PopUp {
         tabs.add(tab6);
 
         switch (tabIndex) {
-            case 0 -> createInventory(skin, tabs, getMenuGroup(), stage);
+            case 0 -> createInventory(skin, getMenuGroup(), stage);
             case 1 -> createSkillMenu(skin, getMenuGroup(), tabs);
             case 2 -> createSocialMenu(skin, getMenuGroup(), tabs);
             case 3 -> createMapMenu(skin, getMenuGroup(), tabs);
@@ -129,11 +135,19 @@ public class InventoryMenu extends PopUp {
     private void refreshInventory(Stage stage, Table inventory, Player player, Texture slotTexture, Player currentPlayer, ImageButton trashCan, ScrollPane scrollPane) {
         inventory.clear();
         java.util.List<Salable> items = new ArrayList<>(player.getInventory().getProducts().keySet());
+        int maxCol = 12;
+        int maxRow;
+        BackPack backPack = App.getInstance().getCurrentGame().getCurrentPlayer().getInventory();
+        if (backPack.getBackPackType().getIsInfinite()) {
+            maxRow = Math.max(5, backPack.getProducts().size() / maxCol + 1);
+        } else {
+            maxRow = (int) Math.ceil((double) backPack.getBackPackType().getCapacity() / maxCol);
+        }
 
-        for (int row = 0; row < 3; row++) {
-            for (int col = 0; col < 9; col++) {
+        for (int row = 0; row < maxRow; row++) {
+            for (int col = 0; col < maxCol; col++) {
                 Image slot = new Image(slotTexture);
-                int index = row * 9 + col;
+                int index = row * maxCol + col;
 
                 if (index < items.size()) {
                     Salable item = items.get(index);
@@ -195,13 +209,14 @@ public class InventoryMenu extends PopUp {
         refreshInventory(stage, inventory, currentPlayer, slotTexture, currentPlayer, trashCan, scrollPane);
     }
 
-    private void createInventory(Skin skin, Table tabs, Group menuGroup, Stage stage) {
+    private void createInventory(Skin skin, Group menuGroup, Stage stage) {
         Player currentPlayer = App.getInstance().getCurrentGame().getCurrentPlayer();
+        OrthographicCamera camera = MainGradle.getInstance().getCamera();
         Window window = new Window("", skin);
-        window.setSize(700, 600);
+        window.setSize(camera.viewportWidth * 0.7f, camera.viewportHeight * 0.7f);
         window.setPosition(
-            (MainGradle.getInstance().getCamera().viewportWidth - window.getWidth()) / 2f,
-            (MainGradle.getInstance().getCamera().viewportHeight - window.getHeight()) / 2f
+            (camera.viewportWidth - window.getWidth()) / 2f,
+            (camera.viewportHeight - window.getHeight()) / 2f
         );
         window.setMovable(false);
 
@@ -221,7 +236,7 @@ public class InventoryMenu extends PopUp {
         scrollPane.layout();
         scrollPane.setTouchable(Touchable.enabled);
 
-        int maxCol = 9;
+        int maxCol = 12;
         int maxRow;
         BackPack backPack = App.getInstance().getCurrentGame().getCurrentPlayer().getInventory();
         if (backPack.getBackPackType().getIsInfinite()) {
@@ -234,7 +249,7 @@ public class InventoryMenu extends PopUp {
             for (int col = 0; col < maxCol; col++) {
                 Image slot = new Image(slotTexture);
 
-                int index = row * 9 + col;
+                int index = row * maxCol + col;
                 if (index < currentPlayer.getInventory().getProducts().size()) {
                     java.util.List<Salable> items = new ArrayList<>(currentPlayer.getInventory().getProducts().keySet());
                     Salable item = items.get(index);
@@ -307,25 +322,25 @@ public class InventoryMenu extends PopUp {
 
         ArrayList<Actor> array = new ArrayList<>();
         array.add(window);
-        array.add(tabs);
+        array.add(InventoryMenu.tabs);
         array.add(trashCan);
         ImageButton exitButton = provideExitButton(array);
 
 
         Table content = new Table();
         content.setFillParent(true);
-        content.add(scrollPane).width(600).height(220).padBottom(20).padTop(50).row();
-        content.add(finances).padTop(60).top().row();
+        content.add(scrollPane).width(window.getWidth() * 0.95f).height(window.getHeight() * 0.5f).padBottom(20).padTop(50).row();
+        content.add(finances).height(window.getHeight() * 0.3f).padTop(60).top().row();
 
         window.add(content).expand().fill().pad(10);
         Group group = new Group() {
             @Override
             public void act(float delta) {
                 window.setPosition(
-                    (MainGradle.getInstance().getCamera().viewportWidth - window.getWidth()) / 2f +
-                        MainGradle.getInstance().getCamera().position.x - MainGradle.getInstance().getCamera().viewportWidth / 2,
-                    (MainGradle.getInstance().getCamera().viewportHeight - window.getHeight()) / 2f +
-                        MainGradle.getInstance().getCamera().position.y - MainGradle.getInstance().getCamera().viewportHeight / 2
+                    (camera.viewportWidth - window.getWidth()) / 2f +
+                        camera.position.x - camera.viewportWidth / 2,
+                    (camera.viewportHeight - window.getHeight()) / 2f +
+                        camera.position.y - camera.viewportHeight / 2
                 );
                 exitButton.setPosition(
                     window.getX() + window.getWidth() - exitButton.getWidth() / 2f + 16,
@@ -335,9 +350,9 @@ public class InventoryMenu extends PopUp {
                     window.getX() + window.getWidth() - trashCan.getWidth() / 2f + 50,
                     window.getY() + window.getHeight() - trashCan.getHeight() / 2f - 300
                 );
-                tabs.setPosition(
+                InventoryMenu.tabs.setPosition(
                     window.getX(),
-                    window.getY() + window.getHeight() - tabs.getHeight() / 2f + 70
+                    window.getY() + window.getHeight() - InventoryMenu.tabs.getHeight() / 2f + 70
                 );
 
                 super.act(delta);
@@ -346,7 +361,7 @@ public class InventoryMenu extends PopUp {
         group.addActor(window);
         group.addActor(exitButton);
         group.addActor(trashCan);
-        group.addActor(tabs);
+        group.addActor(InventoryMenu.tabs);
         menuGroup.addActor(group);
     }
 
@@ -492,7 +507,7 @@ public class InventoryMenu extends PopUp {
         getGameService().updateRecipes();
         OrthographicCamera camera = MainGradle.getInstance().getCamera();
         Window window = new Window("", skin);
-        window.setSize(camera.viewportWidth * 0.7f, camera.viewportHeight * 0.5f);
+        window.setSize(camera.viewportWidth * 0.7f, camera.viewportHeight * 0.65f);
         window.setPosition(
             (MainGradle.getInstance().getCamera().viewportWidth - window.getWidth()) / 2f,
             (MainGradle.getInstance().getCamera().viewportHeight - window.getHeight()) / 2f
@@ -547,8 +562,10 @@ public class InventoryMenu extends PopUp {
         Table info = new Table();
         info.left();
         if (selectedIndex == null) {
-            Label label = new Label("Right Click An Item To See Info", skin);
-            info.add(label).expandX().fillX().row();
+            for (String string : wrapString("Right Click An Item To See Info", 24)) {
+                Label noInfo = new Label(string, skin);
+                info.add(noInfo).expandX().fillX().row();
+            }
         } else {
             Map.Entry<CraftingRecipe, Boolean> recipe = recipes.get(selectedIndex);
             Label name = new Label(recipe.getKey().getName(), skin);
@@ -557,8 +574,10 @@ public class InventoryMenu extends PopUp {
             info.add(type).colspan(3).expandX().fillX().row();
             info.row();
             if (!recipe.getValue()) {
-                Label noInfo = new Label("You've not learnt this recipe", skin);
-                info.add(noInfo).expandX().fillX().row();
+                for (String string : wrapString("You've not learnt this recipe", 24)) {
+                    Label noInfo = new Label(string, skin);
+                    info.add(noInfo).expandX().fillX().row();
+                }
             } else {
                 Label ingredients = new Label("Ingredients", skin);
                 info.add(ingredients).colspan(3).expandX().fillX().row();
@@ -604,7 +623,7 @@ public class InventoryMenu extends PopUp {
         getGameService().updateRecipes();
         OrthographicCamera camera = MainGradle.getInstance().getCamera();
         Window window = new Window("", skin);
-        window.setSize(camera.viewportWidth * 0.7f, camera.viewportHeight * 0.5f);
+        window.setSize(camera.viewportWidth * 0.7f, camera.viewportHeight * 0.65f);
         window.setPosition(
             (MainGradle.getInstance().getCamera().viewportWidth - window.getWidth()) / 2f,
             (MainGradle.getInstance().getCamera().viewportHeight - window.getHeight()) / 2f
@@ -640,12 +659,10 @@ public class InventoryMenu extends PopUp {
                     return false;
                 }
             });
-            itemImage.setSize(130, 130);
             if (!entry.getValue()) {
                 itemImage.setColor(0.3f, 0.3f, 0.3f, 0.6f);
             }
-            cookingRecipes.add(itemImage);
-            cookingRecipes.add().expandX();
+            cookingRecipes.add(itemImage).size(60).expandX();
             if (col == 6) cookingRecipes.row().expandY();
             i++;
         }
@@ -659,8 +676,10 @@ public class InventoryMenu extends PopUp {
         Table info = new Table();
         info.left();
         if (selectedIndex == null) {
-            Label label = new Label("Right Click An Item To See Info", skin);
-            info.add(label).expandX().fillX().row();
+            for (String string : wrapString("Right Click An Item To See Info", 24)) {
+                Label noInfo = new Label(string, skin);
+                info.add(noInfo).expandX().fillX().row();
+            }
         } else {
             Map.Entry<CookingRecipe, Boolean> recipe = recipes.get(selectedIndex);
             Label name = new Label(recipe.getKey().getName(), skin);
@@ -721,12 +740,13 @@ public class InventoryMenu extends PopUp {
     private void createSkillMenu(Skin skin, Group menuGroup, Table tabs) {
         friendships.clear();
         Player player = App.getInstance().getCurrentGame().getCurrentPlayer();
+        OrthographicCamera camera = MainGradle.getInstance().getCamera();
         Window window = new Window("Skills", skin);
-        window.setSize(900, 600);
+        window.setSize(camera.viewportWidth * 0.7f, camera.viewportHeight * 0.65f);
         window.setMovable(false);
         window.setPosition(
-            (MainGradle.getInstance().getCamera().viewportWidth - window.getWidth()) / 2f,
-            (MainGradle.getInstance().getCamera().viewportHeight - window.getHeight()) / 2f
+            (camera.viewportWidth - window.getWidth()) / 2f,
+            (camera.viewportHeight - window.getHeight()) / 2f
         );
 
         Table skillTable = new Table();
@@ -817,10 +837,10 @@ public class InventoryMenu extends PopUp {
             @Override
             public void act(float delta) {
                 window.setPosition(
-                    (MainGradle.getInstance().getCamera().viewportWidth - window.getWidth()) / 2f +
-                        MainGradle.getInstance().getCamera().position.x - MainGradle.getInstance().getCamera().viewportWidth / 2,
-                    (MainGradle.getInstance().getCamera().viewportHeight - window.getHeight()) / 2f +
-                        MainGradle.getInstance().getCamera().position.y - MainGradle.getInstance().getCamera().viewportHeight / 2
+                    (camera.viewportWidth - window.getWidth()) / 2f +
+                        camera.position.x - camera.viewportWidth / 2,
+                    (camera.viewportHeight - window.getHeight()) / 2f +
+                        camera.position.y - camera.viewportHeight / 2
                 );
                 exitButton.setPosition(
                     window.getX() + window.getWidth() - exitButton.getWidth() / 2f + 16,
@@ -845,7 +865,7 @@ public class InventoryMenu extends PopUp {
         Player player = App.getInstance().getCurrentGame().getCurrentPlayer();
         OrthographicCamera camera = MainGradle.getInstance().getCamera();
         Window window = new Window("Social", skin);
-        window.setSize(camera.viewportWidth * 0.7f, camera.viewportHeight * 0.5f);
+        window.setSize(camera.viewportWidth * 0.7f, camera.viewportHeight * 0.65f);
         window.setPosition(
             (MainGradle.getInstance().getCamera().viewportWidth - window.getWidth()) / 2f,
             (MainGradle.getInstance().getCamera().viewportHeight - window.getHeight()) / 2f
@@ -853,6 +873,11 @@ public class InventoryMenu extends PopUp {
         window.setMovable(false);
 
         Table table = new Table();
+        ScrollPane scrollPane = new ScrollPane(table, skin);
+        scrollPane.setFadeScrollBars(false);
+        scrollPane.setScrollingDisabled(true, false);
+        scrollPane.setScrollbarsOnTop(true);
+
         table.defaults().pad(10).left();
 
 
@@ -920,17 +945,17 @@ public class InventoryMenu extends PopUp {
 
             Table row = new Table();
             row.defaults().pad(10).align(Align.left);
-            row.add(iconImage).size(64).padRight(20);
-            row.add(nameLabel).width(100).padRight(20);
+            row.add(iconImage).size(128).padRight(20);
+            row.add(nameLabel).width(250).padRight(20);
             row.add(xpBar).width(300).padRight(20);
-            row.add(levelLabel).width(80).align(Align.right).padRight(20);
+            row.add(levelLabel).width(200).align(Align.right).padRight(20);
             row.add(gift).size(64).padRight(20);
             row.add(history).size(64).padRight(20);
             row.add(chat).size(64);
 
             table.add(row).row();
         }
-        for (Friendship friendship : friendships) {
+        for (Friendship friendship : App.getInstance().getCurrentGame().getFriendships()) {
             NPC npc;
             if (friendship.getFirstPlayer() == player) {
                 if (friendship.getSecondPlayer() instanceof NPC) {
@@ -941,34 +966,32 @@ public class InventoryMenu extends PopUp {
                     npc = (NPC) friendship.getFirstPlayer();
                 } else continue;
             } else continue;
-            if (friendship.getFirstPlayer() instanceof NPC) {
-                Table row = new Table();
-                row.align(Align.left);
-                row.defaults().space(15);
+            Table row = new Table();
+            row.align(Align.left);
+            row.defaults().space(15);
 
-                Image icon;
-                icon = new Image(npc.getType().getTextureIcon());
-                icon.setSize(128, 128);
-                row.add(icon).size(128).padLeft(20);
+            Image icon;
+            icon = new Image(npc.getType().getTextureIcon());
+            icon.setSize(128, 128);
+            row.add(icon).size(128).padLeft(20);
 
-                Label name = new Label(npc.getName(), skin);
-                row.add(name).width(150).left();
+            Label name = new Label(npc.getName(), skin);
+            row.add(name).width(250).padRight(20).left();
 
-                ProgressBar bar = new ProgressBar(0, (friendship.getFriendShipLevel() + 1) * 200, 1, false, skin);
-                bar.setValue(friendship.getXp());
-                bar.setWidth(300);
-                row.add(bar).width(300);
+            ProgressBar bar = new ProgressBar(0, (friendship.getFriendShipLevel() + 1) * 200, 1, false, skin);
+            bar.setValue(friendship.getXp());
+            bar.setWidth(300);
+            row.add(bar).width(300);
 
-                Label levelLabel = new Label("Level: " + friendship.getFriendShipLevel(), skin);
-                row.add(levelLabel).width(80);
+            Label levelLabel = new Label("Level: " + friendship.getFriendShipLevel(), skin);
+            row.add(levelLabel).width(80);
 
-                table.add(row).row();
-            }
+            table.add(row).row();
         }
 
         Table content = new Table();
         content.setFillParent(true);
-        content.add(table).expand().fill().pad(20);
+        content.add(scrollPane).expand().fill().pad(20);
 
         window.add(content).expand().fill();
         window.top();
@@ -1039,10 +1062,10 @@ public class InventoryMenu extends PopUp {
     }
 
     private void createMapMenu(Skin skin, Group menuGroup, Table tabs) {
-        Window window = new Window("Mini Map", skin);
-        window.setSize(900, 600);
-        window.setMovable(false);
         OrthographicCamera camera = MainGradle.getInstance().getCamera();
+        Window window = new Window("Mini Map", skin);
+        window.setSize(camera.viewportWidth * 0.7f, camera.viewportHeight * 0.5f);
+        window.setMovable(false);
 
         float scale = 0.3f;
         MiniMapActor miniMapActor = new MiniMapActor(scale);

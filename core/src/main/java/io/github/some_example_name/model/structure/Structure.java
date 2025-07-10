@@ -1,6 +1,7 @@
 package io.github.some_example_name.model.structure;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import io.github.some_example_name.model.dto.SpriteComponent;
 import io.github.some_example_name.model.dto.SpriteHolder;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,6 +20,18 @@ public abstract class Structure {
     }
 
     public ArrayList<SpriteHolder> getSprites() {
+        return null;
+    }
+
+    public Integer getWidth() {
+        return null;
+    }
+
+    public Integer getHeight() {
+        return null;
+    }
+
+    public SpriteComponent getSpriteComponent() {
         return null;
     }
 }

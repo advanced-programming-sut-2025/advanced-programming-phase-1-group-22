@@ -158,7 +158,7 @@ public abstract class PopUp {
         labelContainer.setPosition(66, 5);
         return labelContainer;
     }
-    protected ArrayList<String> wrapString(String string, int length) {
+    public static ArrayList<String> wrapString(String string, int length) {
         ArrayList<String> lines = new ArrayList<>();
         if (string == null || string.isEmpty() || length <= 0) return lines;
 
