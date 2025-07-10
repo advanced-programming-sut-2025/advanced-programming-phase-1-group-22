@@ -61,6 +61,9 @@ public class CameraViewController {
         if (GameView.captureInput) {
             handleInput();
         }
+        if (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) && Gdx.input.isKeyJustPressed(Input.Keys.CAPS_LOCK)) {
+            GameView.captureInput = !GameView.captureInput;
+        }
     }
 
     private void updateButtons(Sprite mainClock) {
@@ -139,19 +142,21 @@ public class CameraViewController {
     }
 
     private void initEnergyBar(){
-        Texture texture = GameAsset.ENERGY_BAR;
+        Texture texture = GameAsset.GREEN_SQUARE;
         Texture texture1 = GameAsset.ENERGY_BAR_EMPTY;
         OrthographicCamera camera = MainGradle.getInstance().getCamera();
-        TextureRegion backgroundRegion = new TextureRegion(texture1, 0, 0, 101, 580);
-        TextureRegion fillRegion = new TextureRegion(texture, 9, 26, 18, 160);
+        TextureRegion backgroundRegion = new TextureRegion(texture1);
+        TextureRegion fillRegion = new TextureRegion(texture);
         energyBackground = new Image(backgroundRegion);
+        energyBackground.setSize(camera.viewportWidth * 0.03f,
+            camera.viewportHeight * 0.3f);
         energyFill = new Image(fillRegion);
-        energyFill.setSize(camera.viewportWidth * 0.03f,
-            camera.viewportHeight * 0.2f / 160 * 200);
-        energyFill.setPosition(9, 10);
+        energyFill.setSize(energyBackground.getWidth() * 0.5f,
+            energyBackground.getHeight() / 215 * 170);
+        energyFill.setPosition(energyBackground.getWidth() * 0.25f, energyBackground.getHeight() * 8 / 215);
 
         Stack energyStack = new Stack();
-        energyStack.setSize(50, 260);
+        energyStack.setSize(energyBackground.getWidth(), energyBackground.getHeight());
         energyStack.add(energyBackground);
         energyStack.add(energyFill);
 
@@ -164,7 +169,7 @@ public class CameraViewController {
             }
         };
 
-        energyBar.setSize(50, 260);
+        energyBar.setSize(energyBackground.getWidth(), energyBackground.getHeight());
         energyBar.addActor(energyStack);
         GameView.stage.addActor(energyBar);
     }
@@ -173,13 +178,12 @@ public class CameraViewController {
         Player player = App.getInstance().getCurrentGame().getCurrentPlayer();
         float energyPercent = (float) player.getEnergy() / player.getMaxEnergy();
 
-        float fullHeight = 160f;
+        float fullHeight = energyBackground.getHeight() * 175 / 215;
         float currentHeight = fullHeight * energyPercent;
 
-        energyFill.setSize(30, currentHeight);
+        energyFill.setSize(energyBackground.getWidth() * 0.5f, currentHeight);
         energyBackground.setScale(1, player.getMaxEnergy()/200f);
-
-        energyFill.setPosition(9,10);
+        energyFill.setPosition(energyBackground.getWidth() * 0.25f, energyBackground.getHeight() * 3 / 215);
     }
 
     private void updateInventoryBar(){
