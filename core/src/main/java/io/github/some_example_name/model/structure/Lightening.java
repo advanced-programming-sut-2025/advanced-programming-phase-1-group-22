@@ -40,7 +40,7 @@ public class Lightening extends Structure {
         tiles.clear();
         tiles.add(tile);
         OrthographicCamera camera = MainGradle.getInstance().getCamera();
-        sprites.getLast().setOffset(new Tuple<>(
+        sprites.get(sprites.size() - 1).setOffset(new Tuple<>(
             -tile.getX() + (camera.position.x - 3*camera.viewportWidth/2) / App.tileWidth,
             -tile.getY() + (camera.position.y - 3*camera.viewportHeight/2) / App.tileHeight
         ));

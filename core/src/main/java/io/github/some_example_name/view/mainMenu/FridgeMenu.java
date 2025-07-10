@@ -256,10 +256,10 @@ public class FridgeMenu extends PopUp {
         group.addActor(tab2);
         menuGroup.addActor(group);
     }
-    
+
     private Farm currentFarm() {
         for (Farm farm : App.getInstance().getCurrentGame().getVillage().getFarms()) {
-            if (farm.getTiles().contains(App.getInstance().getCurrentGame().getCurrentPlayer().getTiles().getFirst())) {
+            if (farm.getTiles().contains(App.getInstance().getCurrentGame().getCurrentPlayer().getTiles().get(0))) {
                 return farm;
             }
         }
