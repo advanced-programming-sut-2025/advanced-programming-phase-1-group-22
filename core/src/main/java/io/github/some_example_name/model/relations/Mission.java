@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 import io.github.some_example_name.model.Actor;
 import io.github.some_example_name.model.Salable;
@@ -17,11 +18,12 @@ import java.util.Objects;
 import java.util.function.Supplier;
 
 @Getter
+@Setter
 @ToString
 public class Mission {
     private Integer id;
     private Actor doer;
-    private final NPCType requester;
+    private NPCType requester;
     private Integer requiredLevel;
     private Season requiredSeason;
     private final Supplier<Map<Salable, Integer>> requestSupplier;
@@ -120,6 +122,7 @@ public class Mission {
             // Give rewards to doer
         }
     }
+
     @JsonIgnore
     private Map<Salable, Integer> reward = new HashMap<>();
 
@@ -127,10 +130,10 @@ public class Mission {
     private ObjectMapWrapper rewardWrapper;
 
     public void prepareForSave(ObjectMapper mapper) {
-        this.rewardWrapper = new ObjectMapWrapper((Map<Object, Integer>)(Map<?, ?>) reward, mapper);
+        this.rewardWrapper = new ObjectMapWrapper((Map<Object, Integer>) (Map<?, ?>) reward, mapper);
     }
 
     public void unpackAfterLoad(ObjectMapper mapper) {
-        this.reward = (Map<Salable, Integer>)(Map<?, ?>) rewardWrapper.toMap(mapper);
+        this.reward = (Map<Salable, Integer>) (Map<?, ?>) rewardWrapper.toMap(mapper);
     }
 }

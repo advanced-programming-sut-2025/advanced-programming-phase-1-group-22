@@ -23,50 +23,50 @@ import java.util.Map;
 @Getter
 @ToString
 public enum NPCType {
-    SEBASTIAN("sebastian", GameAsset.SEBASTIAN_,GameAsset.CABIN1,GameAsset.SEBASTIAN,
-            () -> List.of(AnimalProductType.SHEEP_WOOL, FoodType.PUMPKIN_PIE, FoodType.PIZZA),
-            () -> List.of(
-                    new Mission(() -> Map.of(MineralType.IRON, 50), () -> Map.of(MineralType.DIAMOND, 2), 0),
-                    new Mission(() -> Map.of(FoodType.PUMPKIN_PIE, 1), () -> Map.of(MineralType.GOLD, 5000), 0),
-                    new Mission(() -> Map.of(MineralType.STONE, 150), () -> Map.of(MineralType.QUARTZ, 50), Season.FALL)
-            ),
-            1),
+    SEBASTIAN("sebastian", GameAsset.SEBASTIAN_, GameAsset.CABIN1, GameAsset.SEBASTIAN,
+        () -> List.of(AnimalProductType.SHEEP_WOOL, FoodType.PUMPKIN_PIE, FoodType.PIZZA),
+        () -> List.of(
+            new Mission(() -> Map.of(MineralType.IRON, 50), () -> Map.of(MineralType.DIAMOND, 2), 0),
+            new Mission(() -> Map.of(FoodType.PUMPKIN_PIE, 1), () -> Map.of(MineralType.GOLD, 5000), 0),
+            new Mission(() -> Map.of(MineralType.STONE, 150), () -> Map.of(MineralType.QUARTZ, 50), Season.FALL)
+        ),
+        1),
 
-    ABIGIL("ebigel", GameAsset.ABIGEL_,GameAsset.CABIN2,GameAsset.ABIGAIL,
-            () -> List.of(MineralType.IRON_ORE, MineralType.STONE, MadeProductType.COFFE),
-            () -> List.of(
-                    new Mission(() -> Map.of(MadeProductType.GOLD_BAR, 1), () -> Map.of(MineralType.GOLD, 1), 0),
-                    new Mission(() -> Map.of(CropType.PUMPKIN, 1), () -> Map.of(MineralType.GOLD, 500), 1),
-                    new Mission(() -> Map.of(CropType.WHEAT, 50), () -> Map.of(WateringCanType.IRIDIUM, 1), Season.WINTER)
-            ),
-            2),
+    ABIGIL("ebigel", GameAsset.ABIGEL_, GameAsset.CABIN2, GameAsset.ABIGAIL,
+        () -> List.of(MineralType.IRON_ORE, MineralType.STONE, MadeProductType.COFFE),
+        () -> List.of(
+            new Mission(() -> Map.of(MadeProductType.GOLD_BAR, 1), () -> Map.of(MineralType.GOLD, 1), 0),
+            new Mission(() -> Map.of(CropType.PUMPKIN, 1), () -> Map.of(MineralType.GOLD, 500), 1),
+            new Mission(() -> Map.of(CropType.WHEAT, 50), () -> Map.of(WateringCanType.IRIDIUM, 1), Season.WINTER)
+        ),
+        2),
 
-    HARVEY("harvey", GameAsset.HARVEY_,GameAsset.CABIN3,GameAsset.HARVEY,
-            () -> List.of(MadeProductType.PICKLES, MadeProductType.WINE, MadeProductType.COFFE),
-            () -> List.of(
-                    new Mission(() -> Map.of(MineralType.GOLD, 12), () -> Map.of(MineralType.GOLD, 750), 0),
-                    new Mission(() -> Map.of(FishType.SALMON, 1), () -> Map.of(MineralType.GOLD, 1), 1),
-                    new Mission(() -> Map.of(MadeProductType.WINE, 1), () -> Map.of(FoodType.SALAD, 5), Season.WINTER)
-            ),
-            3),
+    HARVEY("harvey", GameAsset.HARVEY_, GameAsset.CABIN3, GameAsset.HARVEY,
+        () -> List.of(MadeProductType.PICKLES, MadeProductType.WINE, MadeProductType.COFFE),
+        () -> List.of(
+            new Mission(() -> Map.of(MineralType.GOLD, 12), () -> Map.of(MineralType.GOLD, 750), 0),
+            new Mission(() -> Map.of(FishType.SALMON, 1), () -> Map.of(MineralType.GOLD, 1), 1),
+            new Mission(() -> Map.of(MadeProductType.WINE, 1), () -> Map.of(FoodType.SALAD, 5), Season.WINTER)
+        ),
+        3),
 
-    LIA("lia", GameAsset.LIA_,GameAsset.CABIN4,GameAsset.LIA_ICON,
-            () -> List.of(MadeProductType.WINE, CropType.GRAPE, FoodType.SALAD),
-            () -> List.of(
-                    new Mission(() -> Map.of(MineralType.HARD_WOOD, 10), () -> Map.of(MineralType.GOLD, 500), 0),
-                    new Mission(() -> Map.of(FishType.SALMON, 1), () -> Map.of(CookingRecipe.SALMON_DINNER_RECIPE, 1), 1),
-                    new Mission(() -> Map.of(MineralType.WOOD, 200), () -> Map.of(CraftType.DELUXE_SCARECROW, 3), Season.SUMMER)
-            ),
-            4),
+    LIA("lia", GameAsset.LIA_, GameAsset.CABIN4, GameAsset.LIA_ICON,
+        () -> List.of(MadeProductType.WINE, CropType.GRAPE, FoodType.SALAD),
+        () -> List.of(
+            new Mission(() -> Map.of(MineralType.HARD_WOOD, 10), () -> Map.of(MineralType.GOLD, 500), 0),
+            new Mission(() -> Map.of(FishType.SALMON, 1), () -> Map.of(CookingRecipe.SALMON_DINNER_RECIPE, 1), 1),
+            new Mission(() -> Map.of(MineralType.WOOD, 200), () -> Map.of(CraftType.DELUXE_SCARECROW, 3), Season.SUMMER)
+        ),
+        4),
 
-    RABIN("rabin", GameAsset.ROBIN_,GameAsset.CABIN5,GameAsset.ROBIN,
-            () -> List.of(FoodType.SPAGHETTI, MineralType.WOOD, MadeProductType.IRON_BAR),
-            () -> List.of(
-                    new Mission(() -> Map.of(MineralType.WOOD, 80), () -> Map.of(MineralType.GOLD, 1000), 0),
-                    new Mission(() -> Map.of(MadeProductType.IRON_BAR, 10), () -> Map.of(CraftType.BEE_HOUSE, 3), 1),
-                    new Mission(() -> Map.of(MineralType.WOOD, 1000), () -> Map.of(MineralType.GOLD, 25_000), Season.WINTER)
-            ),
-            5);
+    RABIN("rabin", GameAsset.ROBIN_, GameAsset.CABIN5, GameAsset.ROBIN,
+        () -> List.of(FoodType.SPAGHETTI, MineralType.WOOD, MadeProductType.IRON_BAR),
+        () -> List.of(
+            new Mission(() -> Map.of(MineralType.WOOD, 80), () -> Map.of(MineralType.GOLD, 1000), 0),
+            new Mission(() -> Map.of(MadeProductType.IRON_BAR, 10), () -> Map.of(CraftType.BEE_HOUSE, 3), 1),
+            new Mission(() -> Map.of(MineralType.WOOD, 1000), () -> Map.of(MineralType.GOLD, 25_000), Season.WINTER)
+        ),
+        5);
 
     private Integer id;
     private final String name;
@@ -105,7 +105,7 @@ public enum NPCType {
         return missions;
     }
 
-    NPCType(String name, Texture textureCharacter,Texture textureHouse,Texture textureIcon, IngredientsSupplier ingredientsSupplier,
+    NPCType(String name, Texture textureCharacter, Texture textureHouse, Texture textureIcon, IngredientsSupplier ingredientsSupplier,
             MissionsSupplier missionsSupplier, int missionSeasonDis) {
         this.name = name;
         this.textureCharacter = textureCharacter;
