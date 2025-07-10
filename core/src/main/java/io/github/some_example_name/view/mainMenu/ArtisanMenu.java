@@ -59,9 +59,7 @@ public class ArtisanMenu extends PopUp {
         } else if (flag && isOverActor(dragImage, window2)) {
             int count = currentPlayer.getInventory().countProductFromBackPack(item.getName());
             craft.getIngredients().put(item, count);
-//                        gameService.removeFromPlayerInventory(item.getName(), false);
         } else if (!flag && isOverActor(dragImage, window)) {
-//                        currentPlayer.getInventory().addProductToBackPack(item, craft.getIngredients().get(item));
             craft.getIngredients().remove(item);
         }
         createMenu(stage, skin, getController());

@@ -43,6 +43,7 @@ public class GameNotifier {
             style.fontColor = Color.WHITE;
 
         Label label = new Label(message, style);
+        label.setZIndex(100);
         label.setAlignment(Align.left);
         label.getColor().a = 0f;
 

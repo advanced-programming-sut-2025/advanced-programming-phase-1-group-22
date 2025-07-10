@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import io.github.some_example_name.MainGradle;
 import io.github.some_example_name.model.*;
 import io.github.some_example_name.model.dto.SpriteHolder;
+import io.github.some_example_name.model.products.AnimalProduct;
 import io.github.some_example_name.model.records.Response;
 import io.github.some_example_name.model.relations.Player;
 import io.github.some_example_name.utils.App;
@@ -125,5 +126,10 @@ public class Craft extends Structure implements Salable {
     public void setETA(TimeAndDate ETA) {
         this.ETA = ETA;
         this.startTime = App.getInstance().getCurrentGame().getTimeAndDate().copy();
+    }
+
+    @Override
+    public Craft copy() {
+        return new Craft(craftType, madeProduct, ETA);
     }
 }

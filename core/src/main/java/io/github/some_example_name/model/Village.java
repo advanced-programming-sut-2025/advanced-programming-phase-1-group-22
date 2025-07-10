@@ -3,6 +3,7 @@ package io.github.some_example_name.model;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.github.some_example_name.model.structure.Lightening;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

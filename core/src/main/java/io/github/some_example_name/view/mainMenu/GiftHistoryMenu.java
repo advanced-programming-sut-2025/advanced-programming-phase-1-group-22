@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Timer;
 import io.github.some_example_name.MainGradle;
 import io.github.some_example_name.controller.WorldController;
 import io.github.some_example_name.model.Farm;
@@ -30,7 +31,10 @@ public class GiftHistoryMenu extends PopUp {
     private Friendship friendship;
     private Player friend;
     private Window window;
+    private ScrollPane scrollPane;
+    private Float scrollY;
     private ArrayList<ArrayList<ImageButton>> hearts = new ArrayList<>();
+    private ArrayList<Boolean> handleHearts = new ArrayList<>();
 
     public void createMenu(Stage stage, Skin skin, WorldController worldController) {
         super.createMenu(stage, skin, worldController);
@@ -59,39 +63,38 @@ public class GiftHistoryMenu extends PopUp {
         window.setMovable(false);
 
         Table inventory = new Table();
-        ScrollPane scrollPane = new ScrollPane(inventory, skin);
+        scrollPane = new ScrollPane(inventory, skin);
         inventory.pack();
         scrollPane.setFadeScrollBars(false);
-        scrollPane.setScrollbarsOnTop(true);
+        scrollPane.setScrollbarsOnTop(false);
         scrollPane.setScrollingDisabled(false, false);
         scrollPane.setScrollBarPositions(true, true);
         scrollPane.setForceScroll(false, true);
         scrollPane.layout();
         scrollPane.setTouchable(Touchable.enabled);
+        Table otherPlayer = new Table();
 
-        inventory.add(new Image(friend.getAvatar())).size(100).padRight(20);
-        inventory.add(new Label(friend.getUser().getNickname(), skin)).colspan(3).width(80).expandX().row();
+        otherPlayer.add(new Image(friend.getAvatar())).size(200).row();
+        otherPlayer.add(new Label(friend.getUser().getNickname(), skin)).width(200).expandX().row();
         int i = 0;
         for (Gift gift : friendship.getGifts()) {
             hearts.add(new ArrayList<>());
             boolean isGifting = gift.getGiver() == currentPlayer;
             Table giftTable = new Table(skin);
-            if (isGifting) giftTable.left();
-            else {
-                inventory.add();
-                inventory.add();
-                giftTable.right();
-            }
-            giftTable.add(new Image(gift.getGift().getTexture())).size(50).padRight(20);
-            giftTable.add(new Label(gift.getAmount().toString(), skin)).size(50).padRight(20);
-            giftTable.add(new Label(gift.getGift().getName(), skin)).colspan(3).width(80).left().expandX().row();
+            giftTable.add(new Image(gift.getGift().getTexture())).size(50).padRight(15);
+            giftTable.add(new Label(gift.getAmount().toString(), skin)).size(50).padRight(15);
+            giftTable.add(new Label(gift.getGift().getName(), skin)).colspan(5).width(150).left().row();
             addRating(giftTable, gift, isGifting, i);
-            inventory.add(giftTable).colspan(2).expandX();
+            Table rowWrapper = new Table();
+
             if (isGifting) {
-                inventory.add();
-                inventory.add();
+                rowWrapper.add(giftTable).left().expandX();
+                rowWrapper.add();
+            } else {
+                rowWrapper.add();
+                rowWrapper.add(giftTable).right().expandX();
             }
-            inventory.row();
+            inventory.add(rowWrapper).expandX().fillX().row();
             i++;
         }
 
@@ -101,6 +104,8 @@ public class GiftHistoryMenu extends PopUp {
 
         Table content = new Table();
         content.setFillParent(true);
+        content.center();
+        content.add(otherPlayer).width(window.getWidth() * 0.15f);
         content.add(scrollPane).width(window.getWidth() * 0.8f).height(window.getHeight() - 100).padBottom(20).padTop(50).row();
 
 
@@ -125,6 +130,12 @@ public class GiftHistoryMenu extends PopUp {
         group.addActor(window);
         group.addActor(exitButton);
         menuGroup.addActor(group);
+        Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+                scrollPane.setScrollY(scrollY == null ? scrollPane.getMaxY() : Math.max(0, scrollY));
+            }
+        }, 0.2f);
     }
 
     private void addRating(Table giftTable, Gift gift, boolean isGifting, int k) {
@@ -135,33 +146,45 @@ public class GiftHistoryMenu extends PopUp {
         Drawable filled = new TextureRegionDrawable(GameAsset.SECRET_HEART);
         Drawable empty = new TextureRegionDrawable(GameAsset.EMPTY_HEART);
         int rate = (gift.getRate() == null) ? 0 : gift.getRate();
+        handleHearts.add(false);
         if (!isGifting && rate == 0) {
+            handleHearts.set(handleHearts.size() - 1, true);
             for (int i = 0; i < 5; i++) {
                 int finalI = i;
                 ImageButton heartButton = hearts.get(k).get(i);
                 heartButton.addListener(new InputListener() {
                     @Override
                     public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-                        for (int j = 0; j < 5; j++) {
-                            hearts.get(k).get(j).getStyle().imageUp = (j <= finalI) ? filled : empty;
+                        if (handleHearts.get(k)) {
+                            for (int j = 0; j < 5; j++) {
+                                hearts.get(k).get(j).getStyle().imageUp = (j <= finalI) ? filled : empty;
+                            }
                         }
                     }
 
                     @Override
                     public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
-                        for (int j = 0; j < 5; j++) {
-                            hearts.get(k).get(j).getStyle().imageUp = empty;
+                        if (handleHearts.get(k)) {
+                            for (int j = 0; j < 5; j++) {
+                                hearts.get(k).get(j).getStyle().imageUp = empty;
+                            }
                         }
                     }
 
                     @Override
                     public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                        for (int j = 0; j < 5; j++) {
-                            hearts.get(k).get(j).getStyle().imageUp = (j <= finalI) ? filled : empty;
-                        }
-                        Response resp = RelationService.getInstance().rateGift(friendship, gift, finalI + 1);
-                        if (!resp.shouldBeBack()) {
-                            getController().showResponse(resp);
+                        if (handleHearts.get(k)) {
+                            for (int j = 0; j < 5; j++) {
+                                hearts.get(k).get(j).getStyle().imageUp = (j <= finalI) ? filled : empty;
+                            }
+                            Response resp = RelationService.getInstance().rateGift(friendship, gift, finalI + 1);
+                            if (!resp.shouldBeBack()) {
+                                getController().showResponse(resp);
+                            } else {
+                                handleHearts.set(k, false);
+                            }
+                        } else {
+                            getController().showResponse(new Response("You have already votes this gift."));
                         }
                         return true;
                     }
@@ -175,7 +198,7 @@ public class GiftHistoryMenu extends PopUp {
         for (int i = 0; i < 5; i++) {
             Drawable drawable = new TextureRegionDrawable(i < rate ? GameAsset.SECRET_HEART : GameAsset.EMPTY_HEART);
             hearts.get(hearts.size() - 1).set(i, new ImageButton(drawable));
-            giftTable.add(hearts.get(hearts.size() - 1).get(i)).padRight(10);
+            giftTable.add(hearts.get(hearts.size() - 1).get(i)).padRight(15);
         }
         giftTable.row();
     }

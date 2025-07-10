@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import io.github.some_example_name.MainGradle;
+import io.github.some_example_name.model.TimeAndDate;
 import io.github.some_example_name.utils.App;
 import io.github.some_example_name.utils.GameAsset;
 import io.github.some_example_name.view.GameView;
@@ -15,7 +16,7 @@ public class GameViewController {
     private final PlayerController playerController = new PlayerController(worldController);
     private final ToolController toolController = new ToolController();
     private final CarryingController carryingController = new CarryingController();
-    private final CameraViewController cameraViewController = new CameraViewController();
+    private final CameraViewController cameraViewController = new CameraViewController(worldController);
     private final AnimalController animalController = new AnimalController();
     private final StoreController storeController = new StoreController();
     private final ShippingBinController shippingBinController = new ShippingBinController();
@@ -36,7 +37,9 @@ public class GameViewController {
                 GameView.captureInput = true;
             }
         }
-        worldController.update();
+        boolean isNight = App.getInstance().getCurrentGame().getTimeAndDate().compareDailyTime(new TimeAndDate(0, 18)) <= 0;
+        if (isNight) MainGradle.getInstance().getBatch().setShader(GameAsset.SHADER);
+        worldController.update(delta);
         playerController.update(delta);
         toolController.update();
         carryingController.update();
@@ -63,6 +66,7 @@ public class GameViewController {
             }
             MainGradle.getInstance().getCamera().update();
         }
+        if (isNight) MainGradle.getInstance().getBatch().setShader(null);
         OrthographicCamera camera = MainGradle.getInstance().getCamera();
         switch (App.getInstance().getCurrentGame().getFadingInTheNight()) {
             case 1: {

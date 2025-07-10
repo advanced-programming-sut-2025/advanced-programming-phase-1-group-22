@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 public class GameAsset {
@@ -64,9 +65,12 @@ public class GameAsset {
     public static final Texture BUTTON = new Texture("Inventory/button-.png");
     public static final Texture FILLED_BUTTON = new Texture("Inventory/Filled_Button.png");
     public static final Texture GREEN_SQUARE = new Texture("Night/Green.png");
+    public static final Texture YELLOW_SQUARE = new Texture("Night/Yellow.png");
     public static final Texture MAP_TAB = new Texture("Inventory/map_tab.png");
     public static final Texture SKILL_TAB = new Texture("Inventory/skill_tab.png");
-    public static final Texture SOCIAL_TAB = new Texture("Inventory/socail_tab.png");
+    public static final Texture SOCIAL_TAB = new Texture("Inventory/social_tab.png");
+    public static final Texture SOCIAL_ICON = new Texture("Inventory/social_icon.png");
+    public static final Texture RAW = new Texture("Inventory/raw.png");
     public static final Texture EXIT_BUTTON = new Texture("Inventory/exit.png");
     public static final Skin SKIN = new Skin(Gdx.files.internal("skin/craftacular-ui.json"));
     public static final Skin SKIN_MENU = new Skin(Gdx.files.internal("skinMenu/pixthulhu-ui.json"));
@@ -1699,6 +1703,8 @@ public class GameAsset {
     public static final Texture WHITE_BOW = new Texture("Hat/White_Bow.png");
     public static final Texture WHITE_TURBAN = new Texture("Hat/White_Turban.png");
     public static final Texture WITCH_HAT = new Texture("Hat/Witch_Hat.png");
+    public static final Texture BEATING_HEART = new Texture("Heart/Beating_Heart.png");
+    public static final TextureRegion[][] BEATING_HEARTS = TextureRegion.split(BEATING_HEART, 157, 159);
     public static final Texture EIGHT_HEARTS = new Texture("Heart/Eight_Hearts.png");
     public static final Texture ELEVEN_HEARTS = new Texture("Heart/Eleven_Hearts.png");
     public static final Texture FIVE_HEARTS = new Texture("Heart/Five_Hearts.png");
@@ -1772,6 +1778,10 @@ public class GameAsset {
     public static final Texture NOTIFICATION = new Texture("Inventory/Notification.png");
     public static final Texture NIGHT = new Texture("Night/night.jpg");
     public static final Sprite NIGHT_SPRITE = new Sprite(NIGHT);
+    public static final ShaderProgram SHADER = new ShaderProgram(
+        Gdx.files.internal("Night/grayscale.vert"),
+        Gdx.files.internal("Night/grayscale.frag")
+    );
     static {
         NIGHT_SPRITE.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
@@ -2364,6 +2374,7 @@ public class GameAsset {
     public static final Texture WILD_TREE_STUMP_FALL = new Texture("Trees/Wild_Tree_stump_Fall.png");
     public static final Texture WILD_TREE_STUMP_SPRING = new Texture("Trees/Wild_Tree_stump_Spring.png");
     public static final Texture WILD_TREE_STUMP_WINTER = new Texture("Trees/Wild_Tree_stump_Winter.png");
+    public static final Texture PELICAN_TOWN = new Texture("Village/Pelican_Town.png");
     public static final Texture ABIGAIL = new Texture("Villagers/Abigail.png");
     public static final Texture ALEX = new Texture("Villagers/Alex.png");
     public static final Texture BIRDIE = new Texture("Villagers/Birdie.png");
@@ -2471,6 +2482,7 @@ public class GameAsset {
     public static final Texture WOODEN_BLADE = new Texture("Weapon/Wooden_Blade.png");
     public static final TextureRegion[][] RAIN = TextureRegion.split(new Texture("Weather/Rain.png"), 41, 130);
     public static final TextureRegion[][] STORM = TextureRegion.split(new Texture("Weather/Storm.png"), 192, 384);
+    public static final Texture LIGHTENING = new Texture("Weather/lightening.png");
     public static final Texture SNOW = new Texture("Weather/Snow.png");
     public static final Texture ABIGAIL_FULL = new Texture("Player/Abigail.png");
     public static final Texture ALEX_FULL = new Texture("Player/Alex.png");
@@ -2484,4 +2496,5 @@ public class GameAsset {
     public static final Texture SAM_FULL = new Texture("Player/Sam.png");
     public static final Texture SEBASTIAN_FULL = new Texture("Player/Sebastian.png");
     public static final Texture SHANE_FULL = new Texture("Player/Shane.png");
+
 }

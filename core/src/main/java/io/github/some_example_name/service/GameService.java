@@ -102,6 +102,17 @@ public class GameService {
         return new Response("The game is terminated", true);
     }
 
+    public void nextTurnAfterFaint() {
+        com.badlogic.gdx.utils.Timer.schedule(new com.badlogic.gdx.utils.Timer.Task() {
+            @Override
+            public void run() {
+                nextTurn();
+                GameView.captureInput = true;
+            }
+        }, 3);
+        new Response("", true);
+    }
+
     public Response nextTurn() {
         Player player = app.getCurrentGame().getCurrentPlayer();
         player.setEnergyPerTurn(player.getMaxEnergyPerTurn());
@@ -180,8 +191,9 @@ public class GameService {
     public Response greenhouseBuild() {
         Farm farm = null;
         for (int i = 0; i < app.getCurrentGame().getVillage().getFarms().size(); i++) {
-            farm = app.getCurrentGame().getVillage().getFarms().get(i);
-            if (farm.getPlayers().get(0).equals(app.getCurrentGame().getCurrentPlayer())) {
+            Farm farm1 = app.getCurrentGame().getVillage().getFarms().get(i);
+            if (farm1.getTiles().contains(app.getCurrentGame().getCurrentPlayer().getTiles().getFirst())) {
+                farm = farm1;
                 break;
             }
         }
@@ -245,18 +257,11 @@ public class GameService {
 //            if (confirmation.equals("Y")) break;
 //            if (confirmation.equals("n")) return new Response("You didn't moved");
 //        }
-        if (player.getEnergy() < energy) {
+        if (player.getEnergy() <= energy) {
             player.walkTillFaint(walkingStrategy.getDistances(), new Pair(x1, y1));
             player.faint();
             walkingStrategy.getDistances().clear();
-            GameView.captureInput = false;
-            com.badlogic.gdx.utils.Timer.schedule(new com.badlogic.gdx.utils.Timer.Task() {
-                @Override
-                public void run() {
-                    nextTurn();
-                    GameView.captureInput = true;
-                }
-            }, 3);
+            nextTurnAfterFaint();
             return new Response("Not enough energy; you fainted");
         }
         walkingStrategy.getDistances().clear();
@@ -401,7 +406,9 @@ public class GameService {
         Tool currentTool = getCurrentTool(currentPlayer);
         if (currentTool == null) {
             return new Response("you do not carrying any tool");
-        } else if (currentTool.getEnergy(currentPlayer) > currentPlayer.getEnergy()) {
+        } else if (currentTool.getEnergy(currentPlayer) < currentPlayer.getEnergy()) {
+            currentPlayer.faint();
+            nextTurnAfterFaint();
             return new Response("you do not have enough energy to use this tool");
         }
         Tile currentTile = getTileByXAndY(currentPlayer.getTiles().get(0).getX() + currentDirection.getXTransmit(),
@@ -409,7 +416,12 @@ public class GameService {
         if (currentTile == null) {
             return new Response("out of bond");
         }
-        return new Response(currentTool.useTool(currentPlayer, currentTile), true);
+        Response resp = new Response(currentTool.useTool(currentPlayer, currentTile), true);
+        if (currentPlayer.getEnergy() == 0) {
+            currentPlayer.faint();
+            nextTurnAfterFaint();
+        } else if (currentPlayer.getEnergyPerTurn() <= 0) nextTurn();
+        return resp;
     }
 
     public Response pickFromFloor(Structure currentStructure) {
@@ -1279,8 +1291,9 @@ public class GameService {
             [player.getTiles().get(0).getY() + dir.getYTransmit()];
         if (tile.getIsFilled()) return new Response("The tile you're trying to put the item on, is filled");
         if (!(product instanceof Structure))
-            return new Response(product.getName() + " Cannot be put on ground"); //TODO Some objects are not structure but must be put on ground
+            return new Response(product.getName() + " Cannot be put on ground");
         player.getInventory().deleteProductFromBackPack(product, player, 1);
+        product = product.copy();
         ((Structure) product).getTiles().add(tile);
         Farm currentFarm = getPlayerInWitchFarm(player);
         if (currentFarm == null) return new Response("You can only place something in a farm");
@@ -2043,13 +2056,17 @@ public class GameService {
         }
         if (player.getEnergy() < 2) {
             player.faint();
-            nextTurn();
+            nextTurnAfterFaint();
             return new Response("Not enough energy; you fainted");
         }
         player.removeEnergy(2);
         recipe.getCraft().removeIngredients(player);
         player.getInventory().addProductToBackPack(new Craft(recipe.getCraft(), null, null), 1);
-        if (player.getEnergyPerTurn() <= 0) nextTurn();
+        if (player.getEnergy() == 0) {
+            player.faint();
+            nextTurnAfterFaint();
+        }
+        else if (player.getEnergyPerTurn() <= 0) nextTurn();
         return new Response(recipe.getCraft().getName() + " crafted successfully.");
     }
 
@@ -2104,13 +2121,16 @@ public class GameService {
         }
         if (player.getEnergy() < 3) {
             player.faint();
-            nextTurn();
+            nextTurnAfterFaint();
             return new Response("Not enough energy; you fainted");
         }
         player.removeEnergy(3);
         recipe.getIngredients().removeIngredients(fridge, player);
         player.getInventory().addProductToBackPack(new Food(recipe.getIngredients()), 1);
-        if (player.getEnergyPerTurn() <= 0) nextTurn();
+        if (player.getEnergy() == 0) {
+            player.faint();
+            nextTurnAfterFaint();
+        } else if (player.getEnergyPerTurn() <= 0) nextTurn();
         return new Response(recipe.getIngredients().getName() + " cooked successfully.");
     }
 

@@ -5,7 +5,6 @@ import io.github.some_example_name.model.Farm;
 import io.github.some_example_name.utils.App;
 import io.github.some_example_name.utils.GameAsset;
 import io.github.some_example_name.view.Menu;
-import lombok.Getter;
 import lombok.Setter;
 import io.github.some_example_name.model.shelter.FarmBuildingType;
 
@@ -24,8 +23,8 @@ public class Cottage extends HardCodeFarmElements {
 	}
 
 	public Cottage() {
-		super.setLength(6);
 		super.setWidth(6);
+		super.setHeight(6);
         this.outsideSprite = new Sprite(GameAsset.HOUSE);
         this.outsideSprite.setSize(App.tileWidth * 6,App.tileHeight * 6);
         this.insideSprite = new Sprite(GameAsset.COTTAGE_INSIDE);
@@ -33,7 +32,7 @@ public class Cottage extends HardCodeFarmElements {
 	}
 
 	@Override
-	public HardCodeFarmElements cloneEl() {
+	public HardCodeFarmElements copyEl() {
 		return new Cottage(this);
 	}
 

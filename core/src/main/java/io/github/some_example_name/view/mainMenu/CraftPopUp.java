@@ -38,16 +38,19 @@ public class CraftPopUp extends PopUp {
         OrthographicCamera camera = MainGradle.getInstance().getCamera();
 
         Window window = new Window("", skin);
-        window.setSize(camera.viewportWidth * 0.3f, camera.viewportHeight * 0.35f);
+        window.setSize(camera.viewportWidth * 0.3f, camera.viewportHeight * 0.45f);
         window.setMovable(false);
 
         Table info = new Table();
 
         info.pack();
-        info.add(new Label(craft.getName(), skin)).colspan(2).padRight(10);
+        info.add(new Label(craft.getName(), skin)).colspan(2).row();
         info.add(new Image(craft.getMadeProduct().getTexture())).width(70).height(70).padRight(10);
         info.add(new Label(craft.getMadeProduct().getName(), skin)).left().row();
-        info.add(new Label(craft.getCraftType().getDescription(), skin)).colspan(2).row();
+
+        for (String description : wrapString(craft.getCraftType().getDescription(), 21)) {
+            info.add(new Label(description, skin)).colspan(2).row();
+        }
         TextButton cancel = new TextButton("Cancel!", skin);
         cancel.addListener(new InputListener() {
             @Override

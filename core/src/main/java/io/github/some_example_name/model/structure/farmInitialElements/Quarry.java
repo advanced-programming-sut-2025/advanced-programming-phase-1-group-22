@@ -14,12 +14,12 @@ public class Quarry extends HardCodeFarmElements {
     }
 
     public Quarry() {
-        super.setLength(10);
         super.setWidth(10);
+        super.setHeight(10);
     }
 
     @Override
-    public HardCodeFarmElements cloneEl() {
+    public HardCodeFarmElements copyEl() {
         return new Quarry(this);
     }
 }

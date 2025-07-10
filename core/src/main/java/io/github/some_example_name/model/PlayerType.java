@@ -2,6 +2,7 @@ package io.github.some_example_name.model;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import io.github.some_example_name.model.enums.Gender;
 import io.github.some_example_name.utils.GameAsset;
@@ -55,9 +56,14 @@ public enum PlayerType {
         this.miniOffsetY = miniOffsetY;
         directions =  new HashMap<>();
         directions.put(Direction.NORTH, 2);
+        directions.put(Direction.CENTRE, 0);
+        directions.put(Direction.NORTHEAST, 1);
+        directions.put(Direction.SOUTHEAST, 1);
         directions.put(Direction.EAST, 1);
         directions.put(Direction.SOUTH, 0);
+        directions.put(Direction.NORTHWEST, 3);
         directions.put(Direction.WEST, 3);
+        directions.put(Direction.SOUTHWEST, 3);
     }
 
     public static PlayerType findInstance(String character) {
@@ -67,21 +73,36 @@ public enum PlayerType {
         return null;
     }
 
-    public TextureRegion getLazy() {
-        return miniTextures[this.miniOffsetY][0];
-    }
-
     public AnimatedSprite getWalking(Direction direction) {
         Animation<TextureRegion> animation = new Animation<>(0.1f,
             miniTextures[miniOffsetY + directions.get(direction)][1], miniTextures[miniOffsetY + directions.get(direction)][2],
-            miniTextures[miniOffsetY + directions.get(direction)][3], miniTextures[miniOffsetY +  + directions.get(direction)][0]);
+            miniTextures[miniOffsetY + directions.get(direction)][3], miniTextures[miniOffsetY + directions.get(direction)][0]);
         return new AnimatedSprite(animation);
+    }
+
+    public AnimatedSprite getLazy(Direction direction) {
+        Animation<TextureRegion> animation = new Animation<>(0.1f,
+            miniTextures[miniOffsetY + directions.get(direction)][0]);
+        AnimatedSprite x = new AnimatedSprite(animation);
+        x.setLooping(false);
+        return x;
     }
 
     public AnimatedSprite getFainting() {
         Animation<TextureRegion> animation = new Animation<>(0.1f,
             miniTextures[miniOffsetY + directions.get(Direction.SOUTH)][0], miniTextures[miniOffsetY + directions.get(Direction.SOUTH)][3],
             miniTextures[miniOffsetY + directions.get(Direction.EAST)][3], miniTextures[miniOffsetY + +directions.get(Direction.EAST)][0]);
-        return new AnimatedSprite(animation);
+        AnimatedSprite x = new AnimatedSprite(animation);
+        x.setLooping(false);
+        return x;
+    }
+
+    public Sprite getProposal() {
+        Animation<TextureRegion> animation = new Animation<>(0.1f,
+            miniTextures[miniOffsetY + 2][3]);
+        AnimatedSprite x = new AnimatedSprite(animation);
+        x.setLooping(false);
+        x.setScale(1, 0.8f);
+        return x;
     }
 }

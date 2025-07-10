@@ -1,6 +1,7 @@
 package io.github.some_example_name.model.source;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import io.github.some_example_name.model.products.TreesAndFruitsAndSeeds.Fruit;
 import io.github.some_example_name.utils.App;
 import io.github.some_example_name.utils.GameAsset;
 import lombok.Getter;
@@ -32,4 +33,9 @@ public class MixedSeeds extends Structure implements Salable {
 
     @Override
     public Integer getContainingEnergy() {return 0;}
+
+    @Override
+    public MixedSeeds copy() {
+        return new MixedSeeds(mixedSeedsType);
+    }
 }

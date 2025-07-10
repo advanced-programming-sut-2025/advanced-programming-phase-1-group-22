@@ -2,6 +2,7 @@ package io.github.some_example_name.model.source;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import io.github.some_example_name.model.products.TreesAndFruitsAndSeeds.Fruit;
 import io.github.some_example_name.utils.App;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -33,10 +34,12 @@ public class Seed extends Structure implements Salable {
     public int getSellPrice() {
         return seedType.getSellPrice();
     }
-    public void burn() {
-        //TODO
-    }
 
     @Override
     public Integer getContainingEnergy() {return seedType.getContainingEnergy();}
+
+    @Override
+    public Seed copy() {
+        return new Seed(seedType);
+    }
 }

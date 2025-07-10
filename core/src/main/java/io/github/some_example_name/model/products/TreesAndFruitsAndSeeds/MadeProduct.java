@@ -50,4 +50,9 @@ public class MadeProduct implements Salable {
     public Texture getTexture() {
         return madeProductType.getTexture();
     }
+
+    @Override
+    public MadeProduct copy() {
+        return new MadeProduct(madeProductType, product);
+    }
 }
