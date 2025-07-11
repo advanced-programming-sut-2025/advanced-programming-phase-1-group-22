@@ -12,6 +12,8 @@ import io.github.some_example_name.model.relations.Player;
 import io.github.some_example_name.model.shelter.FarmBuildingType;
 import io.github.some_example_name.model.source.MineralType;
 
+import java.util.Collections;
+
 @Getter
 @Setter
 public class GreenHouse extends HardCodeFarmElements {
@@ -64,5 +66,6 @@ public class GreenHouse extends HardCodeFarmElements {
             pool.getTiles().add(this.getTiles().get(i));
         }
         farm.getStructures().add(pool);
+        Collections.swap(farm.getStructures(), farm.getStructures().size() - 1, farm.getStructures().indexOf(this));
     }
 }

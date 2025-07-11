@@ -1,6 +1,7 @@
 package io.github.some_example_name.model.structure.farmInitialElements;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import io.github.some_example_name.utils.GameAsset;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,6 +12,7 @@ import io.github.some_example_name.model.shelter.FarmBuildingType;
 public class Lake extends HardCodeFarmElements {
     private final FarmBuildingType farmBuildingType = FarmBuildingType.Lake;
     private final Sprite sprite;
+//    private TextureRegion[][] regions = GameAsset.SEA_FLOORING;
 
     public Lake(Lake lake) {
         super(lake);

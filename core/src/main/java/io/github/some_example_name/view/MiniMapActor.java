@@ -3,9 +3,11 @@ package io.github.some_example_name.view;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import io.github.some_example_name.model.Farm;
 import io.github.some_example_name.model.Tile;
+import io.github.some_example_name.model.TileType;
 import io.github.some_example_name.model.structure.Structure;
 import io.github.some_example_name.model.structure.farmInitialElements.Lake;
 import io.github.some_example_name.utils.App;
@@ -33,7 +35,12 @@ public class MiniMapActor extends Actor {
         Tile[][] tiles = App.getInstance().getCurrentGame().tiles;
         for (int i = 0; i < tiles.length; i++) {
             for (int j = 0; j < tiles[0].length; j++) {
-                Texture tex = tiles[i][j].getTileType().getTexture();
+                TextureRegion tex = tiles[i][j].getTextureRegion();
+                batch.draw(TileType.FLAT.getTexture()[0][0],
+                    getX() + i * App.tileWidth * scale,
+                    getY() + j * App.tileHeight * scale,
+                    App.tileWidth * scale,
+                    App.tileHeight * scale);
                 if (tex != null) {
                     batch.draw(tex,
                         getX() + i * App.tileWidth * scale,

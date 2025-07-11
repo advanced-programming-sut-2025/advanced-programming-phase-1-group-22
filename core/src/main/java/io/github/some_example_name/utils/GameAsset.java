@@ -2375,6 +2375,9 @@ public class GameAsset {
     public static final Texture WILD_TREE_STUMP_SPRING = new Texture("Trees/Wild_Tree_stump_Spring.png");
     public static final Texture WILD_TREE_STUMP_WINTER = new Texture("Trees/Wild_Tree_stump_Winter.png");
     public static final Texture PELICAN_TOWN = new Texture("Village/Pelican_Town.png");
+    public static final Texture FLOORING = new Texture("Village/Flooring.png");
+    public static final TextureRegion[][] SNOW_FLOORING = new TextureRegion(FLOORING, 320, 64, 64, 64).split(16, 16);
+    public static final TextureRegion[][] PLOWED_FLOORING = new TextureRegion(FLOORING, 64, 64, 64, 64).split(16, 16);
     public static final Texture ABIGAIL = new Texture("Villagers/Abigail.png");
     public static final Texture ALEX = new Texture("Villagers/Alex.png");
     public static final Texture BIRDIE = new Texture("Villagers/Birdie.png");
