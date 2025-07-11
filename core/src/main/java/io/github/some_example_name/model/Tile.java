@@ -1,5 +1,8 @@
 package io.github.some_example_name.model;
 
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -44,5 +47,19 @@ public class Tile {
     public Tile(Integer x, Integer y) {
         this.x = x;
         this.y = y;
+    }
+
+    public TextureRegion getTextureRegion() {
+        if (tileType == TileType.PLOWED) {
+            Game currentGame = App.getInstance().getCurrentGame();
+            boolean f0 = TileType.PLOWED != currentGame.getTiles()[this.getX()][this.getY() + 1].getTileType();
+            boolean f1 = TileType.PLOWED != currentGame.getTiles()[this.getX() + 1][this.getY()].getTileType();
+            boolean f2 = TileType.PLOWED != currentGame.getTiles()[this.getX()][this.getY() - 1].getTileType();
+            boolean f3 = TileType.PLOWED != currentGame.getTiles()[this.getX() - 1][this.getY()].getTileType();
+            Pair pair = new Pair();
+            TileType.mapBooleansToPair(f0, f1, f2, f3, pair);
+            return tileType.getTexture()[pair.getX()][pair.getY()];
+        }
+        return tileType.getTexture()[0][0];
     }
 }
