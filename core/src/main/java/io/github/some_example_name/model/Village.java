@@ -69,31 +69,32 @@ public class Village implements JsonPreparable {
     public void fillStructures() {
         StoreType fishShop = StoreType.FISH_SHOP;
         int randomNumber = getRandomNumber(1, 10);
-        addStores(fishShop, 63, randomNumber, true);
+        addStores(fishShop, 63, randomNumber, 8, 8);
 
         StoreType blackSmith = StoreType.BLACK_SMITH;
         randomNumber = getRandomNumber(71, 88);
-        addStores(blackSmith, 63, randomNumber, true);
+        addStores(blackSmith, 63, randomNumber, 12, 14);
 
         StoreType carpenterShop = StoreType.CARPENTER_SHOP;
         randomNumber = getRandomNumber(90, 106);
-        addStores(carpenterShop, 88, randomNumber, true);
+        addStores(carpenterShop, 88, randomNumber, 13, 10);
 
         StoreType jojaMart = StoreType.JOJA_MART;
         randomNumber = getRandomNumber(27, 37);
-        addStores(jojaMart, 88, randomNumber, true);
+        addStores(jojaMart, 88, randomNumber, 12, 12);
 
         StoreType stardropsalon = StoreType.STARDROPSALON;
         randomNumber = getRandomNumber(1, 10);
-        addStores(stardropsalon, randomNumber, 49, false);
+        addStores(stardropsalon, randomNumber, 49, 12, 9);
+        addStores(stardropsalon, randomNumber, 49, 12, 9);
 
         StoreType pierreShop = StoreType.PIERRE_SHOP;
         randomNumber = getRandomNumber(130, 140);
-        addStores(pierreShop, randomNumber, 49, false);
+        addStores(pierreShop, randomNumber, 49, 12, 9);
 
         StoreType marnieShop = StoreType.MARNIE_SHOP;
         randomNumber = getRandomNumber(1, 9);
-        addStores(marnieShop, randomNumber, 63, false);
+        addStores(marnieShop, randomNumber, 63, 15, 10);
 
         NPCType lia = NPCType.LIA;
         randomNumber = getRandomNumber(29, 37);
@@ -146,13 +147,9 @@ public class Village implements JsonPreparable {
         }
     }
 
-    public void addStores(StoreType storeType, int xStart, int yStart, boolean vertical) {
-        Store store = new Store(storeType);
-        if (vertical) {
-            setTileOfStore(store, xStart, yStart, xStart + 8, yStart + 12);
-        } else {
-            setTileOfStore(store, xStart, yStart, xStart + 12, yStart + 8);
-        }
+    public void addStores(StoreType storeType, int xStart, int yStart, int width, int height) {
+        Store store = new Store(storeType, width, height);
+        setTileOfStore(store, xStart, yStart, xStart + width, yStart + height);
         structures.add(store);
     }
 

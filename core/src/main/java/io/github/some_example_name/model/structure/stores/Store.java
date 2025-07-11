@@ -23,13 +23,18 @@ import java.util.Objects;
 public class Store extends Structure{
    private StoreType storeType;
    private Sprite sprite;
+   private Integer width;
+   private Integer height;
    private Sprite insideSprite;
 
-   public Store(StoreType storeType) {
+   public Store(StoreType storeType, int width, int height) {
       this.storeType = storeType;
       this.sprite = new Sprite(storeType.getTexture());
       this.insideSprite = new Sprite(storeType.getTextureInterior());
-      this.insideSprite.setSize(this.insideSprite.getWidth() * 2,this.insideSprite.getHeight() * 2);
+      this.insideSprite.setSize(width * App.tileWidth,height * App.tileHeight);
+      this.sprite.setSize(width * App.tileWidth,height * App.tileHeight);
+      this.width = width;
+      this.height = height;
    }
 
     public Sprite getSprite() {
