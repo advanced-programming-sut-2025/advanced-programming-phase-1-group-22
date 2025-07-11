@@ -293,15 +293,18 @@ public class WorldController {
     }
 
     public void printMap(float delta) {
-        Player player = App.getInstance().getCurrentGame().getCurrentPlayer();
-        Game game = App.getInstance().getCurrentGame();
+        Game currentGame = App.getInstance().getCurrentGame();
+        Player player = currentGame.getCurrentPlayer();
+        Game game = currentGame;
         Tile[][] tiles = game.tiles;
         OrthographicCamera camera = MainGradle.getInstance().getCamera();
 
         for (int i = 0; i < 160; i++) {
             for (int j = 0; j < 120; j++) {
                 if (camera.frustum.pointInFrustum(i * App.tileWidth, j * App.tileHeight, 0)) {
-                    MainGradle.getInstance().getBatch().draw(tiles[i][j].getTileType().getTexture(),
+                    MainGradle.getInstance().getBatch().draw(TileType.FLAT.getTexture()[0][0],
+                        i * App.tileWidth, j * App.tileHeight, App.tileWidth, App.tileHeight);
+                    MainGradle.getInstance().getBatch().draw(tiles[i][j].getTextureRegion(),
                         i * App.tileWidth, j * App.tileHeight, App.tileWidth, App.tileHeight);
                 }
             }
@@ -317,6 +320,19 @@ public class WorldController {
                                 structure.getSprite().setPosition(tile.getX() * App.tileWidth,
                                     tile.getY() * App.tileHeight);
                                 structure.getSprite().draw(MainGradle.getInstance().getBatch());
+                                /*
+                                boolean f0 = !structure.getTiles().contains(currentGame.getTiles()[tile.getX()][tile.getY() + 1]);
+                                boolean f1 = !structure.getTiles().contains(currentGame.getTiles()[tile.getX() + 1][tile.getY()]);
+                                boolean f2 = !structure.getTiles().contains(currentGame.getTiles()[tile.getX()][tile.getY() - 1]);
+                                boolean f3 = !structure.getTiles().contains(currentGame.getTiles()[tile.getX() - 1][tile.getY()]);
+                                Pair pair = new Pair();
+                                TileType.mapBooleansToPair(f0,f1,f2,f3,pair);
+                                MainGradle.getInstance().getBatch().draw(
+                                    lake.getRegions()[pair.getX()][pair.getY()],
+                                    tile.getX() * App.tileWidth, tile.getY() * App.tileHeight,
+                                    App.tileWidth, App.tileHeight
+                                );
+                                 */
                             }
                         } else if (structure instanceof Animal animal) {
                             if (isAnimalBuildingCollision(farm.getStructures(), animal, player) ||
@@ -344,7 +360,7 @@ public class WorldController {
                 }
             }
         }
-        for (Structure structure : App.getInstance().getCurrentGame().getVillage().getStructures()) {
+        for (Structure structure : currentGame.getVillage().getStructures()) {
             if (structure.getSprite() != null) {
                 if (structure instanceof NPC npc) {
                     drawRawSprite(delta, structure.getSprite(), structure);
