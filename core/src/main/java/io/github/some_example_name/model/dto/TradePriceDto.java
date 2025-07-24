@@ -1,7 +1,0 @@
-package io.github.some_example_name.model.dto;
-
-import lombok.Builder;
-
-@Builder
-public record TradePriceDto(String username, String type, String item, int amount, int price) {
-}
