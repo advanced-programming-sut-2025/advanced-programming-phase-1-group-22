@@ -10,6 +10,7 @@ import io.github.some_example_name.server.model.GameServer;
 import io.github.some_example_name.server.model.GameThread;
 import io.github.some_example_name.server.model.ServerPlayer;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -27,6 +28,7 @@ public class ClientHandler extends Thread {
     private PrintWriter out;
     private BufferedReader in;
     @Getter
+    @Setter
     private boolean ready = false;
     private GameServer gameServer;
 
@@ -96,6 +98,10 @@ public class ClientHandler extends Thread {
                             )
                         );
                         send(GSON.toJson(msg));
+                    } else if (obj.get("action").getAsString().equals("skip_time")) {
+                        gameServer.sendAll(message);
+                    } else if (obj.get("action").getAsString().equals("ready_for_sleep")) {
+                        if (gameServer.isReady()) gameServer.sendAll(message);
                     }
                 } catch (JsonParseException e) {
                     System.out.println("Received non-JSON message: " + message);

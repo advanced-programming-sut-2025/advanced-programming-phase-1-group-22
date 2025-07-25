@@ -1,5 +1,6 @@
 package io.github.some_example_name.server.service;
 
+import io.github.some_example_name.client.GameClient;
 import io.github.some_example_name.common.model.*;
 import io.github.some_example_name.common.model.products.*;
 import io.github.some_example_name.common.model.products.TreesAndFruitsAndSeeds.*;
@@ -102,6 +103,8 @@ public class GameService {
     }
 
     public Response nextTurn() {
+        return new Response("");
+        /* //todo change next turn usages
         Player player = app.getCurrentGame().getCurrentPlayer();
         player.setEnergyPerTurn(player.getMaxEnergyPerTurn());
         if (player.getBuff() != null) {
@@ -113,6 +116,7 @@ public class GameService {
         app.getCurrentGame().nextPlayer();
         if (app.getCurrentGame().getCurrentPlayer().getIsFainted()) return nextTurn();
         return new Response("It's next player's turn", true);
+         */
     }
 
     public Response time() {
@@ -137,18 +141,20 @@ public class GameService {
 
     public Response C_AdvanceTime(String x) {
         int hours = Integer.parseInt(x);
-        for (int i = 0; i < hours * app.getCurrentGame().getPlayers().size(); i++) {
-            nextTurn();
-        }
+        GameClient.getInstance().skipTime(60 * hours);
         return new Response(x + " hours passed", true);
     }
 
     public Response C_AdvanceDate(String x) {
         int days = Integer.parseInt(x);
-        for (int i = 0; i < days * app.getCurrentGame().getPlayers().size() * 13; i++) {
-            nextTurn();
-        }
+        GameClient.getInstance().skipTime(60 * 13 * days);
         return new Response(x + " days passed", true);
+    }
+
+    public void skipTimeByServer(int minutes) {
+        for (int i = 0; i < minutes; i++) {
+            App.getInstance().getCurrentGame().getTimeAndDate().moveTimeForward();
+        }
     }
 
     public Response season() {
