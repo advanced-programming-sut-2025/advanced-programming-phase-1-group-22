@@ -57,6 +57,8 @@ public class GameInitService {
         return 0;
     }
 
+    /*
+
     public Response newGame(String players) {
         Matcher matcher;
         String newGameEmpty = "^\\s*$";
@@ -107,6 +109,8 @@ public class GameInitService {
         return new Response("The game is starting, please players choose their maps", true);
     }
 
+     */
+
     public Response loadGame() {
         Game game = null;
         String savedGamePath = Session.getCurrentUser().getIsPlaying();
@@ -151,8 +155,7 @@ public class GameInitService {
                 farm = new Farm(player, player.getFarmType());
                 village.getStructures().add(player);
             } else {
-                Random random = new Random();
-                farm = new Farm(null, FarmType.values()[random.nextInt(0, 4)]);
+                farm = new Farm(null, FarmType.values()[game.getPlayers().get(i - 2).getUser().getUsername().length() % 4]);
             }
             village.getFarms().add(farm);
         }

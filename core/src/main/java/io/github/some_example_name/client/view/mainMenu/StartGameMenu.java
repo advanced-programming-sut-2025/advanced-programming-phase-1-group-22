@@ -13,6 +13,7 @@ public class StartGameMenu extends PreGameMenu {
     private final TextButton newGameButton;
     private final TextButton loadGameButton;
     private final TextButton enterGameButton;
+    private final TextButton wait;
     private final SelectBox<String> farmSelection;
     private final SelectBox<String> playerSelection;
     private final Integer state;
@@ -24,6 +25,7 @@ public class StartGameMenu extends PreGameMenu {
         this.newGameButton = new TextButton("New Game!", skin);
         this.loadGameButton = new TextButton("Load Game!", skin);
         this.enterGameButton = new TextButton("Enter!", skin);
+        this.wait = new TextButton("Wait for server response!", skin);
         farmSelection = new SelectBox<>(skin);
         Array<String> farmNames = new Array<>();
         for (FarmType value : FarmType.values()) {
@@ -31,12 +33,12 @@ public class StartGameMenu extends PreGameMenu {
         }
         farmSelection.setItems(farmNames);
         playerSelection = new SelectBox<>(skin);
-        Array<String> playerNames = new Array<>();
-        for (PlayerType value : PlayerType.values()) {
-            if (value.getGender() == Session.getCurrentUser().getGender())
-                playerNames.add(value.getName());
-        }
-        playerSelection.setItems(playerNames);
+//        Array<String> playerNames = new Array<>();
+//        for (PlayerType value : PlayerType.values()) {
+//            if (value.getGender() == Session.getCurrentUser().getGender())
+//                playerNames.add(value.getName());
+//        }
+//        playerSelection.setItems(playerNames);
         this.state = state;
         controller.setView(this);
     }
@@ -50,6 +52,14 @@ public class StartGameMenu extends PreGameMenu {
             }
             break;
             case 1: {
+                { //todo move this part on initializing
+                    Array<String> playerNames = new Array<>();
+                    for (PlayerType value : PlayerType.values()) {
+                        if (value.getGender() == Session.getCurrentUser().getGender())
+                            playerNames.add(value.getName());
+                    }
+                    playerSelection.setItems(playerNames);
+                }
                 table.add(farmSelection).width(600);
                 table.row().pad(10, 0, 10, 0);
                 table.add(playerSelection).width(600);
@@ -57,6 +67,8 @@ public class StartGameMenu extends PreGameMenu {
                 table.add(enterGameButton).width(600);
             }
             break;
+            case 2:
+                table.add(wait).width(900);
         }
     }
 

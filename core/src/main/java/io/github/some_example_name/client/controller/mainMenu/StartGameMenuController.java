@@ -1,12 +1,16 @@
 package io.github.some_example_name.client.controller.mainMenu;
 
 
+import com.badlogic.gdx.Gdx;
+import com.google.gson.JsonArray;
+import io.github.some_example_name.client.GameClient;
 import io.github.some_example_name.common.model.FarmType;
 import io.github.some_example_name.common.model.PlayerType;
 import io.github.some_example_name.common.model.User;
 import io.github.some_example_name.common.model.enums.Gender;
 import io.github.some_example_name.common.model.enums.SecurityQuestion;
 import io.github.some_example_name.common.model.relations.Player;
+import io.github.some_example_name.server.repository.UserRepo;
 import io.github.some_example_name.server.service.GameInitService;
 import io.github.some_example_name.common.utils.App;
 import io.github.some_example_name.common.utils.InitialGame;
@@ -15,7 +19,7 @@ import io.github.some_example_name.client.view.GameView;
 import io.github.some_example_name.client.view.mainMenu.StartGameMenu;
 import lombok.Setter;
 
-import java.util.ArrayList;
+import java.util.Optional;
 
 @Setter
 public class StartGameMenuController {
@@ -34,12 +38,16 @@ public class StartGameMenuController {
             switch (view.getState()) {
                 case 0: {
                     if (view.getNewGameButton().isChecked()) {
+                        { //todo delete hardcode
+                            if (Session.getCurrentUser() == null) {
+                                UserRepo userRepo = new UserRepo();
+//                                Session.setCurrentUser(new User("Roham1234", "pass", "a@a.a", "Roham", Gender.MALE, SecurityQuestion.QUESTION1, "snf"));
+                                Session.setCurrentUser(userRepo.findByUsername("Roham1234").get());
+                            }
+                        }
                         if (Session.getCurrentUser().getIsPlaying() == null) {
-                            ArrayList<User> users = new ArrayList<>();
-                            users.add(Session.getCurrentUser());
-                            users.add(new User("Clara1234", "noPass", "a@b.c", "Claire", Gender.FEMALE, SecurityQuestion.QUESTION1,"snf"));
                             InitialGame initialGame = new InitialGame();
-                            initialGame.initial(users);
+                            initialGame.initial();
                             view.setState(1);
                             return;
                         } else {
@@ -48,6 +56,11 @@ public class StartGameMenuController {
                         view.getNewGameButton().setChecked(false);
                     }
                     if (view.getLoadGameButton().isChecked()) {
+                        { //todo delete hardcode
+                            UserRepo userRepo = new UserRepo();
+//                        Session.setCurrentUser(new User("Clara1234", "noPass", "a@b.c", "Claire", Gender.FEMALE, SecurityQuestion.QUESTION1,"snf"));
+                            Session.setCurrentUser(userRepo.findByUsername("Clara1234").get());
+                        }
                         view.alert(GameInitService.getInstance().loadGame().message(), 5);
                         view.getLoadGameButton().setChecked(false);
                     }
@@ -56,40 +69,42 @@ public class StartGameMenuController {
                 case 1: {
                     if (view.getEnterGameButton().isChecked()) {
                         int farm = view.getFarmSelection().getSelectedIndex();
-                        if (farm == -1) {//TODO check if the farm is not unique
-                            view.alert("Another person has chosen this farm.", 5);
-                        }
                         String character = view.getPlayerSelection().getSelected();
-                        if (character == null) {//TODO check if the farm is not unique
-                            view.alert("Another person has chosen this player.", 5);
-                        }
-                        Player player = null;
-                        for (Player player1 : App.getInstance().getCurrentGame().getPlayers()) {
-                            if (player1.getUser().getUsername().equals(Session.getCurrentUser().getUsername())) {
-                                player = player1;
-                                break;
-                            }
-                        }
-                        if (player == null) {
-                            view.alert("Something went wrong", 5);
-                        } else {
-                            player.setFarmType(FarmType.values()[farm]);
-                            player.setPlayerType(PlayerType.findInstance(character));
-                            view.setState(2);
-                        }
+                        GameClient.getInstance().chooseFarm(farm, character);
                     }
                 }
                 break;
-                case 2: {
-                    { //TODO REMOVE THE HARDCODING IN PHASE 3
-                        App.getInstance().getCurrentGame().getPlayers().get(1).setPlayerType(PlayerType.EMILY);
-                        App.getInstance().getCurrentGame().getPlayers().get(1).setFarmType(FarmType.FLOWER_FARM);
-                    }
-                    GameInitService.getInstance().initGame();
-                    view.setScreen(new GameView());
-                }
             }
         }
+    }
+
+    public void responseToChooseFarm(String response) {
+        if (response.equals("Good!")) {
+            GameClient.getInstance().readyForGame();
+            Gdx.app.postRunnable(() -> view.setState(2));
+        } else {
+            Gdx.app.postRunnable(() -> view.alert(response, 5));
+        }
+    }
+
+    public void startGame(JsonArray players, JsonArray farms, JsonArray characters) {
+        UserRepo userRepository = new UserRepo();
+        Player current = null;
+        for (int i = 0; i < players.size(); i++) {
+            Optional<User> user = userRepository.findByUsername(players.get(i).getAsString());
+            if (user.isEmpty()) {
+                view.alert("Player " + players.get(i).getAsString() + " not found.", 5);
+                return;
+            }
+            Player player = new Player(user.get());
+            if (user.get().getUsername().equals(Session.getCurrentUser().getUsername())) current = player;
+            App.getInstance().getCurrentGame().addPlayer(player);
+            player.setFarmType(FarmType.values()[farms.get(i).getAsInt()]);
+            player.setPlayerType(PlayerType.findInstance(characters.get(i).getAsString()));
+        }
+        App.getInstance().getCurrentGame().setCurrentPlayer(current);
+        GameInitService.getInstance().initGame();
+        Gdx.app.postRunnable(() -> view.setScreen(new GameView()));
     }
 }
 
