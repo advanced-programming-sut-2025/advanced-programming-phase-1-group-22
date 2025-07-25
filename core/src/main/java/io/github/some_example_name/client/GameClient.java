@@ -2,6 +2,7 @@ package io.github.some_example_name.client;
 
 import com.google.gson.*;
 import io.github.some_example_name.client.controller.mainMenu.StartGameMenuController;
+import io.github.some_example_name.common.model.Farm;
 import io.github.some_example_name.common.model.Game;
 import io.github.some_example_name.common.model.User;
 import io.github.some_example_name.common.model.enums.Gender;
@@ -84,6 +85,13 @@ public class GameClient {
                                 bodyArray.getAsJsonArray("farms"),
                                 bodyArray.getAsJsonArray("characters")
                             );
+                            for (int i = 0; i < App.getInstance().getCurrentGame().getVillage().getFarms().size(); i++) {
+                                Farm farm = App.getInstance().getCurrentGame().getVillage().getFarms().get(i);
+                                farm.setDoor(
+                                    bodyArray.getAsJsonArray("doors").get(2 * i).getAsInt(),
+                                    bodyArray.getAsJsonArray("doors").get(2 * i + 1).getAsInt()
+                                );
+                            }
                         } else if (obj.get("action").getAsString().equals("response_choose_farm")) {
                             StartGameMenuController.getInstance().responseToChooseFarm(
                                 obj.getAsJsonObject("body").get("response").getAsString()

@@ -112,7 +112,6 @@ public class Farm implements JsonPreparable {
         setFarmTiles();
         getcopy();
         setFence();
-        setDoor();
     }
 
     public void setFarmTiles() {
@@ -156,10 +155,9 @@ public class Farm implements JsonPreparable {
         }
     }
 
-    public void setDoor() {
-        Random random = new Random();
-        int yRand = random.nextInt(farmYStart, farmYEnd);
-        int xRand = random.nextInt(farmXStart, farmXEnd);
+    public void setDoor(int xRand, int yRand) {
+        xRand = farmXStart + 1 + xRand % (farmXEnd - farmXStart - 2);
+        yRand = farmYStart + 1 + yRand % (farmYEnd - farmYStart - 2);
         int xConst = 0;
         int yConst = 0;
         switch (farmIndex) {

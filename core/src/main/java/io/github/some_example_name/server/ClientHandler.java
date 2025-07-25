@@ -63,6 +63,9 @@ public class ClientHandler extends Thread {
                                         getRandomNumber(100, 112), getRandomNumber(132, 145), getRandomNumber(30, 40),
                                         getRandomNumber(100, 110)
                                     ),
+                                    "doors", List.of(getRandomNumber(0, 300), getRandomNumber(0, 300),
+                                        getRandomNumber(0, 300), getRandomNumber(0, 300), getRandomNumber(0, 300),
+                                        getRandomNumber(0, 300), getRandomNumber(0, 300), getRandomNumber(0, 300)),
                                     "players", gameServer.getClients().stream()
                                         .map(e -> e.getKey().getUsername()).toList(),
                                     "farms", gameServer.getClients().stream()
