@@ -122,24 +122,6 @@ public class GameInitService {
         return new Response("The game has been loaded");
     }
 
-    public Response gameMap(String number) {
-        int mapNumber = Integer.parseInt(number) - 1;
-        if (mapNumber < 0 || mapNumber > 4) return new Response("""
-                Farm not found:\s
-                 1 : Grassy Farm\s
-                 2 : Flower Farm\s
-                 3 : Blue Farm\s
-                 4 : Rocky Farm\s
-                 5 : Desert Farm""");
-        Player player = app.getCurrentGame().getCurrentPlayer();
-        player.setFarmType(FarmType.values()[mapNumber]);
-        app.getCurrentGame().nextPlayer();
-        if (app.getCurrentGame().getCurrentPlayer().getFarmType() != null) {
-            initGame();
-        }
-        return new Response("Farm " + FarmType.values()[mapNumber] + " chosen.");
-    }
-
     public void initGame() {
         completeMap();
     }

@@ -2,11 +2,8 @@ package io.github.some_example_name.client;
 
 import com.google.gson.*;
 import io.github.some_example_name.client.controller.mainMenu.StartGameMenuController;
+import io.github.some_example_name.client.service.ClientService;
 import io.github.some_example_name.common.model.Farm;
-import io.github.some_example_name.common.model.Game;
-import io.github.some_example_name.common.model.User;
-import io.github.some_example_name.common.model.enums.Gender;
-import io.github.some_example_name.common.model.enums.SecurityQuestion;
 import io.github.some_example_name.common.utils.App;
 import io.github.some_example_name.common.variables.Session;
 
@@ -16,7 +13,6 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Map;
-import java.util.Random;
 
 public class GameClient {
     private static final String SERVER_ADDRESS = "localhost";
@@ -26,9 +22,12 @@ public class GameClient {
     private Socket socket;
     private PrintWriter out;
     private BufferedReader in;
+    private final ClientService service = new ClientService();
 
     public static GameClient getInstance() {
-        if (instance == null) {instance = new GameClient();}
+        if (instance == null) {
+            instance = new GameClient();
+        }
         return instance;
     }
 
@@ -55,7 +54,7 @@ public class GameClient {
     public void readyForGame() {
         try {
             out = new PrintWriter(socket.getOutputStream(), true);
-            in  = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
             Map<String, Object> msg = Map.of(
                 "action", "ready_for_game",
@@ -96,10 +95,16 @@ public class GameClient {
                             StartGameMenuController.getInstance().responseToChooseFarm(
                                 obj.getAsJsonObject("body").get("response").getAsString()
                             );
+                        } else if (obj.get("action").getAsString().equals("update_player_position")) {
+                            String username = obj.get("id").getAsString();
+                            int position_x = obj.getAsJsonObject("body").get("position_x").getAsInt();
+                            int position_Y = obj.getAsJsonObject("body").get("position_y").getAsInt();
+                            service.handleUpdatePosition(username, position_x, position_Y);
                         }
                     } catch (JsonParseException e) {
                         System.out.println("Received non-JSON: " + serverMessage);
-                    }                }
+                    }
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -113,7 +118,7 @@ public class GameClient {
     public void enterRoom(int id) {
         try {
             out = new PrintWriter(socket.getOutputStream(), true);
-            in  = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
             Map<String, Object> msg = Map.of(
                 "action", "enter_room",
@@ -130,7 +135,7 @@ public class GameClient {
     public void chooseFarm(int farmId, String character) {
         try {
             out = new PrintWriter(socket.getOutputStream(), true);
-            in  = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
             Map<String, Object> msg = Map.of(
                 "action", "choose_farm",

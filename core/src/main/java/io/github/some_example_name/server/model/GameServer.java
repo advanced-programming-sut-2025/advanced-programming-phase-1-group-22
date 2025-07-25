@@ -20,7 +20,15 @@ public class GameServer {
     }
 
     public void sendAll(String message) {
-        clients.forEach(client -> {client.getValue().send(message);});
+        clients.forEach(client -> {
+            client.getValue().send(message);
+        });
+    }
+
+    public void sendAllBut(String message, String username) {
+        for (Entry<ServerPlayer, ClientHandler> client : clients) {
+            if (!client.getKey().username.equals(username)) client.getValue().send(message);
+        }
     }
 
     public String checkAvailability(String username, Integer farmId, String character) {

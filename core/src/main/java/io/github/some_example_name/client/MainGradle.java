@@ -21,7 +21,6 @@ public class MainGradle extends Game {
     private static MainGradle instance;
     private OrthographicCamera camera;
     private Viewport viewport;
-    private GameClient gameClient;
 
 
     public void centerCameraOnPlayer(float playerX, float playerY) {
