@@ -16,7 +16,13 @@ public class GameServer {
         for (Entry<ServerPlayer, ClientHandler> entry : clients) {
             if (!entry.getValue().isReady()) return false;
         }
-        return clients.size() > 1;
+        if (clients.size() > 1) {
+            for (Entry<ServerPlayer, ClientHandler> entry : clients) {
+                entry.getValue().setReady(false);
+            }
+            return true;
+        }
+        return false;
     }
 
     public void sendAll(String message) {

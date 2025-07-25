@@ -102,6 +102,8 @@ public class GameService {
     }
 
     public Response nextTurn() {
+        return new Response("");
+        /*
         Player player = app.getCurrentGame().getCurrentPlayer();
         player.setEnergyPerTurn(player.getMaxEnergyPerTurn());
         if (player.getBuff() != null) {
@@ -113,6 +115,7 @@ public class GameService {
         app.getCurrentGame().nextPlayer();
         if (app.getCurrentGame().getCurrentPlayer().getIsFainted()) return nextTurn();
         return new Response("It's next player's turn", true);
+        */
     }
 
     public Response time() {

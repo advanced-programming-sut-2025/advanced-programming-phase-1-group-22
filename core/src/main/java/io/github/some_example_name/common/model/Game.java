@@ -2,6 +2,7 @@ package io.github.some_example_name.common.model;
 
 import com.badlogic.gdx.utils.Timer;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import io.github.some_example_name.client.GameClient;
 import io.github.some_example_name.common.model.structure.stores.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -58,18 +59,12 @@ public class Game implements Serializable {
             @Override
             public void run() {
                 fadingInTheNight = 2;
-                startDayEvents();
-                Timer.schedule(new Timer.Task() {
-                    @Override
-                    public void run() {
-                        fadingInTheNight = 0;
-                    }
-                }, 4);
+                GameClient.getInstance().readyForSleep();
             }
         }, 2.5f);
     }
 
-    private void startDayEvents() {
+    public void startDayEvents() {
         App.getInstance().getCurrentGame().getTimeAndDate().setWeatherSprite(
             App.getInstance().getCurrentGame().getVillage().getTomorrowWeather()
         );
@@ -181,6 +176,12 @@ public class Game implements Serializable {
                 player.setDaysOfSadness(player.getDaysOfSadness() - 1);
             }
         }
+        Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+                fadingInTheNight = 0;
+            }
+        }, 4);
     }
 
     public void addGoldToPlayerForShippingBin(int price, Player player) {

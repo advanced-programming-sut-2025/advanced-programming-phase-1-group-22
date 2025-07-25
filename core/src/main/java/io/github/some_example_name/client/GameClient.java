@@ -1,5 +1,6 @@
 package io.github.some_example_name.client;
 
+import com.badlogic.gdx.Gdx;
 import com.google.gson.*;
 import io.github.some_example_name.client.controller.mainMenu.StartGameMenuController;
 import io.github.some_example_name.common.model.Farm;
@@ -9,6 +10,7 @@ import io.github.some_example_name.common.model.enums.Gender;
 import io.github.some_example_name.common.model.enums.SecurityQuestion;
 import io.github.some_example_name.common.utils.App;
 import io.github.some_example_name.common.variables.Session;
+import io.github.some_example_name.server.service.GameService;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -96,10 +98,17 @@ public class GameClient {
                             StartGameMenuController.getInstance().responseToChooseFarm(
                                 obj.getAsJsonObject("body").get("response").getAsString()
                             );
+                        } else if (obj.get("action").getAsString().equals("skip_time")) {
+                            Gdx.app.postRunnable(() -> GameService.getInstance().skipTimeByServer(
+                                obj.getAsJsonObject("body").get("minutes").getAsInt()
+                            ));
+                        } else if (obj.get("action").getAsString().equals("ready_for_sleep")) {
+                            Gdx.app.postRunnable(() -> App.getInstance().getCurrentGame().startDayEvents());
                         }
                     } catch (JsonParseException e) {
                         System.out.println("Received non-JSON: " + serverMessage);
-                    }                }
+                    }
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -136,6 +145,40 @@ public class GameClient {
                 "action", "choose_farm",
                 "id", Session.getCurrentUser().getUsername(),
                 "body", Map.of("farmId", farmId, "character", character)
+            );
+
+            out.println(GSON.toJson(msg));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void skipTime(int minutes) {
+        try {
+            out = new PrintWriter(socket.getOutputStream(), true);
+            in  = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+            Map<String, Object> msg = Map.of(
+                "action", "skip_time",
+                "id", Session.getCurrentUser().getUsername(),
+                "body", Map.of("minutes", minutes)
+            );
+
+            out.println(GSON.toJson(msg));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void readyForSleep() {
+        try {
+            out = new PrintWriter(socket.getOutputStream(), true);
+            in  = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+            Map<String, Object> msg = Map.of(
+                "action", "ready_for_sleep",
+                "id", Session.getCurrentUser().getUsername(),
+                "body", Map.of()
             );
 
             out.println(GSON.toJson(msg));
