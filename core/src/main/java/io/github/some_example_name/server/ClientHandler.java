@@ -5,10 +5,10 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 import io.github.some_example_name.common.model.Entry;
-import io.github.some_example_name.common.variables.Session;
 import io.github.some_example_name.server.model.GameServer;
 import io.github.some_example_name.server.model.GameThread;
 import io.github.some_example_name.server.model.ServerPlayer;
+import io.github.some_example_name.server.service.ServerService;
 import lombok.Getter;
 
 import java.io.BufferedReader;
@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -28,7 +27,9 @@ public class ClientHandler extends Thread {
     private BufferedReader in;
     @Getter
     private boolean ready = false;
+    @Getter
     private GameServer gameServer;
+    private final ServerService service = new ServerService(this);
 
     public ClientHandler(Socket socket) {
         this.clientSocket = socket;
@@ -72,7 +73,7 @@ public class ClientHandler extends Thread {
                                         .map(e -> e.getKey().getFarmId()).toList(),
                                     "characters", gameServer.getClients().stream()
                                         .map(e -> e.getKey().getCharacter()).toList()
-                                    )
+                                )
                             );
 
                             gameServer.sendAll(GSON.toJson(msg));
@@ -96,6 +97,9 @@ public class ClientHandler extends Thread {
                             )
                         );
                         send(GSON.toJson(msg));
+                    } else if (obj.get("action").getAsString().equals("update_player_position")) {
+                        String username = obj.get("id").getAsString();
+                        gameServer.sendAllBut(GSON.toJson(obj), username);
                     }
                 } catch (JsonParseException e) {
                     System.out.println("Received non-JSON message: " + message);

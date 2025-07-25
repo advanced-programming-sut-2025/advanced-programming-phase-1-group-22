@@ -71,6 +71,7 @@ public class StartGameMenuController {
                         int farm = view.getFarmSelection().getSelectedIndex();
                         String character = view.getPlayerSelection().getSelected();
                         GameClient.getInstance().chooseFarm(farm, character);
+                        view.getEnterGameButton().setChecked(false);
                     }
                 }
                 break;
