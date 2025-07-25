@@ -1,25 +1,68 @@
 package io.github.some_example_name.client;
 
+import com.google.gson.*;
+import io.github.some_example_name.client.controller.mainMenu.StartGameMenuController;
+import io.github.some_example_name.common.model.Game;
+import io.github.some_example_name.common.model.User;
+import io.github.some_example_name.common.model.enums.Gender;
+import io.github.some_example_name.common.model.enums.SecurityQuestion;
+import io.github.some_example_name.common.utils.App;
+import io.github.some_example_name.common.variables.Session;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.Map;
+import java.util.Random;
 
 public class GameClient {
     private static final String SERVER_ADDRESS = "localhost";
     private static final int SERVER_PORT = 5000;
+    private static final Gson GSON = new Gson();
+    private static GameClient instance;
     private Socket socket;
     private PrintWriter out;
     private BufferedReader in;
+
+    public static GameClient getInstance() {
+        if (instance == null) {instance = new GameClient();}
+        return instance;
+    }
 
     public void connectToServer() {
         try {
             socket = new Socket(SERVER_ADDRESS, SERVER_PORT);
             out = new PrintWriter(socket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            out.println("Client connected");
+
+            Map<String, Object> msg = Map.of(
+                "action", "connected",
+//                "id", Session.getCurrentUser().getUsername(),
+                "body", Map.of()
+            );
+
+            out.println(GSON.toJson(msg));
             startListening();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.err.println(e.getMessage());
+        }
+    }
+
+    public void readyForGame() {
+        try {
+            out = new PrintWriter(socket.getOutputStream(), true);
+            in  = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+            Map<String, Object> msg = Map.of(
+                "action", "ready_for_game",
+                "id", Session.getCurrentUser().getUsername(),
+                "body", Map.of()
+            );
+
+            out.println(GSON.toJson(msg));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -30,8 +73,25 @@ public class GameClient {
             try {
                 String serverMessage;
                 while ((serverMessage = in.readLine()) != null) {
-                    System.out.println("Received from server: " + serverMessage);
-                }
+                    try {
+                        JsonObject obj = JsonParser.parseString(serverMessage).getAsJsonObject();
+
+                        if (obj.get("action").getAsString().equals("init_game")) {
+                            JsonObject bodyArray = obj.getAsJsonObject("body");
+                            App.getInstance().getCurrentGame().getVillage().addStoresAndNpcs(bodyArray.getAsJsonArray("stores"));
+                            StartGameMenuController.getInstance().startGame(
+                                bodyArray.getAsJsonArray("players"),
+                                bodyArray.getAsJsonArray("farms"),
+                                bodyArray.getAsJsonArray("characters")
+                            );
+                        } else if (obj.get("action").getAsString().equals("response_choose_farm")) {
+                            StartGameMenuController.getInstance().responseToChooseFarm(
+                                obj.getAsJsonObject("body").get("response").getAsString()
+                            );
+                        }
+                    } catch (JsonParseException e) {
+                        System.out.println("Received non-JSON: " + serverMessage);
+                    }                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -40,6 +100,40 @@ public class GameClient {
 
     public void sendGameStateToServer(String gameState) {
         out.println(gameState);
+    }
+
+    public void enterRoom(int id) {
+        try {
+            out = new PrintWriter(socket.getOutputStream(), true);
+            in  = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+            Map<String, Object> msg = Map.of(
+                "action", "enter_room",
+                "id", Session.getCurrentUser().getUsername(),
+                "body", Map.of("id", id)
+            );
+
+            out.println(GSON.toJson(msg));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void chooseFarm(int farmId, String character) {
+        try {
+            out = new PrintWriter(socket.getOutputStream(), true);
+            in  = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+            Map<String, Object> msg = Map.of(
+                "action", "choose_farm",
+                "id", Session.getCurrentUser().getUsername(),
+                "body", Map.of("farmId", farmId, "character", character)
+            );
+
+            out.println(GSON.toJson(msg));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
 

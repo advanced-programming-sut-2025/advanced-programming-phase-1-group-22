@@ -3,6 +3,8 @@ package io.github.some_example_name.common.model;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.JsonArray;
+import io.github.some_example_name.client.GameClient;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -58,7 +60,7 @@ public class Village implements JsonPreparable {
         for (int i = 0; i < farms.size(); i++) {
             Farm farm = farms.get(i);
             farm.fillFarmType(i);
-            farm.generateRandomStructures();
+            farm.generateRandomStructures(); //todo must be moved to gameServer
             if (farm.getCottage() != null) {
                 farm.getFridge().getTiles().add(farm.getCottage().getTiles().get(2));
             }
@@ -66,57 +68,6 @@ public class Village implements JsonPreparable {
     }
 
     public void fillStructures() {
-        StoreType fishShop = StoreType.FISH_SHOP;
-        int randomNumber = getRandomNumber(1, 10);
-        addStores(fishShop, 63, randomNumber, 8, 8);
-
-        StoreType blackSmith = StoreType.BLACK_SMITH;
-        randomNumber = getRandomNumber(71, 88);
-        addStores(blackSmith, 63, randomNumber, 12, 14);
-
-        StoreType carpenterShop = StoreType.CARPENTER_SHOP;
-        randomNumber = getRandomNumber(90, 106);
-        addStores(carpenterShop, 88, randomNumber, 13, 10);
-
-        StoreType jojaMart = StoreType.JOJA_MART;
-        randomNumber = getRandomNumber(27, 37);
-        addStores(jojaMart, 88, randomNumber, 12, 12);
-
-        StoreType stardropsalon = StoreType.STARDROPSALON;
-        randomNumber = getRandomNumber(1, 10);
-        addStores(stardropsalon, randomNumber, 49, 12, 9);
-        addStores(stardropsalon, randomNumber, 49, 12, 9);
-
-        StoreType pierreShop = StoreType.PIERRE_SHOP;
-        randomNumber = getRandomNumber(130, 140);
-        addStores(pierreShop, randomNumber, 49, 12, 9);
-
-        StoreType marnieShop = StoreType.MARNIE_SHOP;
-        randomNumber = getRandomNumber(1, 9);
-        addStores(marnieShop, randomNumber, 63, 15, 10);
-
-        NPCType lia = NPCType.LIA;
-        randomNumber = getRandomNumber(29, 37);
-        addNPC(lia, randomNumber, 66);
-
-
-        NPCType ebigil = NPCType.ABIGIL;
-        randomNumber = getRandomNumber(100, 112);
-        addNPC(ebigil, randomNumber, 66);
-
-        NPCType harvey = NPCType.HARVEY;
-        randomNumber = getRandomNumber(132, 145);
-        addNPC(harvey, randomNumber, 66);
-
-        NPCType rabin = NPCType.RABIN;
-        randomNumber = getRandomNumber(30, 40);
-        addNPC(rabin, randomNumber, 49);
-
-        NPCType sebastian = NPCType.SEBASTIAN;
-        randomNumber = getRandomNumber(100, 110);
-        addNPC(sebastian, randomNumber, 49);
-
-
         setPath();
 
         Fountain fountain = new Fountain();
@@ -128,7 +79,7 @@ public class Village implements JsonPreparable {
             }
         }
         structures.add(fountain);
-
+        GameClient.getInstance().enterRoom(100); //todo different room id
     }
 
     private void setPath() {
@@ -144,6 +95,58 @@ public class Village implements JsonPreparable {
                 tile.setTileType(TileType.PATH);
             }
         }
+    }
+
+    public void addStoresAndNpcs(JsonArray bodyArray) {
+        int i = 0;
+        StoreType fishShop = StoreType.FISH_SHOP;
+        int randomNumber = bodyArray.get(i++).getAsInt();
+        addStores(fishShop, 63, randomNumber, 8, 8);
+
+        StoreType blackSmith = StoreType.BLACK_SMITH;
+        randomNumber = bodyArray.get(i++).getAsInt();
+        addStores(blackSmith, 63, randomNumber, 12, 14);
+
+        StoreType carpenterShop = StoreType.CARPENTER_SHOP;
+        randomNumber = bodyArray.get(i++).getAsInt();
+        addStores(carpenterShop, 88, randomNumber, 13, 10);
+
+        StoreType jojaMart = StoreType.JOJA_MART;
+        randomNumber = bodyArray.get(i++).getAsInt();
+        addStores(jojaMart, 88, randomNumber, 12, 12);
+
+        StoreType stardropsalon = StoreType.STARDROPSALON;
+        randomNumber = bodyArray.get(i++).getAsInt();
+        addStores(stardropsalon, randomNumber, 49, 12, 9);
+
+        StoreType pierreShop = StoreType.PIERRE_SHOP;
+        randomNumber = bodyArray.get(i++).getAsInt();
+        addStores(pierreShop, randomNumber, 49, 12, 9);
+
+        StoreType marnieShop = StoreType.MARNIE_SHOP;
+        randomNumber = bodyArray.get(i++).getAsInt();
+        addStores(marnieShop, randomNumber, 63, 15, 10);
+
+        NPCType lia = NPCType.LIA;
+        randomNumber = bodyArray.get(i++).getAsInt();
+        addNPC(lia, randomNumber, 66);
+
+
+        NPCType ebigil = NPCType.ABIGIL;
+        randomNumber = bodyArray.get(i++).getAsInt();
+        addNPC(ebigil, randomNumber, 66);
+
+        NPCType harvey = NPCType.HARVEY;
+        randomNumber = bodyArray.get(i++).getAsInt();
+        addNPC(harvey, randomNumber, 66);
+
+        NPCType rabin = NPCType.RABIN;
+        randomNumber = bodyArray.get(i++).getAsInt();
+        addNPC(rabin, randomNumber, 49);
+
+        NPCType sebastian = NPCType.SEBASTIAN;
+        randomNumber = bodyArray.get(i++).getAsInt();
+        addNPC(sebastian, randomNumber, 49);
     }
 
     public void addStores(StoreType storeType, int xStart, int yStart, int width, int height) {

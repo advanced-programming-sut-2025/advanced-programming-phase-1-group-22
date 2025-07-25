@@ -57,6 +57,7 @@ public class GameInitService {
         return 0;
     }
 
+    /*
     public Response newGame(String players) {
         Matcher matcher;
         String newGameEmpty = "^\\s*$";
@@ -106,6 +107,7 @@ public class GameInitService {
         initialGame.initial(users);
         return new Response("The game is starting, please players choose their maps", true);
     }
+     */
 
     public Response loadGame() {
         Game game = null;

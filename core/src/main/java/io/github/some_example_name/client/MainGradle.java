@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import io.github.some_example_name.client.view.mainMenu.StartGameMenu;
 import io.github.some_example_name.common.utils.GameAsset;
 import io.github.some_example_name.client.view.GameView;
 import io.github.some_example_name.client.view.mainMenu.FirstMenu;
@@ -31,8 +32,7 @@ public class MainGradle extends Game {
     @Override
     public void create() {
         instance = this;
-        gameClient = new GameClient();
-        gameClient.connectToServer();
+        GameClient.getInstance().connectToServer();
         camera = new OrthographicCamera();
         camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         viewport = new FitViewport(1920, 1080, camera);
@@ -43,7 +43,7 @@ public class MainGradle extends Game {
 
     public void initialMenu() {
         GameView.captureInput = true;
-        instance.setScreen(new FirstMenu(GameAsset.SKIN_MENU));
+        instance.setScreen(new StartGameMenu(GameAsset.SKIN_MENU, 0));
     }
 
     @Override

@@ -8,7 +8,7 @@ import io.github.some_example_name.common.model.relations.Player;
 import java.util.ArrayList;
 
 public class InitialGame {
-    public void initial(ArrayList<User> users) {
+    public void initial() {
         Game game = new Game();
 //        try {
 //            game = GameSaver.loadGame("game.json");
@@ -23,10 +23,5 @@ public class InitialGame {
         Village village = new Village();
         village.initAfterLoad();
         game.setVillage(village);
-        for (int i = 0; i < users.size(); i++) {
-            Player player = new Player(users.get(i));
-            game.addPlayer(player);
-        }
-        game.setCurrentPlayer(game.getPlayers().get(0));
     }
 }
