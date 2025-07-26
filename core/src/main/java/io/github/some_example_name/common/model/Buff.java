@@ -31,8 +31,12 @@ public class Buff implements Cloneable {
     }
 
     public boolean nextHour() {
-        buffImpact.setHour(buffImpact.getHour() - 1);
-        return buffImpact.getHour() != 0;
+        buffImpact.setMinute(buffImpact.getMinute() - 1);
+        if (buffImpact.getMinute() < 0) {
+            buffImpact.setMinute(59);
+            buffImpact.setHour(buffImpact.getHour() - 1);
+        }
+        return buffImpact.getHour() != 0 || buffImpact.getMinute() != 0;
     }
     public void affectBuff(Player player) {
         if (maxPower != null && maxPower != 0) {

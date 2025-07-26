@@ -135,10 +135,6 @@ public class CheatCodeMenuController {
         return relationService.friendShip_CH(friendshipLevel);
     }
 
-    public Response nextTurn(String... strings) {
-        return gameService.nextTurn();
-    }
-
     public Response isCrowAttack(String... strings) {
         return gameService.isCrowAttackToday();
     }

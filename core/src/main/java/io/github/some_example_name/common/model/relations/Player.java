@@ -139,11 +139,6 @@ public class Player extends Actor implements JsonPreparable {
 		}
 		if (energy <= 0){
 			faint();
-			GameService.getInstance().nextTurn();
-			return;
-		}
-		if (energyPerTurn <= 0){
-			GameService.getInstance().nextTurn();
 		}
 	}
 
