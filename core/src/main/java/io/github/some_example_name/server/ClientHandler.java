@@ -46,7 +46,9 @@ public class ClientHandler extends Thread {
                 try {
                     JsonObject obj = JsonParser.parseString(message).getAsJsonObject();
 
-                    if (obj.get("action").getAsString().equals("connected")) {
+                    if (obj.get("action").getAsString().charAt(0) == '_') {
+                        gameServer.sendAll(message);
+                    } else if (obj.get("action").getAsString().equals("connected")) {
 //                        String username = obj.get("id").getAsString();
                         System.out.println("Client Connected");
 //                        send("Game state updated for " + username);
@@ -98,8 +100,6 @@ public class ClientHandler extends Thread {
                             )
                         );
                         send(GSON.toJson(msg));
-                    } else if (obj.get("action").getAsString().equals("skip_time")) {
-                        gameServer.sendAll(message);
                     } else if (obj.get("action").getAsString().equals("ready_for_sleep")) {
                         if (gameServer.isReady()) gameServer.sendAll(message);
                     }

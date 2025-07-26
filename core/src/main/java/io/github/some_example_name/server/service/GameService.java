@@ -168,7 +168,7 @@ public class GameService {
         } catch (IllegalArgumentException e) {
             return new Response("Weather not found!");
         }
-        app.getCurrentGame().getVillage().setTomorrowWeather(weather);
+        GameClient.getInstance().setWeather(type);
         return new Response("Weather set to " + type + " successfully.", true);
     }
 
@@ -178,7 +178,7 @@ public class GameService {
         if (x1 < 0 || y1 < 0 || x1 >= app.getCurrentGame().getLength() || y1 >= app.getCurrentGame().getWidth()) {
             return new Response("Position out of bound");
         }
-        app.getCurrentGame().getVillage().getWeather().thunderBolt(x1, y1);
+        GameClient.getInstance().thor(x, y);
         return new Response("The tile is burnt to earth", true);
     }
 
