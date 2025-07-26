@@ -660,7 +660,7 @@ public class GameService {
         }
         setScareCrowAndSprinklerForAll();
         currentPlayer.getInventory().deleteProductFromBackPack(getProductFromInventory(currentPlayer, name), currentPlayer, 1);
-        GameClient.getInstance().updateStructureState(harvestableProduct,StructureUpdateState.ADD,true);
+        GameClient.getInstance().updateStructureState(harvestableProduct,StructureUpdateState.ADD,true, null);
         GameClient.getInstance().updateTileState(currentTile);
         return new Response("you plant successfully", true);
     }
@@ -1301,7 +1301,7 @@ public class GameService {
         setScareCrowAndSprinklerForAll();
         tile.setIsFilled(true);
         tile.setIsPassable(false);
-        GameClient.getInstance().updateStructureState((Structure) product, StructureUpdateState.ADD, true);
+        GameClient.getInstance().updateStructureState((Structure) product, StructureUpdateState.ADD, true, null);
         return new Response(product.getName() + " is put on the ground.", true);
     }
 
@@ -1702,6 +1702,7 @@ public class GameService {
         }
         craft.setMadeProduct(new MadeProduct(madeProductType, product1));
         craft.setETA(madeProductType.calcETA(product1));
+        GameClient.getInstance().updateStructureState(craft, StructureUpdateState.UPDATE,true, craft.getTiles().getFirst());
         return new Response("The item will be ready in due time.");
     }
 

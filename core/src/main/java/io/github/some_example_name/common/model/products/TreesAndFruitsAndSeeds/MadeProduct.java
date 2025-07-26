@@ -2,12 +2,14 @@ package io.github.some_example_name.common.model.products.TreesAndFruitsAndSeeds
 
 import com.badlogic.gdx.graphics.Texture;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import io.github.some_example_name.common.model.Salable;
 import io.github.some_example_name.common.model.products.Product;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class MadeProduct implements Salable {
     private MadeProductType madeProductType;
     private Salable product;

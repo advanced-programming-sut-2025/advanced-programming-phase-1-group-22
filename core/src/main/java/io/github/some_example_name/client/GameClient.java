@@ -102,8 +102,9 @@ public class GameClient {
                     try {
                         JsonObject obj = JsonParser.parseString(serverMessage).getAsJsonObject();
 
+                        JsonObject body = obj.getAsJsonObject("body");
                         if (obj.get("action").getAsString().equals("init_game")) {
-                            JsonObject bodyArray = obj.getAsJsonObject("body");
+                            JsonObject bodyArray = body;
                             App.getInstance().getCurrentGame().getVillage().addStoresAndNpcs(bodyArray.getAsJsonArray("stores"));
                             StartGameMenuController.getInstance().startGame(
                                 bodyArray.getAsJsonArray("players"),
@@ -119,40 +120,42 @@ public class GameClient {
                             }
                         } else if (obj.get("action").getAsString().equals("response_choose_farm")) {
                             StartGameMenuController.getInstance().responseToChooseFarm(
-                                obj.getAsJsonObject("body").get("response").getAsString()
+                                body.get("response").getAsString()
                             );
                         } else if (obj.get("action").getAsString().equals("_skip_time")) {
                             Gdx.app.postRunnable(() -> GameService.getInstance().skipTimeByServer(
-                                obj.getAsJsonObject("body").get("minutes").getAsInt()
+                                body.get("minutes").getAsInt()
                             ));
                         } else if (obj.get("action").getAsString().equals("ready_for_sleep")) {
                             Gdx.app.postRunnable(() -> App.getInstance().getCurrentGame().startDayEvents(
-                                obj.getAsJsonObject("body").get("tomorrowWeather").getAsInt()
+                                body.get("tomorrowWeather").getAsInt()
                             ));
                         } else if (obj.get("action").getAsString().equals("_thor")) {
                             Gdx.app.postRunnable(
                                 () -> App.getInstance().getCurrentGame().getVillage().getWeather().thunderBolt(
-                                    obj.getAsJsonObject("body").get("x").getAsInt(),
-                                    obj.getAsJsonObject("body").get("y").getAsInt()
+                                    body.get("x").getAsInt(),
+                                    body.get("y").getAsInt()
                                 )
                             );
                         } else if (obj.get("action").getAsString().equals("_set_weather")) {
                             App.getInstance().getCurrentGame().getVillage().setTomorrowWeather(
-                                Weather.valueOf(obj.getAsJsonObject("body").get("weather").getAsString().toUpperCase())
+                                Weather.valueOf(body.get("weather").getAsString().toUpperCase())
                             );
                         } else if (obj.get("action").getAsString().equals("=update_player_position")) {
                             String username = obj.get("id").getAsString();
-                            int position_x = obj.getAsJsonObject("body").get("position_x").getAsInt();
-                            int position_Y = obj.getAsJsonObject("body").get("position_y").getAsInt();
+                            int position_x = body.get("position_x").getAsInt();
+                            int position_Y = body.get("position_y").getAsInt();
                             service.handleUpdatePosition(username, position_x, position_Y);
                         } else if (obj.get("action").getAsString().equals("=update_tile")){
-                            JsonObject tileObject = obj.getAsJsonObject("body").get("tile").getAsJsonObject();
+                            JsonObject tileObject = body.get("tile").getAsJsonObject();
                             Tile tile = GSON.fromJson(tileObject,Tile.class);
                             service.updateTileState(tile);
                         } else if (obj.get("action").getAsString().equals(StructureUpdateState.ADD.getName())){
-                            decodeStructure(obj.getAsJsonObject("body"));
+                            decodeStructureAdd(body);
+                        } else if (obj.get("action").getAsString().equals(StructureUpdateState.UPDATE.getName())){
+                            decodeStructureUpdate(body, findObject(body));
                         } else if (obj.get("action").getAsString().equals(StructureUpdateState.DELETE.getName())){
-                            JsonArray jsonTiles = obj.getAsJsonObject("body").get("tiles").getAsJsonArray();
+                            JsonArray jsonTiles = body.get("tiles").getAsJsonArray();
                             Type listType = new TypeToken<List<Tile>>(){}.getType();
                             List<Tile> tiles = GSON.fromJson(jsonTiles,listType);
                             service.handleDeleteStructure(tiles);
@@ -205,7 +208,7 @@ public class GameClient {
         }
     }
 
-    public void updateStructureState(Structure structure, StructureUpdateState state,Boolean inFarm){
+    public void updateStructureState(Structure structure, StructureUpdateState state,Boolean inFarm, Tile previousTile) {
         try {
             out = new PrintWriter(socket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -222,7 +225,7 @@ public class GameClient {
                 Map<String, Object> msg = Map.of(
                     "action", state.getName(),
                     "id", Session.getCurrentUser().getUsername(),
-                    "body", encodeStructure(structure)
+                    "body", encodeStructure(structure, previousTile)
                 );
                 out.println(GSON.toJson(msg));
             }
@@ -231,7 +234,7 @@ public class GameClient {
         }
     }
 
-    private Object decodeStructure(JsonObject body) {
+    private Object decodeStructureAdd(JsonObject body) {
         Object obj;
         try {
             Class<?> clazz = Class.forName(body.get("!class").getAsString());
@@ -259,15 +262,92 @@ public class GameClient {
                 } else if (fieldType.isEnum()) {
                     field.set(obj, fieldType.getEnumConstants()[entry.getValue().getAsInt()]);
                 } else {
-                    field.set(obj, decodeStructure(entry.getValue().getAsJsonObject()));
+                    field.set(obj, decodeStructureAdd(entry.getValue().getAsJsonObject()));
                 }
             }
         } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException |
-            InstantiationException | IllegalAccessException e ) {
+                 InstantiationException | IllegalAccessException e ) {
             e.printStackTrace();
             return null;
         }
         return obj;
+    }
+
+    private Object decodeStructureUpdate(JsonObject body, Object obj) {
+        try {
+            Class<?> clazz = Class.forName(body.get("!class").getAsString());
+            if (Structure.class.isAssignableFrom(clazz)) {
+                updateTiles((Structure) obj, body);
+            }
+            for (Map.Entry<String, JsonElement> entry : body.entrySet()) {
+                if (entry.getKey().charAt(0) == '!') continue;
+                Field field = findField(clazz, entry.getKey());
+                if (field == null) continue;
+                field.setAccessible(true);
+                Class<?> fieldType = field.getType();
+                if (fieldType.equals(int.class) || fieldType.equals(Integer.class)) {
+                    field.set(obj, entry.getValue().getAsInt());
+                } else if (fieldType.equals(boolean.class) || fieldType.equals(Boolean.class)) {
+                    field.set(obj, entry.getValue().getAsBoolean());
+                } else if (fieldType.equals(String.class)) {
+                    field.set(obj, entry.getValue().getAsString());
+                } else if (fieldType.equals(float.class) || fieldType.equals(Float.class)) {
+                    field.set(obj, entry.getValue().getAsFloat());
+                } else if (fieldType.equals(double.class) || fieldType.equals(Double.class)) {
+                    field.set(obj, entry.getValue().getAsDouble());
+                } else if (fieldType.isEnum()) {
+                    field.set(obj, fieldType.getEnumConstants()[entry.getValue().getAsInt()]);
+                } else {
+                    if (field.get(obj) != null) {
+                        field.set(obj, decodeStructureUpdate(entry.getValue().getAsJsonObject(), field.get(obj)));
+                    } else {
+                        field.set(obj, decodeStructureAdd(entry.getValue().getAsJsonObject()));
+                    }
+                }
+            }
+        } catch (ClassNotFoundException | IllegalAccessException e ) {
+            e.printStackTrace();
+            return null;
+        }
+        return obj;
+    }
+
+    private Object findObject(JsonObject body) {
+        Farm farm = null;
+        int prevX = body.get("!previousTileX").getAsInt();
+        int prevY = body.get("!previousTileY").getAsInt();
+        for (Farm farm1 : App.getInstance().getCurrentGame().getVillage().getFarms()) {
+            if (farm1.isPairInFarm(new Pair(prevX, prevY))) {
+                farm = farm1;
+                break;
+            }
+        }
+        if (farm == null) {
+            for (Structure structure : App.getInstance().getCurrentGame().getVillage().getStructures()) {
+                try {
+                    if (structure.getClass().equals(Class.forName(body.get("!class").getAsString())) &&
+                        structure.getTiles().getFirst().getX() == prevX &&
+                        structure.getTiles().getFirst().getY() == prevY) {
+                        return structure;
+                    }
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+        } else {
+            for (Structure structure : farm.getStructures()) {
+                try {
+                    if (structure.getClass().equals(Class.forName(body.get("!class").getAsString())) &&
+                        structure.getTiles().getFirst().getX() == prevX &&
+                        structure.getTiles().getFirst().getY() == prevY) {
+                        return structure;
+                    }
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return null;
     }
 
     private Field findField(Class<?> clazz, String fieldName) {
@@ -280,9 +360,13 @@ public class GameClient {
     }
 
 
-    private Map<String, Object> encodeStructure(Object object) {
+    private Map<String, Object> encodeStructure(Object object, Tile previouseTile) {
         HashMap<String, Object> map = new HashMap<>();
         map.put("!class", object.getClass().getName());
+        if (previouseTile != null) {
+            map.put("!previousTileX", previouseTile.getX());
+            map.put("!previousTileY", previouseTile.getY());
+        }
         if (object instanceof Structure) {
             putTiles(map, (Structure) object);
         }
@@ -304,7 +388,11 @@ public class GameClient {
                     } else if (fieldType.isEnum()) {
                         map.put(field.getName(), ((Enum<?>) obj).ordinal());
                     } else {
-                        map.put(field.getName(), encodeStructure(obj));
+                        if (obj instanceof Structure structure && !structure.getTiles().isEmpty()) {
+                            map.put(field.getName(), encodeStructure(structure, structure.getTiles().getFirst()));
+                        } else {
+                            map.put(field.getName(), encodeStructure(obj, null));
+                        }
                     }
                 } catch (IllegalAccessException ignored) {}
             }
@@ -315,13 +403,7 @@ public class GameClient {
 
 
     private void putBackTiles(Structure obj, JsonObject body) {
-        Tile[][] tiles = App.getInstance().getCurrentGame().getTiles();
-        for (int i = 0; i < body.get("!tiles").getAsJsonArray().size();) {
-            Tile tile = tiles[body.get("!tiles").getAsJsonArray().get(i++).getAsInt()]
-                [body.get("!tiles").getAsJsonArray().get(i++).getAsInt()];
-            obj.getTiles().add(tile);
-        }
-        obj.setIsPickable(body.get("!isPickable").getAsBoolean());
+        updateTiles(obj, body);
         if (obj.getTiles().isEmpty()) return;
         Farm farm = null;
         for (Farm farm1 : App.getInstance().getCurrentGame().getVillage().getFarms()) {
@@ -335,6 +417,17 @@ public class GameClient {
         } else {
             farm.getStructures().add(obj);
         }
+    }
+
+    private void updateTiles(Structure obj, JsonObject body) {
+        obj.getTiles().clear();
+        Tile[][] tiles = App.getInstance().getCurrentGame().getTiles();
+        for (int i = 0; i < body.get("!tiles").getAsJsonArray().size();) {
+            Tile tile = tiles[body.get("!tiles").getAsJsonArray().get(i++).getAsInt()]
+                [body.get("!tiles").getAsJsonArray().get(i++).getAsInt()];
+            obj.getTiles().add(tile);
+        }
+        obj.setIsPickable(body.get("!isPickable").getAsBoolean());
     }
 
     private void putTiles(Map<String, Object> map, Structure structure) {

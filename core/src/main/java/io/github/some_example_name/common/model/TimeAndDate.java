@@ -22,15 +22,15 @@ import io.github.some_example_name.common.utils.App;
 @JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "@id")
 public class TimeAndDate {
     @JsonIgnore
-    private Sprite mainClock = new Sprite(GameAsset.CLOCK_MAIN);
+    private transient Sprite mainClock = new Sprite(GameAsset.CLOCK_MAIN);
     @JsonIgnore
-    private Sprite arrow = new Sprite(GameAsset.CLOCK_ARROW);
+    private transient Sprite arrow = new Sprite(GameAsset.CLOCK_ARROW);
     @JsonIgnore
-    private Sprite seasonSprite = new Sprite(GameAsset.ClOCK_MANNERS[1]);
+    private transient Sprite seasonSprite = new Sprite(GameAsset.ClOCK_MANNERS[1]);
     @JsonIgnore
-    private Sprite weather = new Sprite(GameAsset.ClOCK_MANNERS[6]);
+    private transient Sprite weather = new Sprite(GameAsset.ClOCK_MANNERS[6]);
 //    @JsonBackReference
-    private Game currentGame = App.getInstance().getCurrentGame();
+    private transient Game currentGame = App.getInstance().getCurrentGame();
     private float delta = 0f;
     private Integer hour = 9;
     private Integer minute = 0;
