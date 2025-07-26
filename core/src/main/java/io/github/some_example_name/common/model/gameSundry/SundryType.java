@@ -1,6 +1,7 @@
 package io.github.some_example_name.common.model.gameSundry;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.github.some_example_name.common.utils.GameAsset;
 import lombok.Getter;
 
@@ -21,6 +22,7 @@ public enum SundryType implements SalableIntegration {
 
     private final String name;
     private final Integer price;
+    @JsonIgnore
     private final Texture texture;
 
     SundryType(String name, Integer price,Texture texture) {

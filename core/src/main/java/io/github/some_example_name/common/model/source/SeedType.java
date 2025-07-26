@@ -1,6 +1,7 @@
 package io.github.some_example_name.common.model.source;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.github.some_example_name.common.utils.GameAsset;
 import lombok.Getter;
 import io.github.some_example_name.common.model.enums.Season;
@@ -69,7 +70,8 @@ public enum SeedType implements Source {
     private final Season season;
     private final boolean isForaging;
     private final Integer price;
-    private final Texture texture;
+    @JsonIgnore
+    private final transient Texture texture;
 
     SeedType(String name, Season season, boolean isForaging,int price,Texture texture) {
         this.name = name;

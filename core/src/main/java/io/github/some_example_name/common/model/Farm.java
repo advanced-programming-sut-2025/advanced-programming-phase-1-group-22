@@ -1,7 +1,9 @@
 package io.github.some_example_name.common.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.some_example_name.common.model.shelter.ShippingBin;
 import io.github.some_example_name.common.model.source.*;
@@ -28,16 +30,17 @@ import java.util.Random;
 @Getter
 @Setter
 @NoArgsConstructor
+@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "@id")
 public class Farm implements JsonPreparable {
-    @JsonManagedReference
+//    @JsonManagedReference
     private List<Tile> tiles = new ArrayList<>();
-    @JsonManagedReference
+//    @JsonManagedReference
     private List<Player> players = new ArrayList<>();
-    @JsonManagedReference
+//    @JsonManagedReference
     private List<Structure> structures = new ArrayList<>();
     private Integer xCenter;
     private Integer yCenter;
-    @JsonManagedReference
+//    @JsonManagedReference
     private FarmType farmType;
     private Integer farmXStart;
     private Integer farmYStart;
@@ -45,7 +48,7 @@ public class Farm implements JsonPreparable {
     private Integer farmYEnd;
     private Boolean crowAttackToday = false;
     private Integer farmIndex = 0;
-    @JsonManagedReference
+//    @JsonManagedReference
     private Fridge fridge = new Fridge();
 
 

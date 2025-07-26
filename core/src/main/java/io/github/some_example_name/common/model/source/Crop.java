@@ -2,6 +2,7 @@ package io.github.some_example_name.common.model.source;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -31,8 +32,10 @@ public class Crop extends HarvestAbleProduct implements Source {
 	private List<SundryType> fertilizes = new ArrayList<>();
 	private Integer numberOfWithoutWaterDays = 0;
 	private Integer numberOfStages = 0;
-    private Texture texture;
-    private Sprite sprite;
+    @JsonIgnore
+    private transient Texture texture;
+    @JsonIgnore
+    private transient Sprite sprite;
 
 	public Crop(CropType cropType) {
 		this.cropType = cropType;
@@ -221,6 +224,7 @@ public class Crop extends HarvestAbleProduct implements Source {
 		return fertilizes;
 	}
 
+    @JsonIgnore
     @Override
     public Sprite getSprite() {
         if (this.cropType.isForaging()) {

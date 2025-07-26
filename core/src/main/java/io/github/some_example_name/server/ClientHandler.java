@@ -1,10 +1,17 @@
 package io.github.some_example_name.server;
 
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
-import io.github.some_example_name.common.model.Entry;
+import io.github.some_example_name.common.model.*;
 import io.github.some_example_name.server.model.GameServer;
 import io.github.some_example_name.server.model.GameThread;
 import io.github.some_example_name.server.model.ServerPlayer;
@@ -29,10 +36,16 @@ public class ClientHandler extends Thread {
     private boolean ready = false;
     @Getter
     private GameServer gameServer;
+    private final ObjectMapper objectMapper = new ObjectMapper();
     private final ServerService service = new ServerService(this);
 
     public ClientHandler(Socket socket) {
         this.clientSocket = socket;
+        objectMapper.activateDefaultTyping(LaissezFaireSubTypeValidator.instance,
+            ObjectMapper.DefaultTyping.NON_FINAL, JsonTypeInfo.As.PROPERTY);
+        objectMapper.addMixIn(Sprite.class, SpriteMixIn.class);
+        objectMapper.addMixIn(Texture.class, SpriteMixIn.class);
+        objectMapper.addMixIn(TextureRegion.class, SpriteMixIn.class);
     }
 
     @Override
@@ -100,6 +113,15 @@ public class ClientHandler extends Thread {
                     } else if (obj.get("action").getAsString().equals("update_player_position")) {
                         String username = obj.get("id").getAsString();
                         gameServer.sendAllBut(GSON.toJson(obj), username);
+                    } else if (obj.get("action").getAsString().equals("update tile")){
+                        String username = obj.get("id").getAsString();
+                        gameServer.sendAllBut(GSON.toJson(obj), username);
+                    }
+                    else if (obj.get("action").getAsString().equals(StructureUpdateState.ADD.getName()) ||
+                        obj.get("action").getAsString().equals(StructureUpdateState.DELETE.getName()) ||
+                        obj.get("action").getAsString().equals(StructureUpdateState.UPDATE.getName())){
+                        String username = obj.get("id").getAsString();
+                        gameServer.sendAllBut(message,username);
                     }
                 } catch (JsonParseException e) {
                     System.out.println("Received non-JSON message: " + message);

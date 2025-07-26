@@ -1,6 +1,8 @@
 package io.github.some_example_name.common.model;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,11 +13,13 @@ import io.github.some_example_name.common.utils.App;
 @Setter
 @ToString
 @NoArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Tile {
     private Integer id;
     private Integer x;
     private Integer y;
     private Boolean isFilled = false;
+    @JsonProperty("passable")
     private Boolean isPassable = true;
     private TileType tileType = TileType.FLAT;
 
@@ -58,5 +62,13 @@ public class Tile {
             return tileType.getTexture()[pair.getX()][pair.getY()];
         }
         return tileType.getTexture()[0][0];
+    }
+
+    public void updateTileState(Tile tile){
+        x = tile.x;
+        y = tile.y;
+        isFilled = tile.isFilled;
+        isPassable = tile.isPassable;
+        tileType = tile.tileType;
     }
 }

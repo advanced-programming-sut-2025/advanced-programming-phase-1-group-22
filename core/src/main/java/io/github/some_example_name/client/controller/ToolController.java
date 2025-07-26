@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import io.github.some_example_name.client.GameClient;
 import io.github.some_example_name.client.MainGradle;
 import io.github.some_example_name.common.model.Salable;
 import io.github.some_example_name.common.model.Tile;
@@ -99,7 +100,10 @@ public class ToolController {
     private void useTool(Player player, Tool tool, int xTransmit, int yTransmit) {
         WorldController worldController = new WorldController();
         Tile tile = getTileByXAndY(player.getTiles().get(0).getX() + xTransmit, player.getTiles().get(0).getY() + yTransmit);
-        if (tile != null) worldController.showResponse(new Response(tool.useTool(player, tile)));
+        if (tile != null){
+            worldController.showResponse(new Response(tool.useTool(player, tile)));
+            GameClient.getInstance().updateTileState(tile);
+        }
     }
 
     private float calculateRotation(int x, int y, float objectX, float objectY) {

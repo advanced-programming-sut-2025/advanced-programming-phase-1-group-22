@@ -1,6 +1,8 @@
 package io.github.some_example_name.common.model.relations;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.some_example_name.common.model.Entry;
 import lombok.Getter;
@@ -19,6 +21,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
+@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "@id")
 public class Friendship implements JsonPreparable {
     private Integer id;
     private Actor firstPlayer;
@@ -27,9 +30,9 @@ public class Friendship implements JsonPreparable {
     private Integer friendShipLevel;
     private Integer xp;
     private ArrayList<Entry<String, Actor>> dialogs;
-    @JsonBackReference
+//    @JsonBackReference
     private TimeAndDate lastSeen = new TimeAndDate(1, 9, Season.SPRING, 0);
-    @JsonBackReference
+//    @JsonBackReference
     private TimeAndDate timeFromGettingFirstLevel = new TimeAndDate(1, 9, Season.SPRING, 0);
 
     public Friendship(Integer id, Actor firstPlayer, Actor secondPlayer) {
