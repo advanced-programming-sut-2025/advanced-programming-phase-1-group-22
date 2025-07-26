@@ -163,9 +163,7 @@ public class FriendPopUp extends PopUp {
                 Timer.schedule(new Timer.Task() {
                     @Override
                     public void run() {
-                        do {
-                            getGameService().nextTurn();
-                        } while (player != App.getInstance().getCurrentGame().getCurrentPlayer());
+                        //todo show in the other thread
                         DoYouMarryMePopUp doYouMarryMePopUp = new DoYouMarryMePopUp();
                         doYouMarryMePopUp.setPlayer(currentPlayer);
                         doYouMarryMePopUp.setOrigin(origin);

@@ -91,34 +91,6 @@ public class GameService {
         return new Response("The game is terminated", true);
     }
 
-    public void nextTurnAfterFaint() {
-        com.badlogic.gdx.utils.Timer.schedule(new com.badlogic.gdx.utils.Timer.Task() {
-            @Override
-            public void run() {
-                nextTurn();
-                GameView.captureInput = true;
-            }
-        }, 3);
-        new Response("", true);
-    }
-
-    public Response nextTurn() {
-        return new Response("");
-        /* //todo change next turn usages
-        Player player = app.getCurrentGame().getCurrentPlayer();
-        player.setEnergyPerTurn(player.getMaxEnergyPerTurn());
-        if (player.getBuff() != null) {
-            if (!player.getBuff().nextHour()) {
-                player.getBuff().defectBuff(player);
-                player.setBuff(null);
-            }
-        }
-        app.getCurrentGame().nextPlayer();
-        if (app.getCurrentGame().getCurrentPlayer().getIsFainted()) return nextTurn();
-        return new Response("It's next player's turn", true);
-         */
-    }
-
     public Response time() {
         String result = app.getCurrentGame().getTimeAndDate().getHour() + ":";
         result += app.getCurrentGame().getTimeAndDate().getMinute();
@@ -255,7 +227,6 @@ public class GameService {
             player.walkTillFaint(walkingStrategy.getDistances(), new Pair(x1, y1));
             player.faint();
             walkingStrategy.getDistances().clear();
-            nextTurnAfterFaint();
             return new Response("Not enough energy; you fainted");
         }
         walkingStrategy.getDistances().clear();
@@ -263,9 +234,6 @@ public class GameService {
         player.getTiles().clear();
         player.getTiles().add(app.getCurrentGame().tiles[x1][y1]);
         setMenu(player, destFarm);
-        if (player.getEnergyPerTurn() <= 0) {
-            nextTurn();
-        }
         return new Response("Moved to the tile.", true);
     }
 
@@ -402,7 +370,6 @@ public class GameService {
             return new Response("you do not carrying any tool");
         } else if (currentTool.getEnergy(currentPlayer) > currentPlayer.getEnergy()) {
             currentPlayer.faint();
-            nextTurnAfterFaint();
             return new Response("you do not have enough energy to use this tool");
         }
         Tile currentTile = getTileByXAndY(currentPlayer.getTiles().get(0).getX() + currentDirection.getXTransmit(),
@@ -413,8 +380,7 @@ public class GameService {
         Response resp = new Response(currentTool.useTool(currentPlayer, currentTile), true);
         if (currentPlayer.getEnergy() == 0) {
             currentPlayer.faint();
-            nextTurnAfterFaint();
-        } else if (currentPlayer.getEnergyPerTurn() <= 0) nextTurn();
+        }
         return resp;
     }
 
@@ -2050,7 +2016,6 @@ public class GameService {
         }
         if (player.getEnergy() < 2) {
             player.faint();
-            nextTurnAfterFaint();
             return new Response("Not enough energy; you fainted");
         }
         player.removeEnergy(2);
@@ -2058,9 +2023,7 @@ public class GameService {
         player.getInventory().addProductToBackPack(new Craft(recipe.getCraft(), null, null), 1);
         if (player.getEnergy() == 0) {
             player.faint();
-            nextTurnAfterFaint();
         }
-        else if (player.getEnergyPerTurn() <= 0) nextTurn();
         return new Response(recipe.getCraft().getName() + " crafted successfully.");
     }
 
@@ -2115,7 +2078,6 @@ public class GameService {
         }
         if (player.getEnergy() < 3) {
             player.faint();
-            nextTurnAfterFaint();
             return new Response("Not enough energy; you fainted");
         }
         player.removeEnergy(3);
@@ -2123,8 +2085,7 @@ public class GameService {
         player.getInventory().addProductToBackPack(new Food(recipe.getIngredients()), 1);
         if (player.getEnergy() == 0) {
             player.faint();
-            nextTurnAfterFaint();
-        } else if (player.getEnergyPerTurn() <= 0) nextTurn();
+        }
         return new Response(recipe.getIngredients().getName() + " cooked successfully.");
     }
 
