@@ -84,7 +84,7 @@ public class TerminateMenu extends PopUp {
 
                 if (endButton.isChecked()) {
                     thoseInFavor = 1;
-                    getGameService().nextTurn();
+                    //todo show in other threads
                     pauseButton.setChecked(false);
                     pauseButton.remove();
                     endButton.remove();
@@ -110,7 +110,7 @@ public class TerminateMenu extends PopUp {
                         MainGradle.getInstance().getScreen().dispose();
                         MainGradle.getInstance().initialMenu();
                     } else {
-                        getGameService().nextTurn();
+                        //todo show in other threads
                     }
                 }
                 super.act(delta);

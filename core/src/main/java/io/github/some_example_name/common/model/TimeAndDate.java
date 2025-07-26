@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import io.github.some_example_name.client.MainGradle;
 import io.github.some_example_name.common.model.enums.Weather;
+import io.github.some_example_name.common.model.relations.Player;
 import io.github.some_example_name.common.utils.GameAsset;
 import lombok.Getter;
 import lombok.Setter;
@@ -82,6 +83,13 @@ public class TimeAndDate {
         }
         if (nextDay) {
             App.getInstance().getCurrentGame().startDay();
+        }
+        Player player = App.getInstance().getCurrentGame().getCurrentPlayer();
+        if (player.getBuff() != null) {
+            if (!player.getBuff().nextHour()) {
+                player.getBuff().defectBuff(player);
+                player.setBuff(null);
+            }
         }
     }
 
