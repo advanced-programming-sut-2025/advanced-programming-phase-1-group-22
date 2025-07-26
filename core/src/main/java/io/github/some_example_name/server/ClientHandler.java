@@ -101,6 +101,7 @@ public class ClientHandler extends Thread {
                         );
                         send(GSON.toJson(msg));
                     } else if (obj.get("action").getAsString().equals("ready_for_sleep")) {
+                        ready = true;
                         if (gameServer.isReady()) gameServer.sendAll(message);
                     }
                 } catch (JsonParseException e) {

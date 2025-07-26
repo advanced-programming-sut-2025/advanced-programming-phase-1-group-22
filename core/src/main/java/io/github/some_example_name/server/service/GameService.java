@@ -134,9 +134,8 @@ public class GameService {
     }
 
     public Response C_WeatherSet(String type) {
-        Weather weather;
         try {
-            weather = Weather.valueOf(type.toUpperCase());
+            Weather.valueOf(type.toUpperCase());
         } catch (IllegalArgumentException e) {
             return new Response("Weather not found!");
         }
