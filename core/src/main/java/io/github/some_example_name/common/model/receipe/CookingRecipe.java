@@ -81,6 +81,9 @@ public enum CookingRecipe implements Recipe {
 
     @Override
     public String toString() {
+        if (App.getInstance().getCurrentGame().findFarm()==null){
+            return super.toString();
+        }
         Fridge fridge = App.getInstance().getCurrentGame().findFarm().getFridge();
         String res = this.getIngredients().getName() + ":\nIngredients:\n";
         res += this.getIngredients().getProductsString();

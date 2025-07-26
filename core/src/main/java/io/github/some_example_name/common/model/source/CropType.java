@@ -1,6 +1,7 @@
 package io.github.some_example_name.common.model.source;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.github.some_example_name.common.utils.GameAsset;
 import lombok.Getter;
 import io.github.some_example_name.common.model.enums.Season;
@@ -146,7 +147,8 @@ public enum CropType implements Harvestable {
     private final List<Season> seasons;
     private final boolean canBecomeGiant;
     private final boolean isForaging;
-    private final List<Texture> textures;
+    @JsonIgnore
+    private final transient List<Texture> textures;
 
     CropType(String name, Source source, List<Integer> harvestStages, boolean oneTime, int regrowthTime,
              int baseSellPrice, boolean isEdible, int energy, List<Season> seasons, boolean canBecomeGiant,
@@ -221,6 +223,7 @@ public enum CropType implements Harvestable {
     @Override
     public Integer getContainingEnergy() {return getEnergy();}
 
+    @JsonIgnore
     @Override
     public Texture getTexture() {
         return textures.get(0);

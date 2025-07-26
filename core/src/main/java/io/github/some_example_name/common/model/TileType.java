@@ -2,6 +2,7 @@ package io.github.some_example_name.common.model;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.github.some_example_name.common.utils.GameAsset;
 import lombok.Getter;
 
@@ -10,7 +11,8 @@ public enum TileType {
     GRASS(GameAsset.DARK_GREEN_FLOOR), FLOWER(GameAsset.FLOWER), SNOW(GameAsset.SNOWED_FLOOR), FLAT(GameAsset.LIGHT_GREEN_FLOOR),
     PATH(GameAsset.PATH_FLOOR), FENCE(GameAsset.STONE_FENCE), DOOR(GameAsset.GATE),PLOWED(GameAsset.PLOWED_FLOORING), THUNDERED(GameAsset.THUNDERED_FLOOR);
 
-    private final TextureRegion[][] texture;
+    @JsonIgnore
+    private final transient TextureRegion[][] texture;
 
     TileType(Texture texture) {
         this.texture = new TextureRegion[][]{{new TextureRegion(texture)}};

@@ -1,7 +1,9 @@
 package io.github.some_example_name.common.model;
 
 import com.badlogic.gdx.utils.Timer;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import io.github.some_example_name.common.model.structure.stores.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,14 +29,15 @@ import java.util.Random;
 @Setter
 @Getter
 @ToString
+@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "@id")
 public class Game implements Serializable {
-    @JsonManagedReference
+//    @JsonManagedReference
     private Village village;
     private final List<Player> players = new ArrayList<>();
     private Player currentPlayer;
     private final List<NPC> npcs = new ArrayList<>();
     private final List<Friendship> friendships = new ArrayList<>();
-    @JsonManagedReference
+//    @JsonManagedReference
     private TimeAndDate timeAndDate;
     private Double weatherCoefficient = 1.0;
     private final Integer length = 160;

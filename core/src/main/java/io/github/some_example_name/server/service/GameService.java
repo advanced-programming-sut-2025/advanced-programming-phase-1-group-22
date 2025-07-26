@@ -1,5 +1,6 @@
 package io.github.some_example_name.server.service;
 
+import io.github.some_example_name.client.GameClient;
 import io.github.some_example_name.common.model.*;
 import io.github.some_example_name.common.model.products.*;
 import io.github.some_example_name.common.model.products.TreesAndFruitsAndSeeds.*;
@@ -689,6 +690,8 @@ public class GameService {
         }
         setScareCrowAndSprinklerForAll();
         currentPlayer.getInventory().deleteProductFromBackPack(getProductFromInventory(currentPlayer, name), currentPlayer, 1);
+        GameClient.getInstance().updateStructureState(harvestableProduct,StructureUpdateState.ADD,true);
+        GameClient.getInstance().updateTileState(currentTile);
         return new Response("you plant successfully", true);
     }
 

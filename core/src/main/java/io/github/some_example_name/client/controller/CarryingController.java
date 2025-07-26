@@ -5,14 +5,18 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import io.github.some_example_name.client.GameClient;
 import io.github.some_example_name.client.MainGradle;
 import io.github.some_example_name.common.model.Direction;
 import io.github.some_example_name.common.model.Salable;
+import io.github.some_example_name.common.model.StructureUpdateState;
 import io.github.some_example_name.common.model.Tile;
 import io.github.some_example_name.common.model.gameSundry.Sundry;
+import io.github.some_example_name.common.model.records.Response;
 import io.github.some_example_name.common.model.relations.Player;
 import io.github.some_example_name.common.model.source.MixedSeeds;
 import io.github.some_example_name.common.model.source.Seed;
+import io.github.some_example_name.common.model.structure.Structure;
 import io.github.some_example_name.common.model.tools.Tool;
 import io.github.some_example_name.server.service.GameService;
 import io.github.some_example_name.common.utils.App;
@@ -95,7 +99,10 @@ public class CarryingController {
 
     private void plant(Player player,Salable carrying,int dx, int dy){
         Tile tile = getTileByXAndY(player.getTiles().get(0).getX() + dx,player.getTiles().get(0).getY() + dy);
-        if (tile!=null) worldController.showResponse(gameService.plantSeed(carrying.getName(),tile));
+        if (tile!=null){
+            Response response = gameService.plantSeed(carrying.getName(),tile);
+            worldController.showResponse(response);
+        }
     }
 
     private Tile getTileByXAndY(int x, int y) {

@@ -5,6 +5,9 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import io.github.some_example_name.client.MainGradle;
 import io.github.some_example_name.common.model.enums.Weather;
 import io.github.some_example_name.common.utils.GameAsset;
@@ -15,12 +18,17 @@ import io.github.some_example_name.common.utils.App;
 
 @Getter
 @Setter
+@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "@id")
 public class TimeAndDate {
+    @JsonIgnore
     private Sprite mainClock = new Sprite(GameAsset.CLOCK_MAIN);
+    @JsonIgnore
     private Sprite arrow = new Sprite(GameAsset.CLOCK_ARROW);
+    @JsonIgnore
     private Sprite seasonSprite = new Sprite(GameAsset.ClOCK_MANNERS[1]);
+    @JsonIgnore
     private Sprite weather = new Sprite(GameAsset.ClOCK_MANNERS[6]);
-    @JsonBackReference
+//    @JsonBackReference
     private Game currentGame = App.getInstance().getCurrentGame();
     private Integer hour = 9;
     private Integer minute = 0;

@@ -144,11 +144,13 @@ public class Tree extends HarvestAbleProduct {
 
     @Override
     public int getSellPrice() {
+        if (treeType == null || treeType.getFruit() == null) return 0;
         return treeType.getFruit().getSellPrice();
     }
 
     @Override
     public Integer getContainingEnergy() {
+        if (treeType == null || treeType.getFruit() == null) return 0;
         return treeType.getFruit().getFruitEnergy();
     }
 

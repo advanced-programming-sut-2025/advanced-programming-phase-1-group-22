@@ -1,7 +1,9 @@
 package io.github.some_example_name.common.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonArray;
 import io.github.some_example_name.client.GameClient;
@@ -27,9 +29,10 @@ import java.util.function.UnaryOperator;
 @Getter
 @Setter
 @ToString
+@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "@id")
 public class Village implements JsonPreparable {
     private List<Tile> tiles;
-    @JsonManagedReference
+//    @JsonManagedReference
     private List<Farm> farms = new ArrayList<>();
     private List<Structure> structures = new ArrayList<>();
     private Weather weather = Weather.SUNNY;
