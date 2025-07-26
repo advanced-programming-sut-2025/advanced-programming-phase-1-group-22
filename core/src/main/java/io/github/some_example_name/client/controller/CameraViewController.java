@@ -255,9 +255,6 @@ public class CameraViewController {
         Player player = App.getInstance().getCurrentGame().getCurrentPlayer();
         if (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)) {
             if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) {
-//                gameMenuController.C_WeatherSet("STORMY");
-//                gameMenuController.C_AdvanceDate("1");
-
                 gameMenuController.toolEquip("normal hoe");
                 gameMenuController.C_AddItem("cherry sapling", "1");
                 gameMenuController.C_AddItem("deluxe retaining soil", "1");
@@ -277,7 +274,8 @@ public class CameraViewController {
                 gameMenuController.C_AdvanceDate("1");
             }
             if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)) {
-                gameMenuController.nextTurn();
+                gameMenuController.C_WeatherSet("STORMY");
+                gameMenuController.C_AdvanceDate("1");
             }
             if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_5)) {
                 gameMenuController.C_AddItem("cherry bomb recipe", "1");
@@ -344,27 +342,10 @@ public class CameraViewController {
                 gameMenuController.C_AddItem("bee_house", "5");
                 RelationService.getInstance().giveGift("Clara1234", "bee_house", 2);
                 RelationService.getInstance().giveGift("Clara1234", "bee_house", 2);
-                String[] a = {"Clara1234", "Roham1234"};
-                for (int i = 0; i < 6; i++) {
-                    gameMenuController.nextTurn();
-                    RelationService.getInstance().giveGift(a[(i + 1) % 2], "bee_house", 1);
-                    RelationService.getInstance().giveGift(a[(i + 1) % 2], "bee_house", 1);
-                    RelationService.getInstance().giveGift(a[(i + 1) % 2], "bee_house", 1);
-                    RelationService.getInstance().giveGift(a[(i + 1) % 2], "bee_house", 1);
-                }
             }
             if (Gdx.input.isKeyJustPressed(Input.Keys.EQUALS)) {
                 RelationService.getInstance().talkToAnotherPlayer("Clara1234", "bee_house");
                 RelationService.getInstance().talkToAnotherPlayer("Clara1234", "bee_house");
-                String[] a = {"Clara1234", "Roham1234"};
-                for (int i = 0; i < 6; i++) {
-                    gameMenuController.nextTurn();
-                    RelationService.getInstance().talkToAnotherPlayer(a[(i + 1) % 2], "bee_house");
-                    RelationService.getInstance().talkToAnotherPlayer(a[(i + 1) % 2], "bee_house");
-                    RelationService.getInstance().talkToAnotherPlayer(a[(i + 1) % 2], "bee_house");
-                    RelationService.getInstance().talkToAnotherPlayer(a[(i + 1) % 2], "bee_house");
-                    RelationService.getInstance().talkToAnotherPlayer(a[(i + 1) % 2], "01234567891234567890 1234");
-                }
             }
         } else {
             if (Gdx.input.isKeyJustPressed(Input.Keys.F4)) {

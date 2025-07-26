@@ -1,5 +1,6 @@
 package io.github.some_example_name.client;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -9,11 +10,18 @@ import com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import io.github.some_example_name.client.controller.mainMenu.StartGameMenuController;
+import io.github.some_example_name.common.model.Farm;
+import io.github.some_example_name.common.model.Game;
+import io.github.some_example_name.common.model.User;
+import io.github.some_example_name.common.model.enums.Gender;
+import io.github.some_example_name.common.model.enums.SecurityQuestion;
+import io.github.some_example_name.common.model.enums.Weather;
 import io.github.some_example_name.client.service.ClientService;
 import io.github.some_example_name.common.model.*;
 import io.github.some_example_name.common.model.structure.Structure;
 import io.github.some_example_name.common.utils.App;
 import io.github.some_example_name.common.variables.Session;
+import io.github.some_example_name.server.service.GameService;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -112,6 +120,25 @@ public class GameClient {
                         } else if (obj.get("action").getAsString().equals("response_choose_farm")) {
                             StartGameMenuController.getInstance().responseToChooseFarm(
                                 obj.getAsJsonObject("body").get("response").getAsString()
+                            );
+                        } else if (obj.get("action").getAsString().equals("_skip_time")) {
+                            Gdx.app.postRunnable(() -> GameService.getInstance().skipTimeByServer(
+                                obj.getAsJsonObject("body").get("minutes").getAsInt()
+                            ));
+                        } else if (obj.get("action").getAsString().equals("ready_for_sleep")) {
+                            Gdx.app.postRunnable(() -> App.getInstance().getCurrentGame().startDayEvents(
+                                obj.getAsJsonObject("body").get("tomorrowWeather").getAsInt()
+                            ));
+                        } else if (obj.get("action").getAsString().equals("_thor")) {
+                            Gdx.app.postRunnable(
+                                () -> App.getInstance().getCurrentGame().getVillage().getWeather().thunderBolt(
+                                    obj.getAsJsonObject("body").get("x").getAsInt(),
+                                    obj.getAsJsonObject("body").get("y").getAsInt()
+                                )
+                            );
+                        } else if (obj.get("action").getAsString().equals("_set_weather")) {
+                            App.getInstance().getCurrentGame().getVillage().setTomorrowWeather(
+                                Weather.valueOf(obj.getAsJsonObject("body").get("weather").getAsString().toUpperCase())
                             );
                         } else if (obj.get("action").getAsString().equals("update_player_position")) {
                             String username = obj.get("id").getAsString();
@@ -227,6 +254,79 @@ public class GameClient {
                 "action", "update tile",
                 "id", Session.getCurrentUser().getUsername(),
                 "body", Map.of("tile",tile)
+            );
+
+            out.println(GSON.toJson(msg));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void skipTime(int minutes) {
+        try {
+            out = new PrintWriter(socket.getOutputStream(), true);
+            in  = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+            Map<String, Object> msg = Map.of(
+                "action", "_skip_time",
+                "id", Session.getCurrentUser().getUsername(),
+                "body", Map.of("minutes", minutes)
+            );
+
+            out.println(GSON.toJson(msg));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void readyForSleep() {
+        try {
+            out = new PrintWriter(socket.getOutputStream(), true);
+            in  = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            Weather tomorrowWeather;
+            Random random = new Random();
+            do {
+                tomorrowWeather = Weather.values()[random.nextInt(0, 4)];
+            } while (!tomorrowWeather.getSeasons().contains(App.getInstance().getCurrentGame().getTimeAndDate().getSeason()));
+
+            Map<String, Object> msg = Map.of(
+                "action", "ready_for_sleep",
+                "id", Session.getCurrentUser().getUsername(),
+                "body", Map.of("tomorrowWeather", tomorrowWeather.ordinal())
+            );
+
+            out.println(GSON.toJson(msg));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void thor(String x, String y) {
+        try {
+            out = new PrintWriter(socket.getOutputStream(), true);
+            in  = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+            Map<String, Object> msg = Map.of(
+                "action", "_thor",
+                "id", Session.getCurrentUser().getUsername(),
+                "body", Map.of("x", x, "y", y)
+            );
+
+            out.println(GSON.toJson(msg));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setWeather(String type) {
+        try {
+            out = new PrintWriter(socket.getOutputStream(), true);
+            in  = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+            Map<String, Object> msg = Map.of(
+                "action", "_set_weather",
+                "id", Session.getCurrentUser().getUsername(),
+                "body", Map.of("weather", type)
             );
 
             out.println(GSON.toJson(msg));

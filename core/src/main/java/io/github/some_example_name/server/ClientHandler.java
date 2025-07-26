@@ -17,6 +17,7 @@ import io.github.some_example_name.server.model.GameThread;
 import io.github.some_example_name.server.model.ServerPlayer;
 import io.github.some_example_name.server.service.ServerService;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -33,6 +34,7 @@ public class ClientHandler extends Thread {
     private PrintWriter out;
     private BufferedReader in;
     @Getter
+    @Setter
     private boolean ready = false;
     @Getter
     private GameServer gameServer;
@@ -58,7 +60,9 @@ public class ClientHandler extends Thread {
                 try {
                     JsonObject obj = JsonParser.parseString(message).getAsJsonObject();
 
-                    if (obj.get("action").getAsString().equals("connected")) {
+                    if (obj.get("action").getAsString().charAt(0) == '_') {
+                        gameServer.sendAll(message);
+                    } else if (obj.get("action").getAsString().equals("connected")) {
 //                        String username = obj.get("id").getAsString();
                         System.out.println("Client Connected");
 //                        send("Game state updated for " + username);
@@ -116,12 +120,14 @@ public class ClientHandler extends Thread {
                     } else if (obj.get("action").getAsString().equals("update tile")){
                         String username = obj.get("id").getAsString();
                         gameServer.sendAllBut(GSON.toJson(obj), username);
-                    }
-                    else if (obj.get("action").getAsString().equals(StructureUpdateState.ADD.getName()) ||
+                    } else if (obj.get("action").getAsString().equals(StructureUpdateState.ADD.getName()) ||
                         obj.get("action").getAsString().equals(StructureUpdateState.DELETE.getName()) ||
                         obj.get("action").getAsString().equals(StructureUpdateState.UPDATE.getName())){
                         String username = obj.get("id").getAsString();
                         gameServer.sendAllBut(message,username);
+                    } else if (obj.get("action").getAsString().equals("ready_for_sleep")) {
+                        ready = true;
+                        if (gameServer.isReady()) gameServer.sendAll(message);
                     }
                 } catch (JsonParseException e) {
                     System.out.println("Received non-JSON message: " + message);

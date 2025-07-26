@@ -39,6 +39,7 @@ public class GameViewController {
         }
         boolean isNight = App.getInstance().getCurrentGame().getTimeAndDate().compareDailyTime(new TimeAndDate(0, 18)) <= 0;
         if (isNight) MainGradle.getInstance().getBatch().setShader(GameAsset.SHADER);
+        App.getInstance().getCurrentGame().getTimeAndDate().updateTime(delta);
         worldController.update(delta);
         playerController.update(delta);
         toolController.update();

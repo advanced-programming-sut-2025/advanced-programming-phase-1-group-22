@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import io.github.some_example_name.client.MainGradle;
 import io.github.some_example_name.common.model.enums.Weather;
+import io.github.some_example_name.common.model.relations.Player;
 import io.github.some_example_name.common.utils.GameAsset;
 import lombok.Getter;
 import lombok.Setter;
@@ -30,6 +31,7 @@ public class TimeAndDate {
     private Sprite weather = new Sprite(GameAsset.ClOCK_MANNERS[6]);
 //    @JsonBackReference
     private Game currentGame = App.getInstance().getCurrentGame();
+    private float delta = 0f;
     private Integer hour = 9;
     private Integer minute = 0;
     private Season season = Season.SPRING;
@@ -59,13 +61,17 @@ public class TimeAndDate {
         this.minute = minute;
     }
 
-//    public void moveTimeForward(TimeAndDate timeAndDate)) {
-//    }
+    public void updateTime(float delta) {
+        this.delta += delta;
+        if (this.delta > 4) {
+            moveTimeForward();
+            this.delta -= 4;
+        }
+    }
 
     public void moveTimeForward() {
         boolean nextDay = false;
-        int numberOfPlayers = App.getInstance().getCurrentGame().getPlayers().size();
-        minute += 60/numberOfPlayers;
+        minute += 1;
         if (minute >= 60) {
             hour++;
             minute = 0;
@@ -85,6 +91,13 @@ public class TimeAndDate {
         }
         if (nextDay) {
             App.getInstance().getCurrentGame().startDay();
+        }
+        Player player = App.getInstance().getCurrentGame().getCurrentPlayer();
+        if (player.getBuff() != null) {
+            if (!player.getBuff().nextHour()) {
+                player.getBuff().defectBuff(player);
+                player.setBuff(null);
+            }
         }
     }
 
@@ -278,6 +291,12 @@ public class TimeAndDate {
 
     public TimeAndDate copy() {
         return new TimeAndDate(day, hour, minute, season, year);
+    }
+
+    public void resetDay() {
+        delta = 0;
+        minute = 0;
+        hour = 9;
     }
 }
 
