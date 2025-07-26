@@ -3,6 +3,7 @@ package io.github.some_example_name.common.model;
 import com.badlogic.gdx.utils.Timer;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import io.github.some_example_name.client.GameClient;
+import io.github.some_example_name.client.view.GameView;
 import io.github.some_example_name.common.model.structure.stores.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -64,7 +65,8 @@ public class Game implements Serializable {
         }, 2.5f);
     }
 
-    public void startDayEvents() {
+    public void startDayEvents(int tomorrowWeatherByServer) {
+        App.getInstance().getCurrentGame().getTimeAndDate().resetDay();
         App.getInstance().getCurrentGame().getTimeAndDate().setWeatherSprite(
             App.getInstance().getCurrentGame().getVillage().getTomorrowWeather()
         );
@@ -92,15 +94,11 @@ public class Game implements Serializable {
         }
         giveRewardToLevelThreeFriends();
         manageHarvest();
-        TimeAndDate timeAndDate = this.getTimeAndDate();
         Weather tomorrowWeather = this.getVillage().getTomorrowWeather();
         Weather weather = this.getVillage().getWeather();
         this.getVillage().setWeather(tomorrowWeather);
+        this.getVillage().setTomorrowWeather(Weather.values()[tomorrowWeatherByServer]);
         Random random = new Random();
-        do {
-            tomorrowWeather = Weather.values()[random.nextInt(0, 4)];
-        } while (!tomorrowWeather.getSeasons().contains(timeAndDate.getSeason()));
-        this.getVillage().setTomorrowWeather(tomorrowWeather);
         if (this.getVillage().getWeather() == Weather.STORMY) {
             for (Farm farm : this.village.getFarms()) {
                 for (int i = 0; i < 3; i++) {
@@ -176,6 +174,7 @@ public class Game implements Serializable {
                 player.setDaysOfSadness(player.getDaysOfSadness() - 1);
             }
         }
+        GameView.captureInput = true;
         Timer.schedule(new Timer.Task() {
             @Override
             public void run() {

@@ -284,5 +284,11 @@ public class TimeAndDate {
     public TimeAndDate copy() {
         return new TimeAndDate(day, hour, minute, season, year);
     }
+
+    public void resetDay() {
+        delta = 0;
+        minute = 0;
+        hour = 9;
+    }
 }
 

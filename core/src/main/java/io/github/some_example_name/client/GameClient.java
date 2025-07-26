@@ -104,7 +104,9 @@ public class GameClient {
                                 obj.getAsJsonObject("body").get("minutes").getAsInt()
                             ));
                         } else if (obj.get("action").getAsString().equals("ready_for_sleep")) {
-                            Gdx.app.postRunnable(() -> App.getInstance().getCurrentGame().startDayEvents());
+                            Gdx.app.postRunnable(() -> App.getInstance().getCurrentGame().startDayEvents(
+                                obj.getAsJsonObject("body").get("tomorrowWeather").getAsInt()
+                            ));
                         } else if (obj.get("action").getAsString().equals("_thor")) {
                             Gdx.app.postRunnable(
                                 () -> App.getInstance().getCurrentGame().getVillage().getWeather().thunderBolt(
@@ -114,7 +116,7 @@ public class GameClient {
                             );
                         } else if (obj.get("action").getAsString().equals("_set_weather")) {
                             App.getInstance().getCurrentGame().getVillage().setTomorrowWeather(
-                                Weather.valueOf(obj.getAsJsonObject("body").get("weather").getAsString())
+                                Weather.valueOf(obj.getAsJsonObject("body").get("weather").getAsString().toUpperCase())
                             );
                         }
                     } catch (JsonParseException e) {
@@ -186,11 +188,16 @@ public class GameClient {
         try {
             out = new PrintWriter(socket.getOutputStream(), true);
             in  = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            Weather tomorrowWeather;
+            Random random = new Random();
+            do {
+                tomorrowWeather = Weather.values()[random.nextInt(0, 4)];
+            } while (!tomorrowWeather.getSeasons().contains(App.getInstance().getCurrentGame().getTimeAndDate().getSeason()));
 
             Map<String, Object> msg = Map.of(
                 "action", "ready_for_sleep",
                 "id", Session.getCurrentUser().getUsername(),
-                "body", Map.of()
+                "body", Map.of("tomorrowWeather", tomorrowWeather.ordinal())
             );
 
             out.println(GSON.toJson(msg));
