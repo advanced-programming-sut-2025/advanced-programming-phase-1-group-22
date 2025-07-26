@@ -300,8 +300,6 @@ public class CameraViewController {
                 gameMenuController.C_AddItem("fish smoker recipe", "1");
                 gameMenuController.C_AddItem("mystic tree seed recipe", "1");
                 gameMenuController.C_AddItem("fiber", "60");
-            }
-            if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_6)) {
                 gameMenuController.C_AddItem("fried egg recipe", "1");
                 gameMenuController.C_AddItem("baked fish recipe", "1");
                 gameMenuController.C_AddItem("salad recipe", "1");
@@ -323,6 +321,8 @@ public class CameraViewController {
                 gameMenuController.C_AddItem("miner's treat recipe", "1");
                 gameMenuController.C_AddItem("triple shot espresson recipe", "1");
                 gameMenuController.C_AddItem("triple shot espresson recipe", "1");
+            }
+            if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_6)) {
 
             }
             if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_7)) {
@@ -330,9 +330,10 @@ public class CameraViewController {
             }
             if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_8)) {
                 gameMenuController.C_AddItem("bee_house", "1");
+                gameMenuController.placeItem("bee_house", "south");
             }
             if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_9)) {
-                gameMenuController.placeItem("bee_house", "south");
+
             }
             if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_0)) {
                 gameMenuController.C_AddItem("flower", "2");

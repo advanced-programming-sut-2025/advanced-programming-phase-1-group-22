@@ -14,14 +14,11 @@ import io.github.some_example_name.common.model.structure.Structure;
 @NoArgsConstructor
 public class Seed extends Structure implements Salable {
     private SeedType seedType;
-    private Texture texture;
-    private Sprite sprite;
+    private transient Texture texture;
+    private transient Sprite sprite;
 
     public Seed(SeedType seedType) {
         this.seedType = seedType;
-        this.texture = seedType.getTexture();
-        this.sprite = new Sprite(seedType.getTexture());
-        this.sprite.setSize(App.tileWidth/2f,App.tileHeight/2f);
     }
 
     @Override
@@ -40,5 +37,21 @@ public class Seed extends Structure implements Salable {
     @Override
     public Seed copy() {
         return new Seed(seedType);
+    }
+
+    public Sprite getSprite() {
+        if (sprite == null) init();
+        return sprite;
+    }
+
+    public Texture getTexture() {
+        if (texture == null) init();
+        return texture;
+    }
+
+    private void init() {
+        this.texture = seedType.getTexture();
+        this.sprite = new Sprite(seedType.getTexture());
+        this.sprite.setSize(App.tileWidth/2f,App.tileHeight/2f);
     }
 }

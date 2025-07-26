@@ -106,7 +106,7 @@ public class PlayerController {
 
     private void updatePlayerPosition(Player player) {
         Map<String, Object> msg = Map.of(
-            "action", "update_player_position",
+            "action", "=update_player_position",
             "id", player.getUser().getUsername(),
             "body", Map.of("position_x", player.getTiles().get(0).getX(),
                 "position_y", player.getTiles().get(0).getY())

@@ -10,6 +10,7 @@ import io.github.some_example_name.common.model.dto.SpriteHolder;
 import io.github.some_example_name.common.utils.App;
 import io.github.some_example_name.common.utils.GameAsset;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import io.github.some_example_name.common.model.products.TreesAndFruitsAndSeeds.MadeProduct;
@@ -21,6 +22,7 @@ import java.util.List;
 
 @Getter
 @ToString
+@NoArgsConstructor
 public class Craft extends Structure implements Salable {
     private Integer id;
     private CraftType craftType;
@@ -28,10 +30,10 @@ public class Craft extends Structure implements Salable {
     private MadeProduct madeProduct;
     private TimeAndDate ETA;
     private TimeAndDate startTime;
-    private SpriteHolder mainSprite;
-    private SpriteHolder processContainer;
-    private SpriteHolder processed;
-    private HashMap<Salable, Integer> ingredients = new HashMap<>();
+    private transient SpriteHolder mainSprite;
+    private transient SpriteHolder processContainer;
+    private transient SpriteHolder processed;
+    private transient HashMap<Salable, Integer> ingredients = new HashMap<>();
 
     public Craft(CraftType craftType, MadeProduct madeProduct, TimeAndDate ETA) {
         this.craftType = craftType;

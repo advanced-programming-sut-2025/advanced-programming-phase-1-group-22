@@ -4,23 +4,22 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import io.github.some_example_name.common.utils.App;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import io.github.some_example_name.common.model.Salable;
 import io.github.some_example_name.common.model.structure.Structure;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class AnimalProduct extends Structure implements Salable {
     private AnimalProductType animalProductType;
     private ProductQuality productQuality = ProductQuality.NORMAL;
-    private Texture texture;
-    private Sprite sprite;
+    private transient Texture texture;
+    private transient Sprite sprite;
 
     public AnimalProduct(AnimalProductType animalProductType) {
         this.animalProductType = animalProductType;
-        this.texture = animalProductType.getTexture();
-        this.sprite = new Sprite(animalProductType.getTexture());
-        this.sprite.setSize(App.tileWidth,App.tileHeight);
     }
 
     @Override
@@ -39,5 +38,21 @@ public class AnimalProduct extends Structure implements Salable {
     @Override
     public AnimalProduct copy() {
         return new AnimalProduct(this.animalProductType);
+    }
+
+    public Texture getTexture() {
+        if (texture == null) init();
+        return texture;
+    }
+
+    public Sprite getSprite() {
+        if (sprite == null) init();
+        return sprite;
+    }
+
+    private void init() {
+        this.texture = animalProductType.getTexture();
+        this.sprite = new Sprite(animalProductType.getTexture());
+        this.sprite.setSize(App.tileWidth,App.tileHeight);
     }
 }

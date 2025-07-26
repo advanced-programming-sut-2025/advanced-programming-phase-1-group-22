@@ -18,6 +18,7 @@ import io.github.some_example_name.common.model.enums.SecurityQuestion;
 import io.github.some_example_name.common.model.enums.Weather;
 import io.github.some_example_name.client.service.ClientService;
 import io.github.some_example_name.common.model.*;
+import io.github.some_example_name.common.model.records.Response;
 import io.github.some_example_name.common.model.structure.Structure;
 import io.github.some_example_name.common.utils.App;
 import io.github.some_example_name.common.variables.Session;
@@ -27,10 +28,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.lang.reflect.Type;
+import java.lang.reflect.*;
 import java.net.Socket;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class GameClient {
     private static final String SERVER_ADDRESS = "localhost";
@@ -140,28 +140,17 @@ public class GameClient {
                             App.getInstance().getCurrentGame().getVillage().setTomorrowWeather(
                                 Weather.valueOf(obj.getAsJsonObject("body").get("weather").getAsString().toUpperCase())
                             );
-                        } else if (obj.get("action").getAsString().equals("update_player_position")) {
+                        } else if (obj.get("action").getAsString().equals("=update_player_position")) {
                             String username = obj.get("id").getAsString();
                             int position_x = obj.getAsJsonObject("body").get("position_x").getAsInt();
                             int position_Y = obj.getAsJsonObject("body").get("position_y").getAsInt();
                             service.handleUpdatePosition(username, position_x, position_Y);
-                        }else if (obj.get("action").getAsString().equals("update tile")){
+                        } else if (obj.get("action").getAsString().equals("=update_tile")){
                             JsonObject tileObject = obj.getAsJsonObject("body").get("tile").getAsJsonObject();
                             Tile tile = GSON.fromJson(tileObject,Tile.class);
                             service.updateTileState(tile);
-                        }
-                        else if (obj.get("action").getAsString().equals(StructureUpdateState.ADD.getName())){
-                            JsonNode object = objectMapper.readTree(serverMessage);
-                            JsonNode structureJson = object.get("body").get("structure");
-                            Structure structure = null;
-                            try {
-                                structure = objectMapper.treeToValue(structureJson,Structure.class);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                            Boolean inFarm = object.get("body").get("inFarm").asBoolean();
-                            String username = object.get("id").asText();
-                            service.handleAddStructure(structure, username, inFarm);
+                        } else if (obj.get("action").getAsString().equals(StructureUpdateState.ADD.getName())){
+                            decodeStructure(obj.getAsJsonObject("body"));
                         } else if (obj.get("action").getAsString().equals(StructureUpdateState.DELETE.getName())){
                             JsonArray jsonTiles = obj.getAsJsonObject("body").get("tiles").getAsJsonArray();
                             Type listType = new TypeToken<List<Tile>>(){}.getType();
@@ -229,20 +218,133 @@ public class GameClient {
                         "inFarm",inFarm)
                 );
                 out.println(GSON.toJson(msg));
-            }else {
-                JsonNode structureJson = objectMapper.valueToTree(structure);
-
+            } else {
                 Map<String, Object> msg = Map.of(
                     "action", state.getName(),
                     "id", Session.getCurrentUser().getUsername(),
-                    "body", Map.of("structure",structureJson,
-                        "inFarm",inFarm)
+                    "body", encodeStructure(structure)
                 );
-                out.println(objectMapper.writeValueAsString(msg));
+                out.println(GSON.toJson(msg));
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private Object decodeStructure(JsonObject body) {
+        Object obj;
+        try {
+            Class<?> clazz = Class.forName(body.get("!class").getAsString());
+            Constructor<?> constructor = clazz.getConstructor();
+            obj = constructor.newInstance();
+            if (Structure.class.isAssignableFrom(clazz)) {
+                putBackTiles((Structure) obj, body);
+            }
+            for (Map.Entry<String, JsonElement> entry : body.entrySet()) {
+                if (entry.getKey().charAt(0) == '!') continue;
+                Field field = findField(clazz, entry.getKey());
+                if (field == null) continue;
+                field.setAccessible(true);
+                Class<?> fieldType = field.getType();
+                if (fieldType.equals(int.class) || fieldType.equals(Integer.class)) {
+                    field.set(obj, entry.getValue().getAsInt());
+                } else if (fieldType.equals(boolean.class) || fieldType.equals(Boolean.class)) {
+                    field.set(obj, entry.getValue().getAsBoolean());
+                } else if (fieldType.equals(String.class)) {
+                    field.set(obj, entry.getValue().getAsString());
+                } else if (fieldType.equals(float.class) || fieldType.equals(Float.class)) {
+                    field.set(obj, entry.getValue().getAsFloat());
+                } else if (fieldType.equals(double.class) || fieldType.equals(Double.class)) {
+                    field.set(obj, entry.getValue().getAsDouble());
+                } else if (fieldType.isEnum()) {
+                    field.set(obj, fieldType.getEnumConstants()[entry.getValue().getAsInt()]);
+                } else {
+                    field.set(obj, decodeStructure(entry.getValue().getAsJsonObject()));
+                }
+            }
+        } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException |
+            InstantiationException | IllegalAccessException e ) {
+            e.printStackTrace();
+            return null;
+        }
+        return obj;
+    }
+
+    private Field findField(Class<?> clazz, String fieldName) {
+        if (clazz.equals(Object.class)) return null;
+        try {
+            return clazz.getDeclaredField(fieldName);
+        } catch (NoSuchFieldException e) {
+            return findField(clazz.getSuperclass(), fieldName);
+        }
+    }
+
+
+    private Map<String, Object> encodeStructure(Object object) {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("!class", object.getClass().getName());
+        if (object instanceof Structure) {
+            putTiles(map, (Structure) object);
+        }
+        Class<?> clazz = object.getClass();
+        while (clazz != Object.class && clazz != Structure.class) {
+            for (Field field : clazz.getDeclaredFields()) {
+                if (Modifier.isTransient(field.getModifiers())) continue;
+                field.setAccessible(true);
+                try {
+                    Class<?> fieldType = field.getType();
+                    Object obj = field.get(object);
+                    if (obj == null) continue;
+                    if (fieldType.equals(int.class) || fieldType.equals(Integer.class) ||
+                        fieldType.equals(boolean.class) || fieldType.equals(Boolean.class) ||
+                        fieldType.equals(String.class) || fieldType.equals(float.class) ||
+                        fieldType.equals(Float.class) || fieldType.equals(double.class) ||
+                        fieldType.equals(Double.class)) {
+                        map.put(field.getName(), obj);
+                    } else if (fieldType.isEnum()) {
+                        map.put(field.getName(), ((Enum<?>) obj).ordinal());
+                    } else {
+                        map.put(field.getName(), encodeStructure(obj));
+                    }
+                } catch (IllegalAccessException ignored) {}
+            }
+            clazz = clazz.getSuperclass();
+        }
+        return map;
+    }
+
+
+    private void putBackTiles(Structure obj, JsonObject body) {
+        Tile[][] tiles = App.getInstance().getCurrentGame().getTiles();
+        for (int i = 0; i < body.get("!tiles").getAsJsonArray().size();) {
+            Tile tile = tiles[body.get("!tiles").getAsJsonArray().get(i++).getAsInt()]
+                [body.get("!tiles").getAsJsonArray().get(i++).getAsInt()];
+            obj.getTiles().add(tile);
+        }
+        obj.setIsPickable(body.get("!isPickable").getAsBoolean());
+        if (obj.getTiles().isEmpty()) return;
+        Farm farm = null;
+        for (Farm farm1 : App.getInstance().getCurrentGame().getVillage().getFarms()) {
+            if (farm1.isPairInFarm(new Pair(obj.getTiles().getFirst().getX(), obj.getTiles().getFirst().getY()))) {
+                farm = farm1;
+                break;
+            }
+        }
+        if (farm == null) {
+            App.getInstance().getCurrentGame().getVillage().getStructures().add(obj);
+        } else {
+            farm.getStructures().add(obj);
+        }
+    }
+
+    private void putTiles(Map<String, Object> map, Structure structure) {
+        ArrayList<Integer> list = new ArrayList<>();
+        for (Tile tile : structure.getTiles()) {
+            list.add(tile.getX());
+            list.add(tile.getY());
+        }
+        map.put("!tiles", list);
+        map.put("!isPickable", structure.getIsPickable());
     }
 
     public void updateTileState(Tile tile){
@@ -251,7 +353,7 @@ public class GameClient {
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
             Map<String, Object> msg = Map.of(
-                "action", "update tile",
+                "action", "=update_tile",
                 "id", Session.getCurrentUser().getUsername(),
                 "body", Map.of("tile",tile)
             );

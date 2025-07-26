@@ -13,17 +13,30 @@ import lombok.Setter;
 @Setter
 public class NPC extends Actor {
     private NPCType type;
-    private Sprite sprite;
+    private transient Sprite sprite;
     private boolean haveDialog = false;
-    private Sprite spriteDialogBox;
+    private transient Sprite spriteDialogBox;
     private boolean giftedToday = false;
 
     public NPC(NPCType type) {
         this.type = type;
+    }
+
+    private void init() {
         this.sprite = new Sprite(type.getTextureCharacter());
         this.sprite.setSize((float) App.tileWidth, (float) (App.tileHeight * 1.5));
         this.spriteDialogBox = new Sprite(GameAsset.DIALOG_BOX);
         this.spriteDialogBox.setSize(App.tileWidth / 2f, App.tileHeight / 2f);
+    }
+
+    public Sprite getSprite() {
+        if (sprite == null) init();
+        return sprite;
+    }
+
+    public Sprite getSpriteDialogBox() {
+        if (spriteDialogBox == null) init();
+        return spriteDialogBox;
     }
 
     @Override

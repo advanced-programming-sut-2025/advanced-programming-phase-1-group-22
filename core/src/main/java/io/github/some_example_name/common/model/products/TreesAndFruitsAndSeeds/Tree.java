@@ -36,7 +36,7 @@ public class Tree extends HarvestAbleProduct {
     private List<SundryType> fertilizes = new ArrayList<>();
     private Integer numberOfWithoutWaterDays = 0;
     private Integer numberOfStages = 0;
-    private ArrayList<SpriteHolder> sprites = new ArrayList<>();
+    private transient ArrayList<SpriteHolder> sprites = new ArrayList<>();
     private int spriteSituation = 0;
 
     public Tree(TreeType treeType) {
@@ -46,9 +46,6 @@ public class Tree extends HarvestAbleProduct {
         } else {
             numberOfStages = 0;
         }
-        this.sprites.add(new SpriteHolder(new Sprite(treeType.getTextures().get(0))));
-        this.sprites.get(0).setOffset(new Tuple<>(-0.5f, 0f));
-        this.sprites.get(0).setSize(App.tileWidth * 2,App.tileHeight * 3);
     }
 
     public void burn() {
@@ -208,6 +205,11 @@ public class Tree extends HarvestAbleProduct {
 
     @Override
     public ArrayList<SpriteHolder> getSprites() {
+        if (sprites.isEmpty()) {
+            this.sprites.add(new SpriteHolder(new Sprite(treeType.getTextures().get(0))));
+            this.sprites.get(0).setOffset(new Tuple<>(-0.5f, 0f));
+            this.sprites.get(0).setSize(App.tileWidth * 2, App.tileHeight * 3);
+        }
         if (this.isBurn && spriteSituation != -1){
             this.sprites.get(0).setSprite(new Sprite(this.treeType.getBurnTexture()));
             spriteSituation = -1;
