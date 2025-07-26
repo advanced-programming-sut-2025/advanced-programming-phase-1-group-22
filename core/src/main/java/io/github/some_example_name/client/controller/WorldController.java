@@ -307,7 +307,7 @@ public class WorldController {
         }
 
         for (Farm farm : game.getVillage().getFarms()) {
-            for (Structure structure : farm.getStructures()) {
+            for (Structure structure : farm.getStructures().toArray(new Structure[0])) {
                 if (isStructureInBond(structure)) {
                     if (structure.getSprite() != null) {
                         if (structure instanceof Lake lake) {

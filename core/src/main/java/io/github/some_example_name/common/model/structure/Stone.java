@@ -13,7 +13,13 @@ public class Stone extends Structure{
 
     public Stone(StoneType stoneType) {
         this.stoneType = stoneType;
-        this.sprite = new Sprite(stoneType.getTexture());
-        this.sprite.setSize(App.tileWidth * stoneType.getWidth(),App.tileHeight * stoneType.getLength());
+    }
+
+    public Sprite getSprite() {
+        if (sprite == null) {
+            this.sprite = new Sprite(stoneType.getTexture());
+            this.sprite.setSize(App.tileWidth * stoneType.getWidth(),App.tileHeight * stoneType.getLength());
+        }
+        return sprite;
     }
 }

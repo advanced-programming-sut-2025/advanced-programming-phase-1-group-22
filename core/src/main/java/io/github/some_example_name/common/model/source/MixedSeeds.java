@@ -4,20 +4,20 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import io.github.some_example_name.common.utils.App;
 import io.github.some_example_name.common.utils.GameAsset;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import io.github.some_example_name.common.model.Salable;
 import io.github.some_example_name.common.model.structure.Structure;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class MixedSeeds extends Structure implements Salable {
     private MixedSeedsType mixedSeedsType;
-    private Sprite sprite;
+    private transient Sprite sprite;
 
     public MixedSeeds(MixedSeedsType mixedSeedsType) {
         this.mixedSeedsType = mixedSeedsType;
-        this.sprite = new Sprite(GameAsset.MIXED_SEEDS);
-        this.sprite.setSize(App.tileWidth/2f,App.tileHeight/2f);
     }
 
     @Override
@@ -36,5 +36,13 @@ public class MixedSeeds extends Structure implements Salable {
     @Override
     public MixedSeeds copy() {
         return new MixedSeeds(mixedSeedsType);
+    }
+
+    public Sprite getSprite() {
+        if (sprite == null) {
+            this.sprite = new Sprite(GameAsset.MIXED_SEEDS);
+            this.sprite.setSize(App.tileWidth/2f,App.tileHeight/2f);
+        }
+        return sprite;
     }
 }

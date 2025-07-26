@@ -4,9 +4,9 @@ import lombok.Getter;
 
 @Getter
 public enum StructureUpdateState {
-    ADD("add structure"),
-    UPDATE("update structure"),
-    DELETE("delete structure");
+    ADD("=add_structure"),
+    UPDATE("=update_structure"),
+    DELETE("=delete_structure");
 
     private final String name;
 

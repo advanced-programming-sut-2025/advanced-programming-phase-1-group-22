@@ -39,9 +39,7 @@ public class Player extends Actor implements JsonPreparable {
 	private User user;
 	private Integer energy;
 	private Integer maxEnergy;
-	private Integer energyPerTurn;
 	private Boolean energyIsInfinite = false;
-	private Integer maxEnergyPerTurn;
 	private Integer daysOfSadness = 0;
 	private BackPack inventory;
 	private Buff buff;
@@ -84,8 +82,6 @@ public class Player extends Actor implements JsonPreparable {
 		this.user = user;
 		this.energy = 200;
 		this.maxEnergy = 200;
-		this.energyPerTurn = 50;
-		this.maxEnergyPerTurn = 50;
 		this.inventory = new BackPack(BackPackType.NORMAL_BACKPACK);
 		for (Ability ability : Ability.values()) {
 			abilities.put(ability, 0);
@@ -134,7 +130,6 @@ public class Player extends Actor implements JsonPreparable {
 		if (energyIsInfinite) {
 			energy = Math.max(maxEnergy, energy + currentEnergy);
 		} else {
-			energyPerTurn += currentEnergy;
 			energy = Math.min(Math.max(0, energy + currentEnergy), maxEnergy);
 		}
 		if (energy <= 0){

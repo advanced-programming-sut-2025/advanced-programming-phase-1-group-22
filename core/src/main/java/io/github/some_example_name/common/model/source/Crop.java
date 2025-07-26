@@ -44,9 +44,6 @@ public class Crop extends HarvestAbleProduct implements Source {
 		} else {
 			numberOfStages = 0;
 		}
-        this.texture = cropType.getTextures().get(cropType.getTextures().size() - 1);
-        this.sprite = new Sprite(cropType.getTextures().get(0));
-        this.sprite.setSize(App.tileWidth / 2f, App.tileHeight / 2f);
 	}
 
 	@Override
@@ -227,6 +224,7 @@ public class Crop extends HarvestAbleProduct implements Source {
     @JsonIgnore
     @Override
     public Sprite getSprite() {
+        if (sprite == null) init();
         if (this.cropType.isForaging()) {
             return this.sprite;
         }
@@ -239,5 +237,16 @@ public class Crop extends HarvestAbleProduct implements Source {
     @Override
     public Crop copy() {
         return new Crop(cropType);
+    }
+
+    public Texture getTexture() {
+        if (texture == null) init();
+        return texture;
+    }
+
+    private void init() {
+        this.texture = cropType.getTextures().get(cropType.getTextures().size() - 1);
+        this.sprite = new Sprite(cropType.getTextures().get(0));
+        this.sprite.setSize(App.tileWidth / 2f, App.tileHeight / 2f);
     }
 }

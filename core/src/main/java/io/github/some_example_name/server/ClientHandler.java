@@ -60,9 +60,7 @@ public class ClientHandler extends Thread {
                 try {
                     JsonObject obj = JsonParser.parseString(message).getAsJsonObject();
 
-                    if (obj.get("action").getAsString().charAt(0) == '_') {
-                        gameServer.sendAll(message);
-                    } else if (obj.get("action").getAsString().equals("connected")) {
+                    if (obj.get("action").getAsString().equals("connected")) {
 //                        String username = obj.get("id").getAsString();
                         System.out.println("Client Connected");
 //                        send("Game state updated for " + username);
@@ -114,20 +112,14 @@ public class ClientHandler extends Thread {
                             )
                         );
                         send(GSON.toJson(msg));
-                    } else if (obj.get("action").getAsString().equals("update_player_position")) {
-                        String username = obj.get("id").getAsString();
-                        gameServer.sendAllBut(GSON.toJson(obj), username);
-                    } else if (obj.get("action").getAsString().equals("update tile")){
-                        String username = obj.get("id").getAsString();
-                        gameServer.sendAllBut(GSON.toJson(obj), username);
-                    } else if (obj.get("action").getAsString().equals(StructureUpdateState.ADD.getName()) ||
-                        obj.get("action").getAsString().equals(StructureUpdateState.DELETE.getName()) ||
-                        obj.get("action").getAsString().equals(StructureUpdateState.UPDATE.getName())){
-                        String username = obj.get("id").getAsString();
-                        gameServer.sendAllBut(message,username);
                     } else if (obj.get("action").getAsString().equals("ready_for_sleep")) {
                         ready = true;
                         if (gameServer.isReady()) gameServer.sendAll(message);
+                    } else if (obj.get("action").getAsString().charAt(0) == '_') {
+                        gameServer.sendAll(message);
+                    } else if (obj.get("action").getAsString().charAt(0) == '=') {
+                        String username = obj.get("id").getAsString();
+                        gameServer.sendAllBut(GSON.toJson(obj), username);
                     }
                 } catch (JsonParseException e) {
                     System.out.println("Received non-JSON message: " + message);

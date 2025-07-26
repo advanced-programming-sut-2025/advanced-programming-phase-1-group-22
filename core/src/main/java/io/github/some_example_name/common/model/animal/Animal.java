@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import io.github.some_example_name.common.utils.App;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import io.github.some_example_name.common.model.products.AnimalProductType;
 import io.github.some_example_name.common.model.products.ProductQuality;
@@ -19,26 +20,24 @@ import java.util.Random;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class Animal extends Structure implements Salable {
     private AnimalType animalType;
     private AnimalProduct todayProduct;
     private Integer relationShipQuality = 0;
     private Boolean isFeed = false;
     private Boolean pet = false;
-    private final String name;
+    private String name;
     private Boolean isAnimalStayOutAllNight = false;
     private Player owner;
-    private Texture texture;
-    private Sprite sprite;
+    private transient Texture texture;
+    private transient Sprite sprite;
     private Queue<Vector2> movementPath = new LinkedList<>();
     private float timeSinceLastMove = 0f;
 
     public Animal(AnimalType animalType, String name) {
         this.animalType = animalType;
         this.name = name;
-        this.texture = animalType.getTexture();
-        this.sprite = new Sprite(animalType.getTexture());
-        this.sprite.setSize(App.tileWidth, App.tileHeight);
     }
 
     @Override
@@ -93,5 +92,21 @@ public class Animal extends Structure implements Salable {
         double R = random.nextDouble(0.5, 1.5);
         double probability = (this.relationShipQuality + (150 * R)) / 1500;
         return probability > 0.5;
+    }
+
+    public Sprite getSprite() {
+        if (sprite == null) init();
+        return sprite;
+    }
+
+    public Texture getTexture() {
+        if (texture == null) init();
+        return texture;
+    }
+
+    private void init() {
+        this.texture = animalType.getTexture();
+        this.sprite = new Sprite(animalType.getTexture());
+        this.sprite.setSize(App.tileWidth, App.tileHeight);
     }
 }

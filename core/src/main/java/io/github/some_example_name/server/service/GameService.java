@@ -1301,6 +1301,7 @@ public class GameService {
         setScareCrowAndSprinklerForAll();
         tile.setIsFilled(true);
         tile.setIsPassable(false);
+        GameClient.getInstance().updateStructureState((Structure) product, StructureUpdateState.ADD, true);
         return new Response(product.getName() + " is put on the ground.", true);
     }
 

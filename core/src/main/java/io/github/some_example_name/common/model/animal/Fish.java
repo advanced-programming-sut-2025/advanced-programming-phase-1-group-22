@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import io.github.some_example_name.common.utils.App;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import io.github.some_example_name.common.model.Salable;
@@ -15,10 +16,11 @@ import java.util.Random;
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
 public class Fish extends Structure implements Salable {
     private FishType fishType;
-    private Texture texture;
-    private Sprite sprite;
+    private transient Texture texture;
+    private transient Sprite sprite;
     private Integer containingEnergy = 20; //TODO Energy not found
     private ProductQuality productQuality;
     private int lastDy;
@@ -32,17 +34,11 @@ public class Fish extends Structure implements Salable {
 
     public Fish(FishType fishType) {
         this.fishType = fishType;
-        this.texture = fishType.getTexture();
-        this.sprite = new Sprite(fishType.getTexture());
-        this.sprite.setSize(App.tileWidth, App.tileHeight);
     }
 
     public Fish(FishType fishType, ProductQuality productQuality) {
         this.fishType = fishType;
         this.productQuality = productQuality;
-        this.texture = fishType.getTexture();
-        this.sprite = new Sprite(fishType.getTexture());
-        this.sprite.setSize(App.tileWidth, App.tileHeight);
     }
 
 	@Override
@@ -149,5 +145,21 @@ public class Fish extends Structure implements Salable {
             this.lastDy = 0;
             return positionY;
         }
+    }
+
+    public Texture getTexture() {
+        if (texture == null) init();
+        return texture;
+    }
+
+    public Sprite getSprite() {
+        if (sprite == null) init();
+        return sprite;
+    }
+
+    private void init() {
+        this.texture = fishType.getTexture();
+        this.sprite = new Sprite(fishType.getTexture());
+        this.sprite.setSize(App.tileWidth, App.tileHeight);
     }
 }

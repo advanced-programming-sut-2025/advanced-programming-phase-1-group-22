@@ -29,17 +29,6 @@ public class ClientService {
         }
     }
 
-    public void handleAddStructure(Structure structure, String username, Boolean inFarm) {
-        if (inFarm) {
-            Player player = getPlayerByUsername(username);
-            Farm farm = getPlayerInWitchFarm(player);
-            if (farm == null) return;
-            farm.getStructures().add(structure);
-        } else {
-            App.getInstance().getCurrentGame().getVillage().getStructures().add(structure);
-        }
-    }
-
     public void handleDeleteStructure(List<Tile> tiles) {
         Structure structure = getStructureByTile(tiles);
         if (structure == null) return;
