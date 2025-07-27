@@ -4,25 +4,21 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator;
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import io.github.some_example_name.client.controller.mainMenu.StartGameMenuController;
 import io.github.some_example_name.common.model.Farm;
-import io.github.some_example_name.common.model.Game;
-import io.github.some_example_name.common.model.User;
-import io.github.some_example_name.common.model.enums.Gender;
-import io.github.some_example_name.common.model.enums.SecurityQuestion;
 import io.github.some_example_name.common.model.enums.Weather;
 import io.github.some_example_name.client.service.ClientService;
 import io.github.some_example_name.common.model.*;
-import io.github.some_example_name.common.model.records.Response;
+import io.github.some_example_name.common.model.relations.Player;
 import io.github.some_example_name.common.model.structure.Structure;
 import io.github.some_example_name.common.utils.App;
 import io.github.some_example_name.common.variables.Session;
 import io.github.some_example_name.server.service.GameService;
+import io.github.some_example_name.server.service.RelationService;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -104,18 +100,17 @@ public class GameClient {
 
                         JsonObject body = obj.getAsJsonObject("body");
                         if (obj.get("action").getAsString().equals("init_game")) {
-                            JsonObject bodyArray = body;
-                            App.getInstance().getCurrentGame().getVillage().addStoresAndNpcs(bodyArray.getAsJsonArray("stores"));
+                            App.getInstance().getCurrentGame().getVillage().addStoresAndNpcs(body.getAsJsonArray("stores"));
                             StartGameMenuController.getInstance().startGame(
-                                bodyArray.getAsJsonArray("players"),
-                                bodyArray.getAsJsonArray("farms"),
-                                bodyArray.getAsJsonArray("characters")
+                                body.getAsJsonArray("players"),
+                                body.getAsJsonArray("farms"),
+                                body.getAsJsonArray("characters")
                             );
                             for (int i = 0; i < App.getInstance().getCurrentGame().getVillage().getFarms().size(); i++) {
                                 Farm farm = App.getInstance().getCurrentGame().getVillage().getFarms().get(i);
                                 farm.setDoor(
-                                    bodyArray.getAsJsonArray("doors").get(2 * i).getAsInt(),
-                                    bodyArray.getAsJsonArray("doors").get(2 * i + 1).getAsInt()
+                                    body.getAsJsonArray("doors").get(2 * i).getAsInt(),
+                                    body.getAsJsonArray("doors").get(2 * i + 1).getAsInt()
                                 );
                             }
                         } else if (obj.get("action").getAsString().equals("response_choose_farm")) {
@@ -165,6 +160,30 @@ public class GameClient {
                         } else if (obj.get("action").getAsString().equals("_faint")) {
                             String username = obj.get("id").getAsString();
                             service.getPlayerByUsername(username).applyFaint();
+                        } else if (obj.get("action").getAsString().equals("_ask_marriage")) {
+                            Player requester = service.getPlayerByUsername(obj.get("id").getAsString());
+                            Player requested = service.getPlayerByUsername(obj.getAsJsonObject("body")
+                                .get("requested").getAsString());
+                            RelationService.getInstance().handleAskMarriage(requester, requested);
+                        } else if (obj.get("action").getAsString().equals("_handle_flower")) {
+                            Player requester = service.getPlayerByUsername(obj.get("id").getAsString());
+                            Player requested = service.getPlayerByUsername(obj.getAsJsonObject("body")
+                                .get("requested").getAsString());
+                            RelationService.getInstance().drawFlower(requester, requested);
+                        } else if (obj.get("action").getAsString().equals("_handle_hug")) {
+                            Player requester = service.getPlayerByUsername(obj.get("id").getAsString());
+                            Player requested = service.getPlayerByUsername(obj.getAsJsonObject("body")
+                                .get("requested").getAsString());
+                            RelationService.getInstance().handleHug(requester, requested);
+                        } else if (obj.get("action").getAsString().equals("_respond_marriage")) {
+                            Player requester = service.getPlayerByUsername(obj.get("id").getAsString());
+                            Player requested = service.getPlayerByUsername(body.get("requested").getAsString());
+                            if (body.get("response").getAsBoolean()) {
+                                RelationService.getInstance().handleYes(requester, requested);
+                            } else {
+                                RelationService.getInstance().handleNo(requester, requested);
+                            }
+                            RelationService.getInstance().handleHug(requester, requested);
                         } else if (obj.get("action").getAsString().equals(StructureUpdateState.ADD.getName())){
                             decodeStructureAdd(body);
                         } else if (obj.get("action").getAsString().equals(StructureUpdateState.UPDATE.getName())){
@@ -578,6 +597,53 @@ public class GameClient {
                 "body", Map.of()
             );
 
+            out.println(GSON.toJson(msg));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void askMarriage(String username) {
+        handleInteraction(username, "_ask_marriage");
+    }
+
+    private void handleInteraction(String username, String action) {
+        try {
+            out = new PrintWriter(socket.getOutputStream(), true);
+            in  = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+            Map<String, Object> msg = Map.of(
+                "action", action,
+                "id", Session.getCurrentUser().getUsername(),
+                "body", Map.of("requested", username)
+            );
+
+            out.println(GSON.toJson(msg));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void handleFlower(String username) {
+        handleInteraction(username, "_handle_flower");
+    }
+
+
+    public void handleHug(String username) {
+        handleInteraction(username, "_handle_hug");
+    }
+
+    public void respondMarriage(boolean b, String username) {
+        try {
+            out = new PrintWriter(socket.getOutputStream(), true);
+            in  = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+            Map<String, Object> msg = Map.of(
+                "action", "_respond_marriage",
+                "id", Session.getCurrentUser().getUsername(),
+                "body", Map.of("requested", username, "response", b)
+            );
             out.println(GSON.toJson(msg));
         } catch (IOException e) {
             e.printStackTrace();

@@ -24,7 +24,7 @@ import io.github.some_example_name.client.view.GameView;
 
 public class CarryingController {
     private final GameService gameService = new GameService();
-    private final WorldController worldController = new WorldController();
+    private final WorldController worldController = WorldController.getInstance();
 
     public void update(){
         Player currentPlayer = App.getInstance().getCurrentGame().getCurrentPlayer();
@@ -71,7 +71,6 @@ public class CarryingController {
     }
 
     private void placeItem(Salable item, int xTransmit, int yTransmit){
-        WorldController worldController = new WorldController();
         GameService gameService = new GameService();
         Direction direction = Direction.getByXAndY(xTransmit, yTransmit);
         if (direction!=null) worldController.showResponse(gameService.placeItem(item, direction));

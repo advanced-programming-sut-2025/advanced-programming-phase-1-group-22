@@ -39,6 +39,7 @@ import java.util.List;
 import java.util.Random;
 
 public class WorldController {
+    private static WorldController instance;
     private final GameNotifier notifier;
     private GameService gameService = new GameService();
     private ArrayList<SpriteContainer> rainDrops = new ArrayList<>();
@@ -49,6 +50,11 @@ public class WorldController {
     private Direction flowerDirection;
     float delta = 0f;
     private final OrthographicCamera camera = MainGradle.getInstance().getCamera();
+
+    public static WorldController getInstance() {
+        if (instance == null) instance = new WorldController();
+        return instance;
+    }
 
     {
         Random rand = new Random();
@@ -62,7 +68,7 @@ public class WorldController {
         }
     }
 
-    public WorldController() {
+    private WorldController() {
         notifier = new GameNotifier(GameView.stage, GameAsset.SKIN);
     }
 
@@ -415,15 +421,14 @@ public class WorldController {
         return false;
     }
 
-    public void drawFlower(Direction direction) {
+    public void drawFlower(Direction direction, Player requester) {
         flower = new SpriteHolder(new AnimatedSprite(
             new Animation<>(0.1f, new TextureRegion(GameAsset.FLOWER))), new Tuple<>(0.5f,0f));
         flower.getSprite().setScale(0.4f);
         ((AnimatedSprite) flower.getSprite()).setLooping(false);
-        Player player = App.getInstance().getCurrentGame().getCurrentPlayer();
         flower.getSprite().setPosition(
-            (flower.getOffset().getX() + player.getTiles().get(0).getX()) * App.tileWidth,
-            (flower.getOffset().getY() + player.getTiles().get(0).getY()) * App.tileHeight);
+            (flower.getOffset().getX() + requester.getTiles().get(0).getX()) * App.tileWidth,
+            (flower.getOffset().getY() + requester.getTiles().get(0).getY()) * App.tileHeight);
         flowerDirection = direction;
         Timer.schedule(new Timer.Task() {
             @Override
@@ -433,7 +438,7 @@ public class WorldController {
         }, 2);
     }
 
-    public void drawHeart() {
+    public void drawHeart(Player player) {
         heart = new SpriteHolder(new AnimatedSprite(new Animation<>(0.15f, GameAsset.BEATING_HEARTS[0][4],
             GameAsset.BEATING_HEARTS[0][3], GameAsset.BEATING_HEARTS[0][2], GameAsset.BEATING_HEARTS[0][1],
             GameAsset.BEATING_HEARTS[0][0], GameAsset.BEATING_HEARTS[0][1], GameAsset.BEATING_HEARTS[0][2],
@@ -443,7 +448,6 @@ public class WorldController {
         ((AnimatedSprite) heart.getSprite()).setScaleAnimation(scale);
         ((AnimatedSprite) heart.getSprite()).setScaleLooping(false);
         ((AnimatedSprite) heart.getSprite()).setLooping(true);
-        Player player = App.getInstance().getCurrentGame().getCurrentPlayer();
         heart.getSprite().setPosition(
             (heart.getOffset().getX() + player.getTiles().get(0).getX()) * App.tileWidth,
             (heart.getOffset().getY() + player.getTiles().get(0).getY()) * App.tileHeight);
