@@ -335,7 +335,7 @@ public class Farm implements JsonPreparable {
                     } else {
                         int rand = random.nextInt(1, 100);
                         if (rand == 1) {
-                            tiles1[j][k].setIsFilled(false);
+                            tiles1[j][k].setIsFilled(true);
                             tiles2.add(tiles1[j][k]);
                         }
                     }

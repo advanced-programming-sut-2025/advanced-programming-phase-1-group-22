@@ -27,7 +27,7 @@ public enum AnimalType implements Product {
     private final List<AnimalProductType> productList;
     private final Hay food = new Hay();
     private final Boolean isBarnAnimal;
-    private final Texture texture;
+    private final transient Texture texture;
 
     AnimalType(String name,int price, List<AnimalProductType> productList, int productPeriod, boolean isBarnAnimal,Texture texture) {
         this.name = name;
