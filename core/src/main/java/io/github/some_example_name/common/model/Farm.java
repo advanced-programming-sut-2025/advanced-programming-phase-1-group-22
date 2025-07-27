@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.some_example_name.client.GameClient;
+import io.github.some_example_name.common.model.products.HarvestAbleProduct;
 import io.github.some_example_name.common.model.shelter.ShippingBin;
 import io.github.some_example_name.common.model.source.*;
 import io.github.some_example_name.common.model.structure.*;
@@ -51,6 +52,7 @@ public class Farm implements JsonPreparable {
     private Integer farmIndex = 0;
     //    @JsonManagedReference
     private Fridge fridge = new Fridge();
+    private HarvestAbleProduct attackedProduct;
 
 
     @JsonProperty("structureWrappers")

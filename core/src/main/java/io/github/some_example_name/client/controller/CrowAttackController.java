@@ -18,9 +18,9 @@ import java.util.*;
 public class CrowAttackController {
     private final Map<Farm, CrowAttack> crowAttacks = new HashMap<>();
 
-    public CrowAttackController(){
+    public CrowAttackController() {
         for (Farm farm : App.getInstance().getCurrentGame().getVillage().getFarms()) {
-            crowAttacks.put(farm,null);
+            crowAttacks.put(farm, null);
         }
     }
 
@@ -31,20 +31,38 @@ public class CrowAttackController {
 //            if (crowAttack != null) {
 //                crowAttack.draw(MainGradle.getInstance().getBatch());
 //                crowAttack.update(Gdx.graphics.getDeltaTime());
-//                if (crowAttack.isFinished()) {
-//                    if (crowAttack.getHarvestAbleProduct() instanceof Tree tree) {
-//                        tree.setAttackByCrow(true);
-//                        GameClient.getInstance().updateStructureState(tree, StructureUpdateState.UPDATE, true, tree.getTiles().get(0));
-//                    } else {
-//                        Crop crop = (Crop) crowAttack.getHarvestAbleProduct();
-//                        App.getInstance().getCurrentGame().getVillage().removeStructure(crop);
-//                        GameClient.getInstance().updateStructureState(crop, StructureUpdateState.UPDATE, true, crop.getTiles().get(0));
+//                if (!farm.getPlayers().isEmpty() && farm.getPlayers().get(0).equals(App.getInstance().getCurrentGame().getCurrentPlayer())) {
+//                    if (crowAttack.isFinished()) {
+//                        if (crowAttack.getHarvestAbleProduct() instanceof Tree tree) {
+//                            tree.setAttackByCrow(true);
+//                            GameClient.getInstance().updateStructureState(tree, StructureUpdateState.UPDATE, true, tree.getTiles().get(0));
+//                        } else {
+//                            Crop crop = (Crop) crowAttack.getHarvestAbleProduct();
+//                            App.getInstance().getCurrentGame().getVillage().removeStructure(crop);
+//                            GameClient.getInstance().updateStructureState(crop, StructureUpdateState.DELETE, true, null);
+//                        }
+//                        crowAttacks.put(farm, null);
+//                        farm.setAttackedProduct(null);
 //                    }
-//                    crowAttacks.put(farm, null);
+//                } else {
+//                    if (crowAttack.isFinished()) {
+//                        crowAttacks.put(farm, null);
+//                        farm.setAttackedProduct(null);
+//                    }
 //                }
 //            } else {
-//                if (!farm.getCrowAttackToday()) {
-//                    crowAttack(farm);
+//                if (!farm.getPlayers().isEmpty() && farm.getPlayers().get(0).equals(App.getInstance().getCurrentGame().getCurrentPlayer())) {
+//                    if (!farm.getCrowAttackToday()) {
+//                        crowAttack(farm);
+//                    }
+//                } else {
+//                    if (!farm.getCrowAttackToday() && farm.getAttackedProduct() != null) {
+//                        HarvestAbleProduct harvestAbleProduct = farm.getAttackedProduct();
+//                        CrowAttack newCrowAttack = new CrowAttack(new Vector2(harvestAbleProduct.getTiles().get(0).getX() * App.tileWidth,
+//                            harvestAbleProduct.getTiles().get(0).getY() * App.tileHeight), 4, 10, harvestAbleProduct);
+//                        crowAttacks.put(farm, newCrowAttack);
+//                        System.out.println("put");
+//                    }
 //                }
 //            }
 //        }
@@ -71,7 +89,7 @@ public class CrowAttackController {
                     harvestAbleProduct.getTiles().get(0).getY() * App.tileHeight), 4, 10, harvestAbleProduct);
                 farm.setCrowAttackToday(true);
                 crowAttacks.put(farm, crowAttack);
-                GameClient.getInstance().updateFarmCrowAttack(farm, true);
+                GameClient.getInstance().updateFarmCrowAttack(farm, false, harvestAbleProduct);
             }
         }
     }

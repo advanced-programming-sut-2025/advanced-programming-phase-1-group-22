@@ -10,6 +10,7 @@ import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import io.github.some_example_name.client.controller.mainMenu.StartGameMenuController;
 import io.github.some_example_name.common.model.Farm;
+import io.github.some_example_name.common.model.products.HarvestAbleProduct;
 import io.github.some_example_name.common.model.relations.Player;
 import io.github.some_example_name.common.model.enums.Weather;
 import io.github.some_example_name.client.service.ClientService;
@@ -163,8 +164,13 @@ public class GameClient {
                             service.handleCurrentCarrying((Salable) carrying, username);
                         } else if (obj.get("action").getAsString().equals("=update_farm_crow_attack")) {
                             String farmType = obj.get("farmType").getAsString();
-                            boolean isCrowAttack = body.get("isCrowAttack").getAsBoolean();
-                            service.handleCrowAttack(farmType,isCrowAttack);
+                            boolean isCrowAttack = obj.get("isCrowAttack").getAsBoolean();
+                            if (!isCrowAttack){
+                                Object harvest = decodeStructure(body);
+                                service.handleCrowAttack(farmType, false,(HarvestAbleProduct)harvest);
+                            }else {
+                                service.handleCrowAttack(farmType, true,null);
+                            }
                         }
                     } catch (JsonParseException e) {
                         System.out.println("Received non-JSON: " + serverMessage);
@@ -214,17 +220,27 @@ public class GameClient {
         }
     }
 
-    public void updateFarmCrowAttack(Farm farm, boolean isCrowAttack) {
+    public void updateFarmCrowAttack(Farm farm, boolean AttackToday, HarvestAbleProduct harvestAbleProduct) {
         try {
             out = new PrintWriter(socket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-
-            Map<String, Object> msg = Map.of(
-                "action", "=update_farm_crow_attack",
-                "id", Session.getCurrentUser().getUsername(),
-                "farmType", farm.getFarmType().getName(),
-                "body", Map.of("isCrowAttack", isCrowAttack)
-            );
+            Map<String, Object> msg;
+            if (!AttackToday){
+                msg = Map.of(
+                    "action", "=update_farm_crow_attack",
+                    "id", Session.getCurrentUser().getUsername(),
+                    "farmType", farm.getFarmType().getName(),
+                    "isCrowAttack", false,
+                    "body", encodeStructure(harvestAbleProduct,null)
+                );
+            } else {
+                msg = Map.of(
+                    "action", "=update_farm_crow_attack",
+                    "id", Session.getCurrentUser().getUsername(),
+                    "farmType", farm.getFarmType().getName(),
+                    "isCrowAttack", true
+                );
+            }
 
             out.println(GSON.toJson(msg));
         } catch (IOException e) {
@@ -316,6 +332,49 @@ public class GameClient {
         }
         return obj;
     }
+
+
+    private Object decodeStructure(JsonObject body){
+        Object obj;
+        try {
+            Class<?> clazz = Class.forName(body.get("!class").getAsString());
+            Constructor<?> constructor = clazz.getConstructor();
+            obj = constructor.newInstance();
+            if (Structure.class.isAssignableFrom(clazz)) {
+                updateTiles((Structure) obj,body);
+            }
+            for (Map.Entry<String, JsonElement> entry : body.entrySet()) {
+                if (entry.getKey().charAt(0) == '!') continue;
+                Field field = findField(clazz, entry.getKey());
+                if (field == null) continue;
+                field.setAccessible(true);
+                Class<?> fieldType = field.getType();
+                if (entry.getValue().isJsonNull()) {
+                    field.set(obj, null);
+                } else if (fieldType.equals(int.class) || fieldType.equals(Integer.class)) {
+                    field.set(obj, entry.getValue().getAsInt());
+                } else if (fieldType.equals(boolean.class) || fieldType.equals(Boolean.class)) {
+                    field.set(obj, entry.getValue().getAsBoolean());
+                } else if (fieldType.equals(String.class)) {
+                    field.set(obj, entry.getValue().getAsString());
+                } else if (fieldType.equals(float.class) || fieldType.equals(Float.class)) {
+                    field.set(obj, entry.getValue().getAsFloat());
+                } else if (fieldType.equals(double.class) || fieldType.equals(Double.class)) {
+                    field.set(obj, entry.getValue().getAsDouble());
+                } else if (fieldType.isEnum()) {
+                    field.set(obj, fieldType.getEnumConstants()[entry.getValue().getAsInt()]);
+                } else {
+                    field.set(obj, decodeStructureAdd(entry.getValue().getAsJsonObject()));
+                }
+            }
+        } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException |
+                 InstantiationException | IllegalAccessException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return obj;
+    }
+
 
     private Map<String, Object> encodeObject(Object object) {
         HashMap<String, Object> map = new HashMap<>();

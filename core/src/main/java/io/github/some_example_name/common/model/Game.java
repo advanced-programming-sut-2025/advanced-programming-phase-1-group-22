@@ -114,10 +114,7 @@ public class Game implements Serializable {
         automaticWatering(this.village.getWeather());
         setWeatherCoefficientEveryDay();
         for (Farm farm : this.getVillage().getFarms()) {
-            if (!farm.getPlayers().isEmpty() && farm.getPlayers().get(0).equals(App.getInstance().getCurrentGame().getCurrentPlayer())) {
-                farm.setCrowAttackToday(false);
-                GameClient.getInstance().updateFarmCrowAttack(farm, false);
-            }
+            farm.setCrowAttackToday(false);
         }
         for (Player player : players) {
             if (!player.getIsFainted()) player.goToCottage();
