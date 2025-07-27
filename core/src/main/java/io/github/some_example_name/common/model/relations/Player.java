@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.github.some_example_name.client.GameClient;
 import io.github.some_example_name.common.model.*;
 import io.github.some_example_name.common.model.dto.SpriteHolder;
 import io.github.some_example_name.common.model.source.*;
@@ -118,14 +119,18 @@ public class Player extends Actor implements JsonPreparable {
     }
 
     public void faint() {
+        GameClient.getInstance().faint();
+	}
+
+    public void applyFaint() {
         this.sprites.get(0).setSprite(playerType.getFainting());
         ((AnimatedSprite)this.sprites.get(0).getSprite()).setRotationAnimation(
             new Animation<>(0.1f, 0f, 0f, 45f, 90f)
         );
         GameView.captureInput = false;
-		isFainted = true;
-		energy = 0;
-	}
+        isFainted = true;
+        energy = 0;
+    }
 
 	public void changeEnergy(int currentEnergy) {
 		if (energyIsInfinite) {

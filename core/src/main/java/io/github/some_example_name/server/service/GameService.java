@@ -33,6 +33,7 @@ import io.github.some_example_name.common.model.structure.Trunk;
 import io.github.some_example_name.common.model.structure.farmInitialElements.Cottage;
 import io.github.some_example_name.common.model.structure.farmInitialElements.GreenHouse;
 import io.github.some_example_name.common.model.structure.farmInitialElements.Lake;
+import io.github.some_example_name.server.ClientHandler;
 import io.github.some_example_name.server.repository.UserRepo;
 import io.github.some_example_name.server.repository.UserRepository;
 import io.github.some_example_name.server.saveGame.GameSerializer;
@@ -176,6 +177,7 @@ public class GameService {
             }
         }
         greenHouse.build(farm);
+        GameClient.getInstance().buildGreenhouse();
         return new Response("The greenhouse is built", true);
     }
 
