@@ -25,6 +25,13 @@ public enum FarmType {
         this.width = width;
     }
 
+    public static FarmType getFromName(String name){
+        for (FarmType value : FarmType.values()) {
+            if (value.name.equals(name)) return value;
+        }
+        return null;
+    }
+
     public void initial() {
         if (structures.isEmpty()) {
             switch (this) {

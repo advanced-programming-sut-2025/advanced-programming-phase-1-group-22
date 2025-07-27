@@ -268,6 +268,7 @@ public class WorldController {
     }
 
     private void drawSpriteHolder(float delta, SpriteHolder sprite, Structure structure) {
+        if (structure.getTiles().isEmpty()) return;
         sprite.getSprite().setPosition(
             (sprite.getOffset().getX() + structure.getTiles().get(0).getX()) * App.tileWidth,
             (sprite.getOffset().getY() + structure.getTiles().get(0).getY()) * App.tileHeight);

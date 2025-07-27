@@ -6,6 +6,7 @@ import io.github.some_example_name.common.model.relations.Player;
 import io.github.some_example_name.common.model.structure.Structure;
 import io.github.some_example_name.common.utils.App;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.TimerTask;
@@ -51,9 +52,20 @@ public class ClientService {
         player.setCurrentCarrying(salable);
     }
 
+    public void handleCrowAttack(String farmType,boolean isCrowAttack){
+        FarmType farmType1 = FarmType.getFromName(farmType);
+        if (farmType1 == null) return;
+        for (Farm farm : App.getInstance().getCurrentGame().getVillage().getFarms()) {
+            if (farm.getFarmType().equals(farmType1)){
+                farm.setCrowAttackToday(isCrowAttack);
+            }
+        }
+    }
+
     private Structure getStructureByTile(List<Tile> tiles) {
         for (Farm farm : App.getInstance().getCurrentGame().getVillage().getFarms()) {
-            for (Structure structure : farm.getStructures()) {
+            List<Structure> structuresCopy = new ArrayList<>(farm.getStructures());
+            for (Structure structure : structuresCopy) {
                 if (structure.getTiles().size() == tiles.size()) {
                     boolean found = true;
                     for (int i = 0; i < structure.getTiles().size(); i++) {
@@ -66,7 +78,8 @@ public class ClientService {
                 }
             }
         }
-        for (Structure structure : App.getInstance().getCurrentGame().getVillage().getStructures()) {
+        List<Structure> structuresCopy = new ArrayList<>(App.getInstance().getCurrentGame().getVillage().getStructures());
+        for (Structure structure : structuresCopy) {
             if (structure.getTiles().size() == tiles.size()) {
                 boolean found = true;
                 for (int i = 0; i < structure.getTiles().size(); i++) {
