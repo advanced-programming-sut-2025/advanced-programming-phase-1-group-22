@@ -3,10 +3,12 @@ package io.github.some_example_name.common.model.cook;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import io.github.some_example_name.common.model.Salable;
 @Getter
 @Setter
+@NoArgsConstructor
 public class Food implements Salable {
     private Integer id;
     private FoodType foodType;

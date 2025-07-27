@@ -13,6 +13,9 @@ import io.github.some_example_name.common.model.Farm;
 import io.github.some_example_name.common.model.enums.Weather;
 import io.github.some_example_name.client.service.ClientService;
 import io.github.some_example_name.common.model.*;
+import io.github.some_example_name.common.model.records.Response;
+import io.github.some_example_name.common.model.relations.NPC;
+import io.github.some_example_name.common.model.relations.NPCType;
 import io.github.some_example_name.common.model.relations.Player;
 import io.github.some_example_name.common.model.structure.Structure;
 import io.github.some_example_name.common.utils.App;
@@ -187,6 +190,38 @@ public class GameClient {
                         } else if (obj.get("action").getAsString().equals("set_golds")) {
                             App.getInstance().getCurrentGame().getCurrentPlayer().getAccount().setGoldsByServer(
                                 body.get("count").getAsInt()
+                            );
+                        } else if (obj.get("action").getAsString().equals("send_gift")) {
+                            RelationService.getInstance().getGift(
+                                service.getPlayerByUsername(obj.get("id").getAsString()),
+                                (Salable) decodeStructureAdd(body.getAsJsonObject("gift")),
+                                body.get("amount").getAsInt()
+                            );
+                        } else if (obj.get("action").getAsString().equals("talk")) {
+                            RelationService.getInstance().privateTalk(
+                                service.getPlayerByUsername(obj.get("id").getAsString()),
+                                service.getPlayerByUsername(body.get("receiver").getAsString()),
+                                body.get("message").getAsString()
+                            );
+                        } else if (obj.get("action").getAsString().equals("notify")) {
+                            Actor source = null;
+                            if (body.get("isFromPlayer").getAsBoolean()) {
+                                source = service.getPlayerByUsername(body.get("source").getAsString());
+                            } else {
+                                for (NPC npc : App.getInstance().getCurrentGame().getNpcs()) {
+                                    if (npc.getName().equals(body.get("source").getAsString())) {
+                                        source = npc;
+                                        break;
+                                    }
+                                }
+                            }
+                            service.getPlayerByUsername(body.get("receiver").getAsString()).getNotified(
+                                new Response(
+                                    body.get("response_message").getAsString(),
+                                    body.get("response_bool").getAsBoolean()
+                                ),
+                                NotificationType.values()[body.get("type").getAsInt()],
+                                source
                             );
                         } else if (obj.get("action").getAsString().equals(StructureUpdateState.ADD.getName())){
                             decodeStructureAdd(body);
@@ -663,6 +698,57 @@ public class GameClient {
                 "action", "set_golds",
                 "id", Session.getCurrentUser().getUsername(),
                 "body", Map.of("count", count, "receiver", couple)
+            );
+            out.println(GSON.toJson(msg));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void sendGift(Player player, Salable gift, int amount) {
+        try {
+            out = new PrintWriter(socket.getOutputStream(), true);
+            in  = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+            Map<String, Object> msg = Map.of(
+                "action", "send_gift",
+                "id", Session.getCurrentUser().getUsername(),
+                "body", Map.of("amount", amount, "receiver", player.getUser().getUsername(),
+                    "gift", encodeStructure(gift, null))
+            );
+            out.println(GSON.toJson(msg));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void notifyPlayer(String username, Response response, NotificationType type, Actor source) {
+        try {
+            out = new PrintWriter(socket.getOutputStream(), true);
+            in  = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+            Map<String, Object> msg = Map.of(
+                "action", "notify",
+                "id", Session.getCurrentUser().getUsername(),
+                "body", Map.of("response_message", response.message(), "receiver", username,
+                    "response_bool", response.shouldBeBack(), "type", type.ordinal(),
+                    "isFromPlayer", source instanceof Player, "source", source.getName())
+            );
+            out.println(GSON.toJson(msg));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void talk(Player anotherPlayer, String message) {
+        try {
+            out = new PrintWriter(socket.getOutputStream(), true);
+            in  = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+            Map<String, Object> msg = Map.of(
+                "action", "talk",
+                "id", Session.getCurrentUser().getUsername(),
+                "body", Map.of("message", message, "receiver", anotherPlayer.getName())
             );
             out.println(GSON.toJson(msg));
         } catch (IOException e) {

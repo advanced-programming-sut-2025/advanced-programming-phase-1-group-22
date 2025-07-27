@@ -215,9 +215,12 @@ public class Player extends Actor implements JsonPreparable {
 	}
 
 	public void notify(Response response, NotificationType type, Actor source) {
-        notifications.add(new Notification<>(type, new Label(response.message(), GameAsset.SKIN), source));
+        GameClient.getInstance().notifyPlayer(getUser().getUsername(), response, type, source);
 	}
 
+    public void getNotified(Response response, NotificationType type, Actor source) {
+        notifications.add(new Notification<>(type, new Label(response.message(), GameAsset.SKIN), source));
+    }
 	public Map.Entry<Salable, Integer> getItemFromInventory(String name) {
 		for (Map.Entry<Salable, Integer> salableIntegerEntry : this.getInventory().getProducts().entrySet()) {
 			if (salableIntegerEntry.getKey().getName().equals(name)) {
