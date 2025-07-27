@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.Timer;
+import io.github.some_example_name.client.GameClient;
 import io.github.some_example_name.client.MainGradle;
 import io.github.some_example_name.client.controller.WorldController;
 import io.github.some_example_name.common.model.Direction;
@@ -22,7 +23,6 @@ import lombok.Setter;
 @Setter
 public class DoYouMarryMePopUp extends PopUp {
     private Player player;
-    private Tile origin;
     private Window window;
 
     public void createMenu(Stage stage, Skin skin, WorldController worldController) {
@@ -58,7 +58,8 @@ public class DoYouMarryMePopUp extends PopUp {
         yes.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                handleYes(player);
+                window.remove();
+                GameClient.getInstance().respondMarriage(true, player.getUser().getUsername());
                 return true;
             }
         });
@@ -66,7 +67,8 @@ public class DoYouMarryMePopUp extends PopUp {
         no.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                handleNo(player);
+                window.remove();
+                GameClient.getInstance().respondMarriage(false, player.getUser().getUsername());
                 return true;
             }
         });
@@ -90,39 +92,5 @@ public class DoYouMarryMePopUp extends PopUp {
         };
         group.addActor(window);
         menuGroup.addActor(group);
-    }
-
-    private void handleYes(Player player) {
-        window.remove();
-        Player currentPlayer = App.getInstance().getCurrentGame().getCurrentPlayer();
-        RelationService.getInstance().Respond(true, player.getUser().getUsername());
-        player.setDirection(Direction.NORTH);
-        player.getTiles().clear();
-        player.getTiles().addAll(currentPlayer.getTiles());
-        player.getSprites().get(0).setOffset(new Tuple<>(-0.4f, 0f));
-        Timer.schedule(new Timer.Task() {
-            @Override
-            public void run() {
-                player.setLazyDirection(Direction.EAST);
-                currentPlayer.setLazyDirection(Direction.WEST);
-                getController().drawHeart();
-                GameView.captureInput = true;
-            }
-        }, 0.5f);
-    }
-
-    private void handleNo(Player player) {
-        window.remove();
-        Player currentPlayer = App.getInstance().getCurrentGame().getCurrentPlayer();
-        RelationService.getInstance().Respond(false, player.getUser().getUsername());
-        Direction direction = Direction.getByXAndY(-currentPlayer.getTiles().get(0).getX() + origin.getX(),
-            -currentPlayer.getTiles().get(0).getY() + origin.getY());
-        if (direction == null) return;
-        currentPlayer.setLazyDirection(direction.reverse());
-        player.setDirection(Direction.SOUTH);
-        player.setDirection(direction);
-        player.getTiles().clear();
-        player.getTiles().add(origin);
-        GameView.captureInput = true;
     }
 }

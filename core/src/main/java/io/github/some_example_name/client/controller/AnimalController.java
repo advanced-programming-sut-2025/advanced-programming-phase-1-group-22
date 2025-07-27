@@ -35,7 +35,7 @@ public class AnimalController {
     private final Group menuGroup = new Group();
     private final Array<HeartEffect> heartEffects = new Array<>();
     private final GameService gameService = new GameService();
-    private final WorldController worldController = new WorldController();
+    private final WorldController worldController = WorldController.getInstance();
 
     public void update() {
         if (GameView.captureInput) {

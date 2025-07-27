@@ -1,6 +1,11 @@
 package io.github.some_example_name.server.service;
 
+import io.github.some_example_name.client.controller.WorldController;
+import io.github.some_example_name.client.view.GameView;
+import io.github.some_example_name.client.view.mainMenu.DoYouMarryMePopUp;
 import io.github.some_example_name.common.model.*;
+import io.github.some_example_name.common.model.gameSundry.Sundry;
+import io.github.some_example_name.common.model.gameSundry.SundryType;
 import io.github.some_example_name.common.model.relations.*;
 import io.github.some_example_name.common.model.enums.Gender;
 import io.github.some_example_name.common.model.records.Response;
@@ -8,6 +13,7 @@ import io.github.some_example_name.common.model.structure.Structure;
 import io.github.some_example_name.common.model.structure.stores.PierreShop;
 import io.github.some_example_name.common.model.tools.Tool;
 import io.github.some_example_name.common.utils.App;
+import io.github.some_example_name.common.utils.GameAsset;
 
 import java.util.*;
 
@@ -16,6 +22,7 @@ public class RelationService {
     private static RelationService instance;
     Player currentPlayer;
     Game game;
+    private Tile origin;
 
     private RelationService() {
     }
@@ -50,7 +57,7 @@ public class RelationService {
 //        if (!twoActorsAreNeighbors(currentPlayer, anotherPlayer, 1)) {
 //            return new Response("You can't talk to the other player");
 //        }
-        Friendship friendship = getFriendShipBetweenTwoActors(anotherPlayer);
+        Friendship friendship = getFriendShipBetweenWithActor(anotherPlayer);
         friendship.getDialogs().add(new Entry<>(message, currentPlayer));
         if (currentPlayer.getCouple() != null) {
             if (currentPlayer.getCouple().equals(anotherPlayer)) {
@@ -80,7 +87,7 @@ public class RelationService {
 //        if (!twoActorsAreNeighbors(currentPlayer, anotherPlayer, 1)) {
 //            return new Response("You can't talk to the other player");
 //        }
-        Friendship friendship = getFriendShipBetweenTwoActors(anotherPlayer);
+        Friendship friendship = getFriendShipBetweenWithActor(anotherPlayer);
         friendship.getDialogs().add(new Entry<>(message, currentPlayer));
         if (currentPlayer.getCouple() != null) {
             if (currentPlayer.getCouple().equals(anotherPlayer)) {
@@ -105,7 +112,7 @@ public class RelationService {
         if (player == null) {
             return new Response("Player with that username not found");
         }
-        Friendship friendShipBetweenTwoActors = getFriendShipBetweenTwoActors(player);
+        Friendship friendShipBetweenTwoActors = getFriendShipBetweenWithActor(player);
         if (friendShipBetweenTwoActors == null) {
         }
         StringBuilder stringBuilder = new StringBuilder();
@@ -113,9 +120,8 @@ public class RelationService {
         return new Response(stringBuilder.toString());
     }
 
-    public Friendship getFriendShipBetweenTwoActors(Actor anotherPlayer) {
+    public Friendship getFriendShipBetweenTwoActors(Player currentPlayer, Actor anotherPlayer) {
         game = App.getInstance().getCurrentGame();
-        currentPlayer = game.getCurrentPlayer();
         for (Friendship friendship : game.getFriendships()) {
             if ((friendship.getFirstPlayer().equals(currentPlayer) &&
                 friendship.getSecondPlayer().equals(anotherPlayer)) || (friendship.getSecondPlayer().equals(currentPlayer) &&
@@ -124,6 +130,9 @@ public class RelationService {
             }
         }
         return null;
+    }
+    public Friendship getFriendShipBetweenWithActor(Actor anotherPlayer) {
+        return getFriendShipBetweenTwoActors(App.getInstance().getCurrentGame().getCurrentPlayer(), anotherPlayer);
     }
 
     public boolean twoActorsAreNeighbors(Actor currentPlayer, Actor anotherPlayer, int dis) {
@@ -171,7 +180,7 @@ public class RelationService {
         currentPlayer.getInventory().deleteProductFromBackPack(gift, currentPlayer, amount);
         gift = gift.copy();
         player.getInventory().getProducts().put(gift, amount);
-        Friendship friendShipBetweenTwoActors = getFriendShipBetweenTwoActors(player);
+        Friendship friendShipBetweenTwoActors = getFriendShipBetweenWithActor(player);
         if (gift instanceof Flower) {
             if (friendShipBetweenTwoActors.getXp() == 100) {
                 friendShipBetweenTwoActors.setFriendShipLevel(friendShipBetweenTwoActors.getFriendShipLevel() + 1);
@@ -202,7 +211,7 @@ public class RelationService {
         player.getInventory().getProducts().put(gift, amount);
         currentPlayer.getInventory().deleteProductFromBackPack(gift, currentPlayer, amount);
         gift = gift.copy();
-        Friendship friendship = getFriendShipBetweenTwoActors(player);
+        Friendship friendship = getFriendShipBetweenWithActor(player);
         friendship.getGifts().add(new Gift(currentPlayer, player, amount, gift, friendship.getGifts().size()));
         player.notify(new Response("%s sent you a gift".formatted(currentPlayer.getUser().getUsername())),
             NotificationType.GIFT, currentPlayer);
@@ -279,12 +288,98 @@ public class RelationService {
         currentPlayer = game.getCurrentPlayer();
         StringBuilder stringBuilder = new StringBuilder();
         Player player = getPlayer(username);
-        Friendship friendShipBetweenTwoActors = getFriendShipBetweenTwoActors(player);
+        Friendship friendShipBetweenTwoActors = getFriendShipBetweenWithActor(player);
         if (player == null) {
             return new Response("Player with that username not found");
         }
         stringBuilder.append(friendShipBetweenTwoActors.getGifts());
         return new Response(stringBuilder.toString());
+    }
+
+    public Direction handleInteractionInit(Player requester, Player requested) {
+        Direction direction = Direction.getByXAndY(
+            requested.getTiles().get(0).getX() - requester.getTiles().get(0).getX(),
+            requested.getTiles().get(0).getY() - requester.getTiles().get(0).getY()
+        );
+        if (direction == null) return null;
+        if (requested.getUser().getUsername().equals(App.getInstance().getCurrentGame().getCurrentPlayer().getUser().getUsername())) {
+            GameView.captureInput = false;
+        }
+        requested.setLazyDirection(direction.reverse());
+        requester.setLazyDirection(direction);
+        return direction;
+    }
+
+    public void drawFlower(Player requester, Player requested) {
+        Direction direction = handleInteractionInit(requester, requested);
+        if (direction == null) return;
+        WorldController.getInstance().drawFlower(direction, requester);
+    }
+
+    public void handleHug(Player requester, Player requested) {
+        Direction direction = handleInteractionInit(requester, requested);
+        if (direction == null) return;
+        origin = requester.getTiles().get(0);
+        requester.setDirection(direction);
+        requester.setDirChanged(true);
+        com.badlogic.gdx.utils.Timer.schedule(new com.badlogic.gdx.utils.Timer.Task() {
+            @Override
+            public void run() {
+                requester.getTiles().clear();
+                requester.getTiles().addAll(requested.getTiles());
+            }
+        }, 0.3f);
+
+        boolean flag = false;
+        int x = -1, y = -1;
+        List<Structure> structures = App.getInstance().getCurrentGame().getVillage().getStructures();
+        for (Structure player1 : structures) {
+            if (player1 == requester) break;
+            if (requested == player1) {
+                flag = true;
+                break;
+            }
+        }
+
+        for (int i = 0; i < structures.size(); i++) {
+            Structure player1 = structures.get(i);
+            if (player1 == requester) x = i;
+            if (requested == player1) y = i;
+        }
+        if (flag) {
+            Collections.swap(structures, x, y);
+        }
+        com.badlogic.gdx.utils.Timer.schedule(new com.badlogic.gdx.utils.Timer.Task() {
+            @Override
+            public void run() {
+                requester.getSprites().get(0).setOffset(new Tuple<>( -0.1f, 0.1f));
+                requester.setLazyDirection(Direction.SOUTH);
+                requested.setLazyDirection(Direction.NORTH);
+            }
+        }, 0.8f);
+        boolean finalFlag = flag;
+        int finalX = x;
+        int finalY = y;
+        com.badlogic.gdx.utils.Timer.schedule(new com.badlogic.gdx.utils.Timer.Task() {
+            @Override
+            public void run() {
+                requester.getSprites().get(0).setOffset(new Tuple<>( 0f, 0f));
+                requester.setDirection(direction);
+                requester.setDirChanged(true);
+                requester.getTiles().clear();
+                requester.getTiles().add(origin);
+            }
+        }, 3.3f);
+        com.badlogic.gdx.utils.Timer.schedule(new com.badlogic.gdx.utils.Timer.Task() {
+            @Override
+            public void run() {
+                requested.setLazyDirection(direction.reverse());
+                GameView.captureInput = true;
+                if (finalFlag) {
+                    Collections.swap(structures, finalX, finalY);
+                }
+            }
+        }, 3.6f);
     }
 
     public Response hug(String username) {
@@ -298,14 +393,98 @@ public class RelationService {
         if (!areNeighbors) {
             return new Response("the other player is not next You");
         }
-        Friendship friendShipBetweenTwoActors = getFriendShipBetweenTwoActors(player);
-        if (friendShipBetweenTwoActors.getFriendShipLevel() < 2) {
-            return new Response("you are not in that level of friendship");
-        }
+        Friendship friendShipBetweenTwoActors = getFriendShipBetweenWithActor(player);
+//        if (friendShipBetweenTwoActors.getFriendShipLevel() < 2) {
+//            return new Response("you are not in that level of friendship");
+//        }
         changeFriendShipLevelUp(friendShipBetweenTwoActors, 60);
         currentPlayer.changeEnergy(50);
         player.changeEnergy(50);
         return new Response("", true);
+    }
+
+    public void handleAskMarriage(Player requester, Player requested) {
+        if (requested.getUser().getUsername().equals(App.getInstance().getCurrentGame().getCurrentPlayer().getUser().getUsername())) {
+            GameView.captureInput = false;
+        }
+        origin = requester.getTiles().get(0);
+        Tile dest = App.getInstance().getCurrentGame().tiles[requested.getTiles().get(0).getX()]
+            [requested.getTiles().get(0).getY() - 1];
+        Direction dir = Direction.getByXAndY(
+            dest.getX() - requester.getTiles().get(0).getX(),
+            dest.getY() - requester.getTiles().get(0).getY()
+        );
+        if (dir == null) {
+            if (dest.getY() - requester.getTiles().get(0).getY() == -2 &&
+                Math.abs(dest.getX() - requester.getTiles().get(0).getX()) <= 1) {
+                dir = Direction.SOUTH;
+            } else {
+                return;
+            }
+        }
+        requester.setDirection(dir);
+        requester.setDirChanged(true);
+        com.badlogic.gdx.utils.Timer.schedule(new com.badlogic.gdx.utils.Timer.Task() {
+            @Override
+            public void run() {
+                requester.getTiles().clear();
+                requester.getTiles().add(dest);
+                Direction direction = handleInteractionInit(requester, requested);
+                if (direction == null) {
+                    requester.getTiles().clear();
+                    requester.getTiles().add(origin);
+                    return;
+                }
+                requester.setDirection(direction);
+                com.badlogic.gdx.utils.Timer.schedule(new com.badlogic.gdx.utils.Timer.Task() {
+                    @Override
+                    public void run() {
+                        requester.setProposal();
+                    }
+                }, 0.5f);
+                if (requested.getUser().getUsername().equals(App.getInstance().getCurrentGame().getCurrentPlayer().getUser().getUsername())) {
+                    com.badlogic.gdx.utils.Timer.schedule(new com.badlogic.gdx.utils.Timer.Task() {
+                        @Override
+                        public void run() {
+                            DoYouMarryMePopUp doYouMarryMePopUp = new DoYouMarryMePopUp();
+                            doYouMarryMePopUp.setPlayer(requester);
+                            doYouMarryMePopUp.createMenu(GameView.stage, GameAsset.SKIN, WorldController.getInstance());
+                        }
+                    }, 1);
+                }
+            }
+        }, 0.2f);
+    }
+
+    public void handleYes(Player requester, Player requested) {
+        Respond(true, requester, requested);
+        requester.setDirection(Direction.NORTH);
+        requester.getTiles().clear();
+        requester.getTiles().addAll(requested.getTiles());
+        requester.getSprites().get(0).setOffset(new Tuple<>(-0.4f, 0f));
+        com.badlogic.gdx.utils.Timer.schedule(new com.badlogic.gdx.utils.Timer.Task() {
+            @Override
+            public void run() {
+                requester.setLazyDirection(Direction.EAST);
+                requested.setLazyDirection(Direction.WEST);
+                WorldController.getInstance().drawHeart(requested);
+                GameView.captureInput = true;
+            }
+        }, 0.5f);
+    }
+
+
+    public void handleNo(Player requester, Player requested) {
+        Respond(false, requester, requested);
+        Direction direction = Direction.getByXAndY(-requested.getTiles().get(0).getX() + origin.getX(),
+            -requested.getTiles().get(0).getY() + origin.getY());
+        if (direction == null) return;
+        requested.setLazyDirection(direction.reverse());
+        requester.setDirection(Direction.SOUTH);
+        requester.setDirection(direction);
+        requester.getTiles().clear();
+        requester.getTiles().add(App.getInstance().getCurrentGame().getTiles()[origin.getX()][origin.getY()]);
+        GameView.captureInput = true;
     }
 
     public Response marry(String username, String ring) {
@@ -327,10 +506,10 @@ public class RelationService {
         if (player.getCouple() != null) {
             return new Response("She's engaged, " + player.getCouple().getName() + " would be mad at you.");
         }
-        Friendship friendShipBetweenTwoActors = getFriendShipBetweenTwoActors(player);
-        if (friendShipBetweenTwoActors.getFriendShipLevel() < 3) {
-            return new Response("you are not in that level of friendship");
-        }
+        Friendship friendShipBetweenTwoActors = getFriendShipBetweenWithActor(player);
+//        if (friendShipBetweenTwoActors.getFriendShipLevel() < 3) {
+//            return new Response("you are not in that level of friendship");
+//        }
         if (!twoActorsAreNeighbors(currentPlayer, player, 1)) {
             return new Response("the other player is not next You");
         }
@@ -349,46 +528,42 @@ public class RelationService {
         return new Response("request sent", true);
     }
 
-    public Response Respond(boolean accept, String username) {
+    public Response Respond(boolean accept, Player requested, Player requester) {
         game = App.getInstance().getCurrentGame();
-        currentPlayer = game.getCurrentPlayer();
-        Player player = getPlayer(username);
-        Friendship friendShipBetweenTwoActors = getFriendShipBetweenTwoActors(player);
+        Friendship friendShipBetweenTwoActors = getFriendShipBetweenTwoActors(requested, requester);
 
         if (!accept) {
             friendShipBetweenTwoActors.setFriendShipLevel(0);
-            player.setDaysOfSadness(7);
-            return new Response("reject marriage to " + player.getUser().getUsername(), true);
+            requested.setDaysOfSadness(7);
+            return new Response("reject marriage to " + requested.getUser().getUsername(), true);
         }
 
-        // Use Iterator to safely remove items during iteration
-        Iterator<Map.Entry<Salable, Integer>> iterator = player.getInventory().getProducts().entrySet().iterator();
-        while (iterator.hasNext()) {
-            Map.Entry<Salable, Integer> entry = iterator.next();
-            if (entry.getKey().getName().equals(PierreShop.WEDDING_RING.getName())) {
-                Salable wRing = entry.getKey();
-                iterator.remove();  // Safe removal using iterator
-                currentPlayer.getInventory().addProductToBackPack(wRing, 1);
-            }
+        if (requested.getUser().getUsername().equals(App.getInstance().getCurrentGame().getCurrentPlayer().getUser().getUsername())) {
+            Salable wRing = new Sundry(SundryType.WEDDING_RING);
+            requested.getInventory().addProductToBackPack(wRing, 1);
         }
-
+        if (requester.getUser().getUsername().equals(App.getInstance().getCurrentGame().getCurrentPlayer().getUser().getUsername())) {
+            Salable wRing = requester.getInventory().findProductInBackPackByNAme(SundryType.WEDDING_RING.getName());
+            requester.getInventory().deleteProductFromBackPack(wRing, requester, 1);
+        }
         friendShipBetweenTwoActors.setFriendShipLevel(4);
-        player.setCouple(currentPlayer);
-        currentPlayer.setCouple(player);
+        requested.setCouple(requester);
+        requester.setCouple(requested);
 
         for (Farm farm : game.getVillage().getFarms()) {
-            if (farm.getPlayers().contains(player)) {
-                farm.getPlayers().add(currentPlayer);
+            if (farm.getPlayers().contains(requested)) {
+                farm.getPlayers().add(requester);
             }
-            if (farm.getPlayers().contains(currentPlayer)) {
-                farm.getPlayers().add(player);
+            if (farm.getPlayers().contains(requester)) {
+                farm.getPlayers().add(requested);
             }
         }
 
-        Account wifeAccount = currentPlayer.getAccount();
-        Account husbandAccount = player.getAccount();
+        //todo handle money exchange
+        Account wifeAccount = requester.getAccount();
+        Account husbandAccount = requested.getAccount();
         husbandAccount.setGolds(husbandAccount.getGolds() + wifeAccount.getGolds());
-        currentPlayer.setAccount(husbandAccount);
+        requester.setAccount(husbandAccount);
 
         return new Response("Happy accepting marriage ask", true);
     }
@@ -416,7 +591,7 @@ public class RelationService {
 //            return new Response("the other player is not next You");
 //        }
         lastTalkedNPC = npc;
-        Friendship friendShipBetweenTwoActors = getFriendShipBetweenTwoActors(npc);
+        Friendship friendShipBetweenTwoActors = getFriendShipBetweenWithActor(npc);
         Dialog dialog = Dialog.getDialog(game.getTimeAndDate(), friendShipBetweenTwoActors.getFriendShipLevel());
         friendShipBetweenTwoActors.setXp(Math.min(friendShipBetweenTwoActors.getXp() + 20, 799));
         return new Response(dialog.getDialog(), true);
@@ -487,7 +662,7 @@ public class RelationService {
 //        if (!areNeighbors) {
 //            return new Response("the other player is not next You");
 //        }
-        Friendship friendShipBetweenTwoActors = getFriendShipBetweenTwoActors(npc);
+        Friendship friendShipBetweenTwoActors = getFriendShipBetweenWithActor(npc);
         Map.Entry<Salable, Integer> itemFromInventory = currentPlayer.getItemFromInventory(item);
         if (itemFromInventory == null) {
             return new Response("item not found");
@@ -576,7 +751,7 @@ public class RelationService {
         }
         for (Structure structure : App.getInstance().getCurrentGame().getVillage().getStructures()) {
             if (structure instanceof NPC npc) {
-                Friendship friendShipBetweenTwoActors = getFriendShipBetweenTwoActors(npc);
+                Friendship friendShipBetweenTwoActors = getFriendShipBetweenWithActor(npc);
                 int level = friendShipBetweenTwoActors.getFriendShipLevel();
                 if (level < 1) {
                     questList.put(npc.getType().getMissions().get(0), true);
@@ -606,7 +781,7 @@ public class RelationService {
     public Map<Mission, Boolean> getMissions(NPC npc) {
         Map<Mission, Boolean> missions = new HashMap<>();
         game = App.getInstance().getCurrentGame();
-        Friendship friendShipBetweenTwoActors = getFriendShipBetweenTwoActors(npc);
+        Friendship friendShipBetweenTwoActors = getFriendShipBetweenWithActor(npc);
         int level = friendShipBetweenTwoActors.getFriendShipLevel();
         if (level < 1) {
             missions.put(npc.getType().getMissions().get(0), true);
@@ -633,7 +808,7 @@ public class RelationService {
     }
 
     public Response friendShip_CH(int n) {
-        Friendship friendShipBetweenTwoActors = getFriendShipBetweenTwoActors(lastTalkedNPC);
+        Friendship friendShipBetweenTwoActors = getFriendShipBetweenWithActor(lastTalkedNPC);
         friendShipBetweenTwoActors.setFriendShipLevel(n);
         return new Response("friendship changed to 3");
     }
@@ -668,7 +843,7 @@ public class RelationService {
             Salable salable = salableIntegerEntry.getKey();
             currentPlayer.getInventory().justDelete(salable, value);
         }
-        Friendship friendShipBetweenTwoActors = getFriendShipBetweenTwoActors(npc);
+        Friendship friendShipBetweenTwoActors = getFriendShipBetweenWithActor(npc);
         int multi;
         multi = friendShipBetweenTwoActors.getFriendShipLevel() == 2 ? 2 : 1;
         for (Map.Entry<Salable, Integer> salableIntegerEntry : reward.entrySet()) {
@@ -717,7 +892,7 @@ public class RelationService {
             int amount = currentPlayer.getInventory().getProducts().get(salable);
             currentPlayer.getInventory().getProducts().replace(salable, amount - value);
         }
-        Friendship friendShipBetweenTwoActors = getFriendShipBetweenTwoActors(lastTalkedNPC);
+        Friendship friendShipBetweenTwoActors = getFriendShipBetweenWithActor(lastTalkedNPC);
         int mult = 1;
         mult = friendShipBetweenTwoActors.getFriendShipLevel() == 2 ? 2 : 1;
         for (Map.Entry<Salable, Integer> salableIntegerEntry : reward.entrySet()) {
