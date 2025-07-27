@@ -170,6 +170,7 @@ public class PlayerController {
 
     private boolean collision(Structure structure, float worldX, float worldY) {
         Sprite sprite = structure.getSprite();
+        if (structure.getTiles().isEmpty()) return false;
         sprite.setPosition(structure.getTiles().get(0).getX() * App.tileWidth, structure.getTiles().get(0).getY() * App.tileHeight);
         return worldX >= sprite.getX() && worldX <= sprite.getX() + sprite.getWidth() && worldY >= sprite.getY() && worldY <= sprite.getY() + sprite.getHeight();
     }

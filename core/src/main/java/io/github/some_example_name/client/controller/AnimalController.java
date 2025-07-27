@@ -13,9 +13,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
+import io.github.some_example_name.client.GameClient;
 import io.github.some_example_name.client.MainGradle;
 import io.github.some_example_name.common.model.Direction;
 import io.github.some_example_name.common.model.Farm;
+import io.github.some_example_name.common.model.StructureUpdateState;
 import io.github.some_example_name.common.model.Tile;
 import io.github.some_example_name.common.model.animal.Animal;
 import io.github.some_example_name.common.model.records.Response;
@@ -128,15 +130,22 @@ public class AnimalController {
             if (animal.getTimeSinceLastMove() > 0.3f) {
                 animal.setTimeSinceLastMove(0);
                 Vector2 nextStep = animal.getMovementPath().poll();
-                animal.getTiles().get(0).setX((int) nextStep.x);
-                animal.getTiles().get(0).setY((int) nextStep.y);
+                if (nextStep != null){
+                    Tile tile = getTileByXAndY((int) nextStep.x,(int) nextStep.y);
+                    Tile priviousTile = animal.getTiles().get(0);
+                    if (tile!= null){
+                        animal.getTiles().clear();
+                        animal.getTiles().add(tile);
+                        GameClient.getInstance().updateStructureState(animal, StructureUpdateState.UPDATE,true,priviousTile);
+                    }
+                }
             }
         }
     }
 
     private Farm getPlayerMainFarm(Player player) {
         for (Farm farm : App.getInstance().getCurrentGame().getVillage().getFarms()) {
-            if (farm.getPlayers().get(0).equals(player)) {
+            if (!farm.getPlayers().isEmpty() && farm.getPlayers().get(0).equals(player)) {
                 return farm;
             }
         }

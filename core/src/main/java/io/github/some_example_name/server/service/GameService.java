@@ -385,25 +385,6 @@ public class GameService {
 
     public Response pickFromFloor(Structure currentStructure) {
         Player currentPlayer = getCurrentPlayer();
-//        Direction currentDirection = Direction.getByName(direction);
-//        if (currentDirection == null) {
-//            return new Response("wrong direction");
-//        }
-//        Tile currentTile = getTileByXAndY(currentPlayer.getTiles().get(0).getX() + currentDirection.getXTransmit(),
-//                currentPlayer.getTiles().get(0).getY() + currentDirection.getYTransmit());
-//        if (currentTile == null) {
-//            return new Response("out of bound");
-//        }
-//        List<Structure> structures = App.getInstance().getCurrentGame().getVillage().findStructuresByTile(currentTile);
-//        Structure currentStructure = null;
-//        for (Structure structure : structures) {
-//            if (structure.getIsPickable()) {
-//                currentStructure = structure;
-//            }
-//        }
-//        if (currentStructure == null) {
-//            return new Response("there is nothing to pick on the floor");
-//        }
         boolean flag = tryToPickUp(currentPlayer, currentStructure);
         if (!flag) {
             return new Response("your backpack is full");
@@ -411,6 +392,7 @@ public class GameService {
         for (Tile tile : currentStructure.getTiles()) {
             tile.setIsPassable(true);
             tile.setIsFilled(false);
+            GameClient.getInstance().updateTileState(tile);
         }
         return new Response("you picked up a " + ((Salable) currentStructure).getName(), true);
     }
@@ -421,16 +403,13 @@ public class GameService {
         if (carpenterShopFarmBuildings == null) {
             return new Response("there is no farm building with this name");
         }
-//        if (!isPlayerInStore(StoreType.CARPENTER_SHOP)) {
-//            return new Response("you have to be in Carpenter store to build");
-//        }
         Farm currentFarm = getPlayerMainFarm(currentPlayer);
         if (!thisIsInFarm(currentFarm, x, y)) {
             return new Response("you have to chose a place in your farm");
         } else if (!playerHaveEnoughResourceToBuild(currentPlayer, carpenterShopFarmBuildings)) {
             return new Response("you do not have enough resource to build");
         }
-        if (carpenterShopFarmBuildings.getDailySold() == carpenterShopFarmBuildings.getDailyLimit()) {
+        if (Objects.equals(carpenterShopFarmBuildings.getDailySold(), carpenterShopFarmBuildings.getDailyLimit())) {
             return new Response("Not enough in stock!");
         }
         Structure structure;
@@ -458,9 +437,6 @@ public class GameService {
         if (marnieShopAnimal == null) {
             return new Response("there is no such animal");
         }
-//        else if (!isPlayerInStore(StoreType.MARNIE_SHOP)) {
-//            return new Response("you have to be in Marnie Shop Animal to buy animals");
-//        }
         if (Objects.equals(marnieShopAnimal.getDailySold(), marnieShopAnimal.getDailyLimit())) {
             return new Response("Not enough in stock!");
         }
@@ -480,16 +456,13 @@ public class GameService {
 
     public Response pet(Animal currentAnimal) {
         Player currentPlayer = getCurrentPlayer();
-      //  Animal currentAnimal = getAnimalAroundPlayer(currentPlayer, name);
-//        if (currentAnimal == null) {
-//            return new Response("you have to be around animal to pet it");
-//        }
         if (!currentPlayer.getAnimals().contains(currentAnimal)) {
             return new Response("you only can pet your own animals");
         }
         if (!currentAnimal.getPet()) {
             currentAnimal.setPet(true);
             currentAnimal.changeFriendShip(15);
+            GameClient.getInstance().updateStructureState(currentAnimal,StructureUpdateState.UPDATE,true,currentAnimal.getTiles().get(0));
             return new Response("you pet " + currentAnimal.getName(), true);
         }
         return new Response("you already pet this animal");
@@ -502,6 +475,7 @@ public class GameService {
             return new Response("you do not have such animal");
         }
         currrentAnimal.setRelationShipQuality(count);
+        GameClient.getInstance().updateStructureState(currrentAnimal,StructureUpdateState.UPDATE,true,currrentAnimal.getTiles().get(0));
         return new Response("friendShip upgrade to " + count, true);
     }
 
@@ -512,11 +486,11 @@ public class GameService {
 
     public Response shepherdAnimals(Animal currentAnimal, int x, int y) {
         Player currentPlayer = getCurrentPlayer();
-      //  Animal currentAnimal = getAnimalWithName(name, currentPlayer);
         if (currentAnimal == null) {
             return new Response("you do not have animal with such name");
         }
         Tile currentTile = getTileByXAndY(x, y);
+        Tile priviousTile = currentAnimal.getTiles().get(0);
         if (currentTile == null) {
             return new Response("out of bound");
         }
@@ -526,18 +500,19 @@ public class GameService {
         } else if (!tileIsAvailableForAnimal(currentTile, farms)) {
             return new Response("you can not put your animal in this tile");
         }
-        currentAnimal.setTiles(List.of(currentTile));
+        currentAnimal.getTiles().clear();
+        currentAnimal.getTiles().add(currentTile);
         currentAnimal.setIsAnimalStayOutAllNight(!isAnimalInBarnOrCage(currentAnimal, farms));
         if (!currentAnimal.getIsFeed()) {
             currentAnimal.setIsFeed(true);
             currentAnimal.changeFriendShip(8);
         }
+        GameClient.getInstance().updateStructureState(currentAnimal,StructureUpdateState.UPDATE,true,priviousTile);
         return new Response("animal shepherd successfully", true);
     }
 
     public Response feedHay(Animal currentAnimal) {
         Player currentPlayer = getCurrentPlayer();
-       // Animal currentAnimal = getAnimalWithName(name, currentPlayer);
         if (currentAnimal == null) {
             return new Response("you do not have animal with such name");
         }
@@ -550,12 +525,12 @@ public class GameService {
         }
         currentAnimal.setIsFeed(true);
         currentAnimal.changeFriendShip(8);
+        GameClient.getInstance().updateStructureState(currentAnimal,StructureUpdateState.UPDATE,true,currentAnimal.getTiles().get(0));
         return new Response(currentAnimal.getName() + " eat hay!", true);
     }
 
     public Response sellAnimal(Animal currentAnimal) {
         Player currentPlayer = getCurrentPlayer();
- //       Animal currentAnimal = getAnimalWithName(name, currentPlayer);
         if (currentAnimal == null) {
             return new Response("you do not have animal with such name");
         }
@@ -564,23 +539,15 @@ public class GameService {
         currentPlayer.getAccount().setGolds(oldGold + price);
         currentPlayer.getAnimals().remove(currentAnimal);
         removeAnimalFromVillage(currentAnimal, getPlayerFarms(currentPlayer));
+        GameClient.getInstance().updateStructureState(currentAnimal,StructureUpdateState.DELETE,true,null);
         return new Response("you sell this animal " + price, true);
-    }
-
-    public Response produces() {
-        Player currentPlayer = getCurrentPlayer();
-        return new Response(makeTokenShowAnimalProduce(currentPlayer), true);
     }
 
     public Response collectProduce(Animal currentAnimal) {
         Player currentPlayer = getCurrentPlayer();
-       // Animal currentAnimal = getAnimalWithName(name, currentPlayer);
         if (currentAnimal == null) {
             return new Response("you do not have animal with such name");
         }
-//        else if (!isPlayerNearAnimal(currentPlayer, currentAnimal)) {
-//            return new Response("you need to be next to animal to collect produce");
-//        }
         return new Response(collectProduce(currentAnimal, currentPlayer), true);
     }
 
@@ -594,15 +561,6 @@ public class GameService {
 
     public Response plantSeed(String name, Tile currentTile) {
         Player currentPlayer = getCurrentPlayer();
-//        Direction currentDirection = Direction.getByName(direction);
-//        if (currentDirection == null) {
-//            return new Response("use valid direction");
-//        }
-//        Tile currentTile = getTileByXAndY(currentPlayer.getTiles().get(0).getX() + currentDirection.getXTransmit(),
-//                currentPlayer.getTiles().get(0).getY() + currentDirection.getYTransmit());
-//        if (currentTile == null) {
-//            return new Response("out of bound");
-//        }
         if (currentTile.getIsFilled()) {
             return new Response("this tile is not available for farming");
         } else if (!currentTile.getTileType().equals(TileType.PLOWED)) {
@@ -666,14 +624,10 @@ public class GameService {
     }
 
     public Response showPlant(int x, int y) {
-        Player currentPlayer = getCurrentPlayer();
         Tile currentTile = getTileByXAndY(x, y);
         if (currentTile == null) {
             return new Response("out of bound");
         }
-//        if (!isTileInPlayerFarms(getPlayerFarms(currentPlayer), currentTile)) {
-//            return new Response("you can not access other farms");
-//        }
         HarvestAbleProduct harvestAbleProduct = findHarvestable(currentTile);
         if (harvestAbleProduct == null) {
             return new Response("there is no harvestable in this tile");
@@ -690,15 +644,6 @@ public class GameService {
         if (!isThisFertilize(currentFertilize)) {
             return new Response("there is no fertilize with this name");
         }
-//        Direction currentDirection = Direction.getByName(direction);
-//        if (currentDirection == null) {
-//            return new Response("use valid direction");
-//        }
-//        Tile currentTile = getTileByXAndY(currentPlayer.getTiles().get(0).getX() + currentDirection.getXTransmit(),
-//                currentPlayer.getTiles().get(0).getY() + currentDirection.getYTransmit());
-//        if (currentTile == null) {
-//            return new Response("out of bound");
-//        }
         HarvestAbleProduct harvestAbleProduct = findHarvestable(currentTile);
         if (harvestAbleProduct == null) {
             return new Response("there is no harvestable in this tile");
@@ -881,6 +826,7 @@ public class GameService {
                 structureTile.setIsFilled(false);
             }
             App.getInstance().getCurrentGame().getVillage().removeStructure(structure);
+            GameClient.getInstance().updateStructureState(structure,StructureUpdateState.DELETE,true,null);
             return true;
         }
         return false;
@@ -904,7 +850,7 @@ public class GameService {
 
     private Farm getPlayerMainFarm(Player player) {
         for (Farm farm : App.getInstance().getCurrentGame().getVillage().getFarms()) {
-            if (farm.getPlayers().get(0).equals(player)) {
+            if (!farm.getPlayers().isEmpty() && farm.getPlayers().get(0).equals(player)) {
                 return farm;
             }
         }
@@ -969,6 +915,7 @@ public class GameService {
             }
             structure.getTiles().addAll(tiles2);
             farm.getStructures().add(structure);
+            GameClient.getInstance().updateStructureState(structure,StructureUpdateState.ADD,true,null);
             return "this building successfully add to your farm";
         }
         tiles2.clear();
@@ -1002,9 +949,11 @@ public class GameService {
                         ((FarmBuilding) structure).getAnimals().add(animal);
                         int oldGold = player.getAccount().getGolds();
                         player.getAccount().setGolds(oldGold - marnieShopAnimal.getPrice());
-                        animal.setTiles(List.of(Objects.requireNonNull(getAFreeTileInBarnOrCoop((FarmBuilding) structure))));
+                        animal.getTiles().clear();
+                        animal.getTiles().add(Objects.requireNonNull(getAFreeTileInBarnOrCoop((FarmBuilding) structure)));
                         player.getAnimals().add(animal);
                         farm.getStructures().add(animal);
+                        GameClient.getInstance().updateStructureState(animal,StructureUpdateState.ADD,true,null);
                         return "a/an " + animal.getAnimalType().getName() + " added successfully";
                     }
                 }
@@ -1020,11 +969,14 @@ public class GameService {
                 if (((FarmBuilding) structure).getFarmBuildingType().getIsCoop()) {
                     if (((FarmBuilding) structure).canAddNewAnimal()) {
                         ((FarmBuilding) structure).getAnimals().add(animal);
+
                         int oldGold = player.getAccount().getGolds();
                         player.getAccount().setGolds(oldGold - marnieShopAnimal.getPrice());
-                        animal.setTiles(List.of(Objects.requireNonNull(getAFreeTileInBarnOrCoop((FarmBuilding) structure))));
+                        animal.getTiles().clear();
+                        animal.getTiles().add(Objects.requireNonNull(getAFreeTileInBarnOrCoop((FarmBuilding) structure)));
                         player.getAnimals().add(animal);
                         farm.getStructures().add(animal);
+                        GameClient.getInstance().updateStructureState(animal,StructureUpdateState.ADD,true,null);
                         return "a/an " + animal.getAnimalType().getName() + " added successfully";
                     }
                 }
@@ -1195,6 +1147,7 @@ public class GameService {
                     if (player.getInventory().isInventoryHaveCapacity(animalProduct)) {
                         player.getInventory().addProductToBackPack(animalProduct, 1);
                         animal.setTodayProduct(null);
+                        GameClient.getInstance().updateStructureState(animal,StructureUpdateState.UPDATE,true,animal.getTiles().get(0));
                         return "you collect produce of " + animal.getName() + ": " + animalProduct.getName() +
                                 " with quality: " + animalProduct.getProductQuality();
                     }
@@ -1209,6 +1162,7 @@ public class GameService {
             if (player.getInventory().isInventoryHaveCapacity(animalProduct)) {
                 player.getInventory().addProductToBackPack(animalProduct, 1);
                 animal.setTodayProduct(null);
+                GameClient.getInstance().updateStructureState(animal,StructureUpdateState.UPDATE,true,animal.getTiles().get(0));
                 return "you collect produce of " + animal.getName() + ": " + animalProduct.getName() +
                         " with quality: " + animalProduct.getProductQuality();
             }
