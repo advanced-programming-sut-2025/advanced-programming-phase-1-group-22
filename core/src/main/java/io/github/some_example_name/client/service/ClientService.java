@@ -82,7 +82,7 @@ public class ClientService {
         return Objects.equals(tile1.getX(), tile2.getX()) && Objects.equals(tile1.getY(), tile2.getY());
     }
 
-    private Player getPlayerByUsername(String username) {
+    public Player getPlayerByUsername(String username) {
         for (Player player : App.getInstance().getCurrentGame().getPlayers()) {
             if (player.getUser().getUsername().equals(username)) {
                 return player;

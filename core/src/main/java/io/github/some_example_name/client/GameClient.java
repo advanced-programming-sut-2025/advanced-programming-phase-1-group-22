@@ -151,6 +151,20 @@ public class GameClient {
                             JsonObject tileObject = body.get("tile").getAsJsonObject();
                             Tile tile = GSON.fromJson(tileObject,Tile.class);
                             service.updateTileState(tile);
+                        }  else if (obj.get("action").getAsString().equals("=build_greenhouse")) {
+                            Farm farm = null;
+                            for (Farm farm1 : App.getInstance().getCurrentGame().getVillage().getFarms()) {
+                                if (farm1.getPlayers().getFirst().getUser().getUsername().equals(obj.get("id").getAsString())) {
+                                    farm = farm1;
+                                    break;
+                                }
+                            }
+                            if (farm != null) {
+                                farm.getGreenHouse().build(farm);
+                            }
+                        } else if (obj.get("action").getAsString().equals("_faint")) {
+                            String username = obj.get("id").getAsString();
+                            service.getPlayerByUsername(username).applyFaint();
                         } else if (obj.get("action").getAsString().equals(StructureUpdateState.ADD.getName())){
                             decodeStructureAdd(body);
                         } else if (obj.get("action").getAsString().equals(StructureUpdateState.UPDATE.getName())){
@@ -528,6 +542,40 @@ public class GameClient {
                 "action", "_set_weather",
                 "id", Session.getCurrentUser().getUsername(),
                 "body", Map.of("weather", type)
+            );
+
+            out.println(GSON.toJson(msg));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void buildGreenhouse() {
+        try {
+            out = new PrintWriter(socket.getOutputStream(), true);
+            in  = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+            Map<String, Object> msg = Map.of(
+                "action", "=build_greenhouse",
+                "id", Session.getCurrentUser().getUsername(),
+                "body", Map.of()
+            );
+
+            out.println(GSON.toJson(msg));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void faint() {
+        try {
+            out = new PrintWriter(socket.getOutputStream(), true);
+            in  = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+            Map<String, Object> msg = Map.of(
+                "action", "_faint",
+                "id", Session.getCurrentUser().getUsername(),
+                "body", Map.of()
             );
 
             out.println(GSON.toJson(msg));
