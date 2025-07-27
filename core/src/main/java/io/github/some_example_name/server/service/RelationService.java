@@ -380,6 +380,14 @@ public class RelationService {
                 }
             }
         }, 3.6f);
+        if (requested.getUser().getUsername().equals(App.getInstance().getCurrentGame().getCurrentPlayer().getUser().getUsername()) ||
+            requester.getUser().getUsername().equals(App.getInstance().getCurrentGame().getCurrentPlayer().getUser().getUsername())
+        ) {
+            Friendship friendShipBetweenTwoActors = getFriendShipBetweenTwoActors(requested, requester);
+            changeFriendShipLevelUp(friendShipBetweenTwoActors, 60);
+            requested.changeEnergy(50);
+            requester.changeEnergy(50);
+        }
     }
 
     public Response hug(String username) {
@@ -393,13 +401,11 @@ public class RelationService {
         if (!areNeighbors) {
             return new Response("the other player is not next You");
         }
-        Friendship friendShipBetweenTwoActors = getFriendShipBetweenWithActor(player);
+        //todo uncomment code
+//        Friendship friendShipBetweenTwoActors = getFriendShipBetweenWithActor(player);
 //        if (friendShipBetweenTwoActors.getFriendShipLevel() < 2) {
 //            return new Response("you are not in that level of friendship");
 //        }
-        changeFriendShipLevelUp(friendShipBetweenTwoActors, 60);
-        currentPlayer.changeEnergy(50);
-        player.changeEnergy(50);
         return new Response("", true);
     }
 
@@ -506,7 +512,8 @@ public class RelationService {
         if (player.getCouple() != null) {
             return new Response("She's engaged, " + player.getCouple().getName() + " would be mad at you.");
         }
-        Friendship friendShipBetweenTwoActors = getFriendShipBetweenWithActor(player);
+        //todo uncomment code
+//        Friendship friendShipBetweenTwoActors = getFriendShipBetweenWithActor(player);
 //        if (friendShipBetweenTwoActors.getFriendShipLevel() < 3) {
 //            return new Response("you are not in that level of friendship");
 //        }
@@ -538,17 +545,20 @@ public class RelationService {
             return new Response("reject marriage to " + requested.getUser().getUsername(), true);
         }
 
+        friendShipBetweenTwoActors.setFriendShipLevel(4);
+        requested.setCouple(requester);
+        requester.setCouple(requested);
+
         if (requested.getUser().getUsername().equals(App.getInstance().getCurrentGame().getCurrentPlayer().getUser().getUsername())) {
             Salable wRing = new Sundry(SundryType.WEDDING_RING);
             requested.getInventory().addProductToBackPack(wRing, 1);
+            requested.getAccount().removeGolds(0);
         }
         if (requester.getUser().getUsername().equals(App.getInstance().getCurrentGame().getCurrentPlayer().getUser().getUsername())) {
             Salable wRing = requester.getInventory().findProductInBackPackByNAme(SundryType.WEDDING_RING.getName());
             requester.getInventory().deleteProductFromBackPack(wRing, requester, 1);
+            requester.getAccount().removeGolds(0);
         }
-        friendShipBetweenTwoActors.setFriendShipLevel(4);
-        requested.setCouple(requester);
-        requester.setCouple(requested);
 
         for (Farm farm : game.getVillage().getFarms()) {
             if (farm.getPlayers().contains(requested)) {
@@ -558,12 +568,6 @@ public class RelationService {
                 farm.getPlayers().add(requested);
             }
         }
-
-        //todo handle money exchange
-        Account wifeAccount = requester.getAccount();
-        Account husbandAccount = requested.getAccount();
-        husbandAccount.setGolds(husbandAccount.getGolds() + wifeAccount.getGolds());
-        requester.setAccount(husbandAccount);
 
         return new Response("Happy accepting marriage ask", true);
     }

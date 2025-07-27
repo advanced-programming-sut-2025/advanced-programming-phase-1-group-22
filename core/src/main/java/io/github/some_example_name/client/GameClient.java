@@ -184,6 +184,10 @@ public class GameClient {
                                 RelationService.getInstance().handleNo(requester, requested);
                             }
                             RelationService.getInstance().handleHug(requester, requested);
+                        } else if (obj.get("action").getAsString().equals("set_golds")) {
+                            App.getInstance().getCurrentGame().getCurrentPlayer().getAccount().setGoldsByServer(
+                                body.get("count").getAsInt()
+                            );
                         } else if (obj.get("action").getAsString().equals(StructureUpdateState.ADD.getName())){
                             decodeStructureAdd(body);
                         } else if (obj.get("action").getAsString().equals(StructureUpdateState.UPDATE.getName())){
@@ -643,6 +647,22 @@ public class GameClient {
                 "action", "_respond_marriage",
                 "id", Session.getCurrentUser().getUsername(),
                 "body", Map.of("requested", username, "response", b)
+            );
+            out.println(GSON.toJson(msg));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setGolds(int count, String couple) {
+        try {
+            out = new PrintWriter(socket.getOutputStream(), true);
+            in  = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+            Map<String, Object> msg = Map.of(
+                "action", "set_golds",
+                "id", Session.getCurrentUser().getUsername(),
+                "body", Map.of("count", count, "receiver", couple)
             );
             out.println(GSON.toJson(msg));
         } catch (IOException e) {
