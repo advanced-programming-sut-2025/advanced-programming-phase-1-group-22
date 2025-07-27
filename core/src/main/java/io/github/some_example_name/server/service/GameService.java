@@ -668,7 +668,6 @@ public class GameService {
         Farm farm = getPlayerMainFarm(player);
         if (farm == null) return new Response("farm not found");
         farm.setCrowAttackToday(false);
-        GameClient.getInstance().updateFarmCrowAttack(farm,false);
         return new Response("set",true);
     }
 

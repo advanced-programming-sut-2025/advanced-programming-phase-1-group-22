@@ -393,6 +393,7 @@ public class WorldController {
 
     private boolean isStructureInBond(Structure structure) {
         OrthographicCamera camera = MainGradle.getInstance().getCamera();
+        if (structure == null) return false;
         for (Tile tile : structure.getTiles()) {
             if (camera.frustum.pointInFrustum(tile.getX() * App.tileWidth, tile.getY() * App.tileHeight, 0))
                 return true;

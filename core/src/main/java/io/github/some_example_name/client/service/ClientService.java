@@ -2,6 +2,7 @@ package io.github.some_example_name.client.service;
 
 import com.badlogic.gdx.utils.Timer;
 import io.github.some_example_name.common.model.*;
+import io.github.some_example_name.common.model.products.HarvestAbleProduct;
 import io.github.some_example_name.common.model.relations.Player;
 import io.github.some_example_name.common.model.structure.Structure;
 import io.github.some_example_name.common.utils.App;
@@ -52,12 +53,13 @@ public class ClientService {
         player.setCurrentCarrying(salable);
     }
 
-    public void handleCrowAttack(String farmType,boolean isCrowAttack){
+    public void handleCrowAttack(String farmType, boolean isCrowAttack, HarvestAbleProduct harvestAbleProduct){
         FarmType farmType1 = FarmType.getFromName(farmType);
         if (farmType1 == null) return;
         for (Farm farm : App.getInstance().getCurrentGame().getVillage().getFarms()) {
             if (farm.getFarmType().equals(farmType1)){
                 farm.setCrowAttackToday(isCrowAttack);
+                if (isCrowAttack) farm.setAttackedProduct(harvestAbleProduct);
             }
         }
     }
