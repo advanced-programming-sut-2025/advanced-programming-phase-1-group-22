@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Stone extends Structure{
     private StoneType stoneType;
-    private Sprite sprite;
+    private transient Sprite sprite;
 
     public Stone(StoneType stoneType) {
         this.stoneType = stoneType;

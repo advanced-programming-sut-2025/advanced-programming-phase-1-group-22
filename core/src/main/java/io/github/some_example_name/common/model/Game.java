@@ -130,7 +130,8 @@ public class Game implements Serializable {
             }
         }
         for (Farm farm : App.getInstance().getCurrentGame().getVillage().getFarms()) {
-            farm.generateRandomForaging();
+            if (!farm.getPlayers().isEmpty() && farm.getPlayers().get(0).equals(App.getInstance().getCurrentGame().getCurrentPlayer()))
+                farm.generateRandomForaging();
         }
         for (Farm farm : App.getInstance().getCurrentGame().getVillage().getFarms()) {
             for (Structure structure : farm.getStructures()) {

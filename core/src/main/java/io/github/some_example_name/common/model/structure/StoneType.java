@@ -11,7 +11,7 @@ public enum StoneType {
     LARGE_STONE(2, 2,GameAsset.FARM_BOULDER);
     private final Integer length;
     private final Integer width;
-    private final Texture texture;
+    private final transient Texture texture;
 
     StoneType(int length, int width,Texture texture) {
         this.length = length;

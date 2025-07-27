@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.github.some_example_name.client.GameClient;
 import io.github.some_example_name.common.model.shelter.ShippingBin;
 import io.github.some_example_name.common.model.source.*;
 import io.github.some_example_name.common.model.structure.*;
@@ -32,15 +33,15 @@ import java.util.Random;
 @NoArgsConstructor
 @JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "@id")
 public class Farm implements JsonPreparable {
-//    @JsonManagedReference
+    //    @JsonManagedReference
     private List<Tile> tiles = new ArrayList<>();
-//    @JsonManagedReference
+    //    @JsonManagedReference
     private List<Player> players = new ArrayList<>();
-//    @JsonManagedReference
+    //    @JsonManagedReference
     private List<Structure> structures = new ArrayList<>();
     private Integer xCenter;
     private Integer yCenter;
-//    @JsonManagedReference
+    //    @JsonManagedReference
     private FarmType farmType;
     private Integer farmXStart;
     private Integer farmYStart;
@@ -48,7 +49,7 @@ public class Farm implements JsonPreparable {
     private Integer farmYEnd;
     private Boolean crowAttackToday = false;
     private Integer farmIndex = 0;
-//    @JsonManagedReference
+    //    @JsonManagedReference
     private Fridge fridge = new Fridge();
 
 
@@ -269,15 +270,18 @@ public class Farm implements JsonPreparable {
                 if (!isPassible) {
                     for (Tile tile : tiles2) {
                         tile.setIsPassable(false);
+                        GameClient.getInstance().updateTileState(tile);
                     }
                 }
                 if (isFilled) {
                     for (Tile tile : tiles2) {
                         tile.setIsFilled(true);
+                        GameClient.getInstance().updateTileState(tile);
                     }
                 }
                 structure.getTiles().addAll(tiles2);
                 this.getStructures().add(structure);
+                GameClient.getInstance().updateStructureState(structure, StructureUpdateState.ADD, true, null);
                 return;
             }
             tiles2.clear();
@@ -340,6 +344,7 @@ public class Farm implements JsonPreparable {
             if (flag && !tiles2.isEmpty()) {
                 structure.getTiles().addAll(tiles2);
                 this.getStructures().add(structure);
+                GameClient.getInstance().updateStructureState(structure, StructureUpdateState.ADD, true, null);
                 return;
             }
             tiles2.clear();

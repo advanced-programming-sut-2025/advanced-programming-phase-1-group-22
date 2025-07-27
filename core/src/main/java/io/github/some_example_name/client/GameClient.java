@@ -506,10 +506,16 @@ public class GameClient {
         Class<?> clazz = object.getClass();
         while (clazz != Object.class && clazz != Structure.class) {
             for (Field field : clazz.getDeclaredFields()) {
-                if (Modifier.isTransient(field.getModifiers())) continue;
+                if (Modifier.isTransient(field.getModifiers()) || Modifier.isStatic(field.getModifiers()) ||
+                    Modifier.isFinal(field.getModifiers())) continue;
                 field.setAccessible(true);
                 try {
                     Class<?> fieldType = field.getType();
+                    if (fieldType.getName().startsWith("com.badlogic.gdx.") ||
+                        Collection.class.isAssignableFrom(fieldType) ||
+                        Map.class.isAssignableFrom(fieldType)) {
+                        continue;
+                    }
                     Object obj = field.get(object);
                     if (obj == null) {
                         map.put(field.getName(), null);
