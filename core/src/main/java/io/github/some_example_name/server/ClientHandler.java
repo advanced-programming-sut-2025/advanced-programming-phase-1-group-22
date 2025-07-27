@@ -117,6 +117,13 @@ public class ClientHandler extends Thread {
                     } else if (obj.get("action").getAsString().charAt(0) == '=') {
                         String username = obj.get("id").getAsString();
                         gameServer.sendAllBut(GSON.toJson(obj), username);
+                    } else if (obj.getAsJsonObject("body").has("receiver")) {
+                        String username = obj.getAsJsonObject("body").get("receiver").getAsString();
+                        for (Entry<ServerPlayer, ClientHandler> client : gameServer.getClients()) {
+                            if (client.getKey().getUsername().equals(username)) {
+                                client.getValue().send(message);
+                            }
+                        }
                     }
                 } catch (JsonParseException e) {
                     System.out.println("Received non-JSON message: " + message);
