@@ -59,7 +59,7 @@ public class CraftPopUp extends PopUp {
                 craft.setMadeProduct(null);
                 craft.setETA(null);
                 close(window);
-                GameClient.getInstance().updateStructureState(craft, StructureUpdateState.UPDATE, true, craft.getTiles().getFirst());
+                GameClient.getInstance().updateStructureState(craft, StructureUpdateState.UPDATE, true, craft.getTiles().get(0));
                 return true;
             }
         });
@@ -70,7 +70,7 @@ public class CraftPopUp extends PopUp {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 if (!Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)) return false;
                 craft.setETA(App.getInstance().getCurrentGame().getTimeAndDate().copy());
-                GameClient.getInstance().updateStructureState(craft, StructureUpdateState.UPDATE, true, craft.getTiles().getFirst());
+                GameClient.getInstance().updateStructureState(craft, StructureUpdateState.UPDATE, true, craft.getTiles().get(0));
                 close(window);
                 createMenu(stage, skin, getController());
                 return true;
@@ -90,7 +90,7 @@ public class CraftPopUp extends PopUp {
                     Response resp = getGameService().artisanGet(craft);
                     getController().showResponse(resp);
                     if (resp.shouldBeBack()) {
-                        GameClient.getInstance().updateStructureState(craft, StructureUpdateState.UPDATE, true, craft.getTiles().getFirst());
+                        GameClient.getInstance().updateStructureState(craft, StructureUpdateState.UPDATE, true, craft.getTiles().get(0));
                         close(window);
                         return true;
                     }
