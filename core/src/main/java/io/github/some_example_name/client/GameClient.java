@@ -15,6 +15,7 @@ import io.github.some_example_name.common.model.enums.Weather;
 import io.github.some_example_name.client.service.ClientService;
 import io.github.some_example_name.common.model.*;
 import io.github.some_example_name.common.model.structure.Structure;
+import io.github.some_example_name.common.model.tools.MilkPail;
 import io.github.some_example_name.common.utils.App;
 import io.github.some_example_name.common.variables.Session;
 import io.github.some_example_name.server.service.GameService;
@@ -160,6 +161,10 @@ public class GameClient {
                             String username = obj.get("id").getAsString();
                             Object carrying = decodeObject(body);
                             service.handleCurrentCarrying((Salable) carrying, username);
+                        } else if (obj.get("action").getAsString().equals("=update_farm_crow_attack")) {
+                            String farmType = obj.get("farmType").getAsString();
+                            boolean isCrowAttack = body.get("isCrowAttack").getAsBoolean();
+                            service.handleCrowAttack(farmType,isCrowAttack);
                         }
                     } catch (JsonParseException e) {
                         System.out.println("Received non-JSON: " + serverMessage);
@@ -201,6 +206,24 @@ public class GameClient {
                 "action", "choose_farm",
                 "id", Session.getCurrentUser().getUsername(),
                 "body", Map.of("farmId", farmId, "character", character)
+            );
+
+            out.println(GSON.toJson(msg));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updateFarmCrowAttack(Farm farm, boolean isCrowAttack) {
+        try {
+            out = new PrintWriter(socket.getOutputStream(), true);
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+            Map<String, Object> msg = Map.of(
+                "action", "=update_farm_crow_attack",
+                "id", Session.getCurrentUser().getUsername(),
+                "farmType", farm.getFarmType().getName(),
+                "body", Map.of("isCrowAttack", isCrowAttack)
             );
 
             out.println(GSON.toJson(msg));
@@ -253,6 +276,9 @@ public class GameClient {
                 } else {
                     return clazz.getEnumConstants()[0];
                 }
+            }
+            if (clazz == MilkPail.class) {
+                return MilkPail.getInstance();
             }
             Constructor<?> constructor = clazz.getConstructor();
             obj = constructor.newInstance();
@@ -561,7 +587,8 @@ public class GameClient {
     }
 
     private void updateTiles(Structure obj, JsonObject body) {
-        obj.getTiles().clear();
+        if (obj == null) return;
+        if(!obj.getTiles().isEmpty()) obj.getTiles().clear();
         Tile[][] tiles = App.getInstance().getCurrentGame().getTiles();
         for (int i = 0; i < body.get("!tiles").getAsJsonArray().size(); ) {
             Tile tile = tiles[body.get("!tiles").getAsJsonArray().get(i++).getAsInt()]

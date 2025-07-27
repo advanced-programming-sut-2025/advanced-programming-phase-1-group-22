@@ -37,7 +37,7 @@ public class Tree extends HarvestAbleProduct {
     private Integer numberOfWithoutWaterDays = 0;
     private Integer numberOfStages = 0;
     private transient ArrayList<SpriteHolder> sprites = new ArrayList<>();
-    private int spriteSituation = 0;
+    private transient int spriteSituation = 0;
 
     public Tree(TreeType treeType) {
         this.treeType = treeType;

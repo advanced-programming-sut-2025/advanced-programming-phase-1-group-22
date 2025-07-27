@@ -651,26 +651,14 @@ public class GameService {
         harvestAbleProduct.setFertilized(true);
         currentPlayer.getInventory().deleteProductFromBackPack(currentFertilize, currentPlayer, 1);
         harvestAbleProduct.getFertilizes().add(currentFertilize.getSundryType());
+        GameClient.getInstance().updateStructureState(harvestAbleProduct,StructureUpdateState.UPDATE,true,harvestAbleProduct.getTiles().get(0));
         return new Response("you successfully fertilize " + harvestAbleProduct.getName(), true);
-    }
-
-    public Response howMuchWater() {
-        Player currentPlayer = getCurrentPlayer();
-        Tool currentTool = getCurrentTool(currentPlayer);
-        if (currentTool == null || !(currentTool instanceof WateringCan)) {
-            return new Response("you do not carrying watering can");
-        }
-        return new Response("remain water: " + ((WateringCan) currentTool).getRemain(), true);
-    }
-
-    public Response showAbility() {
-        Player currentPlayer = getCurrentPlayer();
-        return new Response(makeStringTokenAbility(currentPlayer), true);
     }
 
     public Response isCrowAttackToday(){
         Player player = getCurrentPlayer();
         Farm farm = getPlayerMainFarm(player);
+        if (farm == null) return new Response("farm not found");
         if (farm.getCrowAttackToday()) return new Response("it's done",true);
         else return new Response("Not yet");
     }
@@ -678,18 +666,10 @@ public class GameService {
     public Response setCrowAttack(){
         Player player = getCurrentPlayer();
         Farm farm = getPlayerMainFarm(player);
+        if (farm == null) return new Response("farm not found");
         farm.setCrowAttackToday(false);
+        GameClient.getInstance().updateFarmCrowAttack(farm,false);
         return new Response("set",true);
-    }
-
-    private String makeStringTokenAbility(Player player) {
-        StringBuilder token = new StringBuilder();
-        for (Map.Entry<Ability, Integer> abilityIntegerEntry : player.getAbilities().entrySet()) {
-            token.append(abilityIntegerEntry.getKey().toString().toLowerCase()).append(" :\n").
-                    append("    xp: ").append(abilityIntegerEntry.getValue()).append("\n").
-                    append("    level: ").append(player.getAbilityLevel(abilityIntegerEntry.getKey())).append("\n");
-        }
-        return token.toString();
     }
 
     private Player getCurrentPlayer() {
@@ -1795,8 +1775,9 @@ public class GameService {
         for (Tile tile : tiles) {
             List<Structure> structures = App.getInstance().getCurrentGame().getVillage().findStructuresByTile(tile);
             for (Structure structure : structures) {
-                if (structure instanceof HarvestAbleProduct) {
-                    ((HarvestAbleProduct) structure).setAroundScareCrow(true);
+                if (structure instanceof HarvestAbleProduct harvestAbleProduct) {
+                    harvestAbleProduct.setAroundScareCrow(true);
+                    GameClient.getInstance().updateStructureState(harvestAbleProduct,StructureUpdateState.UPDATE,true,harvestAbleProduct.getTiles().get(0));
                 }
             }
         }
@@ -1807,8 +1788,9 @@ public class GameService {
         for (Tile tile : tiles) {
             List<Structure> structures = App.getInstance().getCurrentGame().getVillage().findStructuresByTile(tile);
             for (Structure structure : structures) {
-                if (structure instanceof HarvestAbleProduct) {
-                    ((HarvestAbleProduct) structure).setAroundSprinkler(true);
+                if (structure instanceof HarvestAbleProduct harvestAbleProduct) {
+                    harvestAbleProduct.setAroundSprinkler(true);
+                    GameClient.getInstance().updateStructureState(harvestAbleProduct,StructureUpdateState.UPDATE,true,harvestAbleProduct.getTiles().get(0));
                 }
             }
         }
@@ -1817,7 +1799,7 @@ public class GameService {
     private void setScareCrowAndSprinklerForAll() {
         for (Farm farm : App.getInstance().getCurrentGame().getVillage().getFarms()) {
             for (Structure structure : farm.getStructures()) {
-                if (structure instanceof Craft && (((Craft) structure).getCraftType().equals(CraftType.SCARE_CROW) ||
+                if (structure instanceof Craft craft && (((Craft) structure).getCraftType().equals(CraftType.SCARE_CROW) ||
                         ((Craft) structure).getCraftType().equals(CraftType.DELUXE_SCARECROW))) {
                     setScareCrowAffect((Craft) structure);
                 } else if (structure instanceof Craft && (((Craft) structure).getCraftType().equals(CraftType.SPRINKLER) ||

@@ -17,8 +17,8 @@ public class CrowAttack {
     private float timer;
     private final List<Sprite> crows;
     private boolean finished = false;
-    private final List<Float> angles = new ArrayList<>(); // زاویه فعلی هر کلاغ
-    private final List<Float> radii = new ArrayList<>();  // شعاع حرکت کلاغ
+    private final List<Float> angles = new ArrayList<>();
+    private final List<Float> radii = new ArrayList<>();
 
     private final Vector2 center;
 

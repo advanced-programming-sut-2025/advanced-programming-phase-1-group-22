@@ -33,13 +33,13 @@ import java.util.Random;
 @ToString
 @JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "@id")
 public class Game implements Serializable {
-//    @JsonManagedReference
+    //    @JsonManagedReference
     private Village village;
     private final List<Player> players = new ArrayList<>();
     private Player currentPlayer;
     private final List<NPC> npcs = new ArrayList<>();
     private final List<Friendship> friendships = new ArrayList<>();
-//    @JsonManagedReference
+    //    @JsonManagedReference
     private TimeAndDate timeAndDate;
     private Double weatherCoefficient = 1.0;
     private final Integer length = 160;
@@ -114,7 +114,10 @@ public class Game implements Serializable {
         automaticWatering(this.village.getWeather());
         setWeatherCoefficientEveryDay();
         for (Farm farm : this.getVillage().getFarms()) {
-            farm.setCrowAttackToday(false);
+            if (!farm.getPlayers().isEmpty() && farm.getPlayers().get(0).equals(App.getInstance().getCurrentGame().getCurrentPlayer())) {
+                farm.setCrowAttackToday(false);
+                GameClient.getInstance().updateFarmCrowAttack(farm, false);
+            }
         }
         for (Player player : players) {
             if (!player.getIsFainted()) player.goToCottage();
@@ -130,14 +133,15 @@ public class Game implements Serializable {
             }
         }
         for (Farm farm : App.getInstance().getCurrentGame().getVillage().getFarms()) {
-            if (!farm.getPlayers().isEmpty() && farm.getPlayers().get(0).equals(App.getInstance().getCurrentGame().getCurrentPlayer()))
+            if (!farm.getPlayers().isEmpty() && farm.getPlayers().get(0).equals(App.getInstance().getCurrentGame().getCurrentPlayer())) {
                 farm.generateRandomForaging();
+            }
         }
         for (Farm farm : App.getInstance().getCurrentGame().getVillage().getFarms()) {
             for (Structure structure : farm.getStructures()) {
-                if (structure instanceof Animal) {
-                    ((Animal) structure).produceAnimalProduct();
-                    calculateAnimalFriendShip((Animal) structure);
+                if (structure instanceof Animal animal) {
+                    animal.produceAnimalProduct();
+                    calculateAnimalFriendShip(animal);
                 }
             }
         }
@@ -260,29 +264,34 @@ public class Game implements Serializable {
 
     private void manageHarvest() {
         for (Farm farm : this.getVillage().getFarms()) {
-            List<Structure> structures = new ArrayList<>(farm.getStructures());
-            for (Structure structure : structures) {
-                if (structure instanceof HarvestAbleProduct harvestAbleProduct) {
-                    if (!harvestAbleProduct.getIsWaterToday() && !harvestAbleProduct.getAroundSprinkler()) {
-                        int oldNumber = harvestAbleProduct.getNumberOfWithoutWaterDays();
-                        harvestAbleProduct.setNumberOfWithoutWaterDays(oldNumber + 1);
-                        if (harvestAbleProduct.getNumberOfWithoutWaterDays() >= 2) {
-                            App.getInstance().getCurrentGame().getVillage().removeStructure(harvestAbleProduct);
-                            for (Tile tile : structure.getTiles()) {
-                                tile.setTileType(TileType.FLAT);
+            if (!farm.getPlayers().isEmpty() && farm.getPlayers().get(0).equals(App.getInstance().getCurrentGame().getCurrentPlayer())) {
+                List<Structure> structures = new ArrayList<>(farm.getStructures());
+                for (Structure structure : structures) {
+                    if (structure instanceof HarvestAbleProduct harvestAbleProduct) {
+                        if (!harvestAbleProduct.getIsWaterToday() && !harvestAbleProduct.getAroundSprinkler()) {
+                            int oldNumber = harvestAbleProduct.getNumberOfWithoutWaterDays();
+                            harvestAbleProduct.setNumberOfWithoutWaterDays(oldNumber + 1);
+                            if (harvestAbleProduct.getNumberOfWithoutWaterDays() >= 2) {
+                                App.getInstance().getCurrentGame().getVillage().removeStructure(harvestAbleProduct);
+                                GameClient.getInstance().updateStructureState(harvestAbleProduct, StructureUpdateState.DELETE, true, null);
+                                for (Tile tile : structure.getTiles()) {
+                                    tile.setTileType(TileType.FLAT);
+                                    GameClient.getInstance().updateTileState(tile);
+                                }
+                                continue;
                             }
-                            continue;
+                        } else {
+                            harvestAbleProduct.setNumberOfWithoutWaterDays(0);
                         }
-                    } else {
-                        harvestAbleProduct.setNumberOfWithoutWaterDays(0);
-                    }
 
-                    if (!harvestAbleProduct.getAroundSprinkler() && !canHoldWater(harvestAbleProduct)) {
-                        harvestAbleProduct.setWaterToday(false);
-                    }
+                        if (!harvestAbleProduct.getAroundSprinkler() && !canHoldWater(harvestAbleProduct)) {
+                            harvestAbleProduct.setWaterToday(false);
+                        }
 
-                    if (harvestAbleProduct instanceof Tree) {
-                        ((Tree) harvestAbleProduct).setAttackByCrow(false);
+                        if (harvestAbleProduct instanceof Tree) {
+                            ((Tree) harvestAbleProduct).setAttackByCrow(false);
+                        }
+                        GameClient.getInstance().updateStructureState(harvestAbleProduct, StructureUpdateState.UPDATE, true, harvestAbleProduct.getTiles().get(0));
                     }
                 }
             }

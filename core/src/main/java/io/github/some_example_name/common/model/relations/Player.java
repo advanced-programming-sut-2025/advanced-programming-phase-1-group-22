@@ -186,6 +186,8 @@ public class Player extends Actor implements JsonPreparable {
 		inventory.getProducts().put(new WateringCan(WateringCanType.NORMAL), 1);
 		inventory.getProducts().put(new Scythe(), 1);
         inventory.getProducts().put(FishingPole.IRIDIUM,1);
+        inventory.getProducts().put(MilkPail.getInstance(),1);
+        inventory.getProducts().put(Shear.SHEAR,1);
         this.currentTrashCan = TrashCan.NORMAL;
 	}
 

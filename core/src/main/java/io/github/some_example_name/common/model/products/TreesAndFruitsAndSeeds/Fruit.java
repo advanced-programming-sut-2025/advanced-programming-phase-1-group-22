@@ -3,6 +3,7 @@ package io.github.some_example_name.common.model.products.TreesAndFruitsAndSeeds
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import io.github.some_example_name.common.model.Salable;
@@ -10,10 +11,11 @@ import io.github.some_example_name.common.model.Salable;
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
 public class Fruit implements Salable{
     FruitType fruitType;
-    private Texture texture;
-    private Sprite sprite;
+    private transient Texture texture;
+    private transient Sprite sprite;
 
     public Fruit(FruitType fruitType) {
         this.fruitType = fruitType;
