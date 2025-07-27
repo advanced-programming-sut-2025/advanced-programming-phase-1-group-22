@@ -1,5 +1,8 @@
 package io.github.some_example_name.client.service;
 
+import com.badlogic.gdx.utils.Timer;
+import io.github.some_example_name.common.model.AnimatedSprite;
+import io.github.some_example_name.common.model.Direction;
 import io.github.some_example_name.common.model.Farm;
 import io.github.some_example_name.common.model.Tile;
 import io.github.some_example_name.common.model.relations.Player;
@@ -8,14 +11,24 @@ import io.github.some_example_name.common.utils.App;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.TimerTask;
 
 public class ClientService {
 
-    public void handleUpdatePosition(String username, int positionX, int positionY) {
+    public void handleUpdatePosition(String username, int positionX, int positionY, Direction direction) {
         Player player = getPlayerByUsername(username);
         if (player == null) return;
         player.getTiles().clear();
         player.getTiles().add(App.getInstance().getCurrentGame().tiles[positionX][positionY]);
+        player.setDirection(direction);
+        Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+                if (player.getIsLazy() == 0) {
+                    ((AnimatedSprite) player.getSprites().get(0).getSprite()).setLooping(false);
+                }
+            }
+        }, 0.2f);
     }
 
     public void updateTileState(Tile tile) {

@@ -15,6 +15,7 @@ import io.github.some_example_name.common.model.records.Response;
 import io.github.some_example_name.common.model.relations.Player;
 import io.github.some_example_name.common.model.source.Seed;
 import io.github.some_example_name.common.model.structure.Structure;
+import io.github.some_example_name.common.variables.Session;
 import io.github.some_example_name.server.service.GameService;
 import io.github.some_example_name.common.utils.App;
 import io.github.some_example_name.common.utils.GameAsset;
@@ -28,6 +29,7 @@ import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Getter
 public class PlayerController {

@@ -7,9 +7,11 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import io.github.some_example_name.client.GameClient;
 import io.github.some_example_name.client.MainGradle;
 import io.github.some_example_name.client.controller.WorldController;
 import io.github.some_example_name.common.model.Salable;
+import io.github.some_example_name.common.model.StructureUpdateState;
 import io.github.some_example_name.common.model.craft.Craft;
 import io.github.some_example_name.common.model.records.Response;
 import io.github.some_example_name.common.utils.App;
@@ -57,6 +59,7 @@ public class CraftPopUp extends PopUp {
                 craft.setMadeProduct(null);
                 craft.setETA(null);
                 close(window);
+                GameClient.getInstance().updateStructureState(craft, StructureUpdateState.UPDATE, true, craft.getTiles().getFirst());
                 return true;
             }
         });
@@ -67,6 +70,7 @@ public class CraftPopUp extends PopUp {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 if (!Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)) return false;
                 craft.setETA(App.getInstance().getCurrentGame().getTimeAndDate().copy());
+                GameClient.getInstance().updateStructureState(craft, StructureUpdateState.UPDATE, true, craft.getTiles().getFirst());
                 close(window);
                 createMenu(stage, skin, getController());
                 return true;
@@ -86,6 +90,7 @@ public class CraftPopUp extends PopUp {
                     Response resp = getGameService().artisanGet(craft);
                     getController().showResponse(resp);
                     if (resp.shouldBeBack()) {
+                        GameClient.getInstance().updateStructureState(craft, StructureUpdateState.UPDATE, true, craft.getTiles().getFirst());
                         close(window);
                         return true;
                     }

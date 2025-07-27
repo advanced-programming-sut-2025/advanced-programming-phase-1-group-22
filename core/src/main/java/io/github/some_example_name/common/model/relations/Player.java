@@ -46,6 +46,7 @@ public class Player extends Actor implements JsonPreparable {
 	private Ability buffAbility;
     private Direction direction = Direction.SOUTH;
     private boolean dirChanged = false;
+    private int isLazy = 0;
 	private Map<Ability, Integer> abilities = new HashMap<>();
 	private Account account = new Account();
 	private List<ShippingBin> shippingBinList = new ArrayList<>();
@@ -370,7 +371,19 @@ public class Player extends Actor implements JsonPreparable {
 
     public void setDirection(Direction direction) {
         if (((AnimatedSprite) this.sprites.get(0).getSprite()).isLooping() ||
-            this.direction != direction) dirChanged = true;
+            this.direction != direction) {
+            dirChanged = true;
+            isLazy++;
+            int finalIsLazy = isLazy;
+            com.badlogic.gdx.utils.Timer.schedule(new com.badlogic.gdx.utils.Timer.Task() {
+                @Override
+                public void run() {
+                    if (isLazy == finalIsLazy) {
+                        isLazy = 0;
+                    }
+                }
+            }, 0.1f);
+        }
         if (!isFainted) ((AnimatedSprite) this.sprites.get(0).getSprite()).setLooping(true);
         this.direction = direction;
     }
