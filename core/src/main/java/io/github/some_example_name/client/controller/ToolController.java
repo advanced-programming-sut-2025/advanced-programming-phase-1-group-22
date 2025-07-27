@@ -22,33 +22,34 @@ public class ToolController {
     private boolean isAnimating = false;
 
     public void update() {
-        Player currentPlayer = App.getInstance().getCurrentGame().getCurrentPlayer();
-        Salable carrying = currentPlayer.getCurrentCarrying();
-        Tool currentTool;
-        if (carrying instanceof Tool) {
-            currentTool = (Tool) carrying;
-        } else {
-            return;
-        }
+        for (Player player : App.getInstance().getCurrentGame().getPlayers()) {
+            Salable carryingObject = player.getCurrentCarrying();
 
-        float baseX = currentPlayer.getTiles().get(0).getX() * App.tileWidth;
-        float baseY = currentPlayer.getTiles().get(0).getY() * App.tileHeight;
-        float offsetY = 0f;
+            float baseX = player.getTiles().get(0).getX() * App.tileWidth;
+            float baseY = player.getTiles().get(0).getY() * App.tileHeight;
+            float offsetY = 0f;
 
-        if (isAnimating) {
-            animationTime += Gdx.graphics.getDeltaTime();
+            if (isAnimating && player.equals(App.getInstance().getCurrentGame().getCurrentPlayer())) {
+                animationTime += Gdx.graphics.getDeltaTime();
 
-            if (animationTime < 0.1f) {
-                offsetY = -40 * (animationTime / 0.1f);
-            } else if (animationTime < 0.2f) {
-                offsetY = -40 + 40 * ((animationTime - 0.1f) / 0.1f);
-            } else {
-                isAnimating = false;
+                if (animationTime < 0.1f) {
+                    offsetY = -40 * (animationTime / 0.1f);
+                } else if (animationTime < 0.2f) {
+                    offsetY = -40 + 40 * ((animationTime - 0.1f) / 0.1f);
+                } else {
+                    isAnimating = false;
+                }
             }
-        }
+            Tool tool;
+            if (carryingObject instanceof Tool) {
+                tool = (Tool) carryingObject;
+            } else {
+                continue;
+            }
 
-        currentTool.getSprite().draw(MainGradle.getInstance().getBatch());
-        currentTool.getSprite().setPosition(baseX, baseY + offsetY);
+            tool.getSprite().draw(MainGradle.getInstance().getBatch());
+            tool.getSprite().setPosition(baseX, baseY + offsetY);
+        }
 
         if (GameView.captureInput) {
             handleInput();
@@ -100,7 +101,7 @@ public class ToolController {
     private void useTool(Player player, Tool tool, int xTransmit, int yTransmit) {
         WorldController worldController = new WorldController();
         Tile tile = getTileByXAndY(player.getTiles().get(0).getX() + xTransmit, player.getTiles().get(0).getY() + yTransmit);
-        if (tile != null){
+        if (tile != null) {
             worldController.showResponse(new Response(tool.useTool(player, tile)));
             GameClient.getInstance().updateTileState(tile);
         }
