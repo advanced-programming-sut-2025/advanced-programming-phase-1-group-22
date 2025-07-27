@@ -1,5 +1,6 @@
 package io.github.some_example_name.server.service;
 
+import io.github.some_example_name.client.GameClient;
 import io.github.some_example_name.client.controller.WorldController;
 import io.github.some_example_name.client.view.GameView;
 import io.github.some_example_name.client.view.mainMenu.DoYouMarryMePopUp;
@@ -54,27 +55,7 @@ public class RelationService {
         if (anotherPlayer == null) {
             return new Response("Player with that username not found");
         }
-//        if (!twoActorsAreNeighbors(currentPlayer, anotherPlayer, 1)) {
-//            return new Response("You can't talk to the other player");
-//        }
-        Friendship friendship = getFriendShipBetweenWithActor(anotherPlayer);
-        friendship.getDialogs().add(new Entry<>(message, currentPlayer));
-        if (currentPlayer.getCouple() != null) {
-            if (currentPlayer.getCouple().equals(anotherPlayer)) {
-                changeFriendShipLevelUp(friendship, 50);
-            }
-            if (currentPlayer.getCouple().equals(anotherPlayer)) {
-                changeFriendShipLevelUp(friendship, 20);
-            }
-        }
-        currentPlayer.changeEnergy(50);
-        anotherPlayer.changeEnergy(50);
-        anotherPlayer.notify(
-            new Response("%s called you!".formatted(currentPlayer.getUser().getUsername())),
-            NotificationType.TALK,
-            currentPlayer
-        );
-        return new Response("message sent successfully", true);
+        return talkToAnotherPlayer(anotherPlayer, message);
     }
 
     public Response talkToAnotherPlayer(Player anotherPlayer, String message) {
@@ -87,21 +68,26 @@ public class RelationService {
 //        if (!twoActorsAreNeighbors(currentPlayer, anotherPlayer, 1)) {
 //            return new Response("You can't talk to the other player");
 //        }
-        Friendship friendship = getFriendShipBetweenWithActor(anotherPlayer);
-        friendship.getDialogs().add(new Entry<>(message, currentPlayer));
-        if (currentPlayer.getCouple() != null) {
-            if (currentPlayer.getCouple().equals(anotherPlayer)) {
-                changeFriendShipLevelUp(friendship, 50);
-            }
-            if (currentPlayer.getCouple().equals(anotherPlayer)) {
-                changeFriendShipLevelUp(friendship, 20);
-            }
-        }
+
         anotherPlayer.notify(
             new Response("%s called you!".formatted(currentPlayer.getUser().getUsername())),
             NotificationType.TALK, currentPlayer
         );
+        GameClient.getInstance().talk(anotherPlayer, message);
+        privateTalk(currentPlayer, anotherPlayer, message);
         return new Response("message sent successfully", true);
+    }
+
+    public void privateTalk(Player sender, Player getter, String message) {
+        Friendship friendship = getFriendShipBetweenTwoActors(sender, getter);
+        friendship.getDialogs().add(new Entry<>(message, sender));
+        if (sender.getCouple() != null) {
+            if (sender.getCouple().equals(getter)) {
+                changeFriendShipLevelUp(friendship, 50);
+            }
+        } else {
+            changeFriendShipLevelUp(friendship, 20);
+        }
     }
 
 
@@ -177,40 +163,17 @@ public class RelationService {
         if (gift == null) {
             return new Response("You don't enough amount of the item : " + itemName);
         }
-        currentPlayer.getInventory().deleteProductFromBackPack(gift, currentPlayer, amount);
-        gift = gift.copy();
-        player.getInventory().getProducts().put(gift, amount);
-        Friendship friendShipBetweenTwoActors = getFriendShipBetweenWithActor(player);
-        if (gift instanceof Flower) {
-            if (friendShipBetweenTwoActors.getXp() == 100) {
-                friendShipBetweenTwoActors.setFriendShipLevel(friendShipBetweenTwoActors.getFriendShipLevel() + 1);
-            }
-        } else {
-            friendShipBetweenTwoActors.getGifts().add(new Gift(currentPlayer, player, amount, gift, friendShipBetweenTwoActors.getGifts().size()));
-            player.notify(new Response("%s sent you a gift".formatted(currentPlayer.getUser().getUsername())),
-                NotificationType.GIFT, currentPlayer);
-        }
-        if (player.getCouple() == currentPlayer) {
-            currentPlayer.changeEnergy(50);
-            player.changeEnergy(50);
-        }
-        return new Response("Gift gave successfully", true);
+        return giveGift(player, gift, amount);
     }
 
     public Response giveGift(Player player, Salable gift, int amount) {
         game = App.getInstance().getCurrentGame();
         currentPlayer = game.getCurrentPlayer();
-//        boolean areNeighbors = twoActorsAreNeighbors(currentPlayer, player, 1);
-//        if (!areNeighbors) {
-//            return new Response("the other player is not next You");
-//        }
         if (!currentPlayer.getInventory().getProducts().containsKey(gift)
             || currentPlayer.getInventory().getProducts().get(gift) < amount) {
             return new Response("You don't enough amount of the item : " + gift.getName());
         }
-        player.getInventory().getProducts().put(gift, amount);
         currentPlayer.getInventory().deleteProductFromBackPack(gift, currentPlayer, amount);
-        gift = gift.copy();
         Friendship friendship = getFriendShipBetweenWithActor(player);
         friendship.getGifts().add(new Gift(currentPlayer, player, amount, gift, friendship.getGifts().size()));
         player.notify(new Response("%s sent you a gift".formatted(currentPlayer.getUser().getUsername())),
@@ -225,7 +188,25 @@ public class RelationService {
             currentPlayer.changeEnergy(50);
             player.changeEnergy(50);
         }
+        GameClient.getInstance().sendGift(player, gift, amount);
         return new Response("Gift gave successfully", true);
+    }
+
+    public void getGift(Player player, Salable gift, int amount) {
+        currentPlayer = App.getInstance().getCurrentGame().getCurrentPlayer();
+        currentPlayer.getInventory().getProducts().put(gift, amount);
+        Friendship friendship = getFriendShipBetweenWithActor(player);
+        friendship.getGifts().add(new Gift(currentPlayer, player, amount, gift, friendship.getGifts().size()));
+        if (gift instanceof Flower) {
+            if (friendship.getFriendShipLevel() == 2 && friendship.getXp() >= xpNeededForChangeLevel(friendship)) {
+                friendship.setFriendShipLevel(friendship.getFriendShipLevel() + 1);
+                friendship.setXp(0);
+            }
+        }
+        if (currentPlayer.getCouple() == player) {
+            currentPlayer.changeEnergy(50);
+            player.changeEnergy(50);
+        }
     }
 
     public Response showGottenGifts() {
