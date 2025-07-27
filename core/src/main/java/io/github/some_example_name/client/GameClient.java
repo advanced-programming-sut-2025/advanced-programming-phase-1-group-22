@@ -12,6 +12,7 @@ import com.google.gson.reflect.TypeToken;
 import io.github.some_example_name.client.controller.mainMenu.StartGameMenuController;
 import io.github.some_example_name.common.model.Farm;
 import io.github.some_example_name.common.model.Game;
+import io.github.some_example_name.common.model.relations.Player;
 import io.github.some_example_name.common.model.User;
 import io.github.some_example_name.common.model.enums.Gender;
 import io.github.some_example_name.common.model.enums.SecurityQuestion;
@@ -218,7 +219,7 @@ public class GameClient {
                 "action", "=update_player_position",
                 "id", player.getUser().getUsername(),
                 "body", Map.of("position_x", player.getTiles().get(0).getX(),
-                    "position_y", player.getTiles().get(0).getY())
+                    "position_y", player.getTiles().get(0).getY(), "direction", player.getDirection().ordinal())
             );
             out.println(GSON.toJson(msg));
         } catch (IOException e) {
@@ -364,8 +365,8 @@ public class GameClient {
             for (Structure structure : App.getInstance().getCurrentGame().getVillage().getStructures()) {
                 try {
                     if (structure.getClass().equals(Class.forName(body.get("!class").getAsString())) &&
-                        structure.getTiles().getFirst().getX() == prevX &&
-                        structure.getTiles().getFirst().getY() == prevY) {
+                        structure.getTiles().get(0).getX() == prevX &&
+                        structure.getTiles().get(0).getY() == prevY) {
                         return structure;
                     }
                 } catch (ClassNotFoundException e) {
@@ -376,8 +377,8 @@ public class GameClient {
             for (Structure structure : farm.getStructures()) {
                 try {
                     if (structure.getClass().equals(Class.forName(body.get("!class").getAsString())) &&
-                        structure.getTiles().getFirst().getX() == prevX &&
-                        structure.getTiles().getFirst().getY() == prevY) {
+                        structure.getTiles().get(0).getX() == prevX &&
+                        structure.getTiles().get(0).getY() == prevY) {
                         return structure;
                     }
                 } catch (ClassNotFoundException e) {
@@ -428,7 +429,7 @@ public class GameClient {
                         map.put(field.getName(), ((Enum<?>) obj).ordinal());
                     } else {
                         if (obj instanceof Structure structure && !structure.getTiles().isEmpty()) {
-                            map.put(field.getName(), encodeStructure(structure, structure.getTiles().getFirst()));
+                            map.put(field.getName(), encodeStructure(structure, structure.getTiles().get(0)));
                         } else {
                             map.put(field.getName(), encodeStructure(obj, null));
                         }
@@ -446,7 +447,7 @@ public class GameClient {
         if (obj.getTiles().isEmpty()) return;
         Farm farm = null;
         for (Farm farm1 : App.getInstance().getCurrentGame().getVillage().getFarms()) {
-            if (farm1.isPairInFarm(new Pair(obj.getTiles().getFirst().getX(), obj.getTiles().getFirst().getY()))) {
+            if (farm1.isPairInFarm(new Pair(obj.getTiles().get(0).getX(), obj.getTiles().get(0).getY()))) {
                 farm = farm1;
                 break;
             }
