@@ -15,7 +15,6 @@ import io.github.some_example_name.common.model.records.Response;
 import io.github.some_example_name.common.model.relations.Player;
 import io.github.some_example_name.common.model.source.Seed;
 import io.github.some_example_name.common.model.structure.Structure;
-import io.github.some_example_name.common.variables.Session;
 import io.github.some_example_name.server.service.GameService;
 import io.github.some_example_name.common.utils.App;
 import io.github.some_example_name.common.utils.GameAsset;
@@ -29,7 +28,6 @@ import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Getter
 public class PlayerController {
@@ -99,19 +97,9 @@ public class PlayerController {
                     .getSprites().get(0).getSprite()).setLooping(false);
             }
             if (response != null && response.shouldBeBack()) {
-                updatePlayerPosition(App.getInstance().getCurrentGame().getCurrentPlayer());
+                GameClient.getInstance().updatePlayerPosition(App.getInstance().getCurrentGame().getCurrentPlayer());
             }
         }
-    }
-
-    private void updatePlayerPosition(Player player) {
-        Map<String, Object> msg = Map.of(
-            "action", "=update_player_position",
-            "id", player.getUser().getUsername(),
-            "body", Map.of("position_x", player.getTiles().get(0).getX(),
-                "position_y", player.getTiles().get(0).getY())
-        );
-        GameClient.getInstance().sendGameStateToServer(GSON.toJson(msg));
     }
 
     private void handleInputs() {

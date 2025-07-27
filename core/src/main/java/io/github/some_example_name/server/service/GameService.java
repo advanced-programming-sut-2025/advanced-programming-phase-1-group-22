@@ -38,7 +38,6 @@ import io.github.some_example_name.server.repository.UserRepository;
 import io.github.some_example_name.server.saveGame.GameSerializer;
 import io.github.some_example_name.common.utils.App;
 import io.github.some_example_name.common.variables.Session;
-import io.github.some_example_name.client.view.GameView;
 import io.github.some_example_name.client.view.Menu;
 
 import java.util.*;
@@ -1702,7 +1701,7 @@ public class GameService {
         }
         craft.setMadeProduct(new MadeProduct(madeProductType, product1));
         craft.setETA(madeProductType.calcETA(product1));
-        GameClient.getInstance().updateStructureState(craft, StructureUpdateState.UPDATE,true, craft.getTiles().getFirst());
+        GameClient.getInstance().updateStructureState(craft, StructureUpdateState.UPDATE,true, craft.getTiles().get(0));
         return new Response("The item will be ready in due time.");
     }
 
