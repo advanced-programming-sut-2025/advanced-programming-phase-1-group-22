@@ -109,7 +109,7 @@ public class PlayerController {
             "action", "=update_player_position",
             "id", player.getUser().getUsername(),
             "body", Map.of("position_x", player.getTiles().get(0).getX(),
-                "position_y", player.getTiles().get(0).getY())
+                "position_y", player.getTiles().get(0).getY(), "direction", player.getDirection().ordinal())
         );
         GameClient.getInstance().sendGameStateToServer(GSON.toJson(msg));
     }

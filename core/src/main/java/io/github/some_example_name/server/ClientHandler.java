@@ -7,10 +7,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
 import io.github.some_example_name.common.model.*;
 import io.github.some_example_name.server.model.GameServer;
 import io.github.some_example_name.server.model.GameThread;
@@ -29,7 +26,7 @@ import java.util.Map;
 import java.util.Random;
 
 public class ClientHandler extends Thread {
-    private static final Gson GSON = new Gson();
+    private static final Gson GSON = new GsonBuilder().serializeNulls().create();
     private Socket clientSocket;
     private PrintWriter out;
     private BufferedReader in;

@@ -35,7 +35,7 @@ import java.util.*;
 public class GameClient {
     private static final String SERVER_ADDRESS = "localhost";
     private static final int SERVER_PORT = 5000;
-    private static final Gson GSON = new Gson();
+    private static final Gson GSON = new GsonBuilder().serializeNulls().create();
     private static GameClient instance;
     private Socket socket;
     private PrintWriter out;
@@ -145,7 +145,8 @@ public class GameClient {
                             String username = obj.get("id").getAsString();
                             int position_x = body.get("position_x").getAsInt();
                             int position_Y = body.get("position_y").getAsInt();
-                            service.handleUpdatePosition(username, position_x, position_Y);
+                            Direction direction = Direction.values()[body.get("direction").getAsInt()];
+                            service.handleUpdatePosition(username, position_x, position_Y, direction);
                         } else if (obj.get("action").getAsString().equals("=update_tile")){
                             JsonObject tileObject = body.get("tile").getAsJsonObject();
                             Tile tile = GSON.fromJson(tileObject,Tile.class);
@@ -249,7 +250,9 @@ public class GameClient {
                 if (field == null) continue;
                 field.setAccessible(true);
                 Class<?> fieldType = field.getType();
-                if (fieldType.equals(int.class) || fieldType.equals(Integer.class)) {
+                if (entry.getValue().isJsonNull()) {
+                    field.set(obj, null);
+                } else if (fieldType.equals(int.class) || fieldType.equals(Integer.class)) {
                     field.set(obj, entry.getValue().getAsInt());
                 } else if (fieldType.equals(boolean.class) || fieldType.equals(Boolean.class)) {
                     field.set(obj, entry.getValue().getAsBoolean());
@@ -285,7 +288,9 @@ public class GameClient {
                 if (field == null) continue;
                 field.setAccessible(true);
                 Class<?> fieldType = field.getType();
-                if (fieldType.equals(int.class) || fieldType.equals(Integer.class)) {
+                if (entry.getValue().isJsonNull()) {
+                    field.set(obj, null);
+                } else if (fieldType.equals(int.class) || fieldType.equals(Integer.class)) {
                     field.set(obj, entry.getValue().getAsInt());
                 } else if (fieldType.equals(boolean.class) || fieldType.equals(Boolean.class)) {
                     field.set(obj, entry.getValue().getAsBoolean());
@@ -378,8 +383,9 @@ public class GameClient {
                 try {
                     Class<?> fieldType = field.getType();
                     Object obj = field.get(object);
-                    if (obj == null) continue;
-                    if (fieldType.equals(int.class) || fieldType.equals(Integer.class) ||
+                    if (obj == null) {
+                        map.put(field.getName(), null);
+                    } else if (fieldType.equals(int.class) || fieldType.equals(Integer.class) ||
                         fieldType.equals(boolean.class) || fieldType.equals(Boolean.class) ||
                         fieldType.equals(String.class) || fieldType.equals(float.class) ||
                         fieldType.equals(Float.class) || fieldType.equals(double.class) ||
