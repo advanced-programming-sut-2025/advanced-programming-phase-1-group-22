@@ -2,6 +2,8 @@ package io.github.some_example_name.common.model.tools;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import io.github.some_example_name.client.GameClient;
+import io.github.some_example_name.common.model.StructureUpdateState;
 import io.github.some_example_name.common.utils.GameAsset;
 import lombok.Getter;
 import io.github.some_example_name.common.model.relations.Player;
@@ -93,6 +95,7 @@ public enum Pickaxe implements Tool {
 	public String useTool(Player player, Tile tile) {
 		if (tile.getTileType().equals(TileType.PLOWED) && !tile.getIsFilled()) {
 			tile.setTileType(TileType.FLAT);
+            GameClient.getInstance().updateTileState(tile);
 			player.upgradeAbility(Ability.MINING);
 			player.upgradeAbility(Ability.FORAGING);
 			player.changeEnergy(-this.getEnergy(player));
@@ -156,6 +159,7 @@ public enum Pickaxe implements Tool {
 			player.upgradeAbility(Ability.FORAGING);
 			player.changeEnergy(-this.getEnergy(player));
 			App.getInstance().getCurrentGame().getVillage().removeStructure(structure);
+            GameClient.getInstance().updateStructureState(structure, StructureUpdateState.DELETE,true,null);
 			return "you break a stone and get " + mineral.getName();
 		}
 		player.changeEnergy(-Math.max(0, this.getEnergy(player) - 1));

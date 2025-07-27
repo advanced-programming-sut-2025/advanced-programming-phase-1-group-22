@@ -2,6 +2,7 @@ package io.github.some_example_name.common.model.tools;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import io.github.some_example_name.client.GameClient;
 import io.github.some_example_name.common.utils.GameAsset;
 import lombok.Getter;
 import io.github.some_example_name.common.model.relations.Player;
@@ -92,6 +93,7 @@ public enum Hoe implements Tool {
 		}
 		if (!tile.getIsFilled()) {
 			tile.setTileType(TileType.PLOWED);
+            GameClient.getInstance().updateTileState(tile);
 			player.changeEnergy(-this.getEnergy(player));
 			return "you plowed this tile";
 		}
