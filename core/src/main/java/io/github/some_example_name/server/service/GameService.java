@@ -314,6 +314,7 @@ public class GameService {
             return new Response("there is not a tool with this name in inventory");
         }
         currentPlayer.setCurrentCarrying(currentTool);
+        GameClient.getInstance().updatePlayerCarryingObject(currentPlayer);
         return new Response("you carrying " + name + " now", true);
     }
 

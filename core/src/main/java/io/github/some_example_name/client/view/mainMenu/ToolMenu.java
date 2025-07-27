@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import io.github.some_example_name.client.GameClient;
 import io.github.some_example_name.client.MainGradle;
 import io.github.some_example_name.client.controller.WorldController;
 import io.github.some_example_name.common.model.Salable;
@@ -65,6 +66,7 @@ public class ToolMenu extends PopUp {
                         public void clicked(InputEvent event, float x, float y) {
                             if (getTapCount() == 2) {
                                 currentPlayer.setCurrentCarrying(item);
+                                GameClient.getInstance().updatePlayerCarryingObject(currentPlayer);
                                 refreshInventory(stage, inventory, currentPlayer, slotTexture, currentPlayer, trashCan, scrollPane);
                             }
                         }
@@ -156,6 +158,7 @@ public class ToolMenu extends PopUp {
                         public void clicked(InputEvent event, float x, float y) {
                             if (getTapCount() == 2) {
                                 currentPlayer.setCurrentCarrying(item);
+                                GameClient.getInstance().updatePlayerCarryingObject(player);
                                 refreshInventory(stage, inventory, currentPlayer, slotTexture, currentPlayer, trashCan, scrollPane);
                             }
                         }

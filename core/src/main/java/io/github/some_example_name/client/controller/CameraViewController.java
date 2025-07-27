@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import io.github.some_example_name.client.GameClient;
 import io.github.some_example_name.client.MainGradle;
 import io.github.some_example_name.common.model.Salable;
 import io.github.some_example_name.common.model.Tile;
@@ -355,6 +356,7 @@ public class CameraViewController {
             }
             if (Gdx.input.isKeyJustPressed(Input.Keys.GRAVE)) {
                 player.setCurrentCarrying(null);
+                GameClient.getInstance().updatePlayerCarryingObject(player);
                 currentToolIndex = -1;
 
             }
@@ -366,6 +368,7 @@ public class CameraViewController {
                 if (Gdx.input.isKeyJustPressed(shortcuts[i])) {
                     if (i < player.getInventory().getProducts().size()) {
                         player.setCurrentCarrying(items.get(i));
+                        GameClient.getInstance().updatePlayerCarryingObject(player);
                         currentToolIndex = i;
                     }
                 }
@@ -373,6 +376,7 @@ public class CameraViewController {
             if (Gdx.input.isKeyJustPressed(Input.Keys.TAB)) {
                 if (currentToolIndex == null) currentToolIndex = -1;
                 player.setCurrentCarrying(items.get(++currentToolIndex % Math.min(12, player.getInventory().getProducts().size())));
+                GameClient.getInstance().updatePlayerCarryingObject(player);
             }
             if (GameView.scrollY != 0) {
                 int mod = Math.min(12, player.getInventory().getProducts().size());
@@ -383,6 +387,7 @@ public class CameraViewController {
                     currentToolIndex += mod;
                     currentToolIndex %= mod;
                     player.setCurrentCarrying(items.get(currentToolIndex));
+                    GameClient.getInstance().updatePlayerCarryingObject(player);
                     GameView.scrollY = 0;
                 }
             }

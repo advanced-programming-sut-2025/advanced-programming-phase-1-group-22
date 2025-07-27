@@ -1,10 +1,7 @@
 package io.github.some_example_name.client.service;
 
 import com.badlogic.gdx.utils.Timer;
-import io.github.some_example_name.common.model.AnimatedSprite;
-import io.github.some_example_name.common.model.Direction;
-import io.github.some_example_name.common.model.Farm;
-import io.github.some_example_name.common.model.Tile;
+import io.github.some_example_name.common.model.*;
 import io.github.some_example_name.common.model.relations.Player;
 import io.github.some_example_name.common.model.structure.Structure;
 import io.github.some_example_name.common.utils.App;
@@ -46,6 +43,12 @@ public class ClientService {
         Structure structure = getStructureByTile(tiles);
         if (structure == null) return;
         App.getInstance().getCurrentGame().getVillage().removeStructure(structure);
+    }
+
+    public void handleCurrentCarrying(Salable salable,String username){
+        Player player = getPlayerByUsername(username);
+        if (player == null) return;
+        player.setCurrentCarrying(salable);
     }
 
     private Structure getStructureByTile(List<Tile> tiles) {
