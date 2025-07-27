@@ -42,9 +42,9 @@ public enum TreeType implements Harvestable {
     private final String name;
     private final Source source;
     private final Integer harvestCycle;
-    private final List<Texture> textures;
-    private final Texture fruitedTexture;
-    private final Texture burnTexture;
+    private final transient List<Texture> textures;
+    private final transient Texture fruitedTexture;
+    private final transient Texture burnTexture;
 
     TreeType(FruitType fruit, Season season, String name, Source source, boolean IsForaging, List<Integer> harvestStages, int harvestCycle, List<Texture> textures,Texture fruitedTexture, Texture burnTexture) {
         this.fruit = fruit;

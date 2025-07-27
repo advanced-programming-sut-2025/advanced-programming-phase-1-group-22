@@ -36,7 +36,7 @@ public enum MineralType implements Product {
     private final String name;
     private final String description;
     private final Integer price;
-    private final Texture texture;
+    private final transient Texture texture;
 
     MineralType(String name, String description, Integer price,Texture texture) {
         this.name = name;

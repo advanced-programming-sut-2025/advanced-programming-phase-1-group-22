@@ -63,7 +63,7 @@ public class Village implements JsonPreparable {
         for (int i = 0; i < farms.size(); i++) {
             Farm farm = farms.get(i);
             farm.fillFarmType(i);
-            farm.generateRandomStructures(); //todo must be moved to gameServer
+            //farm.generateRandomStructures(); //todo must be moved to gameServer
             if (farm.getCottage() != null) {
                 farm.getFridge().getTiles().add(farm.getCottage().getTiles().get(2));
             }

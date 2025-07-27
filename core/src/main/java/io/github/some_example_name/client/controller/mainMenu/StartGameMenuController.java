@@ -4,6 +4,7 @@ package io.github.some_example_name.client.controller.mainMenu;
 import com.badlogic.gdx.Gdx;
 import com.google.gson.JsonArray;
 import io.github.some_example_name.client.GameClient;
+import io.github.some_example_name.common.model.Farm;
 import io.github.some_example_name.common.model.FarmType;
 import io.github.some_example_name.common.model.PlayerType;
 import io.github.some_example_name.common.model.User;
@@ -105,6 +106,10 @@ public class StartGameMenuController {
         }
         App.getInstance().getCurrentGame().setCurrentPlayer(current);
         GameInitService.getInstance().initGame();
+        for (Farm farm : App.getInstance().getCurrentGame().getVillage().getFarms()) {
+            if (!farm.getPlayers().isEmpty() && farm.getPlayers().get(0).equals(App.getInstance().getCurrentGame().getCurrentPlayer()))
+                farm.generateRandomStructures();
+        }
         Gdx.app.postRunnable(() -> view.setScreen(new GameView()));
     }
 }

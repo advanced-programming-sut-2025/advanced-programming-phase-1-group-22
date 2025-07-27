@@ -11,7 +11,7 @@ public enum TrunkType {
     LARGE_TRUNK(2, 2,GameAsset.HARDWOOD);
     private final Integer length;
     private final Integer width;
-    private final Texture texture;
+    private final transient Texture texture;
 
     TrunkType(Integer length, Integer width,Texture texture) {
         this.length = length;

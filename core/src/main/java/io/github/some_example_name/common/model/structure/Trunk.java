@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 public class Trunk extends Structure {
     private TrunkType trunkType;
     private Boolean isBurn = false;
-    private Sprite sprite;
+    private transient Sprite sprite;
 
     public Trunk(TrunkType trunkType) {
         this.trunkType = trunkType;
