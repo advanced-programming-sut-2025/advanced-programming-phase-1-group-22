@@ -14,7 +14,7 @@ import io.github.some_example_name.client.view.GameView;
 import io.github.some_example_name.client.view.mainMenu.ShippingBinMenu;
 
 public class ShippingBinController {
-    private final WorldController worldController = new WorldController();
+    private final WorldController worldController = WorldController.getInstance();
 
     public void update() {
         if (GameView.captureInput) {

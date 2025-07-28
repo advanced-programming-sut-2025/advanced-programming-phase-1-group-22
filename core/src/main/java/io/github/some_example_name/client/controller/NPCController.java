@@ -15,7 +15,7 @@ import io.github.some_example_name.client.view.mainMenu.DialogMenu;
 import io.github.some_example_name.client.view.mainMenu.NPCMenu;
 
 public class NPCController {
-    private final WorldController worldController = new WorldController();
+    private final WorldController worldController = WorldController.getInstance();
 
     public void update() {
         if (GameView.captureInput) {

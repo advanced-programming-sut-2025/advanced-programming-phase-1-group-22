@@ -53,4 +53,17 @@ public class GameServer {
         currentPlayer.setCharacter(character);
         return "Good!";
     }
+
+    public void clearFavors() {
+        for (Entry<ServerPlayer, ClientHandler> client : clients) {
+            client.getValue().setInFavor(false);
+        }
+    }
+
+    public boolean isMajority() {
+        for (Entry<ServerPlayer, ClientHandler> client : clients) {
+            if (!client.getValue().isInFavor()) return false;
+        }
+        return true;
+    }
 }

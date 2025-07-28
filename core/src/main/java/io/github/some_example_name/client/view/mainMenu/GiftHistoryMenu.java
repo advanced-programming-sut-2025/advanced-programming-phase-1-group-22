@@ -171,7 +171,7 @@ public class GiftHistoryMenu extends PopUp {
                             for (int j = 0; j < 5; j++) {
                                 hearts.get(k).get(j).getStyle().imageUp = (j <= finalI) ? filled : empty;
                             }
-                            Response resp = RelationService.getInstance().rateGift(friendship, gift, finalI + 1);
+                            Response resp = RelationService.getInstance().rateGift(gift, friendship, finalI + 1);
                             if (!resp.shouldBeBack()) {
                                 getController().showResponse(resp);
                             } else {

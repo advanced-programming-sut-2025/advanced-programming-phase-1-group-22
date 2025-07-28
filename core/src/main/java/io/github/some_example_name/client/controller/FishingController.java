@@ -18,7 +18,7 @@ import io.github.some_example_name.common.utils.App;
 import io.github.some_example_name.client.view.MiniGame;
 
 public class FishingController {
-    private final WorldController worldController = new WorldController();
+    private final WorldController worldController = WorldController.getInstance();
     private MiniGame miniGame;
 
     public void update() {

@@ -100,7 +100,7 @@ public class ToolController {
     }
 
     private void useTool(Player player, Tool tool, int xTransmit, int yTransmit) {
-        WorldController worldController = new WorldController();
+        WorldController worldController = WorldController.getInstance();
         Tile tile = getTileByXAndY(player.getTiles().get(0).getX() + xTransmit, player.getTiles().get(0).getY() + yTransmit);
         if (tile != null) {
             worldController.showResponse(new Response(tool.useTool(player, tile)));

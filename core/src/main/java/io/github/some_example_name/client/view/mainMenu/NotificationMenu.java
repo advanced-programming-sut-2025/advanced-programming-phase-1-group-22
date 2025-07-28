@@ -78,12 +78,12 @@ public class NotificationMenu extends PopUp {
                         switch (notification.type()) {
                             case GIFT: {
                                 GiftHistoryMenu menu = new GiftHistoryMenu();
-                                menu.setFriendship(RelationService.getInstance().getFriendShipBetweenTwoActors(notification.source()));
+                                menu.setFriendship(RelationService.getInstance().getFriendShipBetweenWithActor(notification.source()));
                                 menu.createMenu(stage, skin, getController());
                             } break;
                             case TALK: {
                                 TalkMenu menu = new TalkMenu();
-                                menu.setFriendship(RelationService.getInstance().getFriendShipBetweenTwoActors(notification.source()));
+                                menu.setFriendship(RelationService.getInstance().getFriendShipBetweenWithActor(notification.source()));
                                 menu.createMenu(stage, skin, getController());
                             } break;
                             case TRADE, MARRIAGE: {

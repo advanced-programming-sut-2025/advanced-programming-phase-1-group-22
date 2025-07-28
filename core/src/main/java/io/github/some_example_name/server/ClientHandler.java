@@ -24,15 +24,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+@Getter
+@Setter
 public class ClientHandler extends Thread {
     private static final Gson GSON = new GsonBuilder().serializeNulls().create();
     private Socket clientSocket;
     private PrintWriter out;
     private BufferedReader in;
-    @Getter
-    @Setter
     private boolean ready = false;
-    @Getter
+    private boolean inFavor = false;
     private GameServer gameServer;
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final ServerService service = new ServerService(this);
@@ -111,11 +111,34 @@ public class ClientHandler extends Thread {
                     } else if (obj.get("action").getAsString().equals("ready_for_sleep")) {
                         ready = true;
                         if (gameServer.isReady()) gameServer.sendAll(message);
+                    } else if (obj.get("action").getAsString().equals("propose_end")) {
+                        gameServer.clearFavors();
+                        gameServer.sendAll(message);
+                    } else if (obj.get("action").getAsString().equals("stop_termination")) {
+                        gameServer.clearFavors();
+                        gameServer.sendAllBut(message, obj.get("id").getAsString());
+                    } else if (obj.get("action").getAsString().equals("continue_termination")) {
+                        inFavor = true;
+                        if (gameServer.isMajority()) {
+                            Map<String, Object> msg = Map.of(
+                                "action", "terminate_game",
+                                "id", "!server!",
+                                "body", Map.of()
+                            );
+                            gameServer.sendAll(GSON.toJson(msg));
+                        }
                     } else if (obj.get("action").getAsString().charAt(0) == '_') {
                         gameServer.sendAll(message);
                     } else if (obj.get("action").getAsString().charAt(0) == '=') {
                         String username = obj.get("id").getAsString();
                         gameServer.sendAllBut(GSON.toJson(obj), username);
+                    } else if (obj.getAsJsonObject("body").has("receiver")) {
+                        String username = obj.getAsJsonObject("body").get("receiver").getAsString();
+                        for (Entry<ServerPlayer, ClientHandler> client : gameServer.getClients()) {
+                            if (client.getKey().getUsername().equals(username)) {
+                                client.getValue().send(message);
+                            }
+                        }
                     }
                 } catch (JsonParseException e) {
                     System.out.println("Received non-JSON message: " + message);
