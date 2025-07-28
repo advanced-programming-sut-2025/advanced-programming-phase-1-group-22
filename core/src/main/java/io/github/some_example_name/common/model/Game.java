@@ -90,11 +90,12 @@ public class Game implements Serializable {
                 }
             }
         }
-        for (Structure structure : App.getInstance().getCurrentGame().getVillage().getStructures()) {
+        App.getInstance().getCurrentGame().getVillage().applyPendingChanges();
+        App.getInstance().getCurrentGame().getVillage().forEachStructure(structure -> {
             if (structure instanceof NPC npc) {
                 npc.setGiftedToday(false);
             }
-        }
+        });
         giveRewardToLevelThreeFriends();
         manageHarvest();
         Weather tomorrowWeather = this.getVillage().getTomorrowWeather();
@@ -135,12 +136,13 @@ public class Game implements Serializable {
             }
         }
         for (Farm farm : App.getInstance().getCurrentGame().getVillage().getFarms()) {
-            for (Structure structure : farm.getStructures()) {
+            farm.applyPendingChanges();
+            farm.forEachStructure(structure -> {
                 if (structure instanceof Animal animal) {
                     animal.produceAnimalProduct();
                     calculateAnimalFriendShip(animal);
                 }
-            }
+            });
         }
         for (BlackSmithStuff value : BlackSmithStuff.values()) {
             value.resetDailySold();
@@ -249,12 +251,13 @@ public class Game implements Serializable {
     public void automaticWatering(Weather weather) {
         if (weather.equals(Weather.RAINY) || weather.equals(Weather.STORMY)) {
             for (Farm farm : App.getInstance().getCurrentGame().getVillage().getFarms()) {
-                for (Structure structure : farm.getStructures()) {
+                farm.applyPendingChanges();
+                farm.forEachStructure(structure -> {
                     if (structure instanceof HarvestAbleProduct &&
                         !((HarvestAbleProduct) structure).getInGreenHouse()) {
                         ((HarvestAbleProduct) structure).setWaterToday(true);
                     }
-                }
+                });
             }
         }
     }
@@ -262,8 +265,8 @@ public class Game implements Serializable {
     private void manageHarvest() {
         for (Farm farm : this.getVillage().getFarms()) {
             if (!farm.getPlayers().isEmpty() && farm.getPlayers().get(0).equals(App.getInstance().getCurrentGame().getCurrentPlayer())) {
-                List<Structure> structures = new ArrayList<>(farm.getStructures());
-                for (Structure structure : structures) {
+                farm.applyPendingChanges();
+                for (Structure structure : farm.getStructuresSnapshot()) {
                     if (structure instanceof HarvestAbleProduct harvestAbleProduct) {
                         if (!harvestAbleProduct.getIsWaterToday() && !harvestAbleProduct.getAroundSprinkler()) {
                             int oldNumber = harvestAbleProduct.getNumberOfWithoutWaterDays();

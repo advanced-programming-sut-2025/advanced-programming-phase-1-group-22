@@ -56,14 +56,15 @@ public class AnimalController {
             heartEffect.draw(MainGradle.getInstance().getBatch());
         }
         for (Farm farm : App.getInstance().getCurrentGame().getVillage().getFarms()) {
-            for (Structure structure : farm.getStructures()) {
+            farm.applyPendingChanges();
+            farm.forEachStructure(structure -> {
                 if (structure instanceof Animal animal && isStructureInBond(structure)) {
                     if (animal.getIsAnimalStayOutAllNight()) {
                         handleAnimalMovement(animal);
                         updateAnimalMovement(Gdx.graphics.getDeltaTime(), animal);
                     }
                 }
-            }
+            });
         }
     }
 

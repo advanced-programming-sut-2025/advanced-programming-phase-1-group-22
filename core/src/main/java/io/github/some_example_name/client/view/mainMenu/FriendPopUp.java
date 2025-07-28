@@ -216,7 +216,8 @@ public class FriendPopUp extends PopUp {
 
         boolean flag = false;
         int x = -1, y = -1;
-        List<Structure> structures = App.getInstance().getCurrentGame().getVillage().getStructures();
+        App.getInstance().getCurrentGame().getVillage().applyPendingChanges();
+        List<Structure> structures = App.getInstance().getCurrentGame().getVillage().getStructuresSnapshot();
         for (Structure player1 : structures) {
             if (player1 == currentPlayer) break;
             if (player == player1) {

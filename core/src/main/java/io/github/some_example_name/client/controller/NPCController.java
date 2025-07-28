@@ -30,28 +30,30 @@ public class NPCController {
             MainGradle.getInstance().getCamera().unproject(worldCoords);
             float worldX = worldCoords.x;
             float worldY = worldCoords.y;
-            for (Structure structure : App.getInstance().getCurrentGame().getVillage().getStructures()) {
+            App.getInstance().getCurrentGame().getVillage().applyPendingChanges();
+            App.getInstance().getCurrentGame().getVillage().forEachStructure(structure -> {
                 if (structure instanceof NPC npc) {
                     if (collisionWithDialog(npc.getSpriteDialogBox(), worldX, worldY)) {
                         DialogMenu dialogMenu = new DialogMenu(npc);
                         dialogMenu.createMenu(GameView.stage, GameAsset.SKIN, worldController);
                     }
                 }
-            }
+            });
         }
         if (Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT)){
             Vector3 worldCoords = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
             MainGradle.getInstance().getCamera().unproject(worldCoords);
             float worldX = worldCoords.x;
             float worldY = worldCoords.y;
-            for (Structure structure : App.getInstance().getCurrentGame().getVillage().getStructures()) {
+            App.getInstance().getCurrentGame().getVillage().applyPendingChanges();
+            App.getInstance().getCurrentGame().getVillage().forEachStructure(structure -> {
                 if (structure instanceof NPC npc){
                     if (collision(npc,worldX,worldY)){
                         NPCMenu npcMenu = new NPCMenu(npc);
                         npcMenu.createMenu(GameView.stage,GameAsset.SKIN,worldController);
                     }
                 }
-            }
+            });
         }
     }
 
@@ -61,14 +63,15 @@ public class NPCController {
         int tileMaxX = (int) ((camera.position.x + (camera.viewportWidth / 2)) / App.tileWidth);
         int tileMinY = (int) ((camera.position.y - (camera.viewportHeight / 2)) / App.tileHeight);
         int tileMaxY = (int) ((camera.position.y + (camera.viewportHeight / 2)) / App.tileHeight);
-        for (Structure structure : App.getInstance().getCurrentGame().getVillage().getStructures()) {
+        App.getInstance().getCurrentGame().getVillage().applyPendingChanges();
+        App.getInstance().getCurrentGame().getVillage().forEachStructure(structure -> {
             if (structure instanceof NPC npc) {
                 int tileX = npc.getTiles().get(0).getX();
                 int tileY = npc.getTiles().get(0).getY();
                 npc.setHaveDialog(tileX >= tileMinX && tileX <= tileMaxX &&
                     tileY >= tileMinY && tileY <= tileMaxY);
             }
-        }
+        });
     }
 
     private boolean collision(Structure structure, float worldX, float worldY) {

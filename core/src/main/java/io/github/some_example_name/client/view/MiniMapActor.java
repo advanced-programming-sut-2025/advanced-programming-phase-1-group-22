@@ -53,7 +53,8 @@ public class MiniMapActor extends Actor {
 
     private void drawStructures(Batch batch) {
         for (Farm farm : App.getInstance().getCurrentGame().getVillage().getFarms()) {
-            for (Structure structure : farm.getStructures()) {
+            farm.applyPendingChanges();
+            for (Structure structure : farm.getStructuresSnapshot()) {
                 if (structure.getSprite() != null) {
                     if (structure instanceof Lake) {
                         for (Tile tile : structure.getTiles()) {
@@ -73,7 +74,8 @@ public class MiniMapActor extends Actor {
                 }
             }
         }
-        for (Structure structure : App.getInstance().getCurrentGame().getVillage().getStructures()) {
+        App.getInstance().getCurrentGame().getVillage().applyPendingChanges();
+        App.getInstance().getCurrentGame().getVillage().forEachStructure(structure -> {
             if (structure.getSprite() != null) {
                 Sprite sprite = new Sprite(structure.getSprite());
                 sprite.setSize(structure.getSprite().getWidth() * scale, structure.getSprite().getHeight() * scale);
@@ -81,6 +83,6 @@ public class MiniMapActor extends Actor {
                     getY() + structure.getTiles().get(0).getY() * App.tileHeight * scale);
                 sprite.draw(batch);
             }
-        }
+        });
     }
 }

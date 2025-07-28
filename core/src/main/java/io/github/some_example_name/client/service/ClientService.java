@@ -4,13 +4,11 @@ import com.badlogic.gdx.utils.Timer;
 import io.github.some_example_name.common.model.*;
 import io.github.some_example_name.common.model.products.HarvestAbleProduct;
 import io.github.some_example_name.common.model.relations.Mission;
-import io.github.some_example_name.common.model.relations.NPC;
 import io.github.some_example_name.common.model.relations.NPCType;
 import io.github.some_example_name.common.model.relations.Player;
 import io.github.some_example_name.common.model.structure.Structure;
 import io.github.some_example_name.common.model.structure.stores.Shop;
 import io.github.some_example_name.common.utils.App;
-import io.github.some_example_name.server.service.RelationService;
 
 import java.util.*;
 
@@ -91,7 +89,8 @@ public class ClientService {
 
     private Structure getStructureByTile(List<Tile> tiles) {
         for (Farm farm : App.getInstance().getCurrentGame().getVillage().getFarms()) {
-            List<Structure> structuresCopy = new ArrayList<>(farm.getStructures());
+            farm.applyPendingChanges();
+            List<Structure> structuresCopy = farm.getStructuresSnapshot();
             for (Structure structure : structuresCopy) {
                 if (structure.getTiles().size() == tiles.size()) {
                     boolean found = true;
@@ -105,7 +104,8 @@ public class ClientService {
                 }
             }
         }
-        List<Structure> structuresCopy = new ArrayList<>(App.getInstance().getCurrentGame().getVillage().getStructures());
+        App.getInstance().getCurrentGame().getVillage().applyPendingChanges();
+        List<Structure> structuresCopy = App.getInstance().getCurrentGame().getVillage().getStructuresSnapshot();
         for (Structure structure : structuresCopy) {
             if (structure.getTiles().size() == tiles.size()) {
                 boolean found = true;

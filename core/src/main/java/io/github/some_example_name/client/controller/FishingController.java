@@ -46,13 +46,14 @@ public class FishingController {
             float worldX = worldCoords.x;
             float worldY = worldCoords.y;
             for (Farm farm : App.getInstance().getCurrentGame().getVillage().getFarms()) {
-                for (Structure structure : farm.getStructures()) {
+                farm.applyPendingChanges();
+                farm.forEachStructure(structure -> {
                     if (structure instanceof Lake lake) {
                         if (collision(lake, worldX, worldY)) {
                             fishing();
                         }
                     }
-                }
+                });
             }
         }
     }

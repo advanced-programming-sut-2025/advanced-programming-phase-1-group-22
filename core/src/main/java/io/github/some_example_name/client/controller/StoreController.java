@@ -58,11 +58,12 @@ public class StoreController {
             MainGradle.getInstance().getCamera().unproject(worldCoords);
             float worldX = worldCoords.x;
             float worldY = worldCoords.y;
-            for (Structure structure : App.getInstance().getCurrentGame().getVillage().getStructures()) {
+            App.getInstance().getCurrentGame().getVillage().applyPendingChanges();
+            App.getInstance().getCurrentGame().getVillage().forEachStructure(structure -> {
                 if (structure instanceof Store) {
                     if (collision((Store) structure, worldX, worldY)) createStoreMenu((Store) structure);
                 }
-            }
+            });
         }
     }
 

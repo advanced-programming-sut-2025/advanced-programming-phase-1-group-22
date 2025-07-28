@@ -65,7 +65,9 @@ public class GreenHouse extends HardCodeFarmElements {
             this.getTiles().get(i).setIsFilled(true);
             pool.getTiles().add(this.getTiles().get(i));
         }
-        farm.getStructures().add(pool);
-        Collections.swap(farm.getStructures(), farm.getStructures().size() - 1, farm.getStructures().indexOf(this));
+        farm.addStructure(pool);
+        synchronized (farm.getStructures()){
+            Collections.swap(farm.getStructures(), farm.getStructures().size() - 1, farm.getStructures().indexOf(this));
+        }
     }
 }
