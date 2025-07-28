@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import io.github.some_example_name.common.model.Actor;
@@ -15,14 +16,16 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor(force = true)
 public class Mission {
-    private Integer id;
-    private Actor doer;
+    private int id;
+    private final AtomicReference<Actor> doer = new AtomicReference<>();
     private NPCType requester;
     private Integer requiredLevel;
     private Season requiredSeason;
@@ -31,33 +34,20 @@ public class Mission {
     private transient volatile Map<Salable, Integer> resolvedRequest;
     private transient volatile Map<Salable, Integer> resolvedReward;
 
-    public Mission(Supplier<Map<Salable, Integer>> requestSupplier,
+    public Mission(Integer id, Supplier<Map<Salable, Integer>> requestSupplier,
                    Supplier<Map<Salable, Integer>> rewardSupplier,
                    Integer requiredLevel) {
-        this(null, requestSupplier, rewardSupplier, requiredLevel, null);
+        this(null, id, requestSupplier, rewardSupplier, requiredLevel, null);
     }
 
-    public Mission(Supplier<Map<Salable, Integer>> requestSupplier,
+    public Mission(Integer id, Supplier<Map<Salable, Integer>> requestSupplier,
                    Supplier<Map<Salable, Integer>> rewardSupplier,
                    Season requiredSeason) {
-        this(null, requestSupplier, rewardSupplier, null, requiredSeason);
-    }
-
-    public Mission(NPCType requester,
-                   Supplier<Map<Salable, Integer>> requestSupplier,
-                   Supplier<Map<Salable, Integer>> rewardSupplier,
-                   Integer requiredLevel) {
-        this(requester, requestSupplier, rewardSupplier, requiredLevel, null);
-    }
-
-    public Mission(NPCType requester,
-                   Supplier<Map<Salable, Integer>> requestSupplier,
-                   Supplier<Map<Salable, Integer>> rewardSupplier,
-                   Season requiredSeason) {
-        this(requester, requestSupplier, rewardSupplier, null, requiredSeason);
+        this(null, id, requestSupplier, rewardSupplier, null, requiredSeason);
     }
 
     private Mission(NPCType requester,
+                    Integer id,
                     Supplier<Map<Salable, Integer>> requestSupplier,
                     Supplier<Map<Salable, Integer>> rewardSupplier,
                     Integer requiredLevel,
@@ -97,14 +87,6 @@ public class Mission {
         return result;
     }
 
-    public void setDoer(Actor doer) {
-        this.doer = doer;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
     public boolean isAvailable(int currentLevel, Season currentSeason) {
         if (requiredLevel != null && currentLevel < requiredLevel) {
             return false;
@@ -113,14 +95,6 @@ public class Mission {
             return false;
         }
         return true;
-    }
-
-    public void complete() {
-        // Implementation for mission completion
-        if (doer != null) {
-            // Transfer items from doer to requester (if needed)
-            // Give rewards to doer
-        }
     }
 
     @JsonIgnore
@@ -135,5 +109,13 @@ public class Mission {
 
     public void unpackAfterLoad(ObjectMapper mapper) {
         this.reward = (Map<Salable, Integer>) (Map<?, ?>) rewardWrapper.toMap(mapper);
+    }
+
+    public Actor getDoer() {
+        return doer.get();
+    }
+
+    public void setDoer(Actor actor) {
+        doer.compareAndSet(null, actor);
     }
 }

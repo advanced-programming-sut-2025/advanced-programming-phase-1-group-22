@@ -1,5 +1,6 @@
 package io.github.some_example_name.server.service;
 
+import io.github.some_example_name.client.GameClient;
 import io.github.some_example_name.common.model.*;
 import io.github.some_example_name.common.model.relations.*;
 import io.github.some_example_name.common.model.enums.Gender;
@@ -394,27 +395,6 @@ public class RelationService {
     }
 
     public Response meetNpc(NPC npc) {
-//        game = App.getInstance().getCurrentGame();
-//        currentPlayer = game.getCurrentPlayer();
-//        NPCType npcType = null;
-//        for (NPCType value : NPCType.values()) {
-//            if (value.getName().equals(npcName)) {
-//                npcType = value;
-//            }
-//        }
-//        NPC npc1 = null;
-//        for (NPC npc : game.getNpcs()) {
-//            if (npc.getType().equals(npcType)) {
-//                npc1 = npc;
-//            }
-//        }
-//        if (npc1 == null) {
-//            return new Response("npc not found");
-//        }
-//        boolean areNeighbors = twoActorsAreNeighbors(currentPlayer, npc1, 2);
-//        if (!areNeighbors) {
-//            return new Response("the other player is not next You");
-//        }
         lastTalkedNPC = npc;
         Friendship friendShipBetweenTwoActors = getFriendShipBetweenTwoActors(npc);
         Dialog dialog = Dialog.getDialog(game.getTimeAndDate(), friendShipBetweenTwoActors.getFriendShipLevel());
@@ -468,25 +448,6 @@ public class RelationService {
     public Response giftNPC(NPC npc, String item) {
         game = App.getInstance().getCurrentGame();
         currentPlayer = game.getCurrentPlayer();
-//        NPCType npcType = null;
-//        for (NPCType value : NPCType.values()) {
-//            if (value.getName().equals(npcName)) {
-//                npcType = value;
-//            }
-//        }
-//        NPC npc1 = null;
-//        for (NPC npc : game.getNpcs()) {
-//            if (npc.getType().equals(npcType)) {
-//                npc1 = npc;
-//            }
-//        }
-//        if (npc1 == null) {
-//            return new Response("npc not found");
-//        }
-//        boolean areNeighbors = twoActorsAreNeighbors(currentPlayer, npc1, 2);
-//        if (!areNeighbors) {
-//            return new Response("the other player is not next You");
-//        }
         Friendship friendShipBetweenTwoActors = getFriendShipBetweenTwoActors(npc);
         Map.Entry<Salable, Integer> itemFromInventory = currentPlayer.getItemFromInventory(item);
         if (itemFromInventory == null) {
@@ -677,56 +638,12 @@ public class RelationService {
             currentPlayer.getInventory().addProductToBackPack(salable, multi * value);
         }
         mission.setDoer(currentPlayer);
-        return new Response("mission completed");
-    }
-
-    public Response doMission(int missionId) {
-        game = App.getInstance().getCurrentGame();
-        currentPlayer = game.getCurrentPlayer();
-        if (missionId < 1 || missionId > 3) {
-            return new Response("missionId invalid");
-        }
-        Mission mission = lastTalkedNPC.getType().getMissions().get(missionId - 1);
-        if (mission.getDoer() != null) {
-            return new Response("mission is already done");
-        }
-        boolean areNeighbors = twoActorsAreNeighbors(currentPlayer, lastTalkedNPC, 2);
-        if (!areNeighbors) {
-            return new Response("the other player is not next You");
-        }
-
-        boolean canPrepare = true;
-        Map<Salable, Integer> request = mission.getRequest();
-        Map<Salable, Integer> reward = mission.getReward();
-        for (Map.Entry<Salable, Integer> salableIntegerEntry : request.entrySet()) {
-            if (!currentPlayer.getInventory().getProducts().containsKey(salableIntegerEntry.getKey())) {
-                canPrepare = false;
-                break;
-            }
-            if (currentPlayer.getInventory().getProducts().get(salableIntegerEntry.getKey()) < salableIntegerEntry.getValue()) {
-                canPrepare = false;
-                break;
+        for (NPCType value : NPCType.values()) {
+            for (Mission mission1 : value.getMissions()) {
+                mission1.setRequester(value);
             }
         }
-        if (!canPrepare) {
-            return new Response("you don't have all required items");
-        }
-        for (Map.Entry<Salable, Integer> salableIntegerEntry : request.entrySet()) {
-            int value = salableIntegerEntry.getValue();
-            Salable salable = salableIntegerEntry.getKey();
-            int amount = currentPlayer.getInventory().getProducts().get(salable);
-            currentPlayer.getInventory().getProducts().replace(salable, amount - value);
-        }
-        Friendship friendShipBetweenTwoActors = getFriendShipBetweenTwoActors(lastTalkedNPC);
-        int mult = 1;
-        mult = friendShipBetweenTwoActors.getFriendShipLevel() == 2 ? 2 : 1;
-        for (Map.Entry<Salable, Integer> salableIntegerEntry : reward.entrySet()) {
-            int value = salableIntegerEntry.getValue();
-            Salable salable = salableIntegerEntry.getKey();
-            int amount = currentPlayer.getInventory().getProducts().getOrDefault(salable, 0);
-            currentPlayer.getInventory().getProducts().replace(salable, amount + mult * value);
-        }
-        mission.setDoer(currentPlayer);
+        GameClient.getInstance().updateNpcMissionState(mission);
         return new Response("mission completed");
     }
 }

@@ -11,6 +11,7 @@ import com.google.gson.reflect.TypeToken;
 import io.github.some_example_name.client.controller.mainMenu.StartGameMenuController;
 import io.github.some_example_name.common.model.Farm;
 import io.github.some_example_name.common.model.products.HarvestAbleProduct;
+import io.github.some_example_name.common.model.relations.Mission;
 import io.github.some_example_name.common.model.relations.Player;
 import io.github.some_example_name.common.model.enums.Weather;
 import io.github.some_example_name.client.service.ClientService;
@@ -176,6 +177,11 @@ public class GameClient {
                             int amount = obj.get("amount").getAsInt();
                             Object shop = decodeObject(body);
                             service.handleStore((Shop) shop, amount);
+                        } else if (obj.get("action").getAsString().equals("=update_npc_mission")) {
+                            String username = obj.get("id").getAsString();
+                            String npcName = obj.get("npc_type").getAsString();
+                            int mission_id = obj.get("mission_id").getAsInt();
+                            service.handleNpcMission(mission_id, npcName, username);
                         }
                     } catch (JsonParseException e) {
                         System.out.println("Received non-JSON: " + serverMessage);
@@ -297,6 +303,23 @@ public class GameClient {
                 "action", "=update_player_carrying",
                 "id", player.getUser().getUsername(),
                 "body", encodeObject(player.getCurrentCarrying())
+            );
+            out.println(GSON.toJson(msg));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updateNpcMissionState(Mission mission) {
+        try {
+            out = new PrintWriter(socket.getOutputStream(), true);
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+            Map<String, Object> msg = Map.of(
+                "action", "=update_npc_mission",
+                "id", Session.getCurrentUser().getUsername(),
+                "mission_id", mission.getId(),
+                "npc_type", mission.getRequester().getName()
             );
             out.println(GSON.toJson(msg));
         } catch (IOException e) {
