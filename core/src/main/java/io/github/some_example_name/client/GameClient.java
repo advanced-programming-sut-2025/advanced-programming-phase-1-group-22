@@ -587,7 +587,9 @@ public class GameClient {
             }
         }
         if (farm == null) {
-            for (Structure structure : App.getInstance().getCurrentGame().getVillage().getStructures()) {
+            App.getInstance().getCurrentGame().getVillage().applyPendingChanges();
+            List<Structure> structures = App.getInstance().getCurrentGame().getVillage().getStructuresSnapshot();
+            for (Structure structure : structures) {
                 try {
                     if (structure.getClass().equals(Class.forName(body.get("!class").getAsString())) &&
                         structure.getTiles().get(0).getX() == prevX &&
@@ -599,7 +601,9 @@ public class GameClient {
                 }
             }
         } else {
-            for (Structure structure : farm.getStructures()) {
+            farm.applyPendingChanges();
+            List<Structure> structures = farm.getStructuresSnapshot();
+            for (Structure structure : structures) {
                 try {
                     if (structure.getClass().equals(Class.forName(body.get("!class").getAsString())) &&
                         structure.getTiles().get(0).getX() == prevX &&
@@ -685,9 +689,9 @@ public class GameClient {
             }
         }
         if (farm == null) {
-            App.getInstance().getCurrentGame().getVillage().getStructures().add(obj);
+            App.getInstance().getCurrentGame().getVillage().addStructure(obj);
         } else {
-            farm.getStructures().add(obj);
+            farm.addStructure(obj);
         }
     }
 

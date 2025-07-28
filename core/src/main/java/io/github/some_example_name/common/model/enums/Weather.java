@@ -33,11 +33,11 @@ public enum Weather {
         Game game = App.getInstance().getCurrentGame();
         Lightening lightening = new Lightening();
         lightening.setTile(game.tiles[x][y]);
-        game.getVillage().getStructures().add(lightening);
+        game.getVillage().addStructure(lightening);
         Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
-                game.getVillage().getStructures().remove(lightening);
+                game.getVillage().removeStructureFromList(lightening);
                 game.tiles[x][y].setTileType(TileType.THUNDERED);
                 ArrayList<Structure> structures = game.getVillage().findStructuresByTile(game.tiles[x][y]);
                 for (Structure structure : structures) {

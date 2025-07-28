@@ -24,10 +24,9 @@ import io.github.some_example_name.server.saveGame.JsonPreparable;
 import io.github.some_example_name.server.saveGame.ObjectWrapper;
 import io.github.some_example_name.common.utils.App;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.function.Consumer;
 
 @Getter
 @Setter
@@ -40,6 +39,7 @@ public class Farm implements JsonPreparable {
     private List<Player> players = new ArrayList<>();
     //    @JsonManagedReference
     private List<Structure> structures = new ArrayList<>();
+    private final Queue<Runnable> pendingStructureChanges = new ConcurrentLinkedQueue<>();
     private Integer xCenter;
     private Integer yCenter;
     //    @JsonManagedReference
@@ -83,6 +83,43 @@ public class Farm implements JsonPreparable {
         }
     }
 
+    public void forEachStructure(Consumer<Structure> action) {
+        List<Structure> copy;
+        synchronized (this.getStructures()) {
+            copy = new ArrayList<>(this.getStructures());
+        }
+        for (Structure s : copy) {
+            action.accept(s);
+        }
+    }
+
+    public void applyPendingChanges() {
+        while (!pendingStructureChanges.isEmpty()) {
+            pendingStructureChanges.poll().run();
+        }
+    }
+
+    public void addStructure(Structure s) {
+        pendingStructureChanges.add(() -> {
+            synchronized (this.getStructures()) {
+                this.getStructures().add(s);
+            }
+        });
+    }
+
+    public void removeStructure(Structure s) {
+        pendingStructureChanges.add(() -> {
+            synchronized (this.getStructures()) {
+                this.getStructures().remove(s);
+            }
+        });
+    }
+
+    public List<Structure> getStructuresSnapshot() {
+        synchronized (this.getStructures()) {
+            return new ArrayList<>(this.getStructures());
+        }
+    }
 
     public Farm(Player player, FarmType farmType) {
         if (null != player) {
@@ -282,7 +319,7 @@ public class Farm implements JsonPreparable {
                     }
                 }
                 structure.getTiles().addAll(tiles2);
-                this.getStructures().add(structure);
+                addStructure(structure);
                 GameClient.getInstance().updateStructureState(structure, StructureUpdateState.ADD, true, null);
                 return;
             }
@@ -345,7 +382,7 @@ public class Farm implements JsonPreparable {
             }
             if (flag && !tiles2.isEmpty()) {
                 structure.getTiles().addAll(tiles2);
-                this.getStructures().add(structure);
+                addStructure(structure);
                 GameClient.getInstance().updateStructureState(structure, StructureUpdateState.ADD, true, null);
                 return;
             }

@@ -629,7 +629,7 @@ public class GameService {
         TimeAndDate timeAndDate = new TimeAndDate();
         timeAndDate.setDay(App.getInstance().getCurrentGame().getTimeAndDate().getTotalDays());
         harvestableProduct.setStartPlanting(timeAndDate);
-        currentFarm.getStructures().add(harvestableProduct);
+        currentFarm.addStructure(harvestableProduct);
         if (isThereGreenHouseForHarvest(currentTile)) {
             harvestableProduct.setInGreenHouse(true);
         } else if (harvestableProduct instanceof Crop &&
@@ -757,7 +757,8 @@ public class GameService {
     private void setMenu(Player player, Farm farm) {
         if (farm == null) {
             Village village = app.getCurrentGame().getVillage();
-            for (Structure structure : village.getStructures()) {
+            village.applyPendingChanges();
+            for (Structure structure : village.getStructuresSnapshot()) {
                 if (structure instanceof Store) {
                     for (Tile tile : structure.getTiles()) {
                         if (player.getTiles().get(0) == tile) {
@@ -948,7 +949,7 @@ public class GameService {
                 }
             }
             structure.getTiles().addAll(tiles2);
-            farm.getStructures().add(structure);
+            farm.addStructure(structure);
             return "this building successfully add to your farm";
         }
         tiles2.clear();
@@ -975,7 +976,8 @@ public class GameService {
 
     private String addNewBarnAnimal(Farm farm, Animal animal, Player player,
                                     MarnieShopAnimal marnieShopAnimal) {
-        for (Structure structure : farm.getStructures()) {
+        farm.applyPendingChanges();
+        for (Structure structure : farm.getStructuresSnapshot()) {
             if (structure instanceof FarmBuilding) {
                 if (((FarmBuilding) structure).getFarmBuildingType().getIsBarn()) {
                     if (((FarmBuilding) structure).canAddNewAnimal()) {
@@ -984,7 +986,7 @@ public class GameService {
                         player.getAccount().setGolds(oldGold - marnieShopAnimal.getPrice());
                         animal.setTiles(List.of(Objects.requireNonNull(getAFreeTileInBarnOrCoop((FarmBuilding) structure))));
                         player.getAnimals().add(animal);
-                        farm.getStructures().add(animal);
+                        farm.addStructure(animal);
                         return "a/an " + animal.getAnimalType().getName() + " added successfully";
                     }
                 }
@@ -995,7 +997,8 @@ public class GameService {
 
     private String addNewCoopAnimal(Farm farm, Animal animal, Player player,
                                     MarnieShopAnimal marnieShopAnimal) {
-        for (Structure structure : farm.getStructures()) {
+        farm.applyPendingChanges();
+        for (Structure structure : farm.getStructuresSnapshot()) {
             if (structure instanceof FarmBuilding) {
                 if (((FarmBuilding) structure).getFarmBuildingType().getIsCoop()) {
                     if (((FarmBuilding) structure).canAddNewAnimal()) {
@@ -1004,7 +1007,7 @@ public class GameService {
                         player.getAccount().setGolds(oldGold - marnieShopAnimal.getPrice());
                         animal.setTiles(List.of(Objects.requireNonNull(getAFreeTileInBarnOrCoop((FarmBuilding) structure))));
                         player.getAnimals().add(animal);
-                        farm.getStructures().add(animal);
+                        farm.addStructure(animal);
                         return "a/an " + animal.getAnimalType().getName() + " added successfully";
                     }
                 }
@@ -1080,7 +1083,8 @@ public class GameService {
 
     private boolean isAnimalInBarnOrCage(Animal animal, List<Farm> farms) {
         for (Farm farm : farms) {
-            for (Structure structure : farm.getStructures()) {
+            farm.applyPendingChanges();
+            for (Structure structure : farm.getStructuresSnapshot()) {
                 if (structure instanceof FarmBuilding && structure.getTiles().contains(animal.getTiles().get(0))) {
                     return true;
                 }
@@ -1091,7 +1095,8 @@ public class GameService {
 
     private boolean tileIsAvailableForAnimal(Tile tile, List<Farm> farms) {
         for (Farm farm : farms) {
-            for (Structure structure : farm.getStructures()) {
+            farm.applyPendingChanges();
+            for (Structure structure : farm.getStructuresSnapshot()) {
                 if (structure.getTiles().contains(tile)) {
                     return structure instanceof FarmBuilding &&
                             (((FarmBuilding) structure).getFarmBuildingType().getIsCoop() ||
@@ -1121,10 +1126,10 @@ public class GameService {
 
     private void removeAnimalFromVillage(Animal animal, List<Farm> farms) {
         for (Farm farm : farms) {
-            farm.getStructures().remove(animal);
+            farm.removeStructure(animal);
         }
         for (Farm farm : farms) {
-            for (Structure structure : farm.getStructures()) {
+            for (Structure structure : farm.getStructuresSnapshot()) {
                 if (structure instanceof FarmBuilding) {
                     ((FarmBuilding) structure).getAnimals().remove(animal);
                 }
@@ -1248,7 +1253,7 @@ public class GameService {
                         tile1.setIsPassable(true);
                         tile1.setIsFilled(false);
                     }
-                    List<Structure> farmStructures = new ArrayList<>(currentFarm.getStructures());
+                    List<Structure> farmStructures = new ArrayList<>(currentFarm.getStructuresSnapshot());
                     for (Structure structure : farmStructures) {
                         boolean flag = false;
                         for (Tile structureTile : structure.getTiles()) {
@@ -1258,16 +1263,16 @@ public class GameService {
                             }
                         }
                         if (!flag) continue;
-                        if (structure instanceof Tree) currentFarm.getStructures().remove(structure);
-                        if (structure instanceof Crop) currentFarm.getStructures().remove(structure);
-                        if (structure instanceof Stone) currentFarm.getStructures().remove(structure);
-                        if (structure instanceof Mineral) currentFarm.getStructures().remove(structure);
-                        if (structure instanceof Seed) currentFarm.getStructures().remove(structure);
-                        if (structure instanceof MixedSeeds) currentFarm.getStructures().remove(structure);
-                        if (structure instanceof Trunk) currentFarm.getStructures().remove(structure);
-                        if (structure instanceof FarmBuilding) currentFarm.getStructures().remove(structure);
-                        if (structure instanceof Animal) currentFarm.getStructures().remove(structure);
-                        if (structure instanceof ShippingBin) currentFarm.getStructures().remove(structure);
+                        if (structure instanceof Tree) currentFarm.removeStructure(structure);
+                        if (structure instanceof Crop) currentFarm.removeStructure(structure);
+                        if (structure instanceof Stone) currentFarm.removeStructure(structure);
+                        if (structure instanceof Mineral) currentFarm.removeStructure(structure);
+                        if (structure instanceof Seed) currentFarm.removeStructure(structure);
+                        if (structure instanceof MixedSeeds) currentFarm.removeStructure(structure);
+                        if (structure instanceof Trunk) currentFarm.removeStructure(structure);
+                        if (structure instanceof FarmBuilding) currentFarm.removeStructure(structure);
+                        if (structure instanceof Animal) currentFarm.removeStructure(structure);
+                        if (structure instanceof ShippingBin) currentFarm.removeStructure(structure);
                     }
                     return new Response("Bombing completed.");
                 }
@@ -1277,7 +1282,7 @@ public class GameService {
                 }
             }
         }
-        currentFarm.getStructures().add((Structure) product);
+        currentFarm.addStructure((Structure) product);
         setScareCrowAndSprinklerForAll();
         tile.setIsFilled(true);
         tile.setIsPassable(false);
@@ -1598,7 +1603,7 @@ public class GameService {
             }
         }
         structure.getTiles().addAll(tiles2);
-        farm.getStructures().add(structure);
+        farm.addStructure(structure);
     }
 
     private boolean canBeGiant(Crop... crops) {
@@ -1840,16 +1845,17 @@ public class GameService {
 
     private void setScareCrowAndSprinklerForAll() {
         for (Farm farm : App.getInstance().getCurrentGame().getVillage().getFarms()) {
-            for (Structure structure : farm.getStructures()) {
+            farm.applyPendingChanges();
+            farm.forEachStructure(structure -> {
                 if (structure instanceof Craft && (((Craft) structure).getCraftType().equals(CraftType.SCARE_CROW) ||
-                        ((Craft) structure).getCraftType().equals(CraftType.DELUXE_SCARECROW))) {
+                    ((Craft) structure).getCraftType().equals(CraftType.DELUXE_SCARECROW))) {
                     setScareCrowAffect((Craft) structure);
                 } else if (structure instanceof Craft && (((Craft) structure).getCraftType().equals(CraftType.SPRINKLER) ||
-                        ((Craft) structure).getCraftType().equals(CraftType.QUALITY_SPRINKLER) ||
-                        ((Craft) structure).getCraftType().equals(CraftType.IRIDIUM_SPRINKLER))) {
+                    ((Craft) structure).getCraftType().equals(CraftType.QUALITY_SPRINKLER) ||
+                    ((Craft) structure).getCraftType().equals(CraftType.IRIDIUM_SPRINKLER))) {
                     setSprinklerAffect((Craft) structure);
                 }
-            }
+            });
         }
     }
 
@@ -2096,7 +2102,8 @@ public class GameService {
     private Craft findCraft(String name, FlagWraper resp) {
         Player player = app.getCurrentGame().getCurrentPlayer();
         Farm farm = app.getCurrentGame().findFarm();
-        for (Structure structure : farm.getStructures()) {
+        farm.applyPendingChanges();
+        for (Structure structure : farm.getStructuresSnapshot()) {
             if (structure instanceof Craft) {
                 if (((Craft) structure).getName().equalsIgnoreCase(name)) {
                     resp.setFlag(false);

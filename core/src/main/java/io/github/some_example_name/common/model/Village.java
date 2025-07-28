@@ -23,7 +23,10 @@ import io.github.some_example_name.common.utils.App;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
 import java.util.Random;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.function.Consumer;
 import java.util.function.UnaryOperator;
 
 @Getter
@@ -32,15 +35,54 @@ import java.util.function.UnaryOperator;
 @JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "@id")
 public class Village implements JsonPreparable {
     private List<Tile> tiles;
-//    @JsonManagedReference
+    //    @JsonManagedReference
     private List<Farm> farms = new ArrayList<>();
     private List<Structure> structures = new ArrayList<>();
+    private final Queue<Runnable> pendingStructureChanges = new ConcurrentLinkedQueue<>();
     private Weather weather = Weather.SUNNY;
     private Weather tomorrowWeather = Weather.SUNNY;
     @JsonProperty("structureWrappers")
     private List<ObjectWrapper> structureWrappers;
 
     public Village() {
+    }
+
+    public void forEachStructure(Consumer<Structure> action) {
+        List<Structure> copy;
+        synchronized (this.getStructures()) {
+            copy = new ArrayList<>(this.getStructures());
+        }
+        for (Structure s : copy) {
+            action.accept(s);
+        }
+    }
+
+    public void applyPendingChanges() {
+        while (!pendingStructureChanges.isEmpty()) {
+            pendingStructureChanges.poll().run();
+        }
+    }
+
+    public void addStructure(Structure s) {
+        pendingStructureChanges.add(() -> {
+            synchronized (this.getStructures()) {
+                this.getStructures().add(s);
+            }
+        });
+    }
+
+    public void removeStructureFromList(Structure s) {
+        pendingStructureChanges.add(() -> {
+            synchronized (this.getStructures()) {
+                this.getStructures().remove(s);
+            }
+        });
+    }
+
+    public List<Structure> getStructuresSnapshot() {
+        synchronized (this.getStructures()) {
+            return new ArrayList<>(this.getStructures());
+        }
     }
 
 
@@ -211,11 +253,13 @@ public class Village implements JsonPreparable {
 
     public ArrayList<Structure> findStructuresByTile(Tile tile) {
         ArrayList<Structure> structures = new ArrayList<>();
-        for (Structure structure : this.structures) {
+        applyPendingChanges();
+        for (Structure structure : getStructuresSnapshot()) {
             if (structure.getTiles().contains(tile)) structures.add(structure);
         }
         for (Farm farm : farms) {
-            for (Structure structure : farm.getStructures()) {
+            farm.applyPendingChanges();
+            for (Structure structure : farm.getStructuresSnapshot()) {
                 if (structure.getTiles().contains(tile)) structures.add(structure);
             }
         }
@@ -301,7 +345,7 @@ public class Village implements JsonPreparable {
 
         Game game = App.getInstance().getCurrentGame();
         UnaryOperator<String> pad2 = s ->
-                (s == null ? "  " : String.format("%-2s", s)).substring(0, 2);
+            (s == null ? "  " : String.format("%-2s", s)).substring(0, 2);
 
 //        String[][] str = new String[160][120];
 //        Tile[][] tiles = game.tiles;
@@ -407,9 +451,9 @@ public class Village implements JsonPreparable {
 //    }
 
     public void removeStructure(Structure structure) {
-        this.getStructures().remove(structure);
+        removeStructureFromList(structure);
         for (Farm farm : this.getFarms()) {
-            farm.getStructures().remove(structure);
+            farm.removeStructure(structure);
         }
         for (Tile tile : structure.getTiles()) {
             tile.setIsFilled(false);

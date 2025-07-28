@@ -154,7 +154,8 @@ public class PlayerController {
             float worldY = worldCoords.y;
             for (Farm farm : App.getInstance().getCurrentGame().getVillage().getFarms()) {
                 List<Seed> toRemove = new ArrayList<>();
-                for (Structure structure : new ArrayList<>(farm.getStructures())) {
+                farm.applyPendingChanges();
+                for (Structure structure : new ArrayList<>(farm.getStructuresSnapshot())) {
                     if (structure instanceof Seed seed) {
                         if (collision(seed, worldX, worldY)) {
                             toRemove.add(seed);

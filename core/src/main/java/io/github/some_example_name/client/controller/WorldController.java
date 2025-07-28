@@ -203,7 +203,8 @@ public class WorldController {
                         }
                     }
                 }
-                for (Structure structure : farm.getStructures()) {
+                farm.applyPendingChanges();
+                farm.forEachStructure(structure -> {
                     if (structure instanceof Craft) {
                         if (distanceFromClick(structure.getTiles().get(0)).isOrigin()) {
                             if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
@@ -219,7 +220,7 @@ public class WorldController {
                             }
                         }
                     }
-                }
+                });
             }
             for (Player player : App.getInstance().getCurrentGame().getPlayers()) {
                 if (App.getInstance().getCurrentGame().getCurrentPlayer() == player) continue;
@@ -308,7 +309,9 @@ public class WorldController {
         }
 
         for (Farm farm : game.getVillage().getFarms()) {
-            for (Structure structure : farm.getStructures().toArray(new Structure[0])) {
+            farm.applyPendingChanges();
+            List<Structure> structures = farm.getStructuresSnapshot();
+            for (Structure structure : structures.toArray(new Structure[0])) {
                 if (isStructureInBond(structure)) {
                     if (structure.getSprite() != null) {
                         if (structure instanceof Lake lake) {
@@ -332,7 +335,8 @@ public class WorldController {
                                  */
                             }
                         } else if (structure instanceof Animal animal) {
-                            if (isAnimalBuildingCollision(farm.getStructures(), animal, player) ||
+                            farm.applyPendingChanges();
+                            if (isAnimalBuildingCollision(farm.getStructuresSnapshot(), animal, player) ||
                                 animal.getIsAnimalStayOutAllNight()) {
                                 drawRawSprite(delta, structure.getSprite(), structure);
                             }
@@ -357,7 +361,8 @@ public class WorldController {
                 }
             }
         }
-        for (Structure structure : currentGame.getVillage().getStructures()) {
+        currentGame.getVillage().applyPendingChanges();
+        for (Structure structure : currentGame.getVillage().getStructuresSnapshot()) {
             if (structure.getSprite() != null) {
                 if (structure instanceof NPC npc) {
                     drawRawSprite(delta, structure.getSprite(), structure);

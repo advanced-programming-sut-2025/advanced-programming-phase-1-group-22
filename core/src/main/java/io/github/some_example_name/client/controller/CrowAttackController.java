@@ -70,11 +70,12 @@ public class CrowAttackController {
 
     private void crowAttack(Farm farm) {
         List<HarvestAbleProduct> harvestAbleProducts = new ArrayList<>();
-        for (Structure structure : farm.getStructures()) {
+        farm.applyPendingChanges();
+        farm.forEachStructure(structure -> {
             if (structure instanceof HarvestAbleProduct harvestAbleProduct) {
                 harvestAbleProducts.add(harvestAbleProduct);
             }
-        }
+        });
         Random random2 = new Random();
         HarvestAbleProduct harvestAbleProduct;
         if (!harvestAbleProducts.isEmpty()) {

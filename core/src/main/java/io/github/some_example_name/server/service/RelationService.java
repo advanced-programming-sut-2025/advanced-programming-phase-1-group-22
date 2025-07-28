@@ -535,7 +535,8 @@ public class RelationService {
                 mission.setRequester(value);
             }
         }
-        for (Structure structure : App.getInstance().getCurrentGame().getVillage().getStructures()) {
+        App.getInstance().getCurrentGame().getVillage().applyPendingChanges();
+        for (Structure structure : App.getInstance().getCurrentGame().getVillage().getStructuresSnapshot()) {
             if (structure instanceof NPC npc) {
                 Friendship friendShipBetweenTwoActors = getFriendShipBetweenTwoActors(npc);
                 int level = friendShipBetweenTwoActors.getFriendShipLevel();
