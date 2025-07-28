@@ -8,7 +8,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator;
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
+import io.github.some_example_name.client.controller.WorldController;
 import io.github.some_example_name.client.controller.mainMenu.StartGameMenuController;
+import io.github.some_example_name.client.view.GameView;
+import io.github.some_example_name.client.view.mainMenu.TerminateMenu;
 import io.github.some_example_name.common.model.Farm;
 import io.github.some_example_name.common.model.enums.Weather;
 import io.github.some_example_name.client.service.ClientService;
@@ -19,6 +22,7 @@ import io.github.some_example_name.common.model.relations.NPCType;
 import io.github.some_example_name.common.model.relations.Player;
 import io.github.some_example_name.common.model.structure.Structure;
 import io.github.some_example_name.common.utils.App;
+import io.github.some_example_name.common.utils.GameAsset;
 import io.github.some_example_name.common.variables.Session;
 import io.github.some_example_name.server.service.GameService;
 import io.github.some_example_name.server.service.RelationService;
@@ -30,6 +34,7 @@ import java.io.PrintWriter;
 import java.lang.reflect.*;
 import java.net.Socket;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class GameClient {
     private static final String SERVER_ADDRESS = "localhost";
@@ -40,6 +45,7 @@ public class GameClient {
     private PrintWriter out;
     private BufferedReader in;
     private final ClientService service = new ClientService();
+    private final AtomicReference<TerminateMenu> terminateMenu = new AtomicReference<>();
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     public static GameClient getInstance() {
@@ -203,6 +209,23 @@ public class GameClient {
                                 service.getPlayerByUsername(body.get("receiver").getAsString()),
                                 body.get("message").getAsString()
                             );
+                        } else if (obj.get("action").getAsString().equals("rate_gift")) {
+                            RelationService.getInstance().rateGiftByServer(
+                                body.get("giftId").getAsInt(),
+                                body.get("rate").getAsInt(),
+                                service.getPlayerByUsername(body.get("receiver").getAsString()),
+                                service.getPlayerByUsername(obj.get("id").getAsString())
+                            );
+                        } else if (obj.get("action").getAsString().equals("propose_end")) {
+                            terminateMenu.set(new TerminateMenu());
+                            synchronized (terminateMenu) {
+                                terminateMenu.get().createMenu(GameView.stage, GameAsset.SKIN, WorldController.getInstance());
+                                terminateMenu.get().setState(1);
+                            }
+                        } else if (obj.get("action").getAsString().equals("stop_termination")) {
+                            synchronized (terminateMenu) {terminateMenu.get().undoTermination();}
+                        } else if (obj.get("action").getAsString().equals("terminate_game")) {
+                            synchronized (terminateMenu) {terminateMenu.get().terminate();}
                         } else if (obj.get("action").getAsString().equals("notify")) {
                             Actor source = null;
                             if (body.get("isFromPlayer").getAsBoolean()) {
@@ -749,6 +772,38 @@ public class GameClient {
                 "action", "talk",
                 "id", Session.getCurrentUser().getUsername(),
                 "body", Map.of("message", message, "receiver", anotherPlayer.getName())
+            );
+            out.println(GSON.toJson(msg));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void rateGift(Integer giftId, int rate, String giver) {
+        try {
+            out = new PrintWriter(socket.getOutputStream(), true);
+            in  = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+            Map<String, Object> msg = Map.of(
+                "action", "rate_gift",
+                "id", Session.getCurrentUser().getUsername(),
+                "body", Map.of("giftId", giftId, "receiver", giver, "rate", rate)
+            );
+            out.println(GSON.toJson(msg));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void emptyAction(String string) {
+        try {
+            out = new PrintWriter(socket.getOutputStream(), true);
+            in  = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+            Map<String, Object> msg = Map.of(
+                "action", string,
+                "id", Session.getCurrentUser().getUsername(),
+                "body", Map.of()
             );
             out.println(GSON.toJson(msg));
         } catch (IOException e) {
