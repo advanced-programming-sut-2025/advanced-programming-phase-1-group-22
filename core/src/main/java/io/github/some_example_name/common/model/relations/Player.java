@@ -127,7 +127,6 @@ public class Player extends Actor implements JsonPreparable {
         ((AnimatedSprite)this.sprites.get(0).getSprite()).setRotationAnimation(
             new Animation<>(0.1f, 0f, 0f, 45f, 90f)
         );
-        GameView.captureInput = false;
         isFainted = true;
         energy = 0;
     }
