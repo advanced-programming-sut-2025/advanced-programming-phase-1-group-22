@@ -38,7 +38,7 @@ public class StoreController {
     private final GameService gameService = new GameService();
     private final Group menuGroup = new Group();
     private Runnable updatePrice;
-    private final WorldController worldController = new WorldController();
+    private final WorldController worldController = WorldController.getInstance();
 
     public StoreController() {
         if (!GameView.stage.getActors().contains(menuGroup, true)) {

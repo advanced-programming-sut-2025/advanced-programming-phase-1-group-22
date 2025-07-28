@@ -118,6 +118,7 @@ public class PlayerController {
         if (Gdx.input.isKeyJustPressed(Input.Keys.BACKSPACE)) {
             TerminateMenu terminateMenu = new TerminateMenu();
             terminateMenu.createMenu(GameView.stage, GameAsset.SKIN, getWorldController());
+            terminateMenu.setState(0);
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.E) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             inventoryMenu.setTabIndex(0);

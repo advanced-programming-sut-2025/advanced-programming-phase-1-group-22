@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.Timer;
+import io.github.some_example_name.client.GameClient;
 import io.github.some_example_name.client.MainGradle;
 import io.github.some_example_name.client.controller.WorldController;
 import io.github.some_example_name.common.model.Direction;
@@ -21,6 +22,7 @@ import io.github.some_example_name.common.model.enums.Gender;
 import io.github.some_example_name.common.model.records.Response;
 import io.github.some_example_name.common.model.relations.Player;
 import io.github.some_example_name.common.model.structure.Structure;
+import io.github.some_example_name.server.ClientHandler;
 import io.github.some_example_name.server.service.RelationService;
 import io.github.some_example_name.common.utils.App;
 import io.github.some_example_name.client.view.GameView;
@@ -125,145 +127,35 @@ public class FriendPopUp extends PopUp {
     }
 
     private void handleAskMarriage(Player player) {
-        Player currentPlayer = App.getInstance().getCurrentGame().getCurrentPlayer();
-        Tile origin = currentPlayer.getTiles().get(0);
-        Tile dest = App.getInstance().getCurrentGame().tiles[player.getTiles().get(0).getX()][player.getTiles().get(0).getY() - 1];
-        Direction dir = Direction.getByXAndY(
-            dest.getX() - currentPlayer.getTiles().get(0).getX(),
-            dest.getY() - currentPlayer.getTiles().get(0).getY()
-        );
-        if (dir == null) {
-            if (dest.getY() - currentPlayer.getTiles().get(0).getY() == -2 &&
-                Math.abs(dest.getX() - currentPlayer.getTiles().get(0).getX()) <= 1) {
-                dir = Direction.SOUTH;
-            } else {
-                return;
-            }
+        Response resp = RelationService.getInstance().marry(player.getUser().getUsername(), "Wedding Ring");
+        initialHandle(resp);
+        if (resp.shouldBeBack()) {
+            GameClient.getInstance().askMarriage(player.getUser().getUsername());
         }
-        currentPlayer.setDirection(dir);
-        currentPlayer.setDirChanged(true);
-        Timer.schedule(new Timer.Task() {
-            @Override
-            public void run() {
-                currentPlayer.getTiles().clear();
-                currentPlayer.getTiles().add(dest);
-                Direction direction = initialHandle(player, RelationService.getInstance().marry(player.getUser().getUsername(), "Wedding Ring"));
-                if (direction == null) {
-                    currentPlayer.getTiles().clear();
-                    currentPlayer.getTiles().add(origin);
-                    return;
-                }
-                currentPlayer.setDirection(direction);
-                Timer.schedule(new Timer.Task() {
-                    @Override
-                    public void run() {
-                        currentPlayer.setProposal();
-                    }
-                }, 0.5f);
-                Timer.schedule(new Timer.Task() {
-                    @Override
-                    public void run() {
-                        //todo show in the other thread
-                        DoYouMarryMePopUp doYouMarryMePopUp = new DoYouMarryMePopUp();
-                        doYouMarryMePopUp.setPlayer(currentPlayer);
-                        doYouMarryMePopUp.setOrigin(origin);
-                        doYouMarryMePopUp.createMenu(stage, skin, getController());
-                    }
-                }, 1);
-            }
-        }, 0.2f);
     }
 
-    private Direction initialHandle(Player player, Response resp) {
+    private void initialHandle(Response resp) {
         window.remove();
-        Player currentPlayer = App.getInstance().getCurrentGame().getCurrentPlayer();
         if (!resp.shouldBeBack()) {
             getController().showResponse(resp);
-            return null;
+            return;
         }
         GameView.captureInput = false;
-        Direction direction = Direction.getByXAndY(
-            player.getTiles().get(0).getX() - currentPlayer.getTiles().get(0).getX(),
-            player.getTiles().get(0).getY() - currentPlayer.getTiles().get(0).getY()
-        );
-        if (direction == null) return null;
-        player.setLazyDirection(direction.reverse());
-        currentPlayer.setLazyDirection(direction);
-        return direction;
     }
 
     private void handleFlower(Player player) {
-        Direction direction = initialHandle(player,
-            RelationService.getInstance().giveGift(player.getUser().getUsername(), "flower", 1));
-        if (direction == null) return;
-        getController().drawFlower(direction);
+        Response resp =  RelationService.getInstance().giveGift(player.getUser().getUsername(), "flower", 1);
+        initialHandle(resp);
+        if (resp.shouldBeBack()) {
+            GameClient.getInstance().handleFlower(player.getUser().getUsername());
+        }
     }
 
     private void handleHug(Player player) {
-        Direction direction = initialHandle(player, RelationService.getInstance().hug(player.getUser().getUsername()));
-        if (direction == null) return;
-        Player currentPlayer = App.getInstance().getCurrentGame().getCurrentPlayer();
-        Tile origin = currentPlayer.getTiles().get(0);
-        currentPlayer.setDirection(direction);
-        currentPlayer.setDirChanged(true);
-        Timer.schedule(new Timer.Task() {
-            @Override
-            public void run() {
-                currentPlayer.getTiles().clear();
-                currentPlayer.getTiles().addAll(player.getTiles());
-            }
-        }, 0.3f);
-
-        boolean flag = false;
-        int x = -1, y = -1;
-        App.getInstance().getCurrentGame().getVillage().applyPendingChanges();
-        List<Structure> structures = App.getInstance().getCurrentGame().getVillage().getStructuresSnapshot();
-        for (Structure player1 : structures) {
-            if (player1 == currentPlayer) break;
-            if (player == player1) {
-                flag = true;
-                break;
-            }
+        Response resp = RelationService.getInstance().hug(player.getUser().getUsername());
+        initialHandle(resp);
+        if (resp.shouldBeBack()) {
+            GameClient.getInstance().handleHug(player.getUser().getUsername());
         }
-
-        for (int i = 0; i < structures.size(); i++) {
-            Structure player1 = structures.get(i);
-            if (player1 == currentPlayer) x = i;
-            if (player == player1) y = i;
-        }
-        if (flag) {
-            Collections.swap(structures, x, y);
-        }
-        Timer.schedule(new Timer.Task() {
-            @Override
-            public void run() {
-                currentPlayer.getSprites().get(0).setOffset(new Tuple<>( -0.1f, 0.1f));
-                currentPlayer.setLazyDirection(Direction.SOUTH);
-                player.setLazyDirection(Direction.NORTH);
-            }
-        }, 0.8f);
-        boolean finalFlag = flag;
-        int finalX = x;
-        int finalY = y;
-        Timer.schedule(new Timer.Task() {
-            @Override
-            public void run() {
-                currentPlayer.getSprites().get(0).setOffset(new Tuple<>( 0f, 0f));
-                currentPlayer.setDirection(direction);
-                currentPlayer.setDirChanged(true);
-                currentPlayer.getTiles().clear();
-                currentPlayer.getTiles().add(origin);
-            }
-        }, 3.3f);
-        Timer.schedule(new Timer.Task() {
-            @Override
-            public void run() {
-                player.setLazyDirection(direction.reverse());
-                GameView.captureInput = true;
-                if (finalFlag) {
-                    Collections.swap(structures, finalX, finalY);
-                }
-            }
-        }, 3.6f);
     }
 }

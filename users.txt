@@ -1,3 +1,13 @@
 Roham1234,pass,a@a.a,Roham,MALE,Your collage name?,sut,0,0,null
 Clara1234,noPass,a@b.c,CLARA,FEMALE,Your collage name?,sut,0,0,null
 ali,Mahdi1384arabi#,ali@gmail.com,ali,MALE,Your favorite movie?,sss,0,0,null
+Clara1234,noPass,a@b.c,CLARA,FEMALE,Your collage name?,sut,0,1,null
+Roham1234,pass,a@a.a,Roham,MALE,Your collage name?,sut,0,1,null
+Clara1234,noPass,a@b.c,CLARA,FEMALE,Your collage name?,sut,0,1,null
+Roham1234,pass,a@a.a,Roham,MALE,Your collage name?,sut,0,1,null
+Clara1234,noPass,a@b.c,CLARA,FEMALE,Your collage name?,sut,0,1,null
+Roham1234,pass,a@a.a,Roham,MALE,Your collage name?,sut,0,1,null
+Clara1234,noPass,a@b.c,CLARA,FEMALE,Your collage name?,sut,0,1,null
+Roham1234,pass,a@a.a,Roham,MALE,Your collage name?,sut,0,1,null
+Roham1234,pass,a@a.a,Roham,MALE,Your collage name?,sut,0,1,null
+Clara1234,noPass,a@b.c,CLARA,FEMALE,Your collage name?,sut,0,1,null

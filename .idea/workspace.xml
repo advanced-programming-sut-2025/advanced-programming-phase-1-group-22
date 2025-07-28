@@ -4,31 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d95100ff-6e61-4571-9e87-dcef3d963dba" name="Changes" comment="add npc to server-client">
+    <list default="true" id="d95100ff-6e61-4571-9e87-dcef3d963dba" name="Changes" comment="synced gift rate and final termination">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/assets.txt" beforeDir="false" afterPath="$PROJECT_DIR$/assets/assets.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/reports/problems/problems-report.html" beforeDir="false" afterPath="$PROJECT_DIR$/build/reports/problems/problems-report.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/build/libs/core-1.0.0.jar" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/libs/core-1.0.0.jar" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/client/GameClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/client/GameClient.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/client/controller/AnimalController.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/client/controller/AnimalController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/client/controller/CrowAttackController.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/client/controller/CrowAttackController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/client/controller/FishingController.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/client/controller/FishingController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/client/controller/NPCController.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/client/controller/NPCController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/client/controller/PlayerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/client/controller/PlayerController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/client/controller/ShippingBinController.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/client/controller/ShippingBinController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/client/controller/StoreController.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/client/controller/StoreController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/client/controller/WorldController.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/client/controller/WorldController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/client/service/ClientService.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/client/service/ClientService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/client/service/GameService.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/client/service/GameService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/client/service/RelationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/client/service/RelationService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/client/view/MiniMapActor.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/client/view/MiniMapActor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/client/view/mainMenu/FriendPopUp.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/client/view/mainMenu/FriendPopUp.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/common/model/Farm.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/common/model/Farm.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/common/model/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/common/model/Game.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/common/model/Village.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/common/model/Village.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/common/model/enums/Weather.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/common/model/enums/Weather.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/common/model/structure/farmInitialElements/GreenHouse.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/common/model/structure/farmInitialElements/GreenHouse.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/server/service/GameService.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/server/service/GameService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/server/service/RelationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/server/service/RelationService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lwjgl3/build/resources/main/assets.txt" beforeDir="false" afterPath="$PROJECT_DIR$/lwjgl3/build/resources/main/assets.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -84,8 +67,8 @@
 }</component>
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/advanced-programming-sut-2025/advanced-programming-phase-1-group-22.git&quot;,
-    &quot;accountId&quot;: &quot;6dfd5896-35af-4905-a843-c0bfce2ce8d8&quot;
+    &quot;url&quot;: &quot;https://github.com/advanced-programming-sut-2025/advanced-programming-phase-1-group-22&quot;,
+    &quot;accountId&quot;: &quot;b9efcc9e-e39f-461c-9d13-6b57ad5013fb&quot;
   }
 }</component>
   <component name="ProblemsViewState">
@@ -102,24 +85,22 @@
   </component>
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
-    &quot;Application.Client.executor&quot;: &quot;Coverage&quot;,
+    &quot;Application.Client.executor&quot;: &quot;Run&quot;,
     &quot;Application.Main.executor&quot;: &quot;Run&quot;,
     &quot;Application.Server.executor&quot;: &quot;Run&quot;,
     &quot;Gradle.Build Project.executor&quot;: &quot;Run&quot;,
     &quot;Gradle.Build Project4.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.Build advanced-programming-phase-1-group-22.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.Download Sources.executor&quot;: &quot;Run&quot;,
     &quot;Gradle.Project4:core [:core:io.github.some_example_name.lwjgl3.Lwjgl3Launcher.main()].executor&quot;: &quot;Run&quot;,
     &quot;Gradle.Project4:lwjgl3 [:lwjgl3:io.github.some_example_name.lwjgl3.Lwjgl3Launcher.main()].executor&quot;: &quot;Run&quot;,
     &quot;Gradle.Project:core [:core:io.github.some_example_name.server.Server.main()].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.Project:lwjgl3 [:lwjgl3:io.github.some_example_name.lwjgl3.Lwjgl3Launcher.main()].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.Project:lwjgl3 [:lwjgl3:io.github.some_example_name.lwjgl3.Lwjgl3Launcher.main()].executor&quot;: &quot;Debug&quot;,
     &quot;Gradle.advanced-programming-phase-1-group-22:core [:core:io.github.some_example_name.server.Server.main()].executor&quot;: &quot;Run&quot;,
     &quot;Gradle.advanced-programming-phase-1-group-22:lwjgl3 [:lwjgl3:io.github.some_example_name.lwjgl3.Lwjgl3Launcher.main()].executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;mahdi&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;Roham&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/MahdiArabi/Desktop/advanced-programming-phase-1-group-22&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/MahdiArabi/Desktop/advanced-programming-phase-1-group-22/core/src/main/java/io/github/some_example_name/server&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -153,14 +134,14 @@
   <component name="RunManager" selected="Application.Client">
     <configuration name="Client" type="Application" factoryName="Application" singleton="false">
       <option name="MAIN_CLASS_NAME" value="io.github.some_example_name.lwjgl3.Lwjgl3Launcher" />
-      <module name="advanced-programming-phase-1-group-22.lwjgl3.main" />
+      <module name="Project.lwjgl3.main" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
     <configuration name="Server" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="io.github.some_example_name.server.Server" />
-      <module name="advanced-programming-phase-1-group-22.core.main" />
+      <module name="Project.core.main" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -246,6 +227,78 @@
       <workItem from="1753437821215" duration="14591000" />
       <workItem from="1753572312868" duration="181000" />
       <workItem from="1753609176199" duration="6869000" />
+    </task>
+    <task id="LOCAL-00012" summary="implementing basics of artisan Menu">
+      <option name="closed" value="true" />
+      <created>1751581707525</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1751581707525</updated>
+    </task>
+    <task id="LOCAL-00013" summary="implementing craft popup">
+      <option name="closed" value="true" />
+      <created>1751634966360</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1751634966360</updated>
+    </task>
+    <task id="LOCAL-00014" summary="updated assets">
+      <option name="closed" value="true" />
+      <created>1751635079174</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1751635079174</updated>
+    </task>
+    <task id="LOCAL-00015" summary="merged">
+      <option name="closed" value="true" />
+      <created>1751640799530</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1751640799530</updated>
+    </task>
+    <task id="LOCAL-00016" summary="adding count label">
+      <option name="closed" value="true" />
+      <created>1751647894527</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1751647894527</updated>
+    </task>
+    <task id="LOCAL-00017" summary="converting popUps from static to dynamic">
+      <option name="closed" value="true" />
+      <created>1751650883039</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1751650883039</updated>
+    </task>
+    <task id="LOCAL-00018" summary="polymorphism for popup menus">
+      <option name="closed" value="true" />
+      <created>1751661007525</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1751661007525</updated>
+    </task>
+    <task id="LOCAL-00019" summary="preventing events while popup occurs">
+      <option name="closed" value="true" />
+      <created>1751664759171</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1751664759171</updated>
+    </task>
+    <task id="LOCAL-00020" summary="added shortcuts to carrying salables">
+      <option name="closed" value="true" />
+      <created>1751667002061</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1751667002061</updated>
     </task>
     <task id="LOCAL-00021" summary="added Scrolling">
       <option name="closed" value="true" />
@@ -567,79 +620,7 @@
       <option name="project" value="LOCAL" />
       <updated>1753572037612</updated>
     </task>
-    <task id="LOCAL-00061" summary="merge">
-      <option name="closed" value="true" />
-      <created>1753617856831</created>
-      <option name="number" value="00061" />
-      <option name="presentableId" value="LOCAL-00061" />
-      <option name="project" value="LOCAL" />
-      <updated>1753617856831</updated>
-    </task>
-    <task id="LOCAL-00062" summary="show carrying object">
-      <option name="closed" value="true" />
-      <created>1753622059081</created>
-      <option name="number" value="00062" />
-      <option name="presentableId" value="LOCAL-00062" />
-      <option name="project" value="LOCAL" />
-      <updated>1753622059081</updated>
-    </task>
-    <task id="LOCAL-00063" summary="add use tool effect in server-client">
-      <option name="closed" value="true" />
-      <created>1753622912137</created>
-      <option name="number" value="00063" />
-      <option name="presentableId" value="LOCAL-00063" />
-      <option name="project" value="LOCAL" />
-      <updated>1753622912138</updated>
-    </task>
-    <task id="LOCAL-00064" summary="add random generate">
-      <option name="closed" value="true" />
-      <created>1753626901380</created>
-      <option name="number" value="00064" />
-      <option name="presentableId" value="LOCAL-00064" />
-      <option name="project" value="LOCAL" />
-      <updated>1753626901380</updated>
-    </task>
-    <task id="LOCAL-00065" summary="add build and animal to real-time">
-      <option name="closed" value="true" />
-      <created>1753636884132</created>
-      <option name="number" value="00065" />
-      <option name="presentableId" value="LOCAL-00065" />
-      <option name="project" value="LOCAL" />
-      <updated>1753636884132</updated>
-    </task>
-    <task id="LOCAL-00066" summary="add plant to server-client">
-      <option name="closed" value="true" />
-      <created>1753650836663</created>
-      <option name="number" value="00066" />
-      <option name="presentableId" value="LOCAL-00066" />
-      <option name="project" value="LOCAL" />
-      <updated>1753650836663</updated>
-    </task>
-    <task id="LOCAL-00067" summary="not completed crow attack">
-      <option name="closed" value="true" />
-      <created>1753657882399</created>
-      <option name="number" value="00067" />
-      <option name="presentableId" value="LOCAL-00067" />
-      <option name="project" value="LOCAL" />
-      <updated>1753657882399</updated>
-    </task>
-    <task id="LOCAL-00068" summary="add store ro server-client">
-      <option name="closed" value="true" />
-      <created>1753694634231</created>
-      <option name="number" value="00068" />
-      <option name="presentableId" value="LOCAL-00068" />
-      <option name="project" value="LOCAL" />
-      <updated>1753694634232</updated>
-    </task>
-    <task id="LOCAL-00069" summary="add npc to server-client">
-      <option name="closed" value="true" />
-      <created>1753710672224</created>
-      <option name="number" value="00069" />
-      <option name="presentableId" value="LOCAL-00069" />
-      <option name="project" value="LOCAL" />
-      <updated>1753710672225</updated>
-    </task>
-    <option name="localTasksCounter" value="70" />
+    <option name="localTasksCounter" value="61" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -657,6 +638,14 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
+    <MESSAGE value="implemented giving flower animation" />
+    <MESSAGE value="implemented asking for marriage animation" />
+    <MESSAGE value="implemented responding marriage + animation" />
+    <MESSAGE value="uploaded an asset" />
+    <MESSAGE value="minor debugging" />
+    <MESSAGE value="cloning objects while gifting and placing on ground" />
+    <MESSAGE value="added notification and social button" />
+    <MESSAGE value="uploaded assets" />
     <MESSAGE value="tidy up social menu" />
     <MESSAGE value="tidy up pause menus" />
     <MESSAGE value="tidy up gifts menus" />
@@ -674,16 +663,7 @@
     <MESSAGE value="handle player movement real-time" />
     <MESSAGE value="implemented add item" />
     <MESSAGE value="implemented update item" />
-    <MESSAGE value="merge" />
-    <MESSAGE value="show carrying object" />
-    <MESSAGE value="add use tool effect in server-client" />
-    <MESSAGE value="add random generate" />
-    <MESSAGE value="add build and animal to real-time" />
-    <MESSAGE value="add plant to server-client" />
-    <MESSAGE value="not completed crow attack" />
-    <MESSAGE value="add store ro server-client" />
-    <MESSAGE value="add npc to server-client" />
-    <option name="LAST_COMMIT_MESSAGE" value="add npc to server-client" />
+    <option name="LAST_COMMIT_MESSAGE" value="implemented update item" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -694,19 +674,21 @@
           <option name="timeStamp" value="28" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/common/model/enums/Weather.java</url>
+          <line>35</line>
+          <option name="timeStamp" value="43" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/client/view/mainMenu/FriendPopUp.java</url>
           <line>132</line>
           <option name="timeStamp" value="45" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/client/controller/CameraViewController.java</url>
-          <line>329</line>
+          <line>328</line>
           <option name="timeStamp" value="68" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
-  </component>
-  <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/advanced_programming_phase_1_group_22$Client.ic" NAME="Client Coverage Results" MODIFIED="1753700441073" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
   </component>
 </project>
