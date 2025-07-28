@@ -196,7 +196,7 @@ public class RelationService {
         currentPlayer = App.getInstance().getCurrentGame().getCurrentPlayer();
         currentPlayer.getInventory().getProducts().put(gift, amount);
         Friendship friendship = getFriendShipBetweenWithActor(player);
-        friendship.getGifts().add(new Gift(currentPlayer, player, amount, gift, friendship.getGifts().size()));
+        friendship.getGifts().add(new Gift(player, currentPlayer, amount, gift, friendship.getGifts().size()));
         if (gift instanceof Flower) {
             if (friendship.getFriendShipLevel() == 2 && friendship.getXp() >= xpNeededForChangeLevel(friendship)) {
                 friendship.setFriendShipLevel(friendship.getFriendShipLevel() + 1);
@@ -228,28 +228,34 @@ public class RelationService {
         return new Response(stringBuilder.toString());
     }
 
-    public Response rateGift(int giftId, int rate) {
+    public Response rateGift(Gift gift, Friendship friendship, int rate) {
+        Response resp = rateGiftByServer(gift.getGiftId(), rate, gift.getGiver(), gift.getGiven());
+        if (resp.shouldBeBack()) {
+            GameClient.getInstance().rateGift(gift.getGiftId(), rate, gift.getGiver().getName());
+        }
+        return resp;
+    }
+
+    public Response rateGiftByServer(int giftId, int rate, Actor giver, Actor getter) {
         game = App.getInstance().getCurrentGame();
-        currentPlayer = game.getCurrentPlayer();
-        Gift giftFlag = null;
         if (rate > 5 || rate < 1) {
             return new Response("rate should be between 1 and 5");
         }
+        Friendship friendship1 = null;
         for (Friendship friendship : game.getFriendships()) {
-            for (Gift gift : friendship.getGifts()) {
-                giftFlag = gift;
-                if (gift.getGiftId().equals(giftId)) {
-                    gift.setRate(rate);
-                    friendship.setXp(friendship.getXp() + (rate - 3) * 30 + 15);
-                } else {
-                    return new Response("gift id is not correct");
-                }
+            if (friendship.getFirstPlayer().equals(giver) && friendship.getSecondPlayer().equals(getter) ||
+                friendship.getFirstPlayer().equals(getter) && friendship.getSecondPlayer().equals(giver)) {
+                friendship1 = friendship;
             }
         }
-        if (giftFlag == null) {
-            return new Response("invalid gift number");
+        for (Gift gift : friendship1.getGifts()) {
+            if (gift.getGiftId().equals(giftId)) {
+                gift.setRate(rate);
+                friendship1.setXp(friendship1.getXp() + (rate - 3) * 30 + 15);
+                return new Response("rate gift successfully", true);
+            }
         }
-        return new Response("rate gift successfully", true);
+        return new Response("invalid gift number");
     }
 
     public Response rateGift(Friendship friendship, Gift gift, int rate) {
