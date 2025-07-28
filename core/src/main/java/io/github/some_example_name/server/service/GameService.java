@@ -355,6 +355,7 @@ public class GameService {
             return new Response("Not enough in stock!");
         }
         upgradeTool(currentPlayer, blackSmithUpgrade, currentTool, upgradeTool);
+        blackSmithUpgrade.increaseDailySold(1);
         return new Response("the tool upgrade to " + upgradeTool.getName(), true);
     }
 
@@ -428,6 +429,7 @@ public class GameService {
             currentPlayer.getShippingBinList().add((ShippingBin) structure);
         }
         payForBuild(carpenterShopFarmBuildings, currentPlayer);
+        carpenterShopFarmBuildings.increaseDailySold(1);
         return new Response(message, true);
     }
 
@@ -449,9 +451,19 @@ public class GameService {
         Animal animal = new Animal(marnieShopAnimal.getAnimalType(), name);
         animal.setOwner(currentPlayer);
         if (animal.getAnimalType().getIsBarnAnimal()) {
-            return new Response(addNewBarnAnimal(currentFarm, animal, currentPlayer, marnieShopAnimal));
+            boolean success = addNewBarnAnimal(currentFarm, animal, currentPlayer, marnieShopAnimal);
+            if (success){
+                marnieShopAnimal.increaseDailySold(1);
+                return new Response("a/an " + animal.getAnimalType().getName() + " added successfully",true);
+            }
+            return new Response("your barn is full or you don't have a barn yet");
         }
-        return new Response(addNewCoopAnimal(currentFarm, animal, currentPlayer, marnieShopAnimal), true);
+        boolean success = addNewCoopAnimal(currentFarm, animal, currentPlayer, marnieShopAnimal);
+        if (success){
+            marnieShopAnimal.increaseDailySold(1);
+            return new Response("a/an " + animal.getAnimalType().getName() + " added successfully", true);
+        }
+        return new Response("your coop is full or you don't have a coop yet");
     }
 
     public Response pet(Animal currentAnimal) {
@@ -919,7 +931,7 @@ public class GameService {
         return true;
     }
 
-    private String addNewBarnAnimal(Farm farm, Animal animal, Player player,
+    private boolean addNewBarnAnimal(Farm farm, Animal animal, Player player,
                                     MarnieShopAnimal marnieShopAnimal) {
         for (Structure structure : farm.getStructures()) {
             if (structure instanceof FarmBuilding) {
@@ -933,15 +945,15 @@ public class GameService {
                         player.getAnimals().add(animal);
                         farm.getStructures().add(animal);
                         GameClient.getInstance().updateStructureState(animal,StructureUpdateState.ADD,true,null);
-                        return "a/an " + animal.getAnimalType().getName() + " added successfully";
+                        return true;
                     }
                 }
             }
         }
-        return "your barn is full or you don't have a barn yet";
+        return false;
     }
 
-    private String addNewCoopAnimal(Farm farm, Animal animal, Player player,
+    private boolean addNewCoopAnimal(Farm farm, Animal animal, Player player,
                                     MarnieShopAnimal marnieShopAnimal) {
         for (Structure structure : farm.getStructures()) {
             if (structure instanceof FarmBuilding) {
@@ -956,12 +968,12 @@ public class GameService {
                         player.getAnimals().add(animal);
                         farm.getStructures().add(animal);
                         GameClient.getInstance().updateStructureState(animal,StructureUpdateState.ADD,true,null);
-                        return "a/an " + animal.getAnimalType().getName() + " added successfully";
+                        return true;
                     }
                 }
             }
         }
-        return "your coop is full or you don't have a coop yet";
+        return false;
     }
 
     private Tile getAFreeTileInBarnOrCoop(FarmBuilding farmBuilding) {

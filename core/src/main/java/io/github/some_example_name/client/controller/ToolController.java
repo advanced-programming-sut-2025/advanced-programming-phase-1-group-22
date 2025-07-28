@@ -24,6 +24,7 @@ public class ToolController {
     public void update() {
         for (Player player : App.getInstance().getCurrentGame().getPlayers()) {
             Salable carryingObject = player.getCurrentCarrying();
+            if (player.getTiles().isEmpty()) return;
 
             float baseX = player.getTiles().get(0).getX() * App.tileWidth;
             float baseY = player.getTiles().get(0).getY() * App.tileHeight;

@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.Objects;
 
 @Getter
-public enum CarpenterShopFarmBuildings {
+public enum CarpenterShopFarmBuildings implements Shop{
 	BARN("barn",FarmBuildingType.BARN,6000,Map.of(MineralType.WOOD,350,MineralType.STONE,150),1),
 	BIG_BARN("big barn",FarmBuildingType.BIG_BARN,12000,Map.of(MineralType.WOOD,450,MineralType.STONE,200),1),
 	DELUXE_BARN("deluxe barn",FarmBuildingType.DELUXE_BARN,25000,Map.of(MineralType.WOOD,550,MineralType.STONE,300),1),
@@ -41,7 +41,7 @@ public enum CarpenterShopFarmBuildings {
         List<Item> items = new ArrayList<>();
         for (CarpenterShopFarmBuildings value : CarpenterShopFarmBuildings.values()) {
             boolean available = !Objects.equals(value.dailyLimit, value.dailySold);
-            items.add(new Item(value.farmBuildingType,value.price, value.dailyLimit,available,value.cost));
+            items.add(new Item(value.farmBuildingType,value.price, value.dailyLimit,value.dailySold,available,value.cost,value));
         }
         return items;
     }
@@ -77,4 +77,8 @@ public enum CarpenterShopFarmBuildings {
 	public void resetDailySold() {
 		dailySold = 0;
 	}
+
+    public void increaseDailySold(int amount){
+        dailySold += amount;
+    }
 }

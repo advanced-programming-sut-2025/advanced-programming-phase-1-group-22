@@ -29,6 +29,7 @@ import io.github.some_example_name.common.utils.GameAsset;
 import io.github.some_example_name.client.view.GameView;
 import io.github.some_example_name.client.view.HeartEffect;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Random;

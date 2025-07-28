@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import io.github.some_example_name.client.GameClient;
 import io.github.some_example_name.client.MainGradle;
 import io.github.some_example_name.common.model.Farm;
 import io.github.some_example_name.common.model.Salable;
@@ -19,6 +20,7 @@ import io.github.some_example_name.common.model.records.Response;
 import io.github.some_example_name.common.model.relations.Player;
 import io.github.some_example_name.common.model.shelter.FarmBuildingType;
 import io.github.some_example_name.common.model.structure.Structure;
+import io.github.some_example_name.common.model.structure.stores.CarpenterShopFarmBuildings;
 import io.github.some_example_name.common.model.structure.stores.Item;
 import io.github.some_example_name.common.model.structure.stores.Store;
 import io.github.some_example_name.common.model.tools.MilkPail;
@@ -45,7 +47,7 @@ public class StoreController {
     }
 
     public void update() {
-        if (GameView.captureInput){
+        if (GameView.captureInput) {
             handleInputs();
         }
     }
@@ -233,22 +235,19 @@ public class StoreController {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
                     if (item.isAvailable()) {
-                        if (item.getProduct() instanceof Tool && !(item.getProduct() instanceof Shear) && !(item.getProduct() instanceof MilkPail)){
-                            createUpgradeMenu(item,store);
+                        if (item.getProduct() instanceof Tool && !(item.getProduct() instanceof Shear) && !(item.getProduct() instanceof MilkPail)) {
+                            createUpgradeMenu(item, store);
                             window.remove();
                             exitButton.remove();
-                        }
-                        else if (item.getProduct() instanceof AnimalType){
-                            createBuyAnimalMenu(item,store);
+                        } else if (item.getProduct() instanceof AnimalType) {
+                            createBuyAnimalMenu(item, store);
                             window.remove();
                             exitButton.remove();
-                        }
-                        else if (item.getProduct() instanceof FarmBuildingType){
-                            createBuildMenu(item,store);
+                        } else if (item.getProduct() instanceof FarmBuildingType) {
+                            createBuildMenu(item, store);
                             window.remove();
                             exitButton.remove();
-                        }
-                        else {
+                        } else {
                             createSellMenu(item, store);
                             window.remove();
                             exitButton.remove();
@@ -263,7 +262,7 @@ public class StoreController {
 
             Label countLabel = (item.getDailyLimit() == -1)
                 ? new Label("Remain: No limit", GameAsset.SKIN)
-                : new Label("Remain: " + item.getDailyLimit(), GameAsset.SKIN);
+                : new Label("Remain: " + (item.getDailyLimit() - item.getDailySold()), GameAsset.SKIN);
 
             if (!item.isAvailable()) {
                 itemImage.setColor(1f, 1f, 1f, 0.3f);
@@ -352,6 +351,7 @@ public class StoreController {
             public void clicked(InputEvent event, float x, float y) {
                 Response response = store.getStoreType().purchase(item.getProduct().getName(), amount[0]);
                 worldController.showResponse(response);
+                if (response.shouldBeBack()) GameClient.getInstance().updateStoreDailySold(item.getShop(), amount[0]);
                 buyWindow.remove();
                 exitButton.remove();
                 createStoreMenu(store);
@@ -385,7 +385,7 @@ public class StoreController {
         menuGroup.addActor(group);
     }
 
-    private void createUpgradeMenu(Item item,Store store){
+    private void createUpgradeMenu(Item item, Store store) {
         final Window buyWindow = new Window("Buy Item", GameAsset.SKIN);
         buyWindow.setSize(700, 500);
         buyWindow.setModal(true);
@@ -408,19 +408,19 @@ public class StoreController {
         Image image = new Image(item.getProduct().getTexture());
         image.setSize(64, 64);
         Label name = new Label(item.getProduct().getName(), GameAsset.SKIN);
-        Label price = new Label("Price: " + item.getPrice(),GameAsset.SKIN);
+        Label price = new Label("Price: " + item.getPrice(), GameAsset.SKIN);
 
         Table topRow = new Table();
         topRow.add(image).pad(10);
         topRow.add(name).pad(10);
         content.add(topRow).pad(10).row();
         content.add(price).pad(10).row();
-        if (item.getIngredient() != null){
+        if (item.getIngredient() != null) {
             for (Map.Entry<Salable, Integer> salableIntegerEntry : item.getIngredient().entrySet()) {
                 Table row = new Table();
                 Image itemImage = new Image(salableIntegerEntry.getKey().getTexture());
-                itemImage.setSize(48,48);
-                Label description = new Label("name: " + salableIntegerEntry.getKey().getName() + " count: " + salableIntegerEntry.getValue(),GameAsset.SKIN);
+                itemImage.setSize(48, 48);
+                Label description = new Label("name: " + salableIntegerEntry.getKey().getName() + " count: " + salableIntegerEntry.getValue(), GameAsset.SKIN);
                 row.add(itemImage).pad(5);
                 row.add(description).pad(5);
                 content.add(row).expandX().fillX().pad(5).row();
@@ -433,6 +433,7 @@ public class StoreController {
             public void clicked(InputEvent event, float x, float y) {
                 Response response = gameService.upgradeTool((Tool) item.getProduct());
                 worldController.showResponse(response);
+                if (response.shouldBeBack()) GameClient.getInstance().updateStoreDailySold(item.getShop(), 1);
                 buyWindow.remove();
                 exitButton.remove();
                 createStoreMenu(store);
@@ -464,7 +465,7 @@ public class StoreController {
         menuGroup.addActor(group);
     }
 
-    private void createBuyAnimalMenu(Item item,Store store){
+    private void createBuyAnimalMenu(Item item, Store store) {
         GameView.captureInput = false;
         final Window buyWindow = new Window("Buy Item", GameAsset.SKIN);
         buyWindow.setSize(700, 500);
@@ -498,7 +499,7 @@ public class StoreController {
         Label totalPrice = new Label("Total Price: " + item.getPrice(), GameAsset.SKIN);
         content.add(totalPrice).pad(10).row();
 
-        TextField animalName = new TextField("name",GameAsset.SKIN);
+        TextField animalName = new TextField("name", GameAsset.SKIN);
         content.add(animalName).pad(10).row();
 
         TextButton buyButton = new TextButton("Buy", GameAsset.SKIN);
@@ -506,8 +507,9 @@ public class StoreController {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if (animalName.getText() == null) return;
-                Response response = gameService.buyAnimal(item.getProduct().getName(),animalName.getText());
+                Response response = gameService.buyAnimal(item.getProduct().getName(), animalName.getText());
                 worldController.showResponse(response);
+                if (response.shouldBeBack()) GameClient.getInstance().updateStoreDailySold(item.getShop(), 1);
                 buyWindow.remove();
                 exitButton.remove();
                 GameView.captureInput = true;
@@ -516,9 +518,6 @@ public class StoreController {
         });
 
         content.add(buyButton).pad(10).row();
-
-        this.updatePrice = () -> totalPrice.setText("Total: " + (item.getPrice()));
-
         buyWindow.add(content).pad(20);
 
         Group group = new Group() {
@@ -542,7 +541,7 @@ public class StoreController {
         menuGroup.addActor(group);
     }
 
-    private void createBuildMenu(Item item, Store store){
+    private void createBuildMenu(Item item, Store store) {
         final Window buyWindow = new Window("Buy Item", GameAsset.SKIN);
         buyWindow.setSize(700, 800);
         buyWindow.setModal(true);
@@ -572,20 +571,20 @@ public class StoreController {
 
         Label totalPrice = new Label("Total Price: " + item.getPrice(), GameAsset.SKIN);
         content.add(totalPrice).pad(10).row();
-        if (item.getIngredient() != null){
+        if (item.getIngredient() != null) {
             for (Map.Entry<Salable, Integer> salableIntegerEntry : item.getIngredient().entrySet()) {
                 Table row = new Table();
                 Image itemImage = new Image(salableIntegerEntry.getKey().getTexture());
-                itemImage.setSize(48,48);
-                Label description = new Label("name: " + salableIntegerEntry.getKey().getName() + " count: " + salableIntegerEntry.getValue(),GameAsset.SKIN);
+                itemImage.setSize(48, 48);
+                Label description = new Label("name: " + salableIntegerEntry.getKey().getName() + " count: " + salableIntegerEntry.getValue(), GameAsset.SKIN);
                 row.add(itemImage).pad(5);
                 row.add(description).pad(5);
                 content.add(row).expandX().fillX().pad(5).row();
             }
         }
 
-        TextButton chosePosition = new TextButton("Chose Position",GameAsset.SKIN);
-        chosePosition.addListener(new ClickListener(){
+        TextButton chosePosition = new TextButton("Chose Position", GameAsset.SKIN);
+        chosePosition.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 GameView.positionChoosing = true;
@@ -621,19 +620,25 @@ public class StoreController {
         menuGroup.addActor(group);
     }
 
-    private void chosePosition(){
+    private void chosePosition() {
         Farm farm = getPlayerMainFarm(App.getInstance().getCurrentGame().getCurrentPlayer());
-        MainGradle.getInstance().getCamera().position.set(farm.getXCenter() * App.tileWidth,farm.getYCenter() * App.tileHeight,0);
+        MainGradle.getInstance().getCamera().position.set(farm.getXCenter() * App.tileWidth, farm.getYCenter() * App.tileHeight, 0);
         MainGradle.getInstance().getCamera().update();
     }
 
-    public void build(String name,int x, int y){
-        worldController.showResponse(gameService.build(name,x,y));
+    public void build(String name, int x, int y) {
+        Response response = gameService.build(name, x, y);
+        worldController.showResponse(response);
+        if (response.shouldBeBack()) {
+            CarpenterShopFarmBuildings carpenterShopFarmBuildings = CarpenterShopFarmBuildings.getFromName(name);
+            if (carpenterShopFarmBuildings == null) return;
+            GameClient.getInstance().updateStoreDailySold(carpenterShopFarmBuildings, 1);
+        }
     }
 
     private Farm getPlayerMainFarm(Player player) {
         for (Farm farm : App.getInstance().getCurrentGame().getVillage().getFarms()) {
-            if (farm.getPlayers().get(0).equals(player)) {
+            if (!farm.getPlayers().isEmpty() && farm.getPlayers().get(0).equals(player)) {
                 return farm;
             }
         }

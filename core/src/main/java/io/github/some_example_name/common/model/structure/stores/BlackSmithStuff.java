@@ -32,7 +32,7 @@ public enum BlackSmithStuff implements Shop {
         List<Item> items = new ArrayList<>();
         for (BlackSmithStuff value : BlackSmithStuff.values()) {
             boolean available = !Objects.equals(value.dailyLimit, value.dailySold);
-            items.add(new Item(value.mineralType,value.price, value.dailyLimit,available,null));
+            items.add(new Item(value.mineralType,value.price, value.dailyLimit, value.dailySold, available,null,value));
         }
         return items;
     }
@@ -44,6 +44,7 @@ public enum BlackSmithStuff implements Shop {
         }
         return res.toString();
     }
+
     public static String showAvailableProducts() {
         StringBuilder res = new StringBuilder("Black Smith:\n");
         for (BlackSmithStuff value : BlackSmithStuff.values()) {
@@ -53,6 +54,7 @@ public enum BlackSmithStuff implements Shop {
         }
         return res.toString();
     }
+
     public static Response purchase(String name, Integer count) {
         BlackSmithStuff salable = null;
         for (BlackSmithStuff value : BlackSmithStuff.values()) {
@@ -79,5 +81,9 @@ public enum BlackSmithStuff implements Shop {
 
     public void resetDailySold() {
         dailySold = 0;
+    }
+
+    public void increaseDailySold(int amount){
+        dailySold += amount;
     }
 }

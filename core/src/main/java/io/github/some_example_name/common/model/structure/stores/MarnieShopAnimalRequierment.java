@@ -34,7 +34,7 @@ public enum MarnieShopAnimalRequierment  implements Shop{
         List<Item> items = new ArrayList<>();
         for (MarnieShopAnimalRequierment value : MarnieShopAnimalRequierment.values()) {
             boolean available = value.isAvailable();
-            items.add(new Item(value.product,value.price, value.dailyLimit,available,null));
+            items.add(new Item(value.product,value.price, value.dailyLimit,value.dailySold,available,null,value));
         }
         return items;
     }
@@ -87,5 +87,9 @@ public enum MarnieShopAnimalRequierment  implements Shop{
 
     public void resetDailySold() {
         dailySold = 0;
+    }
+
+    public void increaseDailySold(int amount){
+        dailySold += amount;
     }
 }
