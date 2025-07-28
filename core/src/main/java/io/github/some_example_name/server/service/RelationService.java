@@ -117,6 +117,7 @@ public class RelationService {
         }
         return null;
     }
+
     public Friendship getFriendShipBetweenWithActor(Actor anotherPlayer) {
         return getFriendShipBetweenTwoActors(App.getInstance().getCurrentGame().getCurrentPlayer(), anotherPlayer);
     }
@@ -319,7 +320,8 @@ public class RelationService {
 
         boolean flag = false;
         int x = -1, y = -1;
-        List<Structure> structures = App.getInstance().getCurrentGame().getVillage().getStructures();
+        App.getInstance().getCurrentGame().getVillage().applyPendingChanges();
+        List<Structure> structures = App.getInstance().getCurrentGame().getVillage().getStructuresSnapshot();
         for (Structure player1 : structures) {
             if (player1 == requester) break;
             if (requested == player1) {
@@ -339,7 +341,7 @@ public class RelationService {
         com.badlogic.gdx.utils.Timer.schedule(new com.badlogic.gdx.utils.Timer.Task() {
             @Override
             public void run() {
-                requester.getSprites().get(0).setOffset(new Tuple<>( -0.1f, 0.1f));
+                requester.getSprites().get(0).setOffset(new Tuple<>(-0.1f, 0.1f));
                 requester.setLazyDirection(Direction.SOUTH);
                 requested.setLazyDirection(Direction.NORTH);
             }
@@ -350,7 +352,7 @@ public class RelationService {
         com.badlogic.gdx.utils.Timer.schedule(new com.badlogic.gdx.utils.Timer.Task() {
             @Override
             public void run() {
-                requester.getSprites().get(0).setOffset(new Tuple<>( 0f, 0f));
+                requester.getSprites().get(0).setOffset(new Tuple<>(0f, 0f));
                 requester.setDirection(direction);
                 requester.setDirChanged(true);
                 requester.getTiles().clear();
@@ -634,27 +636,7 @@ public class RelationService {
     public Response giftNPC(NPC npc, String item) {
         game = App.getInstance().getCurrentGame();
         currentPlayer = game.getCurrentPlayer();
-//        NPCType npcType = null;
-//        for (NPCType value : NPCType.values()) {
-//            if (value.getName().equals(npcName)) {
-//                npcType = value;
-//            }
-//        }
-//        NPC npc1 = null;
-//        for (NPC npc : game.getNpcs()) {
-//            if (npc.getType().equals(npcType)) {
-//                npc1 = npc;
-//            }
-//        }
-//        if (npc1 == null) {
-//            return new Response("npc not found");
-//        }
-//        boolean areNeighbors = twoActorsAreNeighbors(currentPlayer, npc1, 2);
-//        if (!areNeighbors) {
-//            return new Response("the other player is not next You");
-//        }
         Friendship friendShipBetweenTwoActors = getFriendShipBetweenWithActor(npc);
-        Friendship friendShipBetweenTwoActors = getFriendShipBetweenTwoActors(npc);
         Map.Entry<Salable, Integer> itemFromInventory = currentPlayer.getItemFromInventory(item);
         if (itemFromInventory == null) {
             return new Response("item not found");

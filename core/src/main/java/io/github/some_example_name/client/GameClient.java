@@ -16,7 +16,9 @@ import io.github.some_example_name.common.model.Farm;
 import io.github.some_example_name.common.model.enums.Weather;
 import io.github.some_example_name.client.service.ClientService;
 import io.github.some_example_name.common.model.*;
+import io.github.some_example_name.common.model.products.HarvestAbleProduct;
 import io.github.some_example_name.common.model.records.Response;
+import io.github.some_example_name.common.model.relations.Mission;
 import io.github.some_example_name.common.model.relations.NPC;
 import io.github.some_example_name.common.model.relations.Player;
 import io.github.some_example_name.common.model.structure.Structure;
@@ -159,7 +161,7 @@ public class GameClient {
                         }  else if (obj.get("action").getAsString().equals("=build_greenhouse")) {
                             Farm farm = null;
                             for (Farm farm1 : App.getInstance().getCurrentGame().getVillage().getFarms()) {
-                                if (farm1.getPlayers().getFirst().getUser().getUsername().equals(obj.get("id").getAsString())) {
+                                if (farm1.getPlayers().get(0).getUser().getUsername().equals(obj.get("id").getAsString())) {
                                     farm = farm1;
                                     break;
                                 }
@@ -229,14 +231,14 @@ public class GameClient {
                             synchronized (terminateMenu) {terminateMenu.get().terminate();}
                         } else if (obj.get("action").getAsString().equals("=fridge_pick")) {
                             for (Farm farm : App.getInstance().getCurrentGame().getVillage().getFarms()) {
-                                if (!farm.getPlayers().isEmpty() && farm.getPlayers().getFirst().getName().equals(obj.get("id").getAsString())) {
+                                if (!farm.getPlayers().isEmpty() && farm.getPlayers().get(0).getName().equals(obj.get("id").getAsString())) {
                                     Salable salable = farm.getFridge().findProduct(body.get("name").getAsString());
                                     farm.getFridge().getProducts().remove(salable);
                                 }
                             }
                         } else if (obj.get("action").getAsString().equals("=fridge_put")) {
                             for (Farm farm : App.getInstance().getCurrentGame().getVillage().getFarms()) {
-                                if (!farm.getPlayers().isEmpty() && farm.getPlayers().getFirst().getName().equals(obj.get("id").getAsString())) {
+                                if (!farm.getPlayers().isEmpty() && farm.getPlayers().get(0).getName().equals(obj.get("id").getAsString())) {
                                     Salable salable = (Salable) decodeStructureAdd(body.get("name").getAsJsonObject());
                                     farm.getFridge().addProduct(salable, body.get("count").getAsInt());
                                 }
