@@ -33,13 +33,11 @@ import io.github.some_example_name.common.model.structure.Trunk;
 import io.github.some_example_name.common.model.structure.farmInitialElements.Cottage;
 import io.github.some_example_name.common.model.structure.farmInitialElements.GreenHouse;
 import io.github.some_example_name.common.model.structure.farmInitialElements.Lake;
-import io.github.some_example_name.server.ClientHandler;
 import io.github.some_example_name.server.repository.UserRepo;
 import io.github.some_example_name.server.repository.UserRepository;
 import io.github.some_example_name.server.saveGame.GameSerializer;
 import io.github.some_example_name.common.utils.App;
 import io.github.some_example_name.common.variables.Session;
-import io.github.some_example_name.client.view.GameView;
 import io.github.some_example_name.client.view.Menu;
 
 import java.util.*;
@@ -2044,6 +2042,7 @@ public class GameService {
         }
         player.getInventory().addProductToBackPack(product, fridge.countProduct(product));
         fridge.deleteProduct(product, fridge.countProduct(product));
+        GameClient.getInstance().refrigeratorPick(product.getName());
         return new Response("Picked up.");
     }
 
@@ -2063,9 +2062,10 @@ public class GameService {
         if (product.getContainingEnergy() == 0) {
             return new Response("Can't put the inedible items in the refrigerator.");
         }
-        fridge.addProduct(product, player.getInventory().countProductFromBackPack(product.getName()));
-        player.getInventory().deleteProductFromBackPack(product, player,
-                player.getInventory().countProductFromBackPack(product.getName()));
+        Integer count = player.getInventory().countProductFromBackPack(product.getName());
+        fridge.addProduct(product, count);
+        player.getInventory().deleteProductFromBackPack(product, player, count);
+        GameClient.getInstance().refrigeratorPut(product, count);
         return new Response("Put down.");
     }
 

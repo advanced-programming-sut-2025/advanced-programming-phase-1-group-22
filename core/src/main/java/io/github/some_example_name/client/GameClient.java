@@ -18,7 +18,6 @@ import io.github.some_example_name.client.service.ClientService;
 import io.github.some_example_name.common.model.*;
 import io.github.some_example_name.common.model.records.Response;
 import io.github.some_example_name.common.model.relations.NPC;
-import io.github.some_example_name.common.model.relations.NPCType;
 import io.github.some_example_name.common.model.relations.Player;
 import io.github.some_example_name.common.model.structure.Structure;
 import io.github.some_example_name.common.utils.App;
@@ -226,6 +225,20 @@ public class GameClient {
                             synchronized (terminateMenu) {terminateMenu.get().undoTermination();}
                         } else if (obj.get("action").getAsString().equals("terminate_game")) {
                             synchronized (terminateMenu) {terminateMenu.get().terminate();}
+                        } else if (obj.get("action").getAsString().equals("=fridge_pick")) {
+                            for (Farm farm : App.getInstance().getCurrentGame().getVillage().getFarms()) {
+                                if (!farm.getPlayers().isEmpty() && farm.getPlayers().getFirst().getName().equals(obj.get("id").getAsString())) {
+                                    Salable salable = farm.getFridge().findProduct(body.get("name").getAsString());
+                                    farm.getFridge().getProducts().remove(salable);
+                                }
+                            }
+                        } else if (obj.get("action").getAsString().equals("=fridge_put")) {
+                            for (Farm farm : App.getInstance().getCurrentGame().getVillage().getFarms()) {
+                                if (!farm.getPlayers().isEmpty() && farm.getPlayers().getFirst().getName().equals(obj.get("id").getAsString())) {
+                                    Salable salable = (Salable) decodeStructureAdd(body.get("name").getAsJsonObject());
+                                    farm.getFridge().addProduct(salable, body.get("count").getAsInt());
+                                }
+                            }
                         } else if (obj.get("action").getAsString().equals("notify")) {
                             Actor source = null;
                             if (body.get("isFromPlayer").getAsBoolean()) {
@@ -804,6 +817,38 @@ public class GameClient {
                 "action", string,
                 "id", Session.getCurrentUser().getUsername(),
                 "body", Map.of()
+            );
+            out.println(GSON.toJson(msg));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void refrigeratorPut(Salable name, Integer count) {
+        try {
+            out = new PrintWriter(socket.getOutputStream(), true);
+            in  = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+            Map<String, Object> msg = Map.of(
+                "action", "=fridge_put",
+                "id", Session.getCurrentUser().getUsername(),
+                "body", Map.of("name", encodeStructure(name, null), "count", count)
+            );
+            out.println(GSON.toJson(msg));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void refrigeratorPick(String name) {
+        try {
+            out = new PrintWriter(socket.getOutputStream(), true);
+            in  = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+            Map<String, Object> msg = Map.of(
+                "action", "=fridge_pick",
+                "id", Session.getCurrentUser().getUsername(),
+                "body", Map.of("name", name)
             );
             out.println(GSON.toJson(msg));
         } catch (IOException e) {
