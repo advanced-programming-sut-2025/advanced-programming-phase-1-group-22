@@ -3,15 +3,16 @@ package io.github.some_example_name.client.service;
 import com.badlogic.gdx.utils.Timer;
 import io.github.some_example_name.common.model.*;
 import io.github.some_example_name.common.model.products.HarvestAbleProduct;
+import io.github.some_example_name.common.model.relations.Mission;
+import io.github.some_example_name.common.model.relations.NPC;
+import io.github.some_example_name.common.model.relations.NPCType;
 import io.github.some_example_name.common.model.relations.Player;
 import io.github.some_example_name.common.model.structure.Structure;
 import io.github.some_example_name.common.model.structure.stores.Shop;
 import io.github.some_example_name.common.utils.App;
+import io.github.some_example_name.server.service.RelationService;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.TimerTask;
+import java.util.*;
 
 public class ClientService {
 
@@ -48,25 +49,44 @@ public class ClientService {
         App.getInstance().getCurrentGame().getVillage().removeStructure(structure);
     }
 
-    public void handleCurrentCarrying(Salable salable,String username){
+    public void handleCurrentCarrying(Salable salable, String username) {
         Player player = getPlayerByUsername(username);
         if (player == null) return;
         player.setCurrentCarrying(salable);
     }
 
-    public void handleCrowAttack(String farmType, boolean isCrowAttack, HarvestAbleProduct harvestAbleProduct){
+    public void handleCrowAttack(String farmType, boolean isCrowAttack, HarvestAbleProduct harvestAbleProduct) {
         FarmType farmType1 = FarmType.getFromName(farmType);
         if (farmType1 == null) return;
         for (Farm farm : App.getInstance().getCurrentGame().getVillage().getFarms()) {
-            if (farm.getFarmType().equals(farmType1)){
+            if (farm.getFarmType().equals(farmType1)) {
                 farm.setCrowAttackToday(isCrowAttack);
                 if (isCrowAttack) farm.setAttackedProduct(harvestAbleProduct);
             }
         }
     }
 
-    public void handleStore(Shop shop,int amount){
+    public void handleStore(Shop shop, int amount) {
         shop.increaseDailySold(amount);
+    }
+
+    public void handleNpcMission(int missionID, String npcName, String username) {
+        Player player = getPlayerByUsername(username);
+        if (player == null) return;
+        for (NPCType value : NPCType.values()) {
+            for (Mission mission1 : value.getMissions()) {
+                mission1.setRequester(value);
+            }
+        }
+        for (NPCType value : NPCType.values()) {
+            for (Mission valueMission : value.getMissions()) {
+                if (valueMission.getRequester().getName().equals(npcName)
+                    && valueMission.getId() == missionID) {
+                    valueMission.setDoer(player);
+                    break;
+                }
+            }
+        }
     }
 
     private Structure getStructureByTile(List<Tile> tiles) {

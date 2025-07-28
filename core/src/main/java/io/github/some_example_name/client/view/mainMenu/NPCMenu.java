@@ -437,7 +437,7 @@ public class NPCMenu extends PopUp {
         content.defaults().pad(10);
 
         boolean done = mission.getDoer() != null;
-        Label doneLabel = new Label("Status: " + (done ? "Completed by " + mission.getDoer().getName() : "Not completed"), skin);
+        final Label[] doneLabel = {new Label("Status: " + (done ? "Completed by " + mission.getDoer().getName() : "Not completed"), skin)};
 
         Label levelLabel;
         if (mission.getRequiredLevel() != null) {
@@ -490,7 +490,7 @@ public class NPCMenu extends PopUp {
             }
         });
 
-        content.add(doneLabel).left().row();
+        content.add(doneLabel[0]).left().row();
         content.add(levelLabel).left().row();
         content.add(reqLabel).left().row();
         content.add(reqTable).left().row();
@@ -503,6 +503,8 @@ public class NPCMenu extends PopUp {
         Group group = new Group() {
             @Override
             public void act(float delta) {
+                boolean done = mission.getDoer() != null;
+                doneLabel[0] = new Label("Status: " + (done ? "Completed by " + mission.getDoer().getName() : "Not completed"), skin);
                 missionWindow.setPosition(
                     (MainGradle.getInstance().getCamera().viewportWidth - missionWindow.getWidth()) / 2f +
                         MainGradle.getInstance().getCamera().position.x - MainGradle.getInstance().getCamera().viewportWidth / 2,
