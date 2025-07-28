@@ -69,7 +69,7 @@ public enum BlackSmithUpgrade implements Shop{
         List<Item> items = new ArrayList<>();
         for (BlackSmithUpgrade value : BlackSmithUpgrade.values()) {
             boolean available = !Objects.equals(value.dailyLimit, value.dailySold);
-            items.add(new Item(value.tool,value.cost, value.dailyLimit,available,value.getIngredients()));
+            items.add(new Item(value.tool,value.cost, value.dailyLimit,value.dailySold,available,value.getIngredients(),value));
         }
         return items;
     }
@@ -107,5 +107,9 @@ public enum BlackSmithUpgrade implements Shop{
 
     public void resetDailySold() {
         dailySold = 0;
+    }
+
+    public void increaseDailySold(int amount){
+        dailySold += amount;
     }
 }

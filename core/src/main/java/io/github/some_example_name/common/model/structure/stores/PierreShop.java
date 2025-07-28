@@ -267,7 +267,7 @@ public enum PierreShop implements Shop {
         List<Item> items = new ArrayList<>();
         for (PierreShop value : PierreShop.values()) {
             boolean available = value.isAvailable();
-            items.add(new Item(value.getSalable(),value.getPrice(), value.dailyLimit,available,null));
+            items.add(new Item(value.getSalable(),value.getPrice(), value.dailyLimit,value.dailySold,available,null,value));
         }
         return items;
     }
@@ -357,5 +357,9 @@ public enum PierreShop implements Shop {
 
     public void resetDailySold() {
         dailySold = 0;
+    }
+
+    public void increaseDailySold(int amount){
+        dailySold += amount;
     }
 }

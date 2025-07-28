@@ -16,6 +16,7 @@ import io.github.some_example_name.common.model.enums.Weather;
 import io.github.some_example_name.client.service.ClientService;
 import io.github.some_example_name.common.model.*;
 import io.github.some_example_name.common.model.structure.Structure;
+import io.github.some_example_name.common.model.structure.stores.Shop;
 import io.github.some_example_name.common.model.tools.MilkPail;
 import io.github.some_example_name.common.utils.App;
 import io.github.some_example_name.common.variables.Session;
@@ -165,12 +166,16 @@ public class GameClient {
                         } else if (obj.get("action").getAsString().equals("=update_farm_crow_attack")) {
                             String farmType = obj.get("farmType").getAsString();
                             boolean isCrowAttack = obj.get("isCrowAttack").getAsBoolean();
-                            if (!isCrowAttack){
+                            if (!isCrowAttack) {
                                 Object harvest = decodeStructure(body);
-                                service.handleCrowAttack(farmType, false,(HarvestAbleProduct)harvest);
-                            }else {
-                                service.handleCrowAttack(farmType, true,null);
+                                service.handleCrowAttack(farmType, false, (HarvestAbleProduct) harvest);
+                            } else {
+                                service.handleCrowAttack(farmType, true, null);
                             }
+                        } else if (obj.get("action").getAsString().equals("=increase_daily_sold")) {
+                            int amount = obj.get("amount").getAsInt();
+                            Object shop = decodeObject(body);
+                            service.handleStore((Shop) shop, amount);
                         }
                     } catch (JsonParseException e) {
                         System.out.println("Received non-JSON: " + serverMessage);
@@ -225,13 +230,13 @@ public class GameClient {
             out = new PrintWriter(socket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             Map<String, Object> msg;
-            if (!AttackToday){
+            if (!AttackToday) {
                 msg = Map.of(
                     "action", "=update_farm_crow_attack",
                     "id", Session.getCurrentUser().getUsername(),
                     "farmType", farm.getFarmType().getName(),
                     "isCrowAttack", false,
-                    "body", encodeStructure(harvestAbleProduct,null)
+                    "body", encodeStructure(harvestAbleProduct, null)
                 );
             } else {
                 msg = Map.of(
@@ -241,6 +246,24 @@ public class GameClient {
                     "isCrowAttack", true
                 );
             }
+
+            out.println(GSON.toJson(msg));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updateStoreDailySold(Shop shop, int amount) {
+        try {
+            out = new PrintWriter(socket.getOutputStream(), true);
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+            Map<String, Object> msg = Map.of(
+                "action", "=increase_daily_sold",
+                "id", Session.getCurrentUser().getUsername(),
+                "amount", amount,
+                "body", encodeObject(shop)
+            );
 
             out.println(GSON.toJson(msg));
         } catch (IOException e) {
@@ -334,14 +357,14 @@ public class GameClient {
     }
 
 
-    private Object decodeStructure(JsonObject body){
+    private Object decodeStructure(JsonObject body) {
         Object obj;
         try {
             Class<?> clazz = Class.forName(body.get("!class").getAsString());
             Constructor<?> constructor = clazz.getConstructor();
             obj = constructor.newInstance();
             if (Structure.class.isAssignableFrom(clazz)) {
-                updateTiles((Structure) obj,body);
+                updateTiles((Structure) obj, body);
             }
             for (Map.Entry<String, JsonElement> entry : body.entrySet()) {
                 if (entry.getKey().charAt(0) == '!') continue;
@@ -647,7 +670,7 @@ public class GameClient {
 
     private void updateTiles(Structure obj, JsonObject body) {
         if (obj == null) return;
-        if(!obj.getTiles().isEmpty()) obj.getTiles().clear();
+        if (!obj.getTiles().isEmpty()) obj.getTiles().clear();
         Tile[][] tiles = App.getInstance().getCurrentGame().getTiles();
         for (int i = 0; i < body.get("!tiles").getAsJsonArray().size(); ) {
             Tile tile = tiles[body.get("!tiles").getAsJsonArray().get(i++).getAsInt()]

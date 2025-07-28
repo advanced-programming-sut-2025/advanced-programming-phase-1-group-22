@@ -5,6 +5,7 @@ import io.github.some_example_name.common.model.*;
 import io.github.some_example_name.common.model.products.HarvestAbleProduct;
 import io.github.some_example_name.common.model.relations.Player;
 import io.github.some_example_name.common.model.structure.Structure;
+import io.github.some_example_name.common.model.structure.stores.Shop;
 import io.github.some_example_name.common.utils.App;
 
 import java.util.ArrayList;
@@ -62,6 +63,10 @@ public class ClientService {
                 if (isCrowAttack) farm.setAttackedProduct(harvestAbleProduct);
             }
         }
+    }
+
+    public void handleStore(Shop shop,int amount){
+        shop.increaseDailySold(amount);
     }
 
     private Structure getStructureByTile(List<Tile> tiles) {

@@ -12,12 +12,16 @@ public class Item {
     private final int dailyLimit;
     private final boolean available;
     private final Map<Salable,Integer> ingredient;
+    private final Shop shop;
+    private final int dailySold;
 
-    public Item(Salable product, int price, int dailyLimit,boolean available,Map<Salable,Integer> ingredient) {
+    public Item(Salable product, int price, int dailyLimit,int dailySold,boolean available,Map<Salable,Integer> ingredient,Shop shop) {
         this.product = product;
         this.price = price;
         this.dailyLimit = dailyLimit;
         this.available = available;
         this.ingredient = ingredient;
+        this.shop = shop;
+        this.dailySold = dailySold;
     }
 }

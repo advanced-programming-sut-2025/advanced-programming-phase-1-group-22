@@ -68,9 +68,9 @@ public enum FishShopStuff  implements Shop{
         List<Item> items = new ArrayList<>();
         for (FishShopStuff value : FishShopStuff.values()) {
             boolean available = value.isAvailable();
-            if (value.craftingRecipe != null) items.add(new Item(value.craftingRecipe,value.price, value.dailyLimit,available,null));
-            else if (value.fishingPole != null) items.add(new Item(value.fishingPole,value.price, value.dailyLimit,available,null));
-            else if (value.foodType != null) items.add(new Item(value.foodType,value.price, value.dailyLimit,available,null));
+            if (value.craftingRecipe != null) items.add(new Item(value.craftingRecipe,value.price, value.dailyLimit,value.dailySold,available,null,value));
+            else if (value.fishingPole != null) items.add(new Item(value.fishingPole,value.price, value.dailyLimit,value.dailySold,available,null,value));
+            else if (value.foodType != null) items.add(new Item(value.foodType,value.price, value.dailyLimit,value.dailySold,available,null,value));
         }
         return items;
     }
@@ -158,4 +158,8 @@ public enum FishShopStuff  implements Shop{
 	public void resetDailySold() {
 		dailySold = 0;
 	}
+
+    public void increaseDailySold(int amount){
+        dailySold += amount;
+    }
 }
