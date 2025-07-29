@@ -2,6 +2,7 @@ package io.github.some_example_name.client.service;
 
 import com.badlogic.gdx.utils.Timer;
 import io.github.some_example_name.common.model.*;
+import io.github.some_example_name.common.model.abilitiy.Ability;
 import io.github.some_example_name.common.model.products.HarvestAbleProduct;
 import io.github.some_example_name.common.model.relations.Mission;
 import io.github.some_example_name.common.model.relations.NPCType;
@@ -93,6 +94,26 @@ public class ClientService {
         player.setTextReaction(text);
         player.setEmojiReactionIndex(emojiIndex);
         player.setLastReaction(0f);
+    }
+
+    public void handlePlayerGold(String username, int gold){
+        Player player = getPlayerByUsername(username);
+        if (player == null) return;
+        player.getAccount().setGolds(gold);
+    }
+
+    public void handlePlayerNumberOfCompleteMissions(String username,int number){
+        Player player = getPlayerByUsername(username);
+        if (player == null) return;
+        player.setNumberOfCompleteMission(number);
+    }
+
+    public void handlePlayerSkill(String username,String ability,int amount){
+        Player player = getPlayerByUsername(username);
+        if (player == null) return;
+        Ability skill = Ability.getFromName(ability);
+        if (skill == null) return;
+        player.getAbilities().put(skill,amount);
     }
 
     private Structure getStructureByTile(List<Tile> tiles) {

@@ -142,4 +142,10 @@ public class CheatCodeMenuController {
     public Response setCrowAttack(String... strings) {
         return gameService.setCrowAttack();
     }
+
+    public Response upgradeAbility(String... strings){
+        String ability = strings[0];
+        int amount = Integer.parseInt(strings[1]);
+        return gameService.upgradeAbility(ability,amount);
+    }
 }

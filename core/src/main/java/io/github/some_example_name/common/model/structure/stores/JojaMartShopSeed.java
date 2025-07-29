@@ -1,5 +1,6 @@
 package io.github.some_example_name.common.model.structure.stores;
 
+import io.github.some_example_name.client.GameClient;
 import lombok.Getter;
 import io.github.some_example_name.common.model.Salable;
 import io.github.some_example_name.common.model.craft.Craft;
@@ -128,6 +129,7 @@ public enum JojaMartShopSeed implements Shop {
 			return new Response("Not enough golds");
 		}
 		player.getAccount().removeGolds(salable.getPrice());
+        GameClient.getInstance().updatePlayerGold(player);
 		salable.dailySold += count;
 		player.getInventory().addProductToBackPack(salable1, count);
 		return new Response("Bought successfully", true);

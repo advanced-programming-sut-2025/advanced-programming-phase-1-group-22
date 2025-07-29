@@ -1,6 +1,7 @@
 package io.github.some_example_name.common.model.structure.farmInitialElements;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import io.github.some_example_name.client.GameClient;
 import io.github.some_example_name.common.utils.App;
 import io.github.some_example_name.common.utils.GameAsset;
 import lombok.Getter;
@@ -39,6 +40,7 @@ public class GreenHouse extends HardCodeFarmElements {
         if (player.getAccount().getGolds() < 1000) return 1;
         if (!player.getInventory().checkProductAvailabilityInBackPack(MineralType.WOOD.getName(), 500)) return 2;
         player.getAccount().removeGolds(1000);
+        GameClient.getInstance().updatePlayerGold(player);
         Salable salable = player.getInventory().findProductInBackPackByNAme(MineralType.WOOD.getName());
         player.getInventory().deleteProductFromBackPack(salable, player,500);
         isBuilt = true;

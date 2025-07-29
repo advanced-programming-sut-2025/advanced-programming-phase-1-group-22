@@ -13,6 +13,7 @@ import io.github.some_example_name.client.controller.mainMenu.StartGameMenuContr
 import io.github.some_example_name.client.view.GameView;
 import io.github.some_example_name.client.view.mainMenu.TerminateMenu;
 import io.github.some_example_name.common.model.Farm;
+import io.github.some_example_name.common.model.abilitiy.Ability;
 import io.github.some_example_name.common.model.enums.Weather;
 import io.github.some_example_name.client.service.ClientService;
 import io.github.some_example_name.common.model.*;
@@ -329,6 +330,19 @@ public class GameClient {
                             JsonElement textJson = obj.get("text");
                             String text = (textJson == null || textJson.isJsonNull()) ? null : textJson.getAsString();
                             service.handlePlayerReaction(username, emojiIndex, text);
+                        } else if (obj.get("action").getAsString().equals("=update_player_gold")) {
+                            String username = obj.get("id").getAsString();
+                            int gold = obj.get("gold").getAsInt();
+                            service.handlePlayerGold(username, gold);
+                        } else if (obj.get("action").getAsString().equals("=update_player_number_of_complete_missions")) {
+                            String username = obj.get("id").getAsString();
+                            int completeMissions = obj.get("complete_missions").getAsInt();
+                            service.handlePlayerNumberOfCompleteMissions(username, completeMissions);
+                        } else if (obj.get("action").getAsString().equals("=update_player_skill")) {
+                            String username = obj.get("id").getAsString();
+                            String ability = obj.get("ability").getAsString();
+                            int amount = obj.get("amount").getAsInt();
+                            service.handlePlayerSkill(username, ability, amount);
                         }
                     } catch (JsonParseException e) {
                         System.out.println("Received non-JSON: " + serverMessage);
@@ -484,6 +498,55 @@ public class GameClient {
             msg.put("id", Session.getCurrentUser().getUsername());
             msg.put("emoji_index", player.getEmojiReactionIndex());
             msg.put("text", player.getTextReaction());
+
+            out.println(GSON.toJson(msg));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updatePlayerGold(Player player) {
+        try {
+            out = new PrintWriter(socket.getOutputStream(), true);
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+            Map<String, Object> msg = new HashMap<>();
+            msg.put("action", "=update_player_gold");
+            msg.put("id", Session.getCurrentUser().getUsername());
+            msg.put("gold", player.getAccount().getGolds());
+
+            out.println(GSON.toJson(msg));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updatePlayerNumberOfCompleteMissions(Player player) {
+        try {
+            out = new PrintWriter(socket.getOutputStream(), true);
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+            Map<String, Object> msg = new HashMap<>();
+            msg.put("action", "=update_player_number_of_complete_missions");
+            msg.put("id", Session.getCurrentUser().getUsername());
+            msg.put("complete_missions", player.getNumberOfCompleteMission());
+
+            out.println(GSON.toJson(msg));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updatePlayerSkill(Player player, Ability ability) {
+        try {
+            out = new PrintWriter(socket.getOutputStream(), true);
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+            Map<String, Object> msg = new HashMap<>();
+            msg.put("action", "=update_player_skill");
+            msg.put("id", Session.getCurrentUser().getUsername());
+            msg.put("ability", ability.getName());
+            msg.put("amount", player.getAbilities().get(ability));
 
             out.println(GSON.toJson(msg));
         } catch (IOException e) {

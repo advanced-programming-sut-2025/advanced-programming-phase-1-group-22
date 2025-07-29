@@ -22,4 +22,11 @@ public enum Ability{
         this.texture = texture;
         this.description = description;
     }
+
+    public static Ability getFromName(String name){
+        for (Ability value : Ability.values()) {
+            if (value.name.equals(name)) return value;
+        }
+        return null;
+    }
 }
