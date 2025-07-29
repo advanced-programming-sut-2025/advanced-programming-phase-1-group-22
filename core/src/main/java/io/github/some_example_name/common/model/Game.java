@@ -6,6 +6,12 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import io.github.some_example_name.client.GameClient;
 import io.github.some_example_name.client.view.GameView;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import io.github.some_example_name.common.model.animal.Fish;
+import io.github.some_example_name.common.model.cook.Food;
+import io.github.some_example_name.common.model.craft.Craft;
+import io.github.some_example_name.common.model.products.AnimalProduct;
+import io.github.some_example_name.common.model.products.TreesAndFruitsAndSeeds.Fruit;
+import io.github.some_example_name.common.model.source.*;
 import io.github.some_example_name.common.model.structure.stores.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -47,6 +53,22 @@ public class Game implements Serializable {
     private int playersInFavorTermination = 0;
     public Tile[][] tiles = new Tile[length][width];
     private int fadingInTheNight = 0;
+    private final List<MultiMission> missions = new ArrayList<>();
+
+    public Game() {
+        createMissions();
+    }
+
+    private void createMissions() {
+        missions.add(new MultiMission(new Fish(), 30, 500, 4, 3));
+        missions.add(new MultiMission(new Mineral(), 100, 2000, 2, 7));
+        missions.add(new MultiMission(new Fruit(), 10, 700, 4, 30));
+        missions.add(new MultiMission(new Craft(), 20, 6000, 4, 10));
+        missions.add(new MultiMission(new Food(), 15, 2000, 3, 10));
+        missions.add(new MultiMission(new AnimalProduct(), 5, 1000, 2, 5));
+        missions.add(new MultiMission(new Seed(), 150, 25000, 4, 20));
+        missions.add(new MultiMission(new MixedSeeds(), 30, 100000, 4, 30));
+    }
 
     public void start() {
         timeAndDate = new TimeAndDate(1, 9);

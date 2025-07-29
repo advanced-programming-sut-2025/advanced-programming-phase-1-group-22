@@ -69,6 +69,7 @@ public class Player extends Actor implements JsonPreparable {
     private Integer emojiReactionIndex;
     private String textReaction;
     private float lastReaction;
+    private final List<MultiMission> activeMissions = new ArrayList<>();
     @JsonProperty("abilitiesMap")
     private ObjectMapWrapper abilitiesWrapper;
 

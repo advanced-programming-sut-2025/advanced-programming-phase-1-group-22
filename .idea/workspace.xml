@@ -4,31 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d95100ff-6e61-4571-9e87-dcef3d963dba" name="Changes" comment="add PopUpReaction">
-      <change afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/client/view/mainMenu/ScoreBoard.java" afterDir="false" />
+    <list default="true" id="d95100ff-6e61-4571-9e87-dcef3d963dba" name="Changes" comment="add live ScoreBoard">
+      <change afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/client/view/mainMenu/MultiMissionMenu.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/common/model/MultiMission.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/build/libs/core-1.0.0.jar" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/libs/core-1.0.0.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/client/GameClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/client/GameClient.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/client/controller/PlayerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/client/controller/PlayerController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/client/controller/gameMenu/CheatCodeMenuController.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/client/controller/gameMenu/CheatCodeMenuController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/client/service/ClientService.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/client/service/ClientService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/client/service/GameService.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/client/service/GameService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/client/view/gameMenu/CheatCodeMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/client/view/gameMenu/CheatCodeMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/common/command/GameCheatCommands.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/common/command/GameCheatCommands.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/common/model/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/common/model/Game.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/common/model/abilitiy/Ability.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/common/model/abilitiy/Ability.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/common/model/relations/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/common/model/relations/Player.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/common/model/structure/farmInitialElements/GreenHouse.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/common/model/structure/farmInitialElements/GreenHouse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/common/model/structure/stores/BlackSmithStuff.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/common/model/structure/stores/BlackSmithStuff.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/common/model/structure/stores/CarpenterShopMineralStuff.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/common/model/structure/stores/CarpenterShopMineralStuff.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/common/model/structure/stores/FishShopStuff.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/common/model/structure/stores/FishShopStuff.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/common/model/structure/stores/JojaMartShopSeed.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/common/model/structure/stores/JojaMartShopSeed.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/common/model/structure/stores/MarnieShopAnimalRequierment.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/common/model/structure/stores/MarnieShopAnimalRequierment.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/common/model/structure/stores/PierreShop.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/common/model/structure/stores/PierreShop.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/common/model/structure/stores/TheStardropSaloonStuff.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/common/model/structure/stores/TheStardropSaloonStuff.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/common/model/tools/TrashCan.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/common/model/tools/TrashCan.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/server/service/GameService.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/server/service/GameService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/server/service/RelationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/server/service/RelationService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -244,14 +227,6 @@
       <workItem from="1753437821215" duration="14591000" />
       <workItem from="1753572312868" duration="181000" />
       <workItem from="1753609176199" duration="6869000" />
-    </task>
-    <task id="LOCAL-00015" summary="merged">
-      <option name="closed" value="true" />
-      <created>1751640799530</created>
-      <option name="number" value="00015" />
-      <option name="presentableId" value="LOCAL-00015" />
-      <option name="project" value="LOCAL" />
-      <updated>1751640799530</updated>
     </task>
     <task id="LOCAL-00016" summary="adding count label">
       <option name="closed" value="true" />
@@ -637,7 +612,15 @@
       <option name="project" value="LOCAL" />
       <updated>1753811864677</updated>
     </task>
-    <option name="localTasksCounter" value="64" />
+    <task id="LOCAL-00064" summary="add live ScoreBoard">
+      <option name="closed" value="true" />
+      <created>1753818998576</created>
+      <option name="number" value="00064" />
+      <option name="presentableId" value="LOCAL-00064" />
+      <option name="project" value="LOCAL" />
+      <updated>1753818998576</updated>
+    </task>
+    <option name="localTasksCounter" value="65" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -655,7 +638,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="uploaded an asset" />
     <MESSAGE value="minor debugging" />
     <MESSAGE value="cloning objects while gifting and placing on ground" />
     <MESSAGE value="added notification and social button" />
@@ -680,7 +662,8 @@
     <MESSAGE value="not complete DC" />
     <MESSAGE value="add real-time map menu" />
     <MESSAGE value="add PopUpReaction" />
-    <option name="LAST_COMMIT_MESSAGE" value="add PopUpReaction" />
+    <MESSAGE value="add live ScoreBoard" />
+    <option name="LAST_COMMIT_MESSAGE" value="add live ScoreBoard" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
