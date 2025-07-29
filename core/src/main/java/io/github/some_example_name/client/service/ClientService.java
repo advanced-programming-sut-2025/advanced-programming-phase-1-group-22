@@ -87,6 +87,14 @@ public class ClientService {
         }
     }
 
+    public void handlePlayerReaction(String username, Integer emojiIndex, String text) {
+        Player player = getPlayerByUsername(username);
+        if (player == null) return;
+        player.setTextReaction(text);
+        player.setEmojiReactionIndex(emojiIndex);
+        player.setLastReaction(0f);
+    }
+
     private Structure getStructureByTile(List<Tile> tiles) {
         for (Farm farm : App.getInstance().getCurrentGame().getVillage().getFarms()) {
             farm.applyPendingChanges();

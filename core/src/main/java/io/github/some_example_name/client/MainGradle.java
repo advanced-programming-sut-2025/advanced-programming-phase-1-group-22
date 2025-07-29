@@ -3,6 +3,7 @@ package io.github.some_example_name.client;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -17,6 +18,7 @@ import lombok.Getter;
 @Getter
 public class MainGradle extends Game {
     private SpriteBatch batch;
+    private BitmapFont font;
     @Getter
     private static MainGradle instance;
     private OrthographicCamera camera;
@@ -37,6 +39,7 @@ public class MainGradle extends Game {
         viewport = new FitViewport(1920, 1080, camera);
         viewport.apply();
         batch = new SpriteBatch();
+        font = new BitmapFont();
         initialMenu();
     }
 

@@ -9,6 +9,11 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class GameAsset {
     public static final Texture PIXEL;
 
@@ -19,6 +24,7 @@ public class GameAsset {
         PIXEL = new Texture(pixmap);
         pixmap.dispose();
     }
+
     public static final Texture MINI_GAME_BACKGROUND = new Texture("background.png");
     public static final Texture MINI_GAME_BAR = new Texture("barMini.png");
     public static final Texture BACKGROUND = new Texture("menu_bg.png");
@@ -458,11 +464,13 @@ public class GameAsset {
     public static final TextureRegion CLOCK_MAIN = new TextureRegion(CLOCK_ALL, 0, 0, 72, 59);
     public static final TextureRegion CLOCK_ARROW = new TextureRegion(CLOCK_ALL, 72, 0, 8, 18);
     public static final TextureRegion[] ClOCK_MANNERS = new TextureRegion[12];
+
     static {
         for (int i = 0; i < 12; i++) {
             ClOCK_MANNERS[i] = new TextureRegion(CLOCK_ALL, 80 + i % 4 * 13, i / 4 * 9, 13, 9);
         }
     }
+
     public static final Texture CLOCKWITHJOURNAL = new Texture("Clock/ClockWithJournal.png");
     public static final Texture GOLDDISPLAY = new Texture("Clock/GoldDisplay.png");
     public static final Texture WEDDINGDAYHEART = new Texture("Clock/WeddingDayHeart.png");
@@ -1316,6 +1324,25 @@ public class GameAsset {
     public static final Texture EMOJIS151 = new Texture("Emoji/Emojis151.png");
     public static final Texture EMOJIS152 = new Texture("Emoji/Emojis152.png");
     public static final Texture EMOJIS153 = new Texture("Emoji/Emojis153.png");
+    public static final List<Texture> emojiTextures = new ArrayList<>();
+
+    static {
+        for (int i = 0; i <= 153; i++) {
+            String index = String.format("%03d", i);
+            Texture emoji = new Texture("Emoji/Emojis" + index + ".png");
+            emojiTextures.add(emoji);
+        }
+    }
+
+    public static final List<String> defaultText = new ArrayList<>();
+
+    static {
+        defaultText.add("Hi");
+        defaultText.add("How are you?");
+        defaultText.add("Great!");
+        defaultText.add("Good Game!");
+    }
+
     public static final Texture EMOJIS189 = new Texture("Emoji/Emojis189.png");
     public static final Texture EMOJIS190 = new Texture("Emoji/Emojis190.png");
     public static final Texture EMOJIS191 = new Texture("Emoji/Emojis191.png");
@@ -1782,9 +1809,11 @@ public class GameAsset {
         Gdx.files.internal("Night/grayscale.vert"),
         Gdx.files.internal("Night/grayscale.frag")
     );
+
     static {
         NIGHT_SPRITE.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
+
     public static final Texture AMETHYST_NODE = new Texture("Node/Amethyst_Node.png");
     public static final Texture AQUAMARINE_NODE = new Texture("Node/Aquamarine_Node.png");
     public static final Texture BONE_NODE_1 = new Texture("Node/Bone_Node_1.png");
