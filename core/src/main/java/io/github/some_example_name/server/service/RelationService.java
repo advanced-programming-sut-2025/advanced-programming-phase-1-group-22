@@ -542,11 +542,13 @@ public class RelationService {
             Salable wRing = new Sundry(SundryType.WEDDING_RING);
             requested.getInventory().addProductToBackPack(wRing, 1);
             requested.getAccount().removeGolds(0);
+            GameClient.getInstance().updatePlayerGold(requested);
         }
         if (requester.getUser().getUsername().equals(App.getInstance().getCurrentGame().getCurrentPlayer().getUser().getUsername())) {
             Salable wRing = requester.getInventory().findProductInBackPackByNAme(SundryType.WEDDING_RING.getName());
             requester.getInventory().deleteProductFromBackPack(wRing, requester, 1);
             requester.getAccount().removeGolds(0);
+            GameClient.getInstance().updatePlayerGold(requested);
         }
 
         for (Farm farm : game.getVillage().getFarms()) {
@@ -833,6 +835,8 @@ public class RelationService {
             }
         }
         GameClient.getInstance().updateNpcMissionState(mission);
+        currentPlayer.setNumberOfCompleteMission(currentPlayer.getNumberOfCompleteMission() + 1);
+        GameClient.getInstance().updatePlayerNumberOfCompleteMissions(currentPlayer);
         return new Response("mission completed");
     }
 }

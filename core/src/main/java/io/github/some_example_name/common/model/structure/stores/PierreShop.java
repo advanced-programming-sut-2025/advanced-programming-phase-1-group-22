@@ -1,5 +1,6 @@
 package io.github.some_example_name.common.model.structure.stores;
 
+import io.github.some_example_name.client.GameClient;
 import lombok.Getter;
 import io.github.some_example_name.common.model.Salable;
 import io.github.some_example_name.common.model.enums.Season;
@@ -323,6 +324,7 @@ public enum PierreShop implements Shop {
                 return new Response("Not enough golds");
             }
             player.getAccount().removeGolds(salable.getPrice());
+            GameClient.getInstance().updatePlayerGold(player);
             player.getInventory().setBackPackType((BackPackType) salable.getSalable());
             return new Response(salable.getSalable().getName() + " bought successfully");
         }
@@ -338,6 +340,7 @@ public enum PierreShop implements Shop {
             return new Response("Not enough golds");
         }
         player.getAccount().removeGolds(salable.getPrice());
+        GameClient.getInstance().updatePlayerGold(player);
         salable.dailySold += count;
         Salable item = null;
         if (salable.getSalable() instanceof SundryType) item = new Sundry((SundryType) salable.salable);

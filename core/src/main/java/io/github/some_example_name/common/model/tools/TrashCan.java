@@ -2,6 +2,7 @@ package io.github.some_example_name.common.model.tools;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import io.github.some_example_name.client.GameClient;
 import io.github.some_example_name.common.utils.App;
 import io.github.some_example_name.common.utils.GameAsset;
 import lombok.Getter;
@@ -88,6 +89,7 @@ public enum TrashCan implements Tool {
 		int price = salable.getSellPrice() * itemNumber * (this.prunedValue / 100);
 		int oldGold = player.getAccount().getGolds();
 		player.getAccount().setGolds(oldGold + price);
+        GameClient.getInstance().updatePlayerGold(player);
 	}
 
 

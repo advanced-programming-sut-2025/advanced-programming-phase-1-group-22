@@ -46,6 +46,7 @@ public class CheatCodeMenu implements CommandProcessor {
         commandsFunctionMap.put(CHANGE_FRIENDSHIP, controller::changeFriendship);
         commandsFunctionMap.put(IS_CROW_ATTACK, controller::isCrowAttack);
         commandsFunctionMap.put(SET_CROW_ATTACK, controller::setCrowAttack);
+        commandsFunctionMap.put(UPGRADE_ABILITY,controller::upgradeAbility);
     }
 
     public static CheatCodeMenu getInstance() {

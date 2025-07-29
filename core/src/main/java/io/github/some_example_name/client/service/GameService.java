@@ -1,5 +1,6 @@
 package io.github.some_example_name.client.service;
 
+import io.github.some_example_name.client.GameClient;
 import io.github.some_example_name.common.model.*;
 import io.github.some_example_name.common.model.products.*;
 import io.github.some_example_name.common.model.products.TreesAndFruitsAndSeeds.*;
@@ -544,6 +545,7 @@ public class GameService {
         int price = (int) (currentAnimal.getSellPrice() * calculateAnimalCoefficientPrice(currentAnimal));
         int oldGold = currentPlayer.getAccount().getGolds();
         currentPlayer.getAccount().setGolds(oldGold + price);
+        GameClient.getInstance().updatePlayerGold(currentPlayer);
         currentPlayer.getAnimals().remove(currentAnimal);
         removeAnimalFromVillage(currentAnimal, getPlayerFarms(currentPlayer));
         return new Response("you sell this animal " + price, true);
@@ -820,6 +822,7 @@ public class GameService {
     private void upgradeTool(Player player, BlackSmithUpgrade blackSmithUpgrade, Tool oldtool, Tool upgradeTool) {
         int oldGold = player.getAccount().getGolds();
         player.getAccount().setGolds(oldGold - blackSmithUpgrade.getCost());
+        GameClient.getInstance().updatePlayerGold(player);
 
         for (Map.Entry<Salable, Integer> productIntegerEntry : blackSmithUpgrade.getIngredients().entrySet()) {
             Salable salable = player.getInventory().getProductFromBackPack(productIntegerEntry.getKey().getName());
@@ -959,6 +962,7 @@ public class GameService {
     private void payForBuild(CarpenterShopFarmBuildings carpenterShopFarmBuildings, Player player) {
         int oldGold = player.getAccount().getGolds();
         player.getAccount().setGolds(oldGold - carpenterShopFarmBuildings.getPrice());
+        GameClient.getInstance().updatePlayerGold(player);
         for (Map.Entry<Salable, Integer> productIntegerEntry : carpenterShopFarmBuildings.getCost().entrySet()) {
             Salable salable = player.getInventory().getProductFromBackPack(productIntegerEntry.getKey().getName());
             player.getInventory().deleteProductFromBackPack(salable, player, productIntegerEntry.getValue());
@@ -984,6 +988,7 @@ public class GameService {
                         ((FarmBuilding) structure).getAnimals().add(animal);
                         int oldGold = player.getAccount().getGolds();
                         player.getAccount().setGolds(oldGold - marnieShopAnimal.getPrice());
+                        GameClient.getInstance().updatePlayerGold(player);
                         animal.setTiles(List.of(Objects.requireNonNull(getAFreeTileInBarnOrCoop((FarmBuilding) structure))));
                         player.getAnimals().add(animal);
                         farm.addStructure(animal);
@@ -1005,6 +1010,7 @@ public class GameService {
                         ((FarmBuilding) structure).getAnimals().add(animal);
                         int oldGold = player.getAccount().getGolds();
                         player.getAccount().setGolds(oldGold - marnieShopAnimal.getPrice());
+                        GameClient.getInstance().updatePlayerGold(player);
                         animal.setTiles(List.of(Objects.requireNonNull(getAFreeTileInBarnOrCoop((FarmBuilding) structure))));
                         player.getAnimals().add(animal);
                         farm.addStructure(animal);
@@ -1764,6 +1770,7 @@ public class GameService {
 
     public Response C_AddDollars(String count) {
         app.getCurrentGame().getCurrentPlayer().getAccount().removeGolds(-Integer.parseInt(count));
+        GameClient.getInstance().updatePlayerGold(app.getCurrentGame().getCurrentPlayer());
         return new Response(count + "$ added to your account.", true);
     }
 

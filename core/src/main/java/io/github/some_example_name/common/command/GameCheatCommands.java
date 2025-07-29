@@ -31,9 +31,9 @@ public class GameCheatCommands extends CommandClass {
     public static final GameCheatCommands CRAFT_INFO = new GameCheatCommands("^\\s*craft\\s+info\\s+-n\\s+(?<craftName>.+)\\s*$");
     public static final GameCheatCommands SHOW_PLANT = new GameCheatCommands("^\\s*showplant\\s+-l\\s+(?<X>\\d+)\\s*,\\s*(?<Y>\\d+)\\s*$");
     public static final GameCheatCommands CHANGE_FRIENDSHIP = new GameCheatCommands("change\\s+friendship\\s+(.*)");
-    public static final GameCheatCommands NEXT_TURN = new GameCheatCommands("next\\s+turn");
     public static final GameCheatCommands IS_CROW_ATTACK = new GameCheatCommands("is\\s+crow\\s+attack");
     public static final GameCheatCommands SET_CROW_ATTACK = new GameCheatCommands("crow\\s+attack");
+    public static final GameCheatCommands UPGRADE_ABILITY = new GameCheatCommands("(\\S+)\\s+(\\d+)");
 
     GameCheatCommands(String regex) {
         super(regex);

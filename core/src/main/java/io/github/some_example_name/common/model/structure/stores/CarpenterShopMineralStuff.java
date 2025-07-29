@@ -1,5 +1,6 @@
 package io.github.some_example_name.common.model.structure.stores;
 
+import io.github.some_example_name.client.GameClient;
 import lombok.Getter;
 import io.github.some_example_name.common.model.records.Response;
 import io.github.some_example_name.common.model.relations.Player;
@@ -68,6 +69,7 @@ public enum CarpenterShopMineralStuff implements Shop {
 			return new Response("Not enough golds");
 		}
 		player.getAccount().removeGolds(salable.getPrice());
+        GameClient.getInstance().updatePlayerGold(player);
 		salable.dailySold += count;
 		player.getInventory().addProductToBackPack(new Mineral(salable.mineralType), count);
 		return new Response("Bought successfully", true);

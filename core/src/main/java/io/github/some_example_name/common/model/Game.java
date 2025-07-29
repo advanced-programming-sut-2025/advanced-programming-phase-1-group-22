@@ -193,6 +193,7 @@ public class Game implements Serializable {
     public void addGoldToPlayerForShippingBin(int price, Player player) {
         int oldGold = player.getAccount().getGolds();
         player.getAccount().setGolds(oldGold + price);
+        GameClient.getInstance().updatePlayerGold(player);
     }
 
     public void addPlayer(Player player) {

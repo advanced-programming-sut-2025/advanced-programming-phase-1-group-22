@@ -1,5 +1,6 @@
 package io.github.some_example_name.common.model.structure.stores;
 
+import io.github.some_example_name.client.GameClient;
 import lombok.Getter;
 import io.github.some_example_name.common.model.abilitiy.Ability;
 import io.github.some_example_name.common.model.cook.Food;
@@ -106,6 +107,7 @@ public enum FishShopStuff  implements Shop{
 				return new Response("Not enough golds");
 			}
 			player.getAccount().removeGolds(salable.getPrice());
+            GameClient.getInstance().updatePlayerGold(player);
 			salable.dailySold += count;
 			player.getCraftingRecipes().put(CraftingRecipe.FISH_SMOKER_RECIPE, true);
 			return new Response("Bought successfully", true);
@@ -123,6 +125,7 @@ public enum FishShopStuff  implements Shop{
 				return new Response("Not enough golds");
 			}
 			player.getAccount().removeGolds(salable.getPrice());
+            GameClient.getInstance().updatePlayerGold(player);
 			salable.dailySold += count;
 			player.getInventory().addProductToBackPack(new Food(salable.foodType), count);
 			return new Response("Bought successfully", true);
@@ -146,6 +149,7 @@ public enum FishShopStuff  implements Shop{
 			return new Response("Not enough golds");
 		}
 		player.getAccount().removeGolds(salable.getPrice());
+        GameClient.getInstance().updatePlayerGold(player);
 		salable.dailySold += count;
 		player.getInventory().addProductToBackPack(salable.fishingPole, count);
 		return new Response("Bought successfully", true);

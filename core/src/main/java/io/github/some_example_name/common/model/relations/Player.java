@@ -40,6 +40,7 @@ public class Player extends Actor implements JsonPreparable {
     private User user;
     private Integer energy;
     private Integer maxEnergy;
+    private Integer numberOfCompleteMission = 0;
     private Boolean energyIsInfinite = false;
     private Integer daysOfSadness = 0;
     private BackPack inventory;
@@ -177,9 +178,18 @@ public class Player extends Actor implements JsonPreparable {
         throw new InvalidInputException("abilityType is invalid");
     }
 
+    public int getAverageAbilityLevel(){
+        int sum = 0;
+        for (Map.Entry<Ability, Integer> abilityIntegerEntry : abilities.entrySet()) {
+            sum += getAbilityLevel(abilityIntegerEntry.getKey());
+        }
+        return sum / 4;
+    }
+
     public void upgradeAbility(Ability ability) {
         int oldValue = this.getAbilities().get(ability);
         this.getAbilities().put(ability, oldValue + ability.getUpgradeAbility());
+        GameClient.getInstance().updatePlayerSkill(this,ability);
         if (ability.equals(Ability.MINING) && this.getAbilities().get(Ability.MINING) >= 2) {
             this.getInventory().addProductToBackPack(generateRandomElement(), 1);
         }
@@ -419,5 +429,9 @@ public class Player extends Actor implements JsonPreparable {
     public void setProposal() {
         this.direction = Direction.NORTH;
         this.sprites.get(0).setSprite(playerType.getProposal());
+    }
+
+    public int getGold() {
+        return account.getGolds();
     }
 }
