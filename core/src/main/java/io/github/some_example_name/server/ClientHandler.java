@@ -20,9 +20,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 @Getter
 @Setter
@@ -35,6 +39,8 @@ public class ClientHandler extends Thread {
     private boolean inFavor = false;
     private GameServer gameServer;
     private final ObjectMapper objectMapper = new ObjectMapper();
+    private final Map<String,Long> playerLastPing = new HashMap<>();
+    private final ScheduledExecutorService pingHandler = Executors.newScheduledThreadPool(1);
     private final ServerService service = new ServerService(this);
 
     public ClientHandler(Socket socket) {
@@ -44,6 +50,19 @@ public class ClientHandler extends Thread {
         objectMapper.addMixIn(Sprite.class, SpriteMixIn.class);
         objectMapper.addMixIn(Texture.class, SpriteMixIn.class);
         objectMapper.addMixIn(TextureRegion.class, SpriteMixIn.class);
+        pingHandler.scheduleAtFixedRate(()->{
+            for (Map.Entry<String, Long> stringLongEntry : playerLastPing.entrySet()) {
+                long lastPing = stringLongEntry.getValue();
+                long now = System.currentTimeMillis();
+                if (now - lastPing > 60 * 2 * 1000){
+                    handlePlayerDC(stringLongEntry.getKey());
+                }
+            }
+        },0,5, TimeUnit.SECONDS);
+    }
+
+    private void handlePlayerDC(String username){
+
     }
 
     @Override
@@ -108,7 +127,11 @@ public class ClientHandler extends Thread {
                             )
                         );
                         send(GSON.toJson(msg));
-                    } else if (obj.get("action").getAsString().equals("ready_for_sleep")) {
+                    }else if (obj.get("action").getAsString().equals("ping")){
+                        String username = obj.get("id").getAsString();
+                        playerLastPing.put(username,System.currentTimeMillis());
+                    }
+                    else if (obj.get("action").getAsString().equals("ready_for_sleep")) {
                         ready = true;
                         if (gameServer.isReady()) gameServer.sendAll(message);
                     } else if (obj.get("action").getAsString().equals("propose_end")) {
