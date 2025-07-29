@@ -2,12 +2,14 @@ package io.github.some_example_name.client.controller;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
 import com.google.gson.Gson;
 import io.github.some_example_name.client.GameClient;
 import io.github.some_example_name.client.MainGradle;
+import io.github.some_example_name.client.view.mainMenu.*;
 import io.github.some_example_name.common.model.Farm;
 import io.github.some_example_name.common.model.AnimatedSprite;
 import io.github.some_example_name.common.model.Direction;
@@ -20,11 +22,6 @@ import io.github.some_example_name.server.service.GameService;
 import io.github.some_example_name.common.utils.App;
 import io.github.some_example_name.common.utils.GameAsset;
 import io.github.some_example_name.client.view.GameView;
-import io.github.some_example_name.client.view.mainMenu.FridgeMenu;
-import io.github.some_example_name.client.view.mainMenu.InventoryMenu;
-import io.github.some_example_name.client.view.mainMenu.NotificationMenu;
-import io.github.some_example_name.client.view.mainMenu.TerminateMenu;
-import io.github.some_example_name.client.view.mainMenu.ToolMenu;
 import lombok.Getter;
 
 import java.util.ArrayList;
@@ -36,9 +33,9 @@ public class PlayerController {
     GameService gameService = new GameService();
     WorldController worldController;
     private float timeSinceLastMove = 0;
-    private InventoryMenu inventoryMenu = new InventoryMenu();
+    private final InventoryMenu inventoryMenu = new InventoryMenu();
     private final ToolMenu toolMenu = new ToolMenu();
-    private static final Gson GSON = new Gson();
+    private final PopUpReaction reactionMenu = new PopUpReaction();
 
     public PlayerController(WorldController worldController) {
         this.worldController = worldController;
@@ -49,6 +46,21 @@ public class PlayerController {
             Sprite playerSprite = player.getSprites().get(0).getSprite();
             if (playerSprite instanceof AnimatedSprite) {
                 ((AnimatedSprite) playerSprite).update(delta);
+            }
+            if (player.getEmojiReactionIndex() != null) {
+                MainGradle.getInstance().getBatch().draw(GameAsset.emojiTextures.get(player.getEmojiReactionIndex()),
+                    playerSprite.getX() + playerSprite.getWidth() / 2f - GameAsset.emojiTextures.get(player.getEmojiReactionIndex()).getWidth() / 2f,
+                    playerSprite.getY() + playerSprite.getHeight() / 2f + 50);
+                player.setLastReaction(player.getLastReaction() + delta);
+                if (player.getLastReaction() > 5f) player.setEmojiReactionIndex(null);
+            } else if (player.getTextReaction() != null) {
+                MainGradle.getInstance().getFont().getData().setScale(3f);
+                MainGradle.getInstance().getFont().draw(MainGradle.getInstance().getBatch(), player.getTextReaction(),
+                    playerSprite.getX() + playerSprite.getWidth() / 2f,
+                    playerSprite.getY() + playerSprite.getHeight() / 2f + 50);
+                MainGradle.getInstance().getFont().getData().setScale(1f);
+                player.setLastReaction(player.getLastReaction() + delta);
+                if (player.getLastReaction() > 5f) player.setTextReaction(null);
             }
         }
         Player currentPlayer = App.getInstance().getCurrentGame().getCurrentPlayer();
@@ -147,6 +159,9 @@ public class PlayerController {
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.L)) {
             toolMenu.createMenu(GameView.stage, GameAsset.SKIN, worldController);
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
+            reactionMenu.createMenu(GameView.stage, GameAsset.SKIN, getWorldController());
         }
         if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
             Vector3 worldCoords = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);

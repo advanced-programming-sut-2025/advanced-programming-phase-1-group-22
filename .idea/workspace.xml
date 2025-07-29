@@ -4,10 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d95100ff-6e61-4571-9e87-dcef3d963dba" name="Changes" comment="not complete DC">
+    <list default="true" id="d95100ff-6e61-4571-9e87-dcef3d963dba" name="Changes" comment="add real-time map menu">
+      <change afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/client/view/mainMenu/PopUpReaction.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/build/libs/core-1.0.0.jar" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/libs/core-1.0.0.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/client/view/MiniMapActor.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/client/view/MiniMapActor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/client/GameClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/client/GameClient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/client/MainGradle.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/client/MainGradle.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/client/controller/PlayerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/client/controller/PlayerController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/client/service/ClientService.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/client/service/ClientService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/common/model/relations/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/common/model/relations/Player.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/common/utils/GameAsset.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/common/utils/GameAsset.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lwjgl3/build/tmp/compileJava/previous-compilation-data.bin" beforeDir="false" afterPath="$PROJECT_DIR$/lwjgl3/build/tmp/compileJava/previous-compilation-data.bin" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -61,12 +68,12 @@
     &quot;assignee&quot;: &quot;Roham8406&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/advanced-programming-sut-2025/advanced-programming-phase-1-group-22.git",
-    "accountId": "6dfd5896-35af-4905-a843-c0bfce2ce8d8"
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/advanced-programming-sut-2025/advanced-programming-phase-1-group-22.git&quot;,
+    &quot;accountId&quot;: &quot;6dfd5896-35af-4905-a843-c0bfce2ce8d8&quot;
   }
-}]]></component>
+}</component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
   </component>
@@ -223,14 +230,6 @@
       <workItem from="1753437821215" duration="14591000" />
       <workItem from="1753572312868" duration="181000" />
       <workItem from="1753609176199" duration="6869000" />
-    </task>
-    <task id="LOCAL-00013" summary="implementing craft popup">
-      <option name="closed" value="true" />
-      <created>1751634966360</created>
-      <option name="number" value="00013" />
-      <option name="presentableId" value="LOCAL-00013" />
-      <option name="project" value="LOCAL" />
-      <updated>1751634966360</updated>
     </task>
     <task id="LOCAL-00014" summary="updated assets">
       <option name="closed" value="true" />
@@ -616,7 +615,15 @@
       <option name="project" value="LOCAL" />
       <updated>1753790115252</updated>
     </task>
-    <option name="localTasksCounter" value="62" />
+    <task id="LOCAL-00062" summary="add real-time map menu">
+      <option name="closed" value="true" />
+      <created>1753794018760</created>
+      <option name="number" value="00062" />
+      <option name="presentableId" value="LOCAL-00062" />
+      <option name="project" value="LOCAL" />
+      <updated>1753794018760</updated>
+    </task>
+    <option name="localTasksCounter" value="63" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -634,7 +641,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="implemented asking for marriage animation" />
     <MESSAGE value="implemented responding marriage + animation" />
     <MESSAGE value="uploaded an asset" />
     <MESSAGE value="minor debugging" />
@@ -659,7 +665,8 @@
     <MESSAGE value="implemented add item" />
     <MESSAGE value="implemented update item" />
     <MESSAGE value="not complete DC" />
-    <option name="LAST_COMMIT_MESSAGE" value="not complete DC" />
+    <MESSAGE value="add real-time map menu" />
+    <option name="LAST_COMMIT_MESSAGE" value="add real-time map menu" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

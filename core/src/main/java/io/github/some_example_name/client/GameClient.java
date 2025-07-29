@@ -37,9 +37,6 @@ import java.io.PrintWriter;
 import java.lang.reflect.*;
 import java.net.Socket;
 import java.util.*;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class GameClient {
@@ -69,7 +66,7 @@ public class GameClient {
         objectMapper.addMixIn(TextureRegion.class, SpriteMixIn.class);
     }
 
-    private void pingMassage(){
+    private void pingMassage() {
         try {
             out = new PrintWriter(socket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -184,7 +181,7 @@ public class GameClient {
                             JsonObject tileObject = body.get("tile").getAsJsonObject();
                             Tile tile = GSON.fromJson(tileObject, Tile.class);
                             service.updateTileState(tile);
-                        }  else if (obj.get("action").getAsString().equals("=build_greenhouse")) {
+                        } else if (obj.get("action").getAsString().equals("=build_greenhouse")) {
                             Farm farm = null;
                             for (Farm farm1 : App.getInstance().getCurrentGame().getVillage().getFarms()) {
                                 if (farm1.getPlayers().get(0).getUser().getUsername().equals(obj.get("id").getAsString())) {
@@ -252,9 +249,13 @@ public class GameClient {
                                 terminateMenu.get().setState(1);
                             }
                         } else if (obj.get("action").getAsString().equals("stop_termination")) {
-                            synchronized (terminateMenu) {terminateMenu.get().undoTermination();}
+                            synchronized (terminateMenu) {
+                                terminateMenu.get().undoTermination();
+                            }
                         } else if (obj.get("action").getAsString().equals("terminate_game")) {
-                            synchronized (terminateMenu) {terminateMenu.get().terminate();}
+                            synchronized (terminateMenu) {
+                                terminateMenu.get().terminate();
+                            }
                         } else if (obj.get("action").getAsString().equals("=fridge_pick")) {
                             for (Farm farm : App.getInstance().getCurrentGame().getVillage().getFarms()) {
                                 if (!farm.getPlayers().isEmpty() && farm.getPlayers().get(0).getName().equals(obj.get("id").getAsString())) {
@@ -289,7 +290,7 @@ public class GameClient {
                                 NotificationType.values()[body.get("type").getAsInt()],
                                 source
                             );
-                        } else if (obj.get("action").getAsString().equals(StructureUpdateState.ADD.getName())){
+                        } else if (obj.get("action").getAsString().equals(StructureUpdateState.ADD.getName())) {
                             decodeStructureAdd(body);
                         } else if (obj.get("action").getAsString().equals(StructureUpdateState.UPDATE.getName())) {
                             decodeStructureUpdate(body, findObject(body));
@@ -321,6 +322,13 @@ public class GameClient {
                             String npcName = obj.get("npc_type").getAsString();
                             int mission_id = obj.get("mission_id").getAsInt();
                             service.handleNpcMission(mission_id, npcName, username);
+                        } else if (obj.get("action").getAsString().equals("=update_player_reaction")) {
+                            String username = obj.get("id").getAsString();
+                            JsonElement emojiIndexJson = obj.get("emoji_index");
+                            Integer emojiIndex = (emojiIndexJson == null || emojiIndexJson.isJsonNull()) ? null : emojiIndexJson.getAsInt();
+                            JsonElement textJson = obj.get("text");
+                            String text = (textJson == null || textJson.isJsonNull()) ? null : textJson.getAsString();
+                            service.handlePlayerReaction(username, emojiIndex, text);
                         }
                     } catch (JsonParseException e) {
                         System.out.println("Received non-JSON: " + serverMessage);
@@ -460,6 +468,23 @@ public class GameClient {
                 "mission_id", mission.getId(),
                 "npc_type", mission.getRequester().getName()
             );
+            out.println(GSON.toJson(msg));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updatePlayerReaction(Player player) {
+        try {
+            out = new PrintWriter(socket.getOutputStream(), true);
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+            Map<String, Object> msg = new HashMap<>();
+            msg.put("action", "=update_player_reaction");
+            msg.put("id", Session.getCurrentUser().getUsername());
+            msg.put("emoji_index", player.getEmojiReactionIndex());
+            msg.put("text", player.getTextReaction());
+
             out.println(GSON.toJson(msg));
         } catch (IOException e) {
             e.printStackTrace();
@@ -949,7 +974,7 @@ public class GameClient {
     public void buildGreenhouse() {
         try {
             out = new PrintWriter(socket.getOutputStream(), true);
-            in  = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
             Map<String, Object> msg = Map.of(
                 "action", "=build_greenhouse",
@@ -966,7 +991,7 @@ public class GameClient {
     public void faint() {
         try {
             out = new PrintWriter(socket.getOutputStream(), true);
-            in  = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
             Map<String, Object> msg = Map.of(
                 "action", "_faint",
@@ -987,7 +1012,7 @@ public class GameClient {
     private void handleInteraction(String username, String action) {
         try {
             out = new PrintWriter(socket.getOutputStream(), true);
-            in  = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
             Map<String, Object> msg = Map.of(
                 "action", action,
@@ -1014,7 +1039,7 @@ public class GameClient {
     public void respondMarriage(boolean b, String username) {
         try {
             out = new PrintWriter(socket.getOutputStream(), true);
-            in  = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
             Map<String, Object> msg = Map.of(
                 "action", "_respond_marriage",
@@ -1030,7 +1055,7 @@ public class GameClient {
     public void setGolds(int count, String couple) {
         try {
             out = new PrintWriter(socket.getOutputStream(), true);
-            in  = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
             Map<String, Object> msg = Map.of(
                 "action", "set_golds",
@@ -1046,7 +1071,7 @@ public class GameClient {
     public void sendGift(Player player, Salable gift, int amount) {
         try {
             out = new PrintWriter(socket.getOutputStream(), true);
-            in  = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
             Map<String, Object> msg = Map.of(
                 "action", "send_gift",
@@ -1063,7 +1088,7 @@ public class GameClient {
     public void notifyPlayer(String username, Response response, NotificationType type, Actor source) {
         try {
             out = new PrintWriter(socket.getOutputStream(), true);
-            in  = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
             Map<String, Object> msg = Map.of(
                 "action", "notify",
@@ -1081,7 +1106,7 @@ public class GameClient {
     public void talk(Player anotherPlayer, String message) {
         try {
             out = new PrintWriter(socket.getOutputStream(), true);
-            in  = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
             Map<String, Object> msg = Map.of(
                 "action", "talk",
@@ -1097,7 +1122,7 @@ public class GameClient {
     public void rateGift(Integer giftId, int rate, String giver) {
         try {
             out = new PrintWriter(socket.getOutputStream(), true);
-            in  = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
             Map<String, Object> msg = Map.of(
                 "action", "rate_gift",
@@ -1113,7 +1138,7 @@ public class GameClient {
     public void emptyAction(String string) {
         try {
             out = new PrintWriter(socket.getOutputStream(), true);
-            in  = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
             Map<String, Object> msg = Map.of(
                 "action", string,
@@ -1129,7 +1154,7 @@ public class GameClient {
     public void refrigeratorPut(Salable name, Integer count) {
         try {
             out = new PrintWriter(socket.getOutputStream(), true);
-            in  = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
             Map<String, Object> msg = Map.of(
                 "action", "=fridge_put",
@@ -1145,7 +1170,7 @@ public class GameClient {
     public void refrigeratorPick(String name) {
         try {
             out = new PrintWriter(socket.getOutputStream(), true);
-            in  = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
             Map<String, Object> msg = Map.of(
                 "action", "=fridge_pick",
