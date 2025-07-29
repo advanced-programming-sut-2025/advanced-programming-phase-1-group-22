@@ -37,6 +37,9 @@ import java.io.PrintWriter;
 import java.lang.reflect.*;
 import java.net.Socket;
 import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class GameClient {
@@ -47,6 +50,7 @@ public class GameClient {
     private Socket socket;
     private PrintWriter out;
     private BufferedReader in;
+    private final Timer timer = new Timer();
     private final ClientService service = new ClientService();
     private final AtomicReference<TerminateMenu> terminateMenu = new AtomicReference<>();
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -63,6 +67,22 @@ public class GameClient {
             ObjectMapper.DefaultTyping.NON_FINAL, JsonTypeInfo.As.PROPERTY);
         objectMapper.addMixIn(Sprite.class, SpriteMixIn.class);
         objectMapper.addMixIn(TextureRegion.class, SpriteMixIn.class);
+    }
+
+    private void pingMassage(){
+        try {
+            out = new PrintWriter(socket.getOutputStream(), true);
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+            Map<String, Object> msg = Map.of(
+                "action", "ping",
+                "id", Session.getCurrentUser().getUsername()
+            );
+
+            out.println(GSON.toJson(msg));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void connectToServer() {
@@ -97,6 +117,12 @@ public class GameClient {
             );
 
             out.println(GSON.toJson(msg));
+            timer.scheduleAtFixedRate(new TimerTask() {
+                @Override
+                public void run() {
+                    pingMassage();
+                }
+            }, 0, 5000);
         } catch (IOException e) {
             e.printStackTrace();
         }
