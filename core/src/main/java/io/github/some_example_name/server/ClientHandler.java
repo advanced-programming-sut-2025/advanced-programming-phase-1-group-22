@@ -1,11 +1,5 @@
 package io.github.some_example_name.server;
 
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator;
 import com.google.gson.*;
 import io.github.some_example_name.common.model.*;
 import io.github.some_example_name.server.model.GameServer;
@@ -44,13 +38,6 @@ public class ClientHandler extends Thread {
 
     public ClientHandler(Socket socket) {
         this.clientSocket = socket;
-        pingHandler.scheduleAtFixedRate(() -> {
-            for (Map.Entry<String, Long> stringLongEntry : playerLastPing.entrySet()) {
-                long lastPing = stringLongEntry.getValue();
-                long now = System.currentTimeMillis();
-                handlePlayerDC(stringLongEntry.getKey(), now - lastPing, lastPing);
-            }
-        }, 0, 5, TimeUnit.SECONDS);
     }
 
     private void handlePlayerDC(String username, long DCTime, long lastPing) {
@@ -79,6 +66,16 @@ public class ClientHandler extends Thread {
             "id", username
         );
         gameServer.sendAllBut(GSON.toJson(msg), username);
+    }
+
+    private void handlePlayerReConnect(String username) {
+        gameServer.getDCPlayers().remove(username);
+        gameServer.getPlayerLastPing().put(username, System.currentTimeMillis());
+        Map<String, Object> msg = Map.of(
+            "action", "update_player_connection",
+            "id", username
+        );
+        gameServer.sendAll(GSON.toJson(msg));
     }
 
     @Override
@@ -130,8 +127,25 @@ public class ClientHandler extends Thread {
                         );
                         String username = obj.get("id").getAsString();
                         synchronized (gameServer) {
+                            Entry<ServerPlayer, ClientHandler> entry = null;
+                            for (Entry<ServerPlayer, ClientHandler> client : gameServer.getClients()) {
+                                if (client.getKey().username.equals(username)) {
+                                    entry = client;
+                                    break;
+                                }
+                            }
+                            if (entry != null) {
+                                gameServer.getClients().remove(entry);
+                            }
                             gameServer.getClients().add(new Entry<>(new ServerPlayer(username), this));
                         }
+                        pingHandler.scheduleAtFixedRate(() -> {
+                            for (Map.Entry<String, Long> stringLongEntry : gameServer.getPlayerLastPing().entrySet()) {
+                                long lastPing = stringLongEntry.getValue();
+                                long now = System.currentTimeMillis();
+                                handlePlayerDC(stringLongEntry.getKey(), now - lastPing, lastPing);
+                            }
+                        }, 0, 5, TimeUnit.SECONDS);
                     } else if (obj.get("action").getAsString().equals("choose_farm")) {
                         Map<String, Object> msg = Map.of(
                             "action", "response_choose_farm",
@@ -143,9 +157,17 @@ public class ClientHandler extends Thread {
                             )
                         );
                         send(GSON.toJson(msg));
+                    } else if (obj.get("action").getAsString().equals("DC_reconnect")) {
+                        String username = obj.get("id").getAsString();
+                        handlePlayerReConnect(username);
+                        service.DCReconnect(username);
+                        Map<String, Object> msg = Map.of(
+                            "action", "finish_reconnect"
+                        );
+                        send(GSON.toJson(msg));
                     } else if (obj.get("action").getAsString().equals("ping")) {
                         String username = obj.get("id").getAsString();
-                        playerLastPing.put(username, System.currentTimeMillis());
+                        gameServer.getPlayerLastPing().put(username, System.currentTimeMillis());
                     } else if (obj.get("action").getAsString().equals("ready_for_sleep")) {
                         ready = true;
                         if (gameServer.isReady()) gameServer.sendAll(message);

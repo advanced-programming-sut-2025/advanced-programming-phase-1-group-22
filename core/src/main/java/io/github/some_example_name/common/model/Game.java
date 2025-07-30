@@ -4,6 +4,7 @@ import com.badlogic.gdx.utils.Timer;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import io.github.some_example_name.client.GameClient;
+import io.github.some_example_name.client.controller.mainMenu.StartGameMenuController;
 import io.github.some_example_name.client.view.GameView;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import io.github.some_example_name.common.model.animal.Fish;
@@ -197,9 +198,11 @@ public class Game implements Serializable {
                 player.setBuff(null);
             }
         }
-        for (Farm farm : App.getInstance().getCurrentGame().getVillage().getFarms()) {
-            if (!farm.getPlayers().isEmpty() && farm.getPlayers().get(0).equals(App.getInstance().getCurrentGame().getCurrentPlayer())) {
-                farm.generateRandomForaging();
+        if (!StartGameMenuController.getInstance().isReconnect()) {
+            for (Farm farm : App.getInstance().getCurrentGame().getVillage().getFarms()) {
+                if (!farm.getPlayers().isEmpty() && farm.getPlayers().get(0).equals(App.getInstance().getCurrentGame().getCurrentPlayer())) {
+                    farm.generateRandomForaging();
+                }
             }
         }
         for (Farm farm : App.getInstance().getCurrentGame().getVillage().getFarms()) {
@@ -260,7 +263,7 @@ public class Game implements Serializable {
     public void addGoldToPlayerForShippingBin(int price, Player player) {
         int oldGold = player.getAccount().getGolds();
         player.getAccount().setGolds(oldGold + price);
-        GameClient.getInstance().updatePlayerGold(player);
+        if (!StartGameMenuController.getInstance().isReconnect())  GameClient.getInstance().updatePlayerGold(player);
     }
 
     public void addPlayer(Player player) {
@@ -341,10 +344,10 @@ public class Game implements Serializable {
                             harvestAbleProduct.setNumberOfWithoutWaterDays(oldNumber + 1);
                             if (harvestAbleProduct.getNumberOfWithoutWaterDays() >= 2) {
                                 App.getInstance().getCurrentGame().getVillage().removeStructure(harvestAbleProduct);
-                                GameClient.getInstance().updateStructureState(harvestAbleProduct, StructureUpdateState.DELETE, true, null);
+                                if (!StartGameMenuController.getInstance().isReconnect()) GameClient.getInstance().updateStructureState(harvestAbleProduct, StructureUpdateState.DELETE, true, null);
                                 for (Tile tile : structure.getTiles()) {
                                     tile.setTileType(TileType.FLAT);
-                                    GameClient.getInstance().updateTileState(tile);
+                                    if (!StartGameMenuController.getInstance().isReconnect()) GameClient.getInstance().updateTileState(tile);
                                 }
                                 continue;
                             }
@@ -359,7 +362,7 @@ public class Game implements Serializable {
                         if (harvestAbleProduct instanceof Tree) {
                             ((Tree) harvestAbleProduct).setAttackByCrow(false);
                         }
-                        GameClient.getInstance().updateStructureState(harvestAbleProduct, StructureUpdateState.UPDATE, true, harvestAbleProduct.getTiles().get(0));
+                        if (!StartGameMenuController.getInstance().isReconnect()) GameClient.getInstance().updateStructureState(harvestAbleProduct, StructureUpdateState.UPDATE, true, harvestAbleProduct.getTiles().get(0));
                     }
                 }
             }
