@@ -247,8 +247,8 @@ public class GameClient {
                             }
                         } else if (obj.get("action").getAsString().equals("trade")) {
                             TradeService.getInstance().addTradeByServer(
-                                service.getPlayerByUsername(body.get("receiver").getAsString()),
-                                service.getPlayerByUsername(obj.get("id").getAsString()),
+                                service.getPlayerByUsername(body.get("customer").getAsString()),
+                                service.getPlayerByUsername(body.get("trader").getAsString()),
                                 body.get("salable").getAsString(),
                                 body.get("quantity").getAsInt(),
                                 body.has("requiredItem") ? body.get("requiredItem").getAsString() : null,
@@ -1179,9 +1179,11 @@ public class GameClient {
                 "action", "trade",
                 "id", Session.getCurrentUser().getUsername(),
                 "body", Map.of(
-                    "receiver", trade.getCustomer().getName(),
+                    "receiver", trade.getCustomer().equals(App.getInstance().getCurrentGame().getCurrentPlayer()) ? trade.getTrader().getName() : trade.getCustomer().getName(),
                     "salable", trade.getSalable(),
                     "quantity", trade.getQuantity(),
+                    "trader", trade.getTrader().getName(),
+                    "customer", trade.getCustomer().getName(),
                     trade.getPrice() == null ? "requiredItem" : "gold", trade.getPrice() == null ? trade.getRequiredItem() : "",
                     trade.getPrice() == null ?"quantityRequired" : "price", trade.getPrice() == null ? trade.getQuantityRequired() : trade.getPrice(),
                     "id", trade.getId()
