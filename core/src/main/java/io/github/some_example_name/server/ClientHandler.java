@@ -31,6 +31,7 @@ public class ClientHandler extends Thread {
     private Socket clientSocket;
     private PrintWriter out;
     private BufferedReader in;
+    private boolean dead = true;
     private boolean ready = false;
     private boolean inFavor = false;
     private GameServer gameServer;
@@ -127,6 +128,26 @@ public class ClientHandler extends Thread {
                             );
                             gameServer.sendAll(GSON.toJson(msg));
                         }
+                    } else if (obj.get("action").getAsString().equals("propose_fire")) {
+                        gameServer.clearFavors();
+                        gameServer.sendFire(message, obj.get("player").getAsString());
+                    } else if (obj.get("action").getAsString().equals("fire")) {
+                        if (obj.getAsJsonObject("body").get("vote").getAsBoolean()) {
+                            inFavor = true;
+                            if (gameServer.isMajority()) {
+                                String player = obj.getAsJsonObject("body").get("player").getAsString();
+                                Map<String, Object> msg = Map.of(
+                                    "action", "fire_accomplished",
+                                    "id", "!server!",
+                                    "body", Map.of("player", player)
+                                );
+                                gameServer.findClient(player).die();
+                                gameServer.sendAll(GSON.toJson(msg));
+                            }
+                        } else {
+                            gameServer.clearFavors();
+                            gameServer.sendAllBut(message, obj.get("id").getAsString());
+                        }
                     } else if (obj.get("action").getAsString().charAt(0) == '_') {
                         gameServer.sendAll(message);
                     } else if (obj.get("action").getAsString().charAt(0) == '=') {
@@ -155,12 +176,16 @@ public class ClientHandler extends Thread {
         }
     }
 
+    private void die() {
+        dead = true;
+    }
+
     private int getRandomNumber(int start, int end) {
         Random random = new Random();
         return random.nextInt(end - start + 1) + start;
     }
 
     public void send(String message) {
-        out.println(message);
+        if (!dead) out.println(message);
     }
 }

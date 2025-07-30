@@ -47,6 +47,7 @@ public class InventoryMenu extends PopUp {
     private ArrayList<ImageButton> histories = new ArrayList<>();
     private ArrayList<ImageButton> chats = new ArrayList<>();
     private ArrayList<ImageButton> trades = new ArrayList<>();
+    private ArrayList<ImageButton> fires = new ArrayList<>();
     private ArrayList<Friendship> friendships = new ArrayList<>();
 
     {
@@ -54,6 +55,7 @@ public class InventoryMenu extends PopUp {
         histories.add(new ImageButton(new TextureRegionDrawable(new TextureRegion(GameAsset.CHEST))));
         chats.add(new ImageButton(new TextureRegionDrawable(new TextureRegion(GameAsset.CHAT))));
         trades.add(new ImageButton(new TextureRegionDrawable(new TextureRegion(GameAsset.TRADE))));
+        fires.add(new ImageButton(new TextureRegionDrawable(new TextureRegion(GameAsset.EXIT_BUTTON))));
     }
 
     private static final Table tabs = new Table();
@@ -947,6 +949,7 @@ public class InventoryMenu extends PopUp {
             ImageButton history = histories.get(i);
             ImageButton chat = chats.get(i);
             ImageButton trade = trades.get(i);
+            ImageButton fire = fires.get(i);
             friendships.add(friendship);
 
             Table row = new Table();
@@ -954,11 +957,12 @@ public class InventoryMenu extends PopUp {
             row.add(iconImage).size(128).padRight(20);
             row.add(nameLabel).width(250).padRight(20);
             row.add(xpBar).width(300).padRight(20);
-            row.add(levelLabel).width(200).align(Align.right).padRight(20);
-            row.add(gift).size(64).padRight(20);
-            row.add(history).size(64).padRight(20);
-            row.add(chat).size(64).padRight(20);
-            row.add(trade).size(64);
+            row.add(levelLabel).width(200).align(Align.right).padRight(5);
+            row.add(gift).size(64).padRight(5);
+            row.add(history).size(64).padRight(5);
+            row.add(chat).size(64).padRight(5);
+            row.add(trade).size(64).padRight(5);
+            row.add(fire).size(64);
 
             table.add(row).row();
         }
@@ -1065,6 +1069,14 @@ public class InventoryMenu extends PopUp {
                         tradeMenu.createMenu(stage, skin, getController());
                         friendships.clear();
                         trades.get(j).setChecked(false);
+                        break;
+                    }
+                    if (fires.get(j).isChecked()) {
+                        endTask(array, exitButton);
+                        getController().showResponse(new Response(friend.getUser().getNickname()));
+                        GameClient.getInstance().startFiring(friend.getName());
+                        friendships.clear();
+                        fires.get(j).setChecked(false);
                         break;
                     }
                 }

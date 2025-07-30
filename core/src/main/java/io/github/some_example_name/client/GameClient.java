@@ -11,6 +11,7 @@ import com.google.gson.reflect.TypeToken;
 import io.github.some_example_name.client.controller.WorldController;
 import io.github.some_example_name.client.controller.mainMenu.StartGameMenuController;
 import io.github.some_example_name.client.view.GameView;
+import io.github.some_example_name.client.view.mainMenu.FireMenu;
 import io.github.some_example_name.client.view.mainMenu.TerminateMenu;
 import io.github.some_example_name.common.model.Farm;
 import io.github.some_example_name.common.model.enums.Weather;
@@ -51,6 +52,7 @@ public class GameClient {
     private BufferedReader in;
     private final ClientService service = new ClientService();
     private final AtomicReference<TerminateMenu> terminateMenu = new AtomicReference<>();
+    private final AtomicReference<FireMenu> fireMenu = new AtomicReference<>();
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     public static GameClient getInstance() {
@@ -231,6 +233,26 @@ public class GameClient {
                             synchronized (terminateMenu) {terminateMenu.get().undoTermination();}
                         } else if (obj.get("action").getAsString().equals("terminate_game")) {
                             synchronized (terminateMenu) {terminateMenu.get().terminate();}
+                        } else if (obj.get("action").getAsString().equals("propose_fire")) {
+                            fireMenu.set(new FireMenu());
+                            synchronized (terminateMenu) {
+                                fireMenu.get().setPlayer(service.getPlayerByUsername(body.get("player").getAsString()));
+                                fireMenu.get().createMenu(GameView.stage, GameAsset.SKIN, WorldController.getInstance());
+                            }
+                        } else if (obj.get("action").getAsString().equals("fire")) {
+                            synchronized (fireMenu) {
+                                if (!body.get("vote").getAsBoolean()) {
+                                    fireMenu.get().undoTermination();
+                                }
+                            }
+                        } else if (obj.get("action").getAsString().equals("fire_accomplished")) {
+                            if (service.getPlayerByUsername(body.get("player").getAsString()).equals(App.getInstance().getCurrentGame().getCurrentPlayer())) {
+                                service.die();
+                            } else {
+                                synchronized (fireMenu) {
+                                    fireMenu.get().terminate();
+                                }
+                            }
                         } else if (obj.get("action").getAsString().equals("=fridge_pick")) {
                             for (Farm farm : App.getInstance().getCurrentGame().getVillage().getFarms()) {
                                 if (!farm.getPlayers().isEmpty() && farm.getPlayers().get(0).getName().equals(obj.get("id").getAsString())) {
@@ -1131,6 +1153,38 @@ public class GameClient {
                 "action", string,
                 "id", Session.getCurrentUser().getUsername(),
                 "body", Map.of()
+            );
+            out.println(GSON.toJson(msg));
+        } catch (IOException e) {
+            debug(e);
+        }
+    }
+
+    public void fire(boolean b, String name) {
+        try {
+            out = new PrintWriter(socket.getOutputStream(), true);
+            in  = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+            Map<String, Object> msg = Map.of(
+                "action", "fire",
+                "id", Session.getCurrentUser().getUsername(),
+                "body", Map.of("player", name, "vote", b)
+            );
+            out.println(GSON.toJson(msg));
+        } catch (IOException e) {
+            debug(e);
+        }
+    }
+
+    public void startFiring(String name) {
+        try {
+            out = new PrintWriter(socket.getOutputStream(), true);
+            in  = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+            Map<String, Object> msg = Map.of(
+                "action", "propose_fire",
+                "id", Session.getCurrentUser().getUsername(),
+                "body", Map.of("player", name)
             );
             out.println(GSON.toJson(msg));
         } catch (IOException e) {

@@ -1,6 +1,7 @@
 package io.github.some_example_name.server.model;
 
 
+import io.github.some_example_name.client.service.ClientService;
 import io.github.some_example_name.common.model.Entry;
 import io.github.some_example_name.server.ClientHandler;
 import lombok.Getter;
@@ -37,6 +38,15 @@ public class GameServer {
         }
     }
 
+    public void sendFire(String message, String username) {
+        for (Entry<ServerPlayer, ClientHandler> client : clients) {
+            if (!client.getKey().username.equals(username))  {
+                client.getValue().send(message);
+                client.getValue().setInFavor(true);
+            }
+        }
+    }
+
     public String checkAvailability(String username, Integer farmId, String character) {
         ServerPlayer currentPlayer = null;
         for (Entry<ServerPlayer, ClientHandler> entry : clients) {
@@ -65,5 +75,12 @@ public class GameServer {
             if (!client.getValue().isInFavor()) return false;
         }
         return true;
+    }
+
+    public ClientHandler findClient(String player) {
+        for (Entry<ServerPlayer, ClientHandler> client : clients) {
+            if (client.getKey().username.equals(player)) return client.getValue();
+        }
+        return null;
     }
 }
