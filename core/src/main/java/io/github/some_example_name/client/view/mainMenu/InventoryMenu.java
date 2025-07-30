@@ -46,12 +46,14 @@ public class InventoryMenu extends PopUp {
     private ArrayList<ImageButton> gifts = new ArrayList<>();
     private ArrayList<ImageButton> histories = new ArrayList<>();
     private ArrayList<ImageButton> chats = new ArrayList<>();
+    private ArrayList<ImageButton> trades = new ArrayList<>();
     private ArrayList<Friendship> friendships = new ArrayList<>();
 
     {
         gifts.add(new ImageButton(new TextureRegionDrawable(new TextureRegion(GameAsset.GIFT))));
         histories.add(new ImageButton(new TextureRegionDrawable(new TextureRegion(GameAsset.CHEST))));
         chats.add(new ImageButton(new TextureRegionDrawable(new TextureRegion(GameAsset.CHAT))));
+        trades.add(new ImageButton(new TextureRegionDrawable(new TextureRegion(GameAsset.TRADE))));
     }
 
     private static final Table tabs = new Table();
@@ -944,6 +946,7 @@ public class InventoryMenu extends PopUp {
             ImageButton gift = gifts.get(i);
             ImageButton history = histories.get(i);
             ImageButton chat = chats.get(i);
+            ImageButton trade = trades.get(i);
             friendships.add(friendship);
 
             Table row = new Table();
@@ -954,7 +957,8 @@ public class InventoryMenu extends PopUp {
             row.add(levelLabel).width(200).align(Align.right).padRight(20);
             row.add(gift).size(64).padRight(20);
             row.add(history).size(64).padRight(20);
-            row.add(chat).size(64);
+            row.add(chat).size(64).padRight(20);
+            row.add(trade).size(64);
 
             table.add(row).row();
         }
@@ -1051,6 +1055,16 @@ public class InventoryMenu extends PopUp {
                         giftMenu.createMenu(stage, skin, getController());
                         friendships.clear();
                         chats.get(j).setChecked(false);
+                        break;
+                    }
+                    if (trades.get(j).isChecked()) {
+                        endTask(array, exitButton);
+                        getController().showResponse(new Response(friend.getUser().getNickname()));
+                        TradeMenu tradeMenu = new TradeMenu();
+                        tradeMenu.setFriendship(friendship);
+                        tradeMenu.createMenu(stage, skin, getController());
+                        friendships.clear();
+                        trades.get(j).setChecked(false);
                         break;
                     }
                 }

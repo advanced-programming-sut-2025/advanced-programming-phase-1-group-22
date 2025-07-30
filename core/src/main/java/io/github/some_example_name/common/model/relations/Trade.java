@@ -1,5 +1,6 @@
 package io.github.some_example_name.common.model.relations;
 
+import io.github.some_example_name.common.utils.App;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,11 +18,10 @@ public class Trade {
     private Integer price;
     private Boolean IShouldAnswer = false;
     private Boolean isAnswered = false;
-    private static Integer lastId = 1;
     private Boolean isSuccessfulled =false;
 
     public Trade(Player customer, Player trader, String salable, int quantity, int price, boolean iShouldAnswer) {
-        this.id = lastId++;
+        this.id = calcId(customer);
         this.customer = customer;
         this.trader = trader;
         this.salable = salable;
@@ -30,8 +30,17 @@ public class Trade {
         this.IShouldAnswer = iShouldAnswer;
     }
 
+    private Integer calcId(Player customer) {
+        for (int i = 0; i < App.getInstance().getCurrentGame().getPlayers().size(); i++) {
+            if (App.getInstance().getCurrentGame().getPlayers().get(i).getName().equals(customer.getName())) {
+                return 10000 * i + 10000 + customer.getGootenTradeList().size();
+            }
+        }
+        return null;
+    }
+
     public Trade(Player customer, Player trader, String salable, Integer quantity, int quantityRequired, String requiredItem, boolean IShouldAnswer) {
-        this.id = lastId++;
+        this.id = calcId(customer);
         this.customer = customer;
         this.trader = trader;
         this.salable = salable;
