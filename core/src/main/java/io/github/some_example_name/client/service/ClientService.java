@@ -137,6 +137,13 @@ public class ClientService {
         });
     }
 
+    public void handleDCPlayer(String username,long time){
+        Player player = getPlayerByUsername(username);
+        if (player == null) return;
+        if (!App.getInstance().getCurrentGame().getDCPlayers().containsKey(player))
+            App.getInstance().getCurrentGame().getDCPlayers().put(player,time);
+    }
+
     private Structure getStructureByTile(List<Tile> tiles) {
         for (Farm farm : App.getInstance().getCurrentGame().getVillage().getFarms()) {
             farm.applyPendingChanges();

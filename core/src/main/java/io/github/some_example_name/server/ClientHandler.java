@@ -38,31 +38,47 @@ public class ClientHandler extends Thread {
     private boolean ready = false;
     private boolean inFavor = false;
     private GameServer gameServer;
-    private final ObjectMapper objectMapper = new ObjectMapper();
-    private final Map<String,Long> playerLastPing = new HashMap<>();
+    private final Map<String, Long> playerLastPing = new HashMap<>();
     private final ScheduledExecutorService pingHandler = Executors.newScheduledThreadPool(1);
     private final ServerService service = new ServerService(this);
 
     public ClientHandler(Socket socket) {
         this.clientSocket = socket;
-        objectMapper.activateDefaultTyping(LaissezFaireSubTypeValidator.instance,
-            ObjectMapper.DefaultTyping.NON_FINAL, JsonTypeInfo.As.PROPERTY);
-        objectMapper.addMixIn(Sprite.class, SpriteMixIn.class);
-        objectMapper.addMixIn(Texture.class, SpriteMixIn.class);
-        objectMapper.addMixIn(TextureRegion.class, SpriteMixIn.class);
-        pingHandler.scheduleAtFixedRate(()->{
+        pingHandler.scheduleAtFixedRate(() -> {
             for (Map.Entry<String, Long> stringLongEntry : playerLastPing.entrySet()) {
                 long lastPing = stringLongEntry.getValue();
                 long now = System.currentTimeMillis();
-                if (now - lastPing > 60 * 2 * 1000){
-                    handlePlayerDC(stringLongEntry.getKey());
-                }
+                handlePlayerDC(stringLongEntry.getKey(), now - lastPing, lastPing);
             }
-        },0,5, TimeUnit.SECONDS);
+        }, 0, 5, TimeUnit.SECONDS);
     }
 
-    private void handlePlayerDC(String username){
+    private void handlePlayerDC(String username, long DCTime, long lastPing) {
+        if (DCTime >= 2 * 60 * 1000) {
+            sendTerminationMessage(username);
+        } else if (DCTime > 20 * 1000) {
+            if (!gameServer.getDCPlayers().containsKey(username)) {
+                gameServer.getDCPlayers().put(username, lastPing);
+                sendDCMessage(username, lastPing);
+            }
+        }
+    }
 
+    private void sendDCMessage(String username, long DCTime) {
+        Map<String, Object> msg = Map.of(
+            "action", "DC_player",
+            "id", username,
+            "time", DCTime
+        );
+        gameServer.sendAllBut(GSON.toJson(msg), username);
+    }
+
+    private void sendTerminationMessage(String username) {
+        Map<String, Object> msg = Map.of(
+            "action", "DC_termination",
+            "id", username
+        );
+        gameServer.sendAllBut(GSON.toJson(msg), username);
     }
 
     @Override
@@ -127,11 +143,10 @@ public class ClientHandler extends Thread {
                             )
                         );
                         send(GSON.toJson(msg));
-                    }else if (obj.get("action").getAsString().equals("ping")){
+                    } else if (obj.get("action").getAsString().equals("ping")) {
                         String username = obj.get("id").getAsString();
-                        playerLastPing.put(username,System.currentTimeMillis());
-                    }
-                    else if (obj.get("action").getAsString().equals("ready_for_sleep")) {
+                        playerLastPing.put(username, System.currentTimeMillis());
+                    } else if (obj.get("action").getAsString().equals("ready_for_sleep")) {
                         ready = true;
                         if (gameServer.isReady()) gameServer.sendAll(message);
                     } else if (obj.get("action").getAsString().equals("propose_end")) {

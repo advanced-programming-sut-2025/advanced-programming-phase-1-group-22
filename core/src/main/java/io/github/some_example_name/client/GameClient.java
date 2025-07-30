@@ -51,7 +51,6 @@ public class GameClient {
     private final Timer timer = new Timer();
     private final ClientService service = new ClientService();
     private final AtomicReference<TerminateMenu> terminateMenu = new AtomicReference<>();
-    private final ObjectMapper objectMapper = new ObjectMapper();
 
     public static GameClient getInstance() {
         if (instance == null) {
@@ -61,10 +60,6 @@ public class GameClient {
     }
 
     private GameClient() {
-        objectMapper.activateDefaultTyping(LaissezFaireSubTypeValidator.instance,
-            ObjectMapper.DefaultTyping.NON_FINAL, JsonTypeInfo.As.PROPERTY);
-        objectMapper.addMixIn(Sprite.class, SpriteMixIn.class);
-        objectMapper.addMixIn(TextureRegion.class, SpriteMixIn.class);
     }
 
     private void pingMassage() {
@@ -352,6 +347,18 @@ public class GameClient {
                             int missionId = obj.get("mission_id").getAsInt();
                             int amount = obj.get("amount").getAsInt();
                             service.handleMissionAdd(username, missionId, amount);
+                        } else if (obj.get("action").getAsString().equals("DC_player")) {
+                            String username = obj.get("id").getAsString();
+                            long time = obj.get("time").getAsLong();
+                            service.handleDCPlayer(username, time);
+                        } else if (obj.get("action").getAsString().equals("DC_termination")) {
+                            GameService.getInstance().finalTermination();
+                            //TODO delete gameServer
+                            Gdx.app.postRunnable(() -> {
+                                MainGradle.getInstance().getScreen().dispose();
+                                MainGradle.getInstance().initialMenu();
+                            });
+                            //TODO transfer to lobby
                         }
                     } catch (JsonParseException e) {
                         System.out.println("Received non-JSON: " + serverMessage);

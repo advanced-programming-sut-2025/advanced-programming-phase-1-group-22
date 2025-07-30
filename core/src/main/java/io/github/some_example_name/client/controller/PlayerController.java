@@ -2,6 +2,7 @@ package io.github.some_example_name.client.controller;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
@@ -63,6 +64,30 @@ public class PlayerController {
                 MainGradle.getInstance().getFont().getData().setScale(1f);
                 player.setLastReaction(player.getLastReaction() + delta);
                 if (player.getLastReaction() > 5f) player.setTextReaction(null);
+            }
+        }
+        synchronized (App.getInstance().getCurrentGame().getDCPlayers()) {
+            int count = 0;
+            for (Map.Entry<Player, Long> playerLongEntry : App.getInstance().getCurrentGame().getDCPlayers().entrySet()) {
+                Player player = playerLongEntry.getKey();
+                long time = playerLongEntry.getValue();
+                long now = System.currentTimeMillis();
+                long seconds = ((now - time) / 1000) % 60;
+                long minutes = ((now - time) / 1000) / 60;
+                String elapsedTime = String.format("%02d:%02d", minutes, seconds);
+                String msg = player.getUser().getUsername() + " disconnected";
+
+                Sprite playerSprite = App.getInstance().getCurrentGame().getCurrentPlayer().getSprites().get(0).getSprite();
+                float x = playerSprite.getX() + playerSprite.getWidth() / 2f;
+                float y = playerSprite.getY() + playerSprite.getHeight() / 2f + 200 - count * 80;
+                count += 1;
+
+                MainGradle.getInstance().getFont().getData().setScale(3f);
+                MainGradle.getInstance().getFont().setColor(Color.RED);
+                MainGradle.getInstance().getFont().draw(MainGradle.getInstance().getBatch(), msg, x, y);
+                MainGradle.getInstance().getFont().setColor(Color.LIGHT_GRAY);
+                MainGradle.getInstance().getFont().draw(MainGradle.getInstance().getBatch(), elapsedTime, x + 20, y - 50);
+                MainGradle.getInstance().getFont().getData().setScale(1f);
             }
         }
         Player currentPlayer = App.getInstance().getCurrentGame().getCurrentPlayer();

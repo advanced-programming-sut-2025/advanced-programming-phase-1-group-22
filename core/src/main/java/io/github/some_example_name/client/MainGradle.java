@@ -61,6 +61,7 @@ public class MainGradle extends Game {
     @Override
     public void dispose() {
         batch.dispose();
+        font.dispose();
     }
 
     @Override

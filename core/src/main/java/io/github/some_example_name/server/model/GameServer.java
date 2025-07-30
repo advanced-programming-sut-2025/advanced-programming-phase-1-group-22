@@ -6,11 +6,14 @@ import io.github.some_example_name.server.ClientHandler;
 import lombok.Getter;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 
 @Getter
 public class GameServer {
     private final ArrayList<Entry<ServerPlayer, ClientHandler>> clients = new ArrayList<>();
+    private final Map<String, Long> DCPlayers = Collections.synchronizedMap(new HashMap<>());
 
     public boolean isReady() {
         for (Entry<ServerPlayer, ClientHandler> entry : clients) {
