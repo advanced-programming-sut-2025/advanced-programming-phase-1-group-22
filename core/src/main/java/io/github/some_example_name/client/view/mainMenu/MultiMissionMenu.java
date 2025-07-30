@@ -8,10 +8,13 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import io.github.some_example_name.client.GameClient;
 import io.github.some_example_name.client.MainGradle;
+import io.github.some_example_name.client.controller.MultiMissionController;
 import io.github.some_example_name.client.controller.WorldController;
 import io.github.some_example_name.common.model.MultiMission;
 import io.github.some_example_name.common.model.Salable;
+import io.github.some_example_name.common.model.records.Response;
 import io.github.some_example_name.common.model.relations.Player;
 import io.github.some_example_name.common.utils.App;
 
@@ -19,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 public class MultiMissionMenu extends PopUp {
+    private final MultiMissionController controller = new MultiMissionController();
 
     @Override
     public void createMenu(Stage stage, Skin skin, WorldController playerController) {
@@ -173,7 +177,8 @@ public class MultiMissionMenu extends PopUp {
         ScrollPane scrollPane = new ScrollPane(table, skin);
 
         int count = 1;
-        for (MultiMission mission : App.getInstance().getCurrentGame().getMissions()) {
+        App.getInstance().getCurrentGame().applyPendingChanges();
+        for (MultiMission mission : App.getInstance().getCurrentGame().getMissionsSnapshot()) {
             TextButton missionButton = new TextButton("Mission " + count, skin);
             missionButton.addListener(new ChangeListener() {
                 @Override
@@ -196,6 +201,7 @@ public class MultiMissionMenu extends PopUp {
 
         int count = 1;
         for (MultiMission activeMission : App.getInstance().getCurrentGame().getCurrentPlayer().getActiveMissions()) {
+            if (!activeMission.isActive()) break;
             TextButton activeMissionButton = new TextButton("Active Mission " + count, skin);
             activeMissionButton.addListener(new ChangeListener() {
                 @Override
@@ -215,25 +221,40 @@ public class MultiMissionMenu extends PopUp {
     private void showAvailableMissionDetails(MultiMission mission, Skin skin) {
         Dialog dialog = new Dialog("Mission Details", skin);
         Table content = dialog.getContentTable();
-        content.add(new Label("Required: Any " + mission.getRequest().getClass().getName() + " x" + mission.getNumberOfRequest(), skin)).padTop(20).row();
+        content.add(new Label("Required: Any " + mission.getRequest().getClass().getSimpleName() + " x" + mission.getNumberOfRequest(), skin)).padTop(20).row();
         content.add(new Label("Time: " + mission.getDeadline() + " Days", skin)).padTop(10).row();
         content.add(new Label("Required Player: " + (mission.getNumberOfRequirePlayer() - mission.getPlayers().size()), skin)).padTop(10).row();
-        dialog.button("Request Mission").addListener(new ClickListener() {
+        TextButton request = new TextButton("Request Mission", skin);
+        request.addListener(new ChangeListener() {
             @Override
-            public void clicked(InputEvent event, float x, float y) {
+            public void changed(ChangeEvent event, Actor actor) {
                 if (!mission.isActive()) {
-                    mission.addPlayer(App.getInstance().getCurrentGame().getCurrentPlayer(),
-                        App.getInstance().getCurrentGame().getTimeAndDate().getTotalDays());
+                    if (App.getInstance().getCurrentGame().getCurrentPlayer().getActiveMissions().size() <= 2) {
+                        mission.addPlayer(App.getInstance().getCurrentGame().getCurrentPlayer(),
+                            App.getInstance().getCurrentGame().getTimeAndDate().getTotalDays());
+                        GameClient.getInstance().updateMultiMissionPlayer(mission);
+                        if (!App.getInstance().getCurrentGame().getCurrentPlayer().getActiveMissions().contains(mission)) {
+                            App.getInstance().getCurrentGame().getCurrentPlayer().getActiveMissions().add(mission);
+                            getController().showResponse(new Response("Mission added successfully", true));
+                        } else {
+                            getController().showResponse(new Response("you already joined!"));
+                        }
+                    } else {
+                        getController().showResponse(new Response("you have 3 active mission"));
+                    }
                     dialog.remove();
                 }
             }
         });
-        dialog.button("Back").addListener(new ClickListener() {
+        TextButton back = new TextButton("Back", skin);
+        back.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 dialog.remove();
             }
         });
+        dialog.getButtonTable().add(request).padRight(20);
+        dialog.getButtonTable().add(back);
         dialog.show(getStage());
         dialog.pack();
         dialog.setPosition(
@@ -247,19 +268,23 @@ public class MultiMissionMenu extends PopUp {
     private void showActiveMissionStatus(MultiMission mission, Skin skin) {
         Dialog dialog = new Dialog("Mission Status", skin);
         makeMissionDetails(mission, dialog.getContentTable());
-        dialog.button("Add").addListener(new ClickListener() {
+        TextButton add = new TextButton("Add", skin);
+        add.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 showAddItemDialog(mission, skin);
                 dialog.remove();
             }
         });
-        dialog.button("Back").addListener(new ClickListener() {
+        TextButton back = new TextButton("Back", skin);
+        back.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 dialog.remove();
             }
         });
+        dialog.getButtonTable().add(add).padRight(20);
+        dialog.getButtonTable().add(back);
         dialog.show(getStage());
         dialog.pack();
         dialog.setPosition(
@@ -312,7 +337,7 @@ public class MultiMissionMenu extends PopUp {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 int selectedAmount = count[0];
-
+                getController().showResponse(controller.addItemToMission(mission, App.getInstance().getCurrentGame().getCurrentPlayer(), selectedAmount));
                 dialog.remove();
             }
         });
@@ -325,7 +350,8 @@ public class MultiMissionMenu extends PopUp {
             }
         });
 
-        table.add(confirmBottom).colspan(3).padTop(20);
+        table.add(confirmBottom).colspan(3).padTop(20).padRight(20);
+        table.add(backBottom);
         dialog.getContentTable().add(table).pad(20);
         dialog.show(getStage());
         dialog.pack();
@@ -338,13 +364,16 @@ public class MultiMissionMenu extends PopUp {
     }
 
     private void makeMissionDetails(MultiMission mission, Table table) {
-        table.add(new Label("Progress: " + ((mission.getMissionProgress() / mission.getNumberOfRequest()) * 100), skin)).padTop(20).row();
+        table.add(new Label("Progress: " + ((mission.getMissionProgress() / mission.getNumberOfRequest()) * 100) + "%   " +
+            mission.getMissionProgress() + "/" + mission.getNumberOfRequest(), skin)).padTop(20).row();
         for (Map.Entry<Player, Integer> playerIntegerEntry : mission.getPlayers().entrySet()) {
             table.add(new Label(playerIntegerEntry.getKey().getUser().getUsername() + " Progress: " +
-                ((playerIntegerEntry.getValue() / mission.getNumberOfRequest()) * 100), skin)).padTop(10).row();
+                ((playerIntegerEntry.getValue() / mission.getNumberOfRequest()) * 100) + "%   " +
+                playerIntegerEntry.getValue() + "/" + mission.getNumberOfRequest(), skin)).padTop(10).row();
         }
+        int passDays = App.getInstance().getCurrentGame().getTimeAndDate().getTotalDays() - mission.getStartedDay();
         table.add(new Label("TimeLeft: "
-                + (App.getInstance().getCurrentGame().getTimeAndDate().getTotalDays() - mission.getStartedDay()), skin))
+                + (mission.getDeadline() - passDays), skin))
             .padTop(10).row();
     }
 

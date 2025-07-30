@@ -343,6 +343,15 @@ public class GameClient {
                             String ability = obj.get("ability").getAsString();
                             int amount = obj.get("amount").getAsInt();
                             service.handlePlayerSkill(username, ability, amount);
+                        } else if (obj.get("action").getAsString().equals("=update_multi_mission_player")) {
+                            String username = obj.get("id").getAsString();
+                            int missionId = obj.get("mission_id").getAsInt();
+                            service.handleMissionPlayer(username, missionId);
+                        } else if (obj.get("action").getAsString().equals("=update_multi_mission_add")) {
+                            String username = obj.get("id").getAsString();
+                            int missionId = obj.get("mission_id").getAsInt();
+                            int amount = obj.get("amount").getAsInt();
+                            service.handleMissionAdd(username, missionId, amount);
                         }
                     } catch (JsonParseException e) {
                         System.out.println("Received non-JSON: " + serverMessage);
@@ -547,6 +556,39 @@ public class GameClient {
             msg.put("id", Session.getCurrentUser().getUsername());
             msg.put("ability", ability.getName());
             msg.put("amount", player.getAbilities().get(ability));
+
+            out.println(GSON.toJson(msg));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updateMultiMissionPlayer(MultiMission mission) {
+        try {
+            out = new PrintWriter(socket.getOutputStream(), true);
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+            Map<String, Object> msg = new HashMap<>();
+            msg.put("action", "=update_multi_mission_player");
+            msg.put("id", Session.getCurrentUser().getUsername());
+            msg.put("mission_id", mission.getId());
+
+            out.println(GSON.toJson(msg));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updateMultiMissionAdd(MultiMission mission, int amount) {
+        try {
+            out = new PrintWriter(socket.getOutputStream(), true);
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+            Map<String, Object> msg = new HashMap<>();
+            msg.put("action", "=update_multi_mission_add");
+            msg.put("id", Session.getCurrentUser().getUsername());
+            msg.put("mission_id", mission.getId());
+            msg.put("amount", amount);
 
             out.println(GSON.toJson(msg));
         } catch (IOException e) {

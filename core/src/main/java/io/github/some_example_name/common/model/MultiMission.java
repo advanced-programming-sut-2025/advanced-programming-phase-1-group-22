@@ -1,6 +1,7 @@
 package io.github.some_example_name.common.model;
 
 import io.github.some_example_name.common.model.relations.Player;
+import io.github.some_example_name.common.utils.App;
 import lombok.Getter;
 
 import java.util.HashMap;
@@ -8,6 +9,7 @@ import java.util.Map;
 
 @Getter
 public class MultiMission {
+    private final int id;
     private final Salable request;
     private final int numberOfRequest;
     private final int rewardGold;
@@ -18,7 +20,8 @@ public class MultiMission {
     private final Map<Player, Integer> players = new HashMap<>();
     private boolean finished = false;
 
-    public MultiMission(Salable request, int numberOfRequest, int rewardGold, int numberOfRequirePlayer, int deadline) {
+    public MultiMission(int id, Salable request, int numberOfRequest, int rewardGold, int numberOfRequirePlayer, int deadline) {
+        this.id = id;
         this.request = request;
         this.numberOfRequest = numberOfRequest;
         this.rewardGold = rewardGold;
@@ -26,7 +29,7 @@ public class MultiMission {
         this.deadline = deadline;
     }
 
-    public boolean canAdd(int amount){
+    public boolean canAdd(int amount) {
         int progress = getMissionProgress();
         return progress + amount <= numberOfRequest;
     }
@@ -35,11 +38,13 @@ public class MultiMission {
         if (isActive) {
             if (today - startedDay > deadline) {
                 finished = true;
+                handleFinishMission();
             }
         }
     }
 
     public void addPlayer(Player player, int today) {
+        if (isActive) return;
         if (!players.containsKey(player)) {
             players.put(player, 0);
             updateActiveStatus(today);
@@ -60,10 +65,13 @@ public class MultiMission {
     }
 
     private void updateFinishStatus() {
-        if (getMissionProgress() >= numberOfRequest) finished = true;
+        if (getMissionProgress() >= numberOfRequest) {
+            finished = true;
+            handleFinishMission();
+        }
     }
 
-    public int getMissionProgress(){
+    public int getMissionProgress() {
         int sum = 0;
         for (Map.Entry<Player, Integer> playerIntegerEntry : players.entrySet()) {
             sum += playerIntegerEntry.getValue();
@@ -72,8 +80,20 @@ public class MultiMission {
     }
 
     public void endMission() {
-        players.clear();
-        finished = false;
-        isActive = false;
+        App.getInstance().getCurrentGame().removeMission(this);
+        for (Map.Entry<Player, Integer> playerIntegerEntry : players.entrySet()) {
+            Player player = playerIntegerEntry.getKey();
+            player.getActiveMissions().remove(this);
+        }
+    }
+
+    private void handleFinishMission() {
+        if (getMissionProgress() == numberOfRequest) {
+            for (Map.Entry<Player, Integer> playerIntegerEntry : players.entrySet()) {
+                Player player = playerIntegerEntry.getKey();
+                player.getAccount().setGolds(player.getAccount().getGolds() + rewardGold);
+            }
+        }
+        endMission();
     }
 }

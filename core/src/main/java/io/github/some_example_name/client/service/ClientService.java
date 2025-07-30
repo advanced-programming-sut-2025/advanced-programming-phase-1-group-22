@@ -96,24 +96,45 @@ public class ClientService {
         player.setLastReaction(0f);
     }
 
-    public void handlePlayerGold(String username, int gold){
+    public void handlePlayerGold(String username, int gold) {
         Player player = getPlayerByUsername(username);
         if (player == null) return;
         player.getAccount().setGolds(gold);
     }
 
-    public void handlePlayerNumberOfCompleteMissions(String username,int number){
+    public void handlePlayerNumberOfCompleteMissions(String username, int number) {
         Player player = getPlayerByUsername(username);
         if (player == null) return;
         player.setNumberOfCompleteMission(number);
     }
 
-    public void handlePlayerSkill(String username,String ability,int amount){
+    public void handlePlayerSkill(String username, String ability, int amount) {
         Player player = getPlayerByUsername(username);
         if (player == null) return;
         Ability skill = Ability.getFromName(ability);
         if (skill == null) return;
-        player.getAbilities().put(skill,amount);
+        player.getAbilities().put(skill, amount);
+    }
+
+    public void handleMissionPlayer(String username, int mission_id) {
+        Player player = getPlayerByUsername(username);
+        if (player == null) return;
+        App.getInstance().getCurrentGame().applyPendingChanges();
+        App.getInstance().getCurrentGame().forEachMission(mission -> {
+            if (mission.getId() == mission_id)
+                mission.addPlayer(player, App.getInstance().getCurrentGame().getTimeAndDate().getTotalDays());
+        });
+    }
+
+    public void handleMissionAdd(String username, int mission_id, int amount) {
+        Player player = getPlayerByUsername(username);
+        if (player == null) return;
+        App.getInstance().getCurrentGame().applyPendingChanges();
+        App.getInstance().getCurrentGame().forEachMission(mission -> {
+            if (mission.getId() == mission_id) {
+                mission.addProduct(player, amount);
+            }
+        });
     }
 
     private Structure getStructureByTile(List<Tile> tiles) {

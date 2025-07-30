@@ -32,7 +32,10 @@ import io.github.some_example_name.common.utils.App;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
 import java.util.Random;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.function.Consumer;
 
 @Setter
 @Getter
@@ -54,21 +57,61 @@ public class Game implements Serializable {
     public Tile[][] tiles = new Tile[length][width];
     private int fadingInTheNight = 0;
     private final List<MultiMission> missions = new ArrayList<>();
+    private final Queue<Runnable> pendingMissionsChanges = new ConcurrentLinkedQueue<>();
 
     public Game() {
         createMissions();
     }
 
     private void createMissions() {
-        missions.add(new MultiMission(new Fish(), 30, 500, 4, 3));
-        missions.add(new MultiMission(new Mineral(), 100, 2000, 2, 7));
-        missions.add(new MultiMission(new Fruit(), 10, 700, 4, 30));
-        missions.add(new MultiMission(new Craft(), 20, 6000, 4, 10));
-        missions.add(new MultiMission(new Food(), 15, 2000, 3, 10));
-        missions.add(new MultiMission(new AnimalProduct(), 5, 1000, 2, 5));
-        missions.add(new MultiMission(new Seed(), 150, 25000, 4, 20));
-        missions.add(new MultiMission(new MixedSeeds(), 30, 100000, 4, 30));
+        missions.add(new MultiMission(1, new Fish(), 30, 500, 4, 3));
+        missions.add(new MultiMission(2, new Mineral(), 100, 2000, 2, 7));
+        missions.add(new MultiMission(3, new Fruit(), 10, 700, 4, 30));
+        missions.add(new MultiMission(4, new Craft(), 20, 6000, 4, 10));
+        missions.add(new MultiMission(5, new Food(), 15, 2000, 3, 10));
+        missions.add(new MultiMission(6, new AnimalProduct(), 5, 1000, 2, 5));
+        missions.add(new MultiMission(7, new Seed(), 150, 25000, 4, 20));
+        missions.add(new MultiMission(8, new MixedSeeds(), 30, 100000, 4, 30));
     }
+
+    public void forEachMission(Consumer<MultiMission> action) {
+        List<MultiMission> copy;
+        synchronized (this.getMissions()) {
+            copy = new ArrayList<>(this.getMissions());
+        }
+        for (MultiMission s : copy) {
+            action.accept(s);
+        }
+    }
+
+    public synchronized void applyPendingChanges() {
+        while (!pendingMissionsChanges.isEmpty()) {
+            pendingMissionsChanges.poll().run();
+        }
+    }
+
+    public void addMission(MultiMission s) {
+        pendingMissionsChanges.add(() -> {
+            synchronized (this.getMissions()) {
+                this.getMissions().add(s);
+            }
+        });
+    }
+
+    public void removeMission(MultiMission s) {
+        pendingMissionsChanges.add(() -> {
+            synchronized (this.getMissions()) {
+                this.getMissions().remove(s);
+            }
+        });
+    }
+
+    public List<MultiMission> getMissionsSnapshot() {
+        synchronized (this.getMissions()) {
+            return new ArrayList<>(this.getMissions());
+        }
+    }
+
 
     public void start() {
         timeAndDate = new TimeAndDate(1, 9);
@@ -117,6 +160,10 @@ public class Game implements Serializable {
             if (structure instanceof NPC npc) {
                 npc.setGiftedToday(false);
             }
+        });
+        applyPendingChanges();
+        forEachMission(mission -> {
+            mission.updateTimeStatus(timeAndDate.getTotalDays());
         });
         giveRewardToLevelThreeFriends();
         manageHarvest();
