@@ -2066,6 +2066,7 @@ Inventory/raw.png
 Inventory/skill_tab.png
 Inventory/social_icon.png
 Inventory/social_tab.png
+Inventory/trade.png
 JojaMart_Interior.png
 Jojamart.png
 Marnie's_Ranch_Interior.png

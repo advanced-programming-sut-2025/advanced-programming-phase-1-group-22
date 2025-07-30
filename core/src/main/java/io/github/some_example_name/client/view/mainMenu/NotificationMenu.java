@@ -86,9 +86,13 @@ public class NotificationMenu extends PopUp {
                                 menu.setFriendship(RelationService.getInstance().getFriendShipBetweenWithActor(notification.source()));
                                 menu.createMenu(stage, skin, getController());
                             } break;
-                            case TRADE, MARRIAGE: {
-                                //todo
+                            case TRADE: {
+                                TradeHistoryMenu menu = new TradeHistoryMenu();
+                                menu.createMenu(stage, skin, getController());
                             } break;
+                            case MARRIAGE: {
+                                //todo
+                            }
                         }
                         close(window);
                     }

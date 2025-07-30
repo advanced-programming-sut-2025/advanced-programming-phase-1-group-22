@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.google.gson.Gson;
 import io.github.some_example_name.client.GameClient;
 import io.github.some_example_name.client.MainGradle;
+import io.github.some_example_name.client.view.mainMenu.*;
 import io.github.some_example_name.common.model.Farm;
 import io.github.some_example_name.common.model.AnimatedSprite;
 import io.github.some_example_name.common.model.Direction;
@@ -20,11 +21,6 @@ import io.github.some_example_name.server.service.GameService;
 import io.github.some_example_name.common.utils.App;
 import io.github.some_example_name.common.utils.GameAsset;
 import io.github.some_example_name.client.view.GameView;
-import io.github.some_example_name.client.view.mainMenu.FridgeMenu;
-import io.github.some_example_name.client.view.mainMenu.InventoryMenu;
-import io.github.some_example_name.client.view.mainMenu.NotificationMenu;
-import io.github.some_example_name.client.view.mainMenu.TerminateMenu;
-import io.github.some_example_name.client.view.mainMenu.ToolMenu;
 import lombok.Getter;
 
 import java.util.ArrayList;
@@ -132,6 +128,10 @@ public class PlayerController {
             NotificationMenu notificationMenu = new NotificationMenu();
             notificationMenu.createMenu(GameView.stage, GameAsset.SKIN, getWorldController());
             //TODO OPEN JOURNAL?
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
+            TradeHistoryMenu tradeHistoryMenu = new TradeHistoryMenu();
+            tradeHistoryMenu.createMenu(GameView.stage, GameAsset.SKIN, getWorldController());
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.M)) {
             inventoryMenu.setTabIndex(3);

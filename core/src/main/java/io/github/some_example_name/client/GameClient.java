@@ -21,6 +21,7 @@ import io.github.some_example_name.common.model.records.Response;
 import io.github.some_example_name.common.model.relations.Mission;
 import io.github.some_example_name.common.model.relations.NPC;
 import io.github.some_example_name.common.model.relations.Player;
+import io.github.some_example_name.common.model.relations.Trade;
 import io.github.some_example_name.common.model.structure.Structure;
 import io.github.some_example_name.common.model.structure.stores.Shop;
 import io.github.some_example_name.common.model.tools.MilkPail;
@@ -29,6 +30,7 @@ import io.github.some_example_name.common.utils.GameAsset;
 import io.github.some_example_name.common.variables.Session;
 import io.github.some_example_name.server.service.GameService;
 import io.github.some_example_name.server.service.RelationService;
+import io.github.some_example_name.server.service.TradeService;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -80,7 +82,7 @@ public class GameClient {
             out.println(GSON.toJson(msg));
             startListening();
         } catch (IOException e) {
-            e.printStackTrace();
+            debug(e);
             System.err.println(e.getMessage());
         }
     }
@@ -98,7 +100,7 @@ public class GameClient {
 
             out.println(GSON.toJson(msg));
         } catch (IOException e) {
-            e.printStackTrace();
+            debug(e);
         }
     }
 
@@ -243,6 +245,40 @@ public class GameClient {
                                     farm.getFridge().addProduct(salable, body.get("count").getAsInt());
                                 }
                             }
+                        } else if (obj.get("action").getAsString().equals("trade")) {
+                            TradeService.getInstance().addTradeByServer(
+                                service.getPlayerByUsername(body.get("receiver").getAsString()),
+                                service.getPlayerByUsername(obj.get("id").getAsString()),
+                                body.get("salable").getAsString(),
+                                body.get("quantity").getAsInt(),
+                                body.has("requiredItem") ? body.get("requiredItem").getAsString() : null,
+                                body.has("quantityRequired") ? body.get("quantityRequired").getAsInt() : null,
+                                body.has("price") ? body.get("price").getAsInt() : null,
+                                body.get("id").getAsInt()
+                            );
+                        } else if (obj.get("action").getAsString().equals("trade_reject")) {
+                            TradeService.getInstance().rejectTrade(
+                                service.getPlayerByUsername(obj.get("id").getAsString()),
+                                body.get("id").getAsInt()
+                            );
+                        } else if (obj.get("action").getAsString().equals("trade_reject_by_state")) {
+                            TradeService.getInstance().rejectTradeByState(
+                                service.getPlayerByUsername(obj.get("id").getAsString()),
+                                body.get("id").getAsInt()
+                            );
+                        } else if (obj.get("action").getAsString().equals("trade_accept")) {
+                            TradeService.getInstance().handleAccept(
+                                service.getPlayerByUsername(obj.get("id").getAsString()),
+                                body.get("id").getAsInt()
+                            );
+                        }  else if (obj.get("action").getAsString().equals("send_trade")) {
+                            TradeService.getInstance().sendTrade(
+                                service.getPlayerByUsername(body.get("customer").getAsString()),
+                                body.get("id").getAsInt(),
+                                body.has("salable") ? (Salable) decodeObject(body.getAsJsonObject("salable")) : null,
+                                body.get("count").getAsInt(),
+                                body.get("shouldRespond").getAsBoolean()
+                            );
                         } else if (obj.get("action").getAsString().equals("notify")) {
                             Actor source = null;
                             if (body.get("isFromPlayer").getAsBoolean()) {
@@ -301,7 +337,7 @@ public class GameClient {
                     }
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                debug(e);
             }
         }).start();
     }
@@ -323,7 +359,7 @@ public class GameClient {
 
             out.println(GSON.toJson(msg));
         } catch (IOException e) {
-            e.printStackTrace();
+            debug(e);
         }
     }
 
@@ -340,7 +376,7 @@ public class GameClient {
 
             out.println(GSON.toJson(msg));
         } catch (IOException e) {
-            e.printStackTrace();
+            debug(e);
         }
     }
 
@@ -368,7 +404,7 @@ public class GameClient {
 
             out.println(GSON.toJson(msg));
         } catch (IOException e) {
-            e.printStackTrace();
+            debug(e);
         }
     }
 
@@ -386,7 +422,7 @@ public class GameClient {
 
             out.println(GSON.toJson(msg));
         } catch (IOException e) {
-            e.printStackTrace();
+            debug(e);
         }
     }
 
@@ -403,7 +439,7 @@ public class GameClient {
             );
             out.println(GSON.toJson(msg));
         } catch (IOException e) {
-            e.printStackTrace();
+            debug(e);
         }
     }
 
@@ -419,7 +455,7 @@ public class GameClient {
             );
             out.println(GSON.toJson(msg));
         } catch (IOException e) {
-            e.printStackTrace();
+            debug(e);
         }
     }
 
@@ -436,11 +472,12 @@ public class GameClient {
             );
             out.println(GSON.toJson(msg));
         } catch (IOException e) {
-            e.printStackTrace();
+            debug(e);
         }
     }
 
     private Object decodeObject(JsonObject body) {
+        if (body == null) return null;
         Object obj;
         try {
             Class<?> clazz = Class.forName(body.get("!class").getAsString());
@@ -486,7 +523,7 @@ public class GameClient {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            debug(e);
             return null;
         }
         return obj;
@@ -528,7 +565,7 @@ public class GameClient {
             }
         } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException |
                  InstantiationException | IllegalAccessException e) {
-            e.printStackTrace();
+            debug(e);
             return null;
         }
         return obj;
@@ -536,6 +573,7 @@ public class GameClient {
 
 
     private Map<String, Object> encodeObject(Object object) {
+        if (object == null) return null;
         HashMap<String, Object> map = new HashMap<>();
         map.put("!class", object.getClass().getName());
 
@@ -603,7 +641,7 @@ public class GameClient {
                 out.println(GSON.toJson(msg));
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            debug(e);
         }
     }
 
@@ -642,7 +680,7 @@ public class GameClient {
             }
         } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException |
                  InstantiationException | IllegalAccessException e) {
-            e.printStackTrace();
+            debug(e);
             return null;
         }
         return obj;
@@ -683,7 +721,7 @@ public class GameClient {
                 }
             }
         } catch (ClassNotFoundException | IllegalAccessException e) {
-            e.printStackTrace();
+            debug(e);
             return null;
         }
         return obj;
@@ -710,7 +748,7 @@ public class GameClient {
                         return structure;
                     }
                 } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
+                    debug(e);
                 }
             }
         } else {
@@ -724,7 +762,7 @@ public class GameClient {
                         return structure;
                     }
                 } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
+                    debug(e);
                 }
             }
         }
@@ -843,7 +881,7 @@ public class GameClient {
 
             out.println(GSON.toJson(msg));
         } catch (IOException e) {
-            e.printStackTrace();
+            debug(e);
         }
     }
 
@@ -860,7 +898,7 @@ public class GameClient {
 
             out.println(GSON.toJson(msg));
         } catch (IOException e) {
-            e.printStackTrace();
+            debug(e);
         }
     }
 
@@ -882,7 +920,7 @@ public class GameClient {
 
             out.println(GSON.toJson(msg));
         } catch (IOException e) {
-            e.printStackTrace();
+            debug(e);
         }
     }
 
@@ -899,7 +937,7 @@ public class GameClient {
 
             out.println(GSON.toJson(msg));
         } catch (IOException e) {
-            e.printStackTrace();
+            debug(e);
         }
     }
 
@@ -916,7 +954,7 @@ public class GameClient {
 
             out.println(GSON.toJson(msg));
         } catch (IOException e) {
-            e.printStackTrace();
+            debug(e);
         }
     }
 
@@ -933,7 +971,7 @@ public class GameClient {
 
             out.println(GSON.toJson(msg));
         } catch (IOException e) {
-            e.printStackTrace();
+            debug(e);
         }
     }
 
@@ -950,7 +988,7 @@ public class GameClient {
 
             out.println(GSON.toJson(msg));
         } catch (IOException e) {
-            e.printStackTrace();
+            debug(e);
         }
     }
 
@@ -971,7 +1009,7 @@ public class GameClient {
 
             out.println(GSON.toJson(msg));
         } catch (IOException e) {
-            e.printStackTrace();
+            debug(e);
         }
     }
 
@@ -997,7 +1035,7 @@ public class GameClient {
             );
             out.println(GSON.toJson(msg));
         } catch (IOException e) {
-            e.printStackTrace();
+            debug(e);
         }
     }
 
@@ -1013,7 +1051,7 @@ public class GameClient {
             );
             out.println(GSON.toJson(msg));
         } catch (IOException e) {
-            e.printStackTrace();
+            debug(e);
         }
     }
 
@@ -1030,7 +1068,7 @@ public class GameClient {
             );
             out.println(GSON.toJson(msg));
         } catch (IOException e) {
-            e.printStackTrace();
+            debug(e);
         }
     }
 
@@ -1048,7 +1086,7 @@ public class GameClient {
             );
             out.println(GSON.toJson(msg));
         } catch (IOException e) {
-            e.printStackTrace();
+            debug(e);
         }
     }
 
@@ -1064,7 +1102,7 @@ public class GameClient {
             );
             out.println(GSON.toJson(msg));
         } catch (IOException e) {
-            e.printStackTrace();
+            debug(e);
         }
     }
 
@@ -1080,7 +1118,7 @@ public class GameClient {
             );
             out.println(GSON.toJson(msg));
         } catch (IOException e) {
-            e.printStackTrace();
+            debug(e);
         }
     }
 
@@ -1096,7 +1134,7 @@ public class GameClient {
             );
             out.println(GSON.toJson(msg));
         } catch (IOException e) {
-            e.printStackTrace();
+            debug(e);
         }
     }
 
@@ -1112,7 +1150,7 @@ public class GameClient {
             );
             out.println(GSON.toJson(msg));
         } catch (IOException e) {
-            e.printStackTrace();
+            debug(e);
         }
     }
 
@@ -1128,7 +1166,116 @@ public class GameClient {
             );
             out.println(GSON.toJson(msg));
         } catch (IOException e) {
-            e.printStackTrace();
+            debug(e);
+        }
+    }
+
+    public void setTrade(Trade trade) {
+        try {
+            out = new PrintWriter(socket.getOutputStream(), true);
+            in  = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+            Map<String, Object> msg = Map.of(
+                "action", "trade",
+                "id", Session.getCurrentUser().getUsername(),
+                "body", Map.of(
+                    "receiver", trade.getCustomer().getName(),
+                    "salable", trade.getSalable(),
+                    "quantity", trade.getQuantity(),
+                    trade.getPrice() == null ? "requiredItem" : "gold", trade.getPrice() == null ? trade.getRequiredItem() : "",
+                    trade.getPrice() == null ?"quantityRequired" : "price", trade.getPrice() == null ? trade.getQuantityRequired() : trade.getPrice(),
+                    "id", trade.getId()
+                )
+            );
+            out.println(GSON.toJson(msg));
+        } catch (IOException e) {
+            debug(e);
+        }
+    }
+
+    private void debug(Exception e) {
+        e.printStackTrace();
+    }
+
+    public void rejectTrade(Trade trade) {
+        try {
+            out = new PrintWriter(socket.getOutputStream(), true);
+            in  = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+            Map<String, Object> msg = Map.of(
+                "action", "trade_reject",
+                "id", Session.getCurrentUser().getUsername(),
+                "body", Map.of(
+                    "receiver", trade.getTrader().getName(),
+                    "id", trade.getId()
+                )
+            );
+            out.println(GSON.toJson(msg));
+        } catch (IOException e) {
+            debug(e);
+        }
+    }
+
+    public void acceptTrade(Player trader, int tradeId, boolean b) {
+        try {
+            out = new PrintWriter(socket.getOutputStream(), true);
+            in  = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+            Map<String, Object> msg = Map.of(
+                "action", "trade_accept",
+                "id", Session.getCurrentUser().getUsername(),
+                "body", Map.of(
+                    "receiver", trader.getName(),
+                    "id", tradeId,
+                    "shouldRespond", b
+                )
+            );
+            out.println(GSON.toJson(msg));
+        } catch (IOException e) {
+            debug(e);
+        }
+    }
+
+    public void rejectTradeByState(Trade trade) {
+        try {
+            out = new PrintWriter(socket.getOutputStream(), true);
+            in  = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+            Map<String, Object> msg = Map.of(
+                "action", "trade_reject_by_state",
+                "id", Session.getCurrentUser().getUsername(),
+                "body", Map.of(
+                    "receiver", trade.getTrader().getName(),
+                    "id", trade.getId()
+                )
+            );
+            out.println(GSON.toJson(msg));
+        } catch (IOException e) {
+            debug(e);
+        }
+    }
+
+
+    public void sendTrade(Player receiver, Trade trade, Integer value, Salable key, boolean b) {
+        try {
+            out = new PrintWriter(socket.getOutputStream(), true);
+            in  = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+            Map<String, Object> msg = Map.of(
+                "action", "send_trade",
+                "id", Session.getCurrentUser().getUsername(),
+                "body", Map.of(
+                    "receiver", receiver.getName(),
+                    "customer", trade.getCustomer().getName(),
+                    "id", trade.getId(),
+                    "shouldRespond", b,
+                    key == null ? "price" : "salable", key == null ? "" : encodeObject(key),
+                    "count", value
+                )
+            );
+            out.println(GSON.toJson(msg));
+        } catch (IOException e) {
+            debug(e);
         }
     }
 }
