@@ -1,11 +1,6 @@
 package io.github.some_example_name.client;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator;
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import io.github.some_example_name.client.controller.WorldController;
@@ -73,6 +68,28 @@ public class GameClient {
             );
 
             out.println(GSON.toJson(msg));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void DCReconnect(String username){
+        try {
+            out = new PrintWriter(socket.getOutputStream(), true);
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+            Map<String, Object> msg = Map.of(
+                "action", "DC_reconnect",
+                "id", username
+            );
+
+            out.println(GSON.toJson(msg));
+            timer.scheduleAtFixedRate(new TimerTask() {
+                @Override
+                public void run() {
+                    pingMassage();
+                }
+            }, 0, 5000);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -359,6 +376,11 @@ public class GameClient {
                                 MainGradle.getInstance().initialMenu();
                             });
                             //TODO transfer to lobby
+                        } else if (obj.get("action").getAsString().equals("update_player_connection")){
+                            String username = obj.get("id").getAsString();
+                            service.handlePlayerReConnect(username);
+                        } else if (obj.get("action").getAsString().equals("finish_reconnect")){
+                            StartGameMenuController.getInstance().setReconnect(false);
                         }
                     } catch (JsonParseException e) {
                         System.out.println("Received non-JSON: " + serverMessage);

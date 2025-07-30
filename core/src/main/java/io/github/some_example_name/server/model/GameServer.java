@@ -5,15 +5,14 @@ import io.github.some_example_name.common.model.Entry;
 import io.github.some_example_name.server.ClientHandler;
 import lombok.Getter;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Getter
 public class GameServer {
     private final ArrayList<Entry<ServerPlayer, ClientHandler>> clients = new ArrayList<>();
     private final Map<String, Long> DCPlayers = Collections.synchronizedMap(new HashMap<>());
+    private final Map<String, Long> playerLastPing = Collections.synchronizedMap(new HashMap<>());
+    private final List<Message> serverToClientsMessages = new ArrayList<>();
 
     public boolean isReady() {
         for (Entry<ServerPlayer, ClientHandler> entry : clients) {
@@ -29,12 +28,14 @@ public class GameServer {
     }
 
     public void sendAll(String message) {
+        serverToClientsMessages.add(new Message(message));
         clients.forEach(client -> {
             client.getValue().send(message);
         });
     }
 
     public void sendAllBut(String message, String username) {
+        serverToClientsMessages.add(new Message(message));
         for (Entry<ServerPlayer, ClientHandler> client : clients) {
             if (!client.getKey().username.equals(username)) client.getValue().send(message);
         }

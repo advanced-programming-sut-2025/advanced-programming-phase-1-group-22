@@ -144,6 +144,12 @@ public class ClientService {
             App.getInstance().getCurrentGame().getDCPlayers().put(player,time);
     }
 
+    public void handlePlayerReConnect(String username){
+        Player player = getPlayerByUsername(username);
+        if (player == null) return;
+        App.getInstance().getCurrentGame().getDCPlayers().remove(player);
+    }
+
     private Structure getStructureByTile(List<Tile> tiles) {
         for (Farm farm : App.getInstance().getCurrentGame().getVillage().getFarms()) {
             farm.applyPendingChanges();

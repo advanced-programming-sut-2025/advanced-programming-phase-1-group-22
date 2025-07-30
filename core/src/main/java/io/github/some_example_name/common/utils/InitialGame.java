@@ -10,13 +10,6 @@ import java.util.ArrayList;
 public class InitialGame {
     public void initial() {
         Game game = new Game();
-//        try {
-//            game = GameSaver.loadGame("game.json");
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        } catch (Exception e) {
-//            throw new RuntimeException(e);
-//        }
         App app = App.getInstance();
         app.setCurrentGame(game);
         game.start();

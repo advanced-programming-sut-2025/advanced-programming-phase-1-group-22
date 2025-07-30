@@ -8,8 +8,6 @@ import io.github.some_example_name.common.model.Farm;
 import io.github.some_example_name.common.model.FarmType;
 import io.github.some_example_name.common.model.PlayerType;
 import io.github.some_example_name.common.model.User;
-import io.github.some_example_name.common.model.enums.Gender;
-import io.github.some_example_name.common.model.enums.SecurityQuestion;
 import io.github.some_example_name.common.model.relations.Player;
 import io.github.some_example_name.server.repository.UserRepo;
 import io.github.some_example_name.server.service.GameInitService;
@@ -18,6 +16,7 @@ import io.github.some_example_name.common.utils.InitialGame;
 import io.github.some_example_name.common.variables.Session;
 import io.github.some_example_name.client.view.GameView;
 import io.github.some_example_name.client.view.mainMenu.StartGameMenu;
+import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Optional;
@@ -26,6 +25,8 @@ import java.util.Optional;
 public class StartGameMenuController {
     private StartGameMenu view;
     private static StartGameMenuController instance;
+    @Getter
+    private boolean reconnect = false;
 
     public static StartGameMenuController getInstance() {
         if (instance == null) {
@@ -39,6 +40,7 @@ public class StartGameMenuController {
             switch (view.getState()) {
                 case 0: {
                     if (view.getNewGameButton().isChecked()) {
+                        reconnect = false;
                         { //todo delete hardcode
                             if (Session.getCurrentUser() == null) {
                                 UserRepo userRepo = new UserRepo();
@@ -52,11 +54,12 @@ public class StartGameMenuController {
                             view.setState(1);
                             return;
                         } else {
-                            view.alert("You've got an unfinished game.",5);
+                            view.alert("You've got an unfinished game.", 5);
                         }
                         view.getNewGameButton().setChecked(false);
                     }
                     if (view.getLoadGameButton().isChecked()) {
+                        reconnect = false;
                         { //todo delete hardcode
                             UserRepo userRepo = new UserRepo();
 //                        Session.setCurrentUser(new User("Clara1234", "noPass", "a@b.c", "Claire", Gender.FEMALE, SecurityQuestion.QUESTION1,"snf"));
@@ -64,6 +67,16 @@ public class StartGameMenuController {
                         }
                         view.alert(GameInitService.getInstance().loadGame().message(), 5);
                         view.getLoadGameButton().setChecked(false);
+                    }
+                    if (view.getContinueDC().isChecked()) {
+                        //todo delete hardcode
+                        UserRepo userRepo = new UserRepo();
+                        Session.setCurrentUser(userRepo.findByUsername("Roham1234").get());
+                        InitialGame initialGame = new InitialGame();
+                        initialGame.initial();
+                        reconnect = true;
+                        GameClient.getInstance().DCReconnect(Session.getCurrentUser().getUsername());
+                        view.getContinueDC().setChecked(false);
                     }
                 }
                 break;
@@ -106,9 +119,11 @@ public class StartGameMenuController {
         }
         App.getInstance().getCurrentGame().setCurrentPlayer(current);
         GameInitService.getInstance().initGame();
-        for (Farm farm : App.getInstance().getCurrentGame().getVillage().getFarms()) {
-            if (!farm.getPlayers().isEmpty() && farm.getPlayers().get(0).equals(App.getInstance().getCurrentGame().getCurrentPlayer()))
-                farm.generateRandomStructures();
+        if (!reconnect) {
+            for (Farm farm : App.getInstance().getCurrentGame().getVillage().getFarms()) {
+                if (!farm.getPlayers().isEmpty() && farm.getPlayers().get(0).equals(App.getInstance().getCurrentGame().getCurrentPlayer()))
+                    farm.generateRandomStructures();
+            }
         }
         Gdx.app.postRunnable(() -> view.setScreen(new GameView()));
     }
