@@ -4,6 +4,7 @@ import io.github.some_example_name.common.model.relations.Player;
 import io.github.some_example_name.common.utils.App;
 import lombok.Getter;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,7 +18,7 @@ public class MultiMission {
     private final int deadline;
     private int startedDay;
     private boolean isActive = false;
-    private final Map<Player, Integer> players = new HashMap<>();
+    private final Map<Player, Integer> players = Collections.synchronizedMap(new HashMap<>());
     private boolean finished = false;
 
     public MultiMission(int id, Salable request, int numberOfRequest, int rewardGold, int numberOfRequirePlayer, int deadline) {
@@ -73,25 +74,31 @@ public class MultiMission {
 
     public int getMissionProgress() {
         int sum = 0;
-        for (Map.Entry<Player, Integer> playerIntegerEntry : players.entrySet()) {
-            sum += playerIntegerEntry.getValue();
+        synchronized (players) {
+            for (Map.Entry<Player, Integer> playerIntegerEntry : players.entrySet()) {
+                sum += playerIntegerEntry.getValue();
+            }
         }
         return sum;
     }
 
     public void endMission() {
         App.getInstance().getCurrentGame().removeMission(this);
-        for (Map.Entry<Player, Integer> playerIntegerEntry : players.entrySet()) {
-            Player player = playerIntegerEntry.getKey();
-            player.getActiveMissions().remove(this);
+        synchronized (players) {
+            for (Map.Entry<Player, Integer> playerIntegerEntry : players.entrySet()) {
+                Player player = playerIntegerEntry.getKey();
+                player.getActiveMissions().remove(this);
+            }
         }
     }
 
     private void handleFinishMission() {
         if (getMissionProgress() == numberOfRequest) {
-            for (Map.Entry<Player, Integer> playerIntegerEntry : players.entrySet()) {
-                Player player = playerIntegerEntry.getKey();
-                player.getAccount().setGolds(player.getAccount().getGolds() + rewardGold);
+            synchronized (players) {
+                for (Map.Entry<Player, Integer> playerIntegerEntry : players.entrySet()) {
+                    Player player = playerIntegerEntry.getKey();
+                    player.getAccount().setGolds(player.getAccount().getGolds() + rewardGold);
+                }
             }
         }
         endMission();
