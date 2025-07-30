@@ -30,10 +30,7 @@ import io.github.some_example_name.common.model.structure.Structure;
 import io.github.some_example_name.common.utils.App;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Queue;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.Consumer;
 
@@ -58,6 +55,7 @@ public class Game implements Serializable {
     private int fadingInTheNight = 0;
     private final List<MultiMission> missions = new ArrayList<>();
     private final Queue<Runnable> pendingMissionsChanges = new ConcurrentLinkedQueue<>();
+    private final Map<Player,Long> DCPlayers = Collections.synchronizedMap(new HashMap<>());
 
     public Game() {
         createMissions();
