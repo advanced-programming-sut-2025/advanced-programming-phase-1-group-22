@@ -93,7 +93,7 @@ public class Farm implements JsonPreparable {
         }
     }
 
-    public void applyPendingChanges() {
+    public synchronized void applyPendingChanges() {
         while (!pendingStructureChanges.isEmpty()) {
             pendingStructureChanges.poll().run();
         }

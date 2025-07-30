@@ -57,7 +57,7 @@ public class Village implements JsonPreparable {
         }
     }
 
-    public void applyPendingChanges() {
+    public synchronized void applyPendingChanges() {
         while (!pendingStructureChanges.isEmpty()) {
             pendingStructureChanges.poll().run();
         }

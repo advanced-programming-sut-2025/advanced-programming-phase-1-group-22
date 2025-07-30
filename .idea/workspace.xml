@@ -4,14 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d95100ff-6e61-4571-9e87-dcef3d963dba" name="Changes" comment="add live ScoreBoard">
-      <change afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/client/view/mainMenu/MultiMissionMenu.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/common/model/MultiMission.java" afterDir="false" />
+    <list default="true" id="d95100ff-6e61-4571-9e87-dcef3d963dba" name="Changes" comment="add MultiMission graphic">
+      <change afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/client/controller/MultiMissionController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/build/libs/core-1.0.0.jar" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/libs/core-1.0.0.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/client/controller/PlayerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/client/controller/PlayerController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/client/GameClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/client/GameClient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/client/service/ClientService.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/client/service/ClientService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/client/view/mainMenu/MultiMissionMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/client/view/mainMenu/MultiMissionMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/common/model/Farm.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/common/model/Farm.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/common/model/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/common/model/Game.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/common/model/relations/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/common/model/relations/Player.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/common/model/MultiMission.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/common/model/MultiMission.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -227,14 +229,6 @@
       <workItem from="1753437821215" duration="14591000" />
       <workItem from="1753572312868" duration="181000" />
       <workItem from="1753609176199" duration="6869000" />
-    </task>
-    <task id="LOCAL-00016" summary="adding count label">
-      <option name="closed" value="true" />
-      <created>1751647894527</created>
-      <option name="number" value="00016" />
-      <option name="presentableId" value="LOCAL-00016" />
-      <option name="project" value="LOCAL" />
-      <updated>1751647894527</updated>
     </task>
     <task id="LOCAL-00017" summary="converting popUps from static to dynamic">
       <option name="closed" value="true" />
@@ -620,7 +614,15 @@
       <option name="project" value="LOCAL" />
       <updated>1753818998576</updated>
     </task>
-    <option name="localTasksCounter" value="65" />
+    <task id="LOCAL-00065" summary="add MultiMission graphic">
+      <option name="closed" value="true" />
+      <created>1753830341132</created>
+      <option name="number" value="00065" />
+      <option name="presentableId" value="LOCAL-00065" />
+      <option name="project" value="LOCAL" />
+      <updated>1753830341132</updated>
+    </task>
+    <option name="localTasksCounter" value="66" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -638,7 +640,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="minor debugging" />
     <MESSAGE value="cloning objects while gifting and placing on ground" />
     <MESSAGE value="added notification and social button" />
     <MESSAGE value="uploaded assets" />
@@ -663,7 +664,8 @@
     <MESSAGE value="add real-time map menu" />
     <MESSAGE value="add PopUpReaction" />
     <MESSAGE value="add live ScoreBoard" />
-    <option name="LAST_COMMIT_MESSAGE" value="add live ScoreBoard" />
+    <MESSAGE value="add MultiMission graphic" />
+    <option name="LAST_COMMIT_MESSAGE" value="add MultiMission graphic" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
