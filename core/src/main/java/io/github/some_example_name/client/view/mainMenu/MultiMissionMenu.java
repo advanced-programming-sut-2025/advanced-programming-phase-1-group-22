@@ -366,10 +366,12 @@ public class MultiMissionMenu extends PopUp {
     private void makeMissionDetails(MultiMission mission, Table table) {
         table.add(new Label("Progress: " + ((mission.getMissionProgress() / mission.getNumberOfRequest()) * 100) + "%   " +
             mission.getMissionProgress() + "/" + mission.getNumberOfRequest(), skin)).padTop(20).row();
-        for (Map.Entry<Player, Integer> playerIntegerEntry : mission.getPlayers().entrySet()) {
-            table.add(new Label(playerIntegerEntry.getKey().getUser().getUsername() + " Progress: " +
-                ((playerIntegerEntry.getValue() / mission.getNumberOfRequest()) * 100) + "%   " +
-                playerIntegerEntry.getValue() + "/" + mission.getNumberOfRequest(), skin)).padTop(10).row();
+        synchronized (mission.getPlayers()) {
+            for (Map.Entry<Player, Integer> playerIntegerEntry : mission.getPlayers().entrySet()) {
+                table.add(new Label(playerIntegerEntry.getKey().getUser().getUsername() + " Progress: " +
+                    ((playerIntegerEntry.getValue() / mission.getNumberOfRequest()) * 100) + "%   " +
+                    playerIntegerEntry.getValue() + "/" + mission.getNumberOfRequest(), skin)).padTop(10).row();
+            }
         }
         int passDays = App.getInstance().getCurrentGame().getTimeAndDate().getTotalDays() - mission.getStartedDay();
         table.add(new Label("TimeLeft: "
