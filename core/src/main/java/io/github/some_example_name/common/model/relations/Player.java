@@ -40,6 +40,7 @@ public class Player extends Actor implements JsonPreparable {
 	private User user;
 	private Integer energy;
 	private Integer maxEnergy;
+    private Boolean dead = false;
 	private Boolean energyIsInfinite = false;
 	private Integer daysOfSadness = 0;
 	private BackPack inventory;
@@ -370,6 +371,7 @@ public class Player extends Actor implements JsonPreparable {
 	}
 
     public ArrayList<SpriteHolder> getSprites() {
+        if (dead) return null;
         if (dirChanged) {
             ((AnimatedSprite)this.sprites.get(0).getSprite()).setRotationAnimation(null);
             dirChanged = false;

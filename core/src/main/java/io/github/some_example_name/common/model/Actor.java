@@ -9,6 +9,9 @@ public abstract class Actor extends Structure {
     public TextureRegion getAvatar() {
         return new TextureRegion(GameAsset.ABIGAIL); //TODO
     }
+    public TextureRegion getAvaar() {
+        return new TextureRegion(GameAsset.ABIGAIL); //TODO
+    }
 
     @Override
     public boolean equals(Object obj) {
