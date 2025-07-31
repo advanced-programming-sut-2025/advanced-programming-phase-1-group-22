@@ -532,37 +532,37 @@ public class GameClient {
     }
 
     public void updatePlayerAddToInventory(Player player, Salable salable, int amount) {
-        try {
-            out = new PrintWriter(socket.getOutputStream(), true);
-            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-
-            Map<String, Object> msg = Map.of(
-                "action", "=update_player_add_to_inventory",
-                "id", player.getUser().getUsername(),
-                "amount", amount,
-                "body", encodeObject(salable)
-            );
-            out.println(GSON.toJson(msg));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            out = new PrintWriter(socket.getOutputStream(), true);
+//            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+//
+//            Map<String, Object> msg = Map.of(
+//                "action", "=update_player_add_to_inventory",
+//                "id", player.getUser().getUsername(),
+//                "amount", amount,
+//                "body", encodeObject(salable)
+//            );
+//            out.println(GSON.toJson(msg));
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
 
     public void updatePlayerDeleteFromInventory(Player player, Salable salable, int amount) {
-        try {
-            out = new PrintWriter(socket.getOutputStream(), true);
-            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-
-            Map<String, Object> msg = Map.of(
-                "action", "=update_player_delete_from_inventory",
-                "id", player.getUser().getUsername(),
-                "amount", amount,
-                "body", encodeObject(salable)
-            );
-            out.println(GSON.toJson(msg));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            out = new PrintWriter(socket.getOutputStream(), true);
+//            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+//
+//            Map<String, Object> msg = Map.of(
+//                "action", "=update_player_delete_from_inventory",
+//                "id", player.getUser().getUsername(),
+//                "amount", amount,
+//                "body", encodeObject(salable)
+//            );
+//            out.println(GSON.toJson(msg));
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
 
     public void updatePlayerJustDeleteFromInventory(Player player, Salable salable, int amount) {
