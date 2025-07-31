@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import io.github.some_example_name.client.GameClient;
 import io.github.some_example_name.client.view.GameView;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import io.github.some_example_name.common.model.records.Response;
 import io.github.some_example_name.common.model.structure.stores.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,6 +28,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @Setter
 @Getter
@@ -47,6 +49,8 @@ public class Game implements Serializable {
     private int playersInFavorTermination = 0;
     public Tile[][] tiles = new Tile[length][width];
     private int fadingInTheNight = 0;
+    private final ArrayList<Entry<String, Actor>> dialogs = new ArrayList<>();
+    private final AtomicBoolean dialogsUpdated = new AtomicBoolean(false);
 
     public void start() {
         timeAndDate = new TimeAndDate(1, 9);
@@ -349,4 +353,15 @@ public class Game implements Serializable {
         }
     }
 
+    public void addPublicMessage(Player sender, String message) {
+        synchronized (dialogs) {dialogs.add(new Entry<>(message, sender));}
+        synchronized (dialogsUpdated) {dialogsUpdated.set(true);}
+        if (message.contains("@" + App.getInstance().getCurrentGame().getCurrentPlayer().getUser().getUsername())) {
+            App.getInstance().getCurrentGame().getCurrentPlayer().getNotified(
+                new Response(sender.getNickname() + " has mentioned you.", true),
+                NotificationType.MENTION,
+                sender
+            );
+        }
+    }
 }

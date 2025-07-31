@@ -43,4 +43,11 @@ public class NPC extends Actor {
     public String getName() {
         return type.getName();
     }
+
+    @Override
+    public String getNickname() {
+        return getName();
+    }
+
+
 }

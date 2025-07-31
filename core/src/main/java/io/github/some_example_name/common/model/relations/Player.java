@@ -417,4 +417,9 @@ public class Player extends Actor implements JsonPreparable {
         this.direction = Direction.NORTH;
         this.sprites.get(0).setSprite(playerType.getProposal());
     }
+
+    @Override
+    public String getNickname() {
+        return user.getNickname();
+    }
 }

@@ -134,6 +134,10 @@ public class PlayerController {
             TradeHistoryMenu tradeHistoryMenu = new TradeHistoryMenu();
             tradeHistoryMenu.createMenu(GameView.stage, GameAsset.SKIN, getWorldController());
         }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.Y)) {
+            PublicChatMenu menu = new PublicChatMenu();
+            menu.createMenu(GameView.stage, GameAsset.SKIN, getWorldController());
+        }
         if (Gdx.input.isKeyJustPressed(Input.Keys.M)) {
             inventoryMenu.setTabIndex(3);
             inventoryMenu.createMenu(GameView.stage, GameAsset.SKIN, getWorldController());
