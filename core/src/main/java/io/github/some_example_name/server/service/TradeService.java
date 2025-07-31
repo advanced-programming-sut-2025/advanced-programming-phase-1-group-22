@@ -73,8 +73,9 @@ public class TradeService {
         Trade trade2 = new Trade(player, currentPlayer, itemName, amount, price, false);
         player.notify(new Response("%s offered you a new trade".formatted(currentPlayer.getUser().getUsername())),
             NotificationType.TRADE, currentPlayer);
-        player.getGootenTradeList().add(trade1);
-        currentPlayer.getGootenTradeList().add(trade2);
+        GameClient.getInstance().setTrade(trade1);
+        trade2.getTrader().getGootenTradeList().add(trade2);
+        trade2.getCustomer().getGootenTradeList().add(trade2);
         return new Response("trade offer added with price requirement");
     }
 
@@ -115,8 +116,9 @@ public class TradeService {
         player.notify
             (new Response("%s offered you a new trade".formatted(currentPlayer.getUser().getUsername())),
                 NotificationType.TRADE, currentPlayer);
-        player.getGootenTradeList().add(trade1);
-        currentPlayer.getGootenTradeList().add(trade2);
+        GameClient.getInstance().setTrade(trade1);
+        trade2.getTrader().getGootenTradeList().add(trade2);
+        trade2.getCustomer().getGootenTradeList().add(trade2);
         return new Response("trade offer added with product requirement");
     }
 
@@ -141,8 +143,9 @@ public class TradeService {
         Trade trade2 = new Trade(currentPlayer, player, itemName, amount, price, false);
         player.notify(new Response("%s requested you a new trade".formatted(currentPlayer.getUser().getUsername())),
             NotificationType.TRADE, currentPlayer);
-        player.getGootenTradeList().add(trade1);
-        currentPlayer.getGootenTradeList().add(trade2);
+        GameClient.getInstance().setTrade(trade1);
+        trade2.getTrader().getGootenTradeList().add(trade2);
+        trade2.getCustomer().getGootenTradeList().add(trade2);
         return new Response("trade request added with price offering");
     }
 
@@ -179,8 +182,9 @@ public class TradeService {
         Trade trade2 = new Trade(currentPlayer, player, itemName, amount, targetAmount, targetItem, false);
         player.notify(new Response("%s requested you a new trade".formatted(currentPlayer.getUser().getUsername())),
             NotificationType.TRADE, currentPlayer);
-        player.getGootenTradeList().add(trade1);
-        currentPlayer.getGootenTradeList().add(trade2);
+        GameClient.getInstance().setTrade(trade1);
+        trade2.getTrader().getGootenTradeList().add(trade2);
+        trade2.getCustomer().getGootenTradeList().add(trade2);
         return new Response("trade request added with product offering");
     }
 
@@ -224,100 +228,169 @@ public class TradeService {
             return new Response("you have answered this trade already");
         }
         if (!accept) {
-            trade1.setIsAnswered(true);
-            trade1.setIsSuccessfulled(false);
-            if (trade1.getCustomer().equals(currentPlayer)) {
-                relationService.changeFriendShipLevelDown(relationService.getFriendShipBetweenWithActor(trade1.getTrader()), 30);
-            } else {
-                relationService.changeFriendShipLevelDown(relationService.getFriendShipBetweenWithActor(trade1.getCustomer()), 30);
-
-            }
+            GameClient.getInstance().rejectTrade(trade1);
+            rejectTrade(trade1.getCustomer(), trade1.getId());
             return new Response("trade rejected successfully");
         }
+
         if (trade1.getCustomer().equals(currentPlayer)) {
             Map.Entry<Salable, Integer> itemFromInventory = trade1.getTrader().getItemFromInventory(trade1.getSalable());
             if (trade1.getPrice() != null) {
                 if (currentPlayer.getAccount().getGolds() < trade1.getPrice()) {
                     return new Response("you don't have enough golds");
                 }
-                currentPlayer.getAccount().setGolds(currentPlayer.getAccount().getGolds() - trade1.getPrice());
-                trade1.getTrader().getAccount().setGolds(currentPlayer.getAccount().getGolds() + trade1.getPrice());
-                currentPlayer.getInventory().addProductToBackPack(itemFromInventory.getKey(), trade1.getQuantity());
-                GameClient.getInstance().updatePlayerAddToInventory(currentPlayer, itemFromInventory.getKey(), trade1.getQuantity());
-                trade1.getTrader().getInventory().getProducts().replace(itemFromInventory.getKey(), itemFromInventory.getValue() - trade1.getQuantity());
-                if (itemFromInventory.getValue() - trade1.getQuantity() == 0) {
-                    trade1.getTrader().getInventory().getProducts().remove(itemFromInventory.getKey());
-                }
-                trade1.setIsAnswered(true);
-                relationService.changeFriendShipLevelUp(relationService.getFriendShipBetweenWithActor(trade1.getTrader()), 50);
-                trade1.setIsSuccessfulled(true);
-                return new Response("trade accepted successfully");
+                GameClient.getInstance().acceptTrade(trade1.getTrader(), tradeId, true);
+                return new Response("", true);
             } else {
                 Map.Entry<Salable, Integer> itemFromInventory1 = currentPlayer.getItemFromInventory(trade1.getRequiredItem());
                 if (itemFromInventory1 == null || itemFromInventory1.getValue() < trade1.getQuantityRequired()) {
-                    trade1.setIsAnswered(true);
-                    trade1.setIsSuccessfulled(false);
-                    relationService.changeFriendShipLevelDown(relationService.getFriendShipBetweenWithActor(trade1.getTrader()), 30);
                     return new Response("RequiredItem not found");
                 }
-                trade1.getTrader().getInventory().addProductToBackPack(itemFromInventory1.getKey(), trade1.getQuantity());
-                GameClient.getInstance().updatePlayerAddToInventory(currentPlayer, itemFromInventory1.getKey(), trade1.getQuantity());
-                currentPlayer.getInventory().getProducts().replace(itemFromInventory1.getKey(), itemFromInventory1.getValue() - trade1.getQuantity());
-                if (itemFromInventory.getValue() - trade1.getQuantity() == 0) {
-                    trade1.getTrader().getInventory().getProducts().remove(itemFromInventory1.getKey());
-                }
-                currentPlayer.getInventory().addProductToBackPack(itemFromInventory.getKey(), trade1.getQuantity());
-                GameClient.getInstance().updatePlayerAddToInventory(currentPlayer, itemFromInventory.getKey(), trade1.getQuantity());
-                trade1.getTrader().getInventory().getProducts().replace(itemFromInventory.getKey(), itemFromInventory.getValue() - trade1.getQuantity());
-                if (itemFromInventory.getValue() - trade1.getQuantity() == 0) {
-                    trade1.getTrader().getInventory().getProducts().remove(itemFromInventory.getKey());
-                }
-                trade1.setIsAnswered(true);
-                trade1.setIsSuccessfulled(true);
-                relationService.changeFriendShipLevelUp(relationService.getFriendShipBetweenWithActor(trade1.getTrader()), 50);
-                return new Response("trade accepted successfully");
+                GameClient.getInstance().acceptTrade(trade1.getTrader(), tradeId, true);
+                return new Response("", true);
             }
-
         } else {
             Map.Entry<Salable, Integer> itemFromInventory = currentPlayer.getItemFromInventory(trade1.getSalable());
             if (itemFromInventory == null || itemFromInventory.getValue() < trade1.getQuantity()) {
-                trade1.setIsAnswered(true);
-                trade1.setIsSuccessfulled(false);
-                relationService.changeFriendShipLevelDown(relationService.getFriendShipBetweenWithActor(trade1.getCustomer()), 30);
                 return new Response("you don't have enough Item to sell");
             }
-            if (trade1.getPrice() != null) {
-                currentPlayer.getAccount().setGolds(currentPlayer.getAccount().getGolds() + trade1.getPrice());
-                trade1.getTrader().getAccount().setGolds(currentPlayer.getAccount().getGolds() - trade1.getPrice());
-                trade1.getTrader().getInventory().addProductToBackPack(itemFromInventory.getKey(), trade1.getQuantity());
-                GameClient.getInstance().updatePlayerAddToInventory(currentPlayer, itemFromInventory.getKey(), trade1.getQuantity());
-                currentPlayer.getInventory().getProducts().replace(itemFromInventory.getKey(), itemFromInventory.getValue() - trade1.getQuantity());
-                if (itemFromInventory.getValue() - trade1.getQuantity() == 0) {
-                    trade1.getTrader().getInventory().getProducts().remove(itemFromInventory.getKey());
-                }
-                trade1.setIsAnswered(true);
-                trade1.setIsSuccessfulled(true);
-                relationService.changeFriendShipLevelUp(relationService.getFriendShipBetweenWithActor(trade1.getCustomer()), 50);
-                return new Response("trade accepted successfully");
-            } else {
-                Map.Entry<Salable, Integer> itemFromInventory1 = trade1.getTrader().getItemFromInventory(trade1.getRequiredItem());
+            GameClient.getInstance().acceptTrade(trade1.getTrader(), tradeId, true);
+            return new Response("", true);
+        }
+    }
 
-                currentPlayer.getInventory().addProductToBackPack(itemFromInventory1.getKey(), trade1.getQuantity());
-                GameClient.getInstance().updatePlayerAddToInventory(currentPlayer,itemFromInventory1.getKey(),trade1.getQuantity());
-                trade1.getTrader().getInventory().getProducts().replace(itemFromInventory1.getKey(), itemFromInventory1.getValue() - trade1.getQuantity());
-                if (itemFromInventory.getValue() - trade1.getQuantity() == 0) {
-                    trade1.getTrader().getInventory().getProducts().remove(itemFromInventory1.getKey());
+    public void rejectTrade(Player customer, int id) {
+        for (Trade trade : customer.getGootenTradeList()) {
+            if (trade.getId() == id) {
+                trade.setIsAnswered(true);
+                trade.setIsSuccessfulled(false);
+                relationService.changeFriendShipLevelDown(relationService.getFriendShipBetweenTwoActors(trade.getTrader(), trade.getCustomer()), 30);
+                return;
+            }
+        }
+    }
+
+    public void addTradeByServer(Player customer, Player trader, String salable, Integer quantity, String requiredItem,
+                            Integer requiredQuantity, Integer price, Integer id) {
+        Trade trade;
+        if (price == null) {
+            trade = new Trade(customer, trader, salable, quantity, requiredQuantity, requiredItem, true);
+        } else {
+            trade = new Trade(customer, trader, salable, quantity, price, true);
+        }
+        trade.setId(id);
+        trader.getGootenTradeList().add(trade);
+        customer.getGootenTradeList().add(trade);
+    }
+
+    public void handleAccept(Player customer, int id) {
+        for (Trade trade : customer.getGootenTradeList()) {
+            if (trade.getId() == id) {
+                if (trade.getTrader().equals(currentPlayer)) {
+                    Map.Entry<Salable, Integer> itemFromInventory = trade.getTrader().getItemFromInventory(trade.getSalable());
+                    if (itemFromInventory == null || itemFromInventory.getValue() < trade.getQuantity()) {
+                        GameClient.getInstance().rejectTradeByState(trade);
+                        rejectTradeByState(trade.getCustomer(), trade.getId());
+                        return;
+                    }
+                    if (itemFromInventory.getValue() - trade.getQuantity() == 0) {
+                        trade.getTrader().getInventory().getProducts().remove(itemFromInventory.getKey());
+                    } else {
+                        trade.getTrader().getInventory().getProducts().replace(itemFromInventory.getKey(), itemFromInventory.getValue() - trade.getQuantity());
+                    }
+
+                    trade.setIsAnswered(true);
+                    relationService.changeFriendShipLevelUp(relationService.getFriendShipBetweenTwoActors(trade.getTrader(), trade.getCustomer()), 50);
+                    trade.setIsSuccessfulled(true);
+                    GameClient.getInstance().sendTrade(trade.getCustomer(), trade, trade.getQuantity(), itemFromInventory.getKey(), true);
+                } else {
+                    if (trade.getPrice() != null) {
+                        if (trade.getCustomer().getAccount().getGolds() < trade.getPrice()) {
+                            GameClient.getInstance().rejectTradeByState(trade);
+                            rejectTradeByState(trade.getCustomer(), trade.getId());
+                            return;
+                        }
+                        trade.getCustomer().getAccount().setGolds(trade.getCustomer().getAccount().getGolds() - trade.getPrice());
+                        GameClient.getInstance().updatePlayerGold(trade.getCustomer());
+                        GameClient.getInstance().sendTrade(trade.getCustomer(), trade, trade.getPrice(), null, true);
+                    } else {
+                        Map.Entry<Salable, Integer> itemFromInventory1 = trade.getCustomer().getItemFromInventory(trade.getRequiredItem());
+                        if (itemFromInventory1 == null || itemFromInventory1.getValue() < trade.getQuantityRequired()) {
+                            GameClient.getInstance().rejectTradeByState(trade);
+                            rejectTradeByState(trade.getCustomer(), trade.getId());
+                            return;
+                        }
+                        if (itemFromInventory1.getValue() - trade.getQuantityRequired() == 0) {
+                            trade.getTrader().getInventory().getProducts().remove(itemFromInventory1.getKey());
+                        } else {
+                            trade.getCustomer().getInventory().getProducts().replace(itemFromInventory1.getKey(), itemFromInventory1.getValue() - trade.getQuantity());
+                        }
+
+                        GameClient.getInstance().sendTrade(trade.getCustomer(), trade, trade.getQuantityRequired(), itemFromInventory1.getKey(), true);
+                    }
+                    trade.setIsAnswered(true);
+                    trade.setIsSuccessfulled(true);
+                    relationService.changeFriendShipLevelUp(relationService.getFriendShipBetweenTwoActors(trade.getTrader(), trade.getCustomer()), 50);
                 }
-                trade1.getTrader().getInventory().addProductToBackPack(itemFromInventory.getKey(), trade1.getQuantity());
-                GameClient.getInstance().updatePlayerAddToInventory(currentPlayer, itemFromInventory.getKey(), trade1.getQuantity());
-                currentPlayer.getInventory().getProducts().replace(itemFromInventory.getKey(), itemFromInventory.getValue() - trade1.getQuantity());
-                if (itemFromInventory.getValue() - trade1.getQuantity() == 0) {
-                    trade1.getTrader().getInventory().getProducts().remove(itemFromInventory.getKey());
+                return;
+            }
+        }
+    }
+
+    public void rejectTradeByState(Player customer, Integer id) {
+        for (Trade trade : customer.getGootenTradeList()) {
+            if (trade.getId() == id) {
+                trade.setIsAnswered(true);
+                relationService.changeFriendShipLevelUp(relationService.getFriendShipBetweenTwoActors(trade.getTrader(), trade.getCustomer()), -50);
+                trade.setIsSuccessfulled(false);
+            }
+        }
+
+    }
+
+    public void sendTrade(Player customer, Integer id, Salable salable, Integer count, boolean shouldRespond) {
+        for (Trade trade : customer.getGootenTradeList()) {
+            if (trade.getId().equals(id)) {
+                currentPlayer = App.getInstance().getCurrentGame().getCurrentPlayer();
+                if (salable == null) {
+                    currentPlayer.getAccount().setGolds(currentPlayer.getAccount().getGolds() + count);
+                    GameClient.getInstance().updatePlayerGold(currentPlayer);
+                } else {
+                    currentPlayer.getInventory().addProductToBackPack(salable, count);
                 }
-                trade1.setIsAnswered(true);
-                trade1.setIsSuccessfulled(true);
-                relationService.changeFriendShipLevelUp(relationService.getFriendShipBetweenWithActor(trade1.getCustomer()), 50);
-                return new Response("trade accepted successfully");
+                if (shouldRespond) {
+                    if (trade.getCustomer().equals(currentPlayer)) {
+                        if (trade.getPrice() != null) {
+                            trade.getCustomer().getAccount().setGolds(trade.getCustomer().getAccount().getGolds() - trade.getPrice());
+                            GameClient.getInstance().updatePlayerGold(trade.getCustomer());
+                            trade.setIsAnswered(true);
+                            trade.setIsSuccessfulled(true);
+                            relationService.changeFriendShipLevelUp(relationService.getFriendShipBetweenTwoActors(trade.getTrader(), trade.getCustomer()), 50);
+                            GameClient.getInstance().sendTrade(trade.getTrader(), trade, trade.getPrice(), null, false);
+                        } else {
+                            Map.Entry<Salable, Integer> itemFromInventory = trade.getCustomer().getItemFromInventory(trade.getRequiredItem());
+                            trade.setIsAnswered(true);
+                            trade.setIsSuccessfulled(true);
+                            if (itemFromInventory.getValue() - trade.getQuantityRequired() == 0) {
+                                trade.getTrader().getInventory().getProducts().remove(itemFromInventory.getKey());
+                            } else {
+                                trade.getCustomer().getInventory().getProducts().replace(itemFromInventory.getKey(), itemFromInventory.getValue() - trade.getQuantity());
+                            }
+                            relationService.changeFriendShipLevelUp(relationService.getFriendShipBetweenTwoActors(trade.getTrader(), trade.getCustomer()), 50);
+                            GameClient.getInstance().sendTrade(trade.getTrader(), trade, trade.getQuantityRequired(), itemFromInventory.getKey(), false);
+                        }
+                    } else {
+                        Map.Entry<Salable, Integer> itemFromInventory = trade.getTrader().getItemFromInventory(trade.getSalable());
+                        trade.getTrader().getInventory().getProducts().replace(itemFromInventory.getKey(), itemFromInventory.getValue() - trade.getQuantity());
+                        if (itemFromInventory.getValue() - trade.getQuantity() == 0) {
+                            trade.getTrader().getInventory().getProducts().remove(itemFromInventory.getKey());
+                        }
+                        trade.setIsAnswered(true);
+                        trade.setIsSuccessfulled(true);
+                        relationService.changeFriendShipLevelUp(relationService.getFriendShipBetweenTwoActors(trade.getTrader(), trade.getCustomer()), 50);
+                        GameClient.getInstance().sendTrade(trade.getCustomer(), trade, trade.getQuantity(), itemFromInventory.getKey(), false);
+                    }
+                }
             }
         }
     }

@@ -66,6 +66,7 @@ public class GameAsset {
     public static final Texture INVENTORY_TAB = new Texture("Inventory/Inventory_Tab.png");
     public static final Texture GIFT = new Texture("Inventory/Gift.png");
     public static final Texture CHAT = new Texture("Inventory/chat.png");
+    public static final Texture TRADE = new Texture("Inventory/trade.png");
     public static final Texture CRAFTING_TAB = new Texture("Inventory/crafting_tab.png");
     public static final Texture COOKING_TAB = new Texture("Inventory/cooking_tab.png");
     public static final Texture BUTTON = new Texture("Inventory/button-.png");
