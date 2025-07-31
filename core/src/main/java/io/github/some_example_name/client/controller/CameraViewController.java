@@ -15,6 +15,8 @@ import io.github.some_example_name.client.GameClient;
 import io.github.some_example_name.client.MainGradle;
 import io.github.some_example_name.common.model.Salable;
 import io.github.some_example_name.common.model.Tile;
+import io.github.some_example_name.common.model.dto.TradePriceDto;
+import io.github.some_example_name.common.model.dto.TradeProductDto;
 import io.github.some_example_name.common.model.relations.Player;
 import io.github.some_example_name.common.model.tools.WateringCan;
 import io.github.some_example_name.server.service.GameService;
@@ -25,6 +27,7 @@ import io.github.some_example_name.client.view.GameView;
 import io.github.some_example_name.client.view.mainMenu.InventoryMenu;
 import io.github.some_example_name.client.view.mainMenu.NotificationMenu;
 import io.github.some_example_name.client.view.mainMenu.PopUp;
+import io.github.some_example_name.server.service.TradeService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -324,21 +327,28 @@ public class CameraViewController {
                 gameMenuController.C_AddItem("dish O' the Sea recipe", "1");
                 gameMenuController.C_AddItem("seafoam pudding recipe", "1");
                 gameMenuController.C_AddItem("miner's treat recipe", "1");
-                gameMenuController.C_AddItem("triple shot espresson recipe", "1");
-                gameMenuController.C_AddItem("triple shot espresson recipe", "1");
+                gameMenuController.C_AddItem("triple shot espresso recipe", "1");
+                gameMenuController.C_AddItem("triple shot espresso recipe", "1");
             }
             if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_6)) {
-
+                TradeService.getInstance().tradePriceRequest(
+                    new TradePriceDto("Roham1234", "offer", "flower", 1, 200));
             }
             if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_7)) {
-                gameMenuController.C_AddItem("pizza", "1");
+                gameMenuController.C_AddItem("pizza", "5");
+                gameMenuController.C_AddDollars("2000");
+                TradeService.getInstance().tradeProductRequest(
+                    new TradeProductDto("Roham1234", "offer", "flower", 1, "pizza", 1));
             }
             if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_8)) {
+                TradeService.getInstance().tradePriceOffer(
+                    new TradePriceDto("Roham1234", "offer", "pizza", 1, 200));
                 gameMenuController.C_AddItem("bee_house", "1");
                 gameMenuController.placeItem("bee_house", "south");
             }
             if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_9)) {
-
+                TradeService.getInstance().tradeProductOffer(
+                    new TradeProductDto("Roham1234", "offer", "pizza", 1, "flower", 1));
             }
             if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_0)) {
                 gameMenuController.C_AddItem("flower", "2");
