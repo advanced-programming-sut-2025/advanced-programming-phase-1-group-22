@@ -119,6 +119,8 @@ public class FireMenu extends PopUp {
     public void terminate() {
         Gdx.app.postRunnable(() -> {
             player.setDead(true);
+            window.remove();
+            close();
             getController().showResponse(new Response(player.getName() + " was stabbed to death."));
         });
     }

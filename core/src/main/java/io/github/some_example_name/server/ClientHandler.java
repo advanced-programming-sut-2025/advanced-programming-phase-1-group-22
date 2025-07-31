@@ -31,7 +31,7 @@ public class ClientHandler extends Thread {
     private Socket clientSocket;
     private PrintWriter out;
     private BufferedReader in;
-    private boolean dead = true;
+    private boolean dead = false;
     private boolean ready = false;
     private boolean inFavor = false;
     private GameServer gameServer;
@@ -130,7 +130,7 @@ public class ClientHandler extends Thread {
                         }
                     } else if (obj.get("action").getAsString().equals("propose_fire")) {
                         gameServer.clearFavors();
-                        gameServer.sendFire(message, obj.get("player").getAsString());
+                        gameServer.sendFire(message, obj.getAsJsonObject("body").get("player").getAsString());
                     } else if (obj.get("action").getAsString().equals("fire")) {
                         if (obj.getAsJsonObject("body").get("vote").getAsBoolean()) {
                             inFavor = true;
@@ -141,8 +141,8 @@ public class ClientHandler extends Thread {
                                     "id", "!server!",
                                     "body", Map.of("player", player)
                                 );
-                                gameServer.findClient(player).die();
                                 gameServer.sendAll(GSON.toJson(msg));
+                                gameServer.findClient(player).die();
                             }
                         } else {
                             gameServer.clearFavors();

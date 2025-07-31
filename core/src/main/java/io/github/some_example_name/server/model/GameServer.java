@@ -15,7 +15,7 @@ public class GameServer {
 
     public boolean isReady() {
         for (Entry<ServerPlayer, ClientHandler> entry : clients) {
-            if (!entry.getValue().isReady()) return false;
+            if (!entry.getValue().isDead() && !entry.getValue().isReady()) return false;
         }
         if (clients.size() > 1) {
             for (Entry<ServerPlayer, ClientHandler> entry : clients) {
@@ -42,6 +42,7 @@ public class GameServer {
         for (Entry<ServerPlayer, ClientHandler> client : clients) {
             if (!client.getKey().username.equals(username))  {
                 client.getValue().send(message);
+            } else {
                 client.getValue().setInFavor(true);
             }
         }
@@ -72,7 +73,7 @@ public class GameServer {
 
     public boolean isMajority() {
         for (Entry<ServerPlayer, ClientHandler> client : clients) {
-            if (!client.getValue().isInFavor()) return false;
+            if (!client.getValue().isDead() && !client.getValue().isInFavor()) return false;
         }
         return true;
     }
