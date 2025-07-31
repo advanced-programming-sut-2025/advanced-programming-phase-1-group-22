@@ -46,6 +46,7 @@ public class PlayerController {
 
     public void update(float delta) {
         for (Player player : App.getInstance().getCurrentGame().getPlayers()) {
+            if (player.getDead()) continue;
             Sprite playerSprite = player.getSprites().get(0).getSprite();
             if (playerSprite instanceof AnimatedSprite) {
                 ((AnimatedSprite) playerSprite).update(delta);
@@ -171,6 +172,14 @@ public class PlayerController {
             NotificationMenu notificationMenu = new NotificationMenu();
             notificationMenu.createMenu(GameView.stage, GameAsset.SKIN, getWorldController());
             //TODO OPEN JOURNAL?
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
+            TradeHistoryMenu tradeHistoryMenu = new TradeHistoryMenu();
+            tradeHistoryMenu.createMenu(GameView.stage, GameAsset.SKIN, getWorldController());
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.Y)) {
+            PublicChatMenu menu = new PublicChatMenu();
+            menu.createMenu(GameView.stage, GameAsset.SKIN, getWorldController());
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.M)) {
             inventoryMenu.setTabIndex(3);

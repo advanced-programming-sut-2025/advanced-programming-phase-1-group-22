@@ -1,6 +1,8 @@
 package io.github.some_example_name.client.service;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Timer;
+import io.github.some_example_name.client.MainGradle;
 import io.github.some_example_name.common.model.*;
 import io.github.some_example_name.common.model.abilitiy.Ability;
 import io.github.some_example_name.common.model.products.HarvestAbleProduct;
@@ -232,4 +234,11 @@ public class ClientService {
         return null;
     }
 
+    public void die() {
+        Gdx.app.postRunnable(() -> {
+            //todo What more should be done?
+            MainGradle.getInstance().getScreen().dispose();
+            MainGradle.getInstance().initialMenu();
+        });
+    }
 }
