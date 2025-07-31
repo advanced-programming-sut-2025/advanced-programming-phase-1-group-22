@@ -13,6 +13,7 @@ import io.github.some_example_name.common.model.craft.Craft;
 import io.github.some_example_name.common.model.products.AnimalProduct;
 import io.github.some_example_name.common.model.products.TreesAndFruitsAndSeeds.Fruit;
 import io.github.some_example_name.common.model.source.*;
+import io.github.some_example_name.common.model.records.Response;
 import io.github.some_example_name.common.model.structure.stores.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -31,6 +32,10 @@ import io.github.some_example_name.common.model.structure.Structure;
 import io.github.some_example_name.common.utils.App;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.Consumer;
@@ -54,6 +59,8 @@ public class Game implements Serializable {
     private int playersInFavorTermination = 0;
     public Tile[][] tiles = new Tile[length][width];
     private int fadingInTheNight = 0;
+    private final ArrayList<Entry<String, Actor>> dialogs = new ArrayList<>();
+    private final AtomicBoolean dialogsUpdated = new AtomicBoolean(false);
     private final List<MultiMission> missions = new ArrayList<>();
     private final Queue<Runnable> pendingMissionsChanges = new ConcurrentLinkedQueue<>();
     private final Map<Player,Long> DCPlayers = Collections.synchronizedMap(new HashMap<>());
@@ -424,4 +431,15 @@ public class Game implements Serializable {
         }
     }
 
+    public void addPublicMessage(Player sender, String message) {
+        synchronized (dialogs) {dialogs.add(new Entry<>(message, sender));}
+        synchronized (dialogsUpdated) {dialogsUpdated.set(true);}
+        if (message.contains("@" + App.getInstance().getCurrentGame().getCurrentPlayer().getUser().getUsername())) {
+            App.getInstance().getCurrentGame().getCurrentPlayer().getNotified(
+                new Response(sender.getNickname() + " has mentioned you.", true),
+                NotificationType.MENTION,
+                sender
+            );
+        }
+    }
 }

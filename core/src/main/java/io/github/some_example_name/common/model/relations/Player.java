@@ -36,16 +36,17 @@ import java.util.*;
 @Getter
 @Setter
 public class Player extends Actor implements JsonPreparable {
-    private Integer id;
-    private User user;
-    private Integer energy;
-    private Integer maxEnergy;
+	private Integer id;
+	private User user;
+	private Integer energy;
+	private Integer maxEnergy;
+    private Boolean dead = false;
     private Integer numberOfCompleteMission = 0;
     private Boolean energyIsInfinite = false;
-    private Integer daysOfSadness = 0;
-    private BackPack inventory;
-    private Buff buff;
-    private Ability buffAbility;
+	private Integer daysOfSadness = 0;
+	private BackPack inventory;
+	private Buff buff;
+	private Ability buffAbility;
     private Direction direction = Direction.SOUTH;
     private boolean dirChanged = false;
     private int isLazy = 0;
@@ -389,6 +390,7 @@ public class Player extends Actor implements JsonPreparable {
     }
 
     public ArrayList<SpriteHolder> getSprites() {
+        if (dead) return null;
         if (dirChanged) {
             ((AnimatedSprite) this.sprites.get(0).getSprite()).setRotationAnimation(null);
             dirChanged = false;
@@ -434,6 +436,11 @@ public class Player extends Actor implements JsonPreparable {
     public void setProposal() {
         this.direction = Direction.NORTH;
         this.sprites.get(0).setSprite(playerType.getProposal());
+    }
+
+    @Override
+    public String getNickname() {
+        return user.getNickname();
     }
 
     public int getGold() {

@@ -4,10 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d95100ff-6e61-4571-9e87-dcef3d963dba" name="Changes" comment="add delete product Client-Service">
+    <list default="true" id="d95100ff-6e61-4571-9e87-dcef3d963dba" name="Changes" comment="synced gift rate and final termination">
+    <list default="true" id="d95100ff-6e61-4571-9e87-dcef3d963dba" name="Changes" comment="synced fridges">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/build/libs/core-1.0.0.jar" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/libs/core-1.0.0.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/client/GameClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/client/GameClient.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -50,7 +50,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="main" />
+        <entry key="$PROJECT_DIR$" value="Roham" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -63,8 +63,8 @@
 }</component>
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/advanced-programming-sut-2025/advanced-programming-phase-1-group-22.git&quot;,
-    &quot;accountId&quot;: &quot;6dfd5896-35af-4905-a843-c0bfce2ce8d8&quot;
+    &quot;url&quot;: &quot;https://github.com/advanced-programming-sut-2025/advanced-programming-phase-1-group-22&quot;,
+    &quot;accountId&quot;: &quot;b9efcc9e-e39f-461c-9d13-6b57ad5013fb&quot;
   }
 }</component>
   <component name="ProblemsViewState">
@@ -89,7 +89,7 @@
     &quot;Gradle.Project4:core [:core:io.github.some_example_name.lwjgl3.Lwjgl3Launcher.main()].executor&quot;: &quot;Run&quot;,
     &quot;Gradle.Project4:lwjgl3 [:lwjgl3:io.github.some_example_name.lwjgl3.Lwjgl3Launcher.main()].executor&quot;: &quot;Run&quot;,
     &quot;Gradle.Project:core [:core:io.github.some_example_name.server.Server.main()].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.Project:lwjgl3 [:lwjgl3:io.github.some_example_name.lwjgl3.Lwjgl3Launcher.main()].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.Project:lwjgl3 [:lwjgl3:io.github.some_example_name.lwjgl3.Lwjgl3Launcher.main()].executor&quot;: &quot;Debug&quot;,
     &quot;Gradle.advanced-programming-phase-1-group-22:core [:core:io.github.some_example_name.server.Server.main()].executor&quot;: &quot;Run&quot;,
     &quot;Gradle.advanced-programming-phase-1-group-22:lwjgl3 [:lwjgl3:io.github.some_example_name.lwjgl3.Lwjgl3Launcher.main()].executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
@@ -130,14 +130,14 @@
   <component name="RunManager" selected="Application.Client">
     <configuration name="Client" type="Application" factoryName="Application" singleton="false">
       <option name="MAIN_CLASS_NAME" value="io.github.some_example_name.lwjgl3.Lwjgl3Launcher" />
-      <module name="advanced-programming-phase-1-group-22.lwjgl3.main" />
+      <module name="Project.lwjgl3.main" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
     <configuration name="Server" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="io.github.some_example_name.server.Server" />
-      <module name="advanced-programming-phase-1-group-22.core.main" />
+      <module name="Project.core.main" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -176,8 +176,8 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Application.Client" />
       <item itemvalue="Application.Server" />
+      <item itemvalue="Application.Client" />
       <item itemvalue="Gradle.Project:lwjgl3 [:lwjgl3:io.github.some_example_name.lwjgl3.Lwjgl3Launcher.main()]" />
     </list>
   </component>
@@ -223,6 +223,102 @@
       <workItem from="1753437821215" duration="14591000" />
       <workItem from="1753572312868" duration="181000" />
       <workItem from="1753609176199" duration="6869000" />
+    </task>
+    <task id="LOCAL-00012" summary="implementing basics of artisan Menu">
+      <option name="closed" value="true" />
+      <created>1751581707525</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1751581707525</updated>
+    </task>
+    <task id="LOCAL-00013" summary="implementing craft popup">
+      <option name="closed" value="true" />
+      <created>1751634966360</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1751634966360</updated>
+    </task>
+    <task id="LOCAL-00014" summary="updated assets">
+      <option name="closed" value="true" />
+      <created>1751635079174</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1751635079174</updated>
+    </task>
+    <task id="LOCAL-00015" summary="merged">
+      <option name="closed" value="true" />
+      <created>1751640799530</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1751640799530</updated>
+    </task>
+    <task id="LOCAL-00016" summary="adding count label">
+      <option name="closed" value="true" />
+      <created>1751647894527</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1751647894527</updated>
+    </task>
+    <task id="LOCAL-00017" summary="converting popUps from static to dynamic">
+      <option name="closed" value="true" />
+      <created>1751650883039</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1751650883039</updated>
+    </task>
+    <task id="LOCAL-00018" summary="polymorphism for popup menus">
+      <option name="closed" value="true" />
+      <created>1751661007525</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1751661007525</updated>
+    </task>
+    <task id="LOCAL-00019" summary="preventing events while popup occurs">
+      <option name="closed" value="true" />
+      <created>1751664759171</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1751664759171</updated>
+    </task>
+    <task id="LOCAL-00020" summary="added shortcuts to carrying salables">
+      <option name="closed" value="true" />
+      <created>1751667002061</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1751667002061</updated>
+    </task>
+    <task id="LOCAL-00021" summary="added Scrolling">
+      <option name="closed" value="true" />
+      <created>1751668528828</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1751668528828</updated>
+    </task>
+    <task id="LOCAL-00022" summary="implemented gift menu">
+      <option name="closed" value="true" />
+      <created>1751722767663</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1751722767663</updated>
+    </task>
+    <task id="LOCAL-00023" summary="implemented gift history menu">
+      <option name="closed" value="true" />
+      <created>1751747707937</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1751747707937</updated>
     </task>
     <task id="LOCAL-00024" summary="implemented talk menu">
       <option name="closed" value="true" />
@@ -520,103 +616,7 @@
       <option name="project" value="LOCAL" />
       <updated>1753572037612</updated>
     </task>
-    <task id="LOCAL-00061" summary="not complete DC">
-      <option name="closed" value="true" />
-      <created>1753790115252</created>
-      <option name="number" value="00061" />
-      <option name="presentableId" value="LOCAL-00061" />
-      <option name="project" value="LOCAL" />
-      <updated>1753790115252</updated>
-    </task>
-    <task id="LOCAL-00062" summary="add real-time map menu">
-      <option name="closed" value="true" />
-      <created>1753794018760</created>
-      <option name="number" value="00062" />
-      <option name="presentableId" value="LOCAL-00062" />
-      <option name="project" value="LOCAL" />
-      <updated>1753794018760</updated>
-    </task>
-    <task id="LOCAL-00063" summary="add PopUpReaction">
-      <option name="closed" value="true" />
-      <created>1753811864676</created>
-      <option name="number" value="00063" />
-      <option name="presentableId" value="LOCAL-00063" />
-      <option name="project" value="LOCAL" />
-      <updated>1753811864677</updated>
-    </task>
-    <task id="LOCAL-00064" summary="add live ScoreBoard">
-      <option name="closed" value="true" />
-      <created>1753818998576</created>
-      <option name="number" value="00064" />
-      <option name="presentableId" value="LOCAL-00064" />
-      <option name="project" value="LOCAL" />
-      <updated>1753818998576</updated>
-    </task>
-    <task id="LOCAL-00065" summary="add MultiMission graphic">
-      <option name="closed" value="true" />
-      <created>1753830341132</created>
-      <option name="number" value="00065" />
-      <option name="presentableId" value="LOCAL-00065" />
-      <option name="project" value="LOCAL" />
-      <updated>1753830341132</updated>
-    </task>
-    <task id="LOCAL-00066" summary="complete MultiMission">
-      <option name="closed" value="true" />
-      <created>1753841958099</created>
-      <option name="number" value="00066" />
-      <option name="presentableId" value="LOCAL-00066" />
-      <option name="project" value="LOCAL" />
-      <updated>1753841958099</updated>
-    </task>
-    <task id="LOCAL-00067" summary="debug MultiMission">
-      <option name="closed" value="true" />
-      <created>1753873169470</created>
-      <option name="number" value="00067" />
-      <option name="presentableId" value="LOCAL-00067" />
-      <option name="project" value="LOCAL" />
-      <updated>1753873169473</updated>
-    </task>
-    <task id="LOCAL-00068" summary="add DC termination">
-      <option name="closed" value="true" />
-      <created>1753882271851</created>
-      <option name="number" value="00068" />
-      <option name="presentableId" value="LOCAL-00068" />
-      <option name="project" value="LOCAL" />
-      <updated>1753882271852</updated>
-    </task>
-    <task id="LOCAL-00069" summary="complete DC reconnect">
-      <option name="closed" value="true" />
-      <created>1753899718676</created>
-      <option name="number" value="00069" />
-      <option name="presentableId" value="LOCAL-00069" />
-      <option name="project" value="LOCAL" />
-      <updated>1753899718676</updated>
-    </task>
-    <task id="LOCAL-00070" summary="change crow attack">
-      <option name="closed" value="true" />
-      <created>1753923666976</created>
-      <option name="number" value="00070" />
-      <option name="presentableId" value="LOCAL-00070" />
-      <option name="project" value="LOCAL" />
-      <updated>1753923666976</updated>
-    </task>
-    <task id="LOCAL-00071" summary="add JsonMessageHandler">
-      <option name="closed" value="true" />
-      <created>1753926023828</created>
-      <option name="number" value="00071" />
-      <option name="presentableId" value="LOCAL-00071" />
-      <option name="project" value="LOCAL" />
-      <updated>1753926023828</updated>
-    </task>
-    <task id="LOCAL-00072" summary="add delete product Client-Service">
-      <option name="closed" value="true" />
-      <created>1753962684961</created>
-      <option name="number" value="00072" />
-      <option name="presentableId" value="LOCAL-00072" />
-      <option name="project" value="LOCAL" />
-      <updated>1753962684962</updated>
-    </task>
-    <option name="localTasksCounter" value="73" />
+    <option name="localTasksCounter" value="61" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -634,6 +634,18 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
+    <MESSAGE value="implemented giving flower animation" />
+    <MESSAGE value="implemented asking for marriage animation" />
+    <MESSAGE value="implemented responding marriage + animation" />
+    <MESSAGE value="uploaded an asset" />
+    <MESSAGE value="minor debugging" />
+    <MESSAGE value="cloning objects while gifting and placing on ground" />
+    <MESSAGE value="added notification and social button" />
+    <MESSAGE value="uploaded assets" />
+    <MESSAGE value="tidy up social menu" />
+    <MESSAGE value="tidy up pause menus" />
+    <MESSAGE value="tidy up gifts menus" />
+    <MESSAGE value="tidy up talk menu" />
     <MESSAGE value="tidy up some Menus" />
     <MESSAGE value="night and lightening animation" />
     <MESSAGE value="handle z-index during the hug" />
@@ -647,23 +659,16 @@
     <MESSAGE value="handle player movement real-time" />
     <MESSAGE value="implemented add item" />
     <MESSAGE value="implemented update item" />
-    <MESSAGE value="not complete DC" />
-    <MESSAGE value="add real-time map menu" />
-    <MESSAGE value="add PopUpReaction" />
-    <MESSAGE value="add live ScoreBoard" />
-    <MESSAGE value="add MultiMission graphic" />
-    <MESSAGE value="complete MultiMission" />
-    <MESSAGE value="debug MultiMission" />
-    <MESSAGE value="add DC termination" />
-    <MESSAGE value="complete DC reconnect" />
-    <MESSAGE value="change crow attack" />
-    <MESSAGE value="add JsonMessageHandler" />
-    <MESSAGE value="add delete product Client-Service" />
-    <option name="LAST_COMMIT_MESSAGE" value="add delete product Client-Service" />
+    <option name="LAST_COMMIT_MESSAGE" value="implemented update item" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/client/view/mainMenu/FridgeMenu.java</url>
+          <line>59</line>
+          <option name="timeStamp" value="28" />
+        </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/common/model/enums/Weather.java</url>
           <line>35</line>
@@ -676,13 +681,9 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/client/controller/CameraViewController.java</url>
-          <line>332</line>
+          <line>328</line>
           <option name="timeStamp" value="68" />
         </line-breakpoint>
-        <breakpoint enabled="true" type="java-exception">
-          <properties class="java.lang.NullPointerException" package="java.lang" />
-          <option name="timeStamp" value="70" />
-        </breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>

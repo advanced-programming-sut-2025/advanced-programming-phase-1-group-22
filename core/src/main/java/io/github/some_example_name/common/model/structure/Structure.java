@@ -21,6 +21,7 @@ import java.util.List;
 public abstract class Structure {
     List<Tile> tiles = new ArrayList<>();
     Boolean isPickable = false;
+    Boolean isPicked = false;
 
     public Sprite getSprite() {
         return null;

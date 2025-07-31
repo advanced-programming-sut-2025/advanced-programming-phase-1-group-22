@@ -9,7 +9,8 @@ public enum NotificationType {
 	GIFT(GameAsset.GIFT),
     TALK(GameAsset.CHAT),
     MARRIAGE(GameAsset.WEDDING_RING),
-    TRADE(GameAsset.ISLAND_TRADER_ICON);
+    TRADE(GameAsset.TRADE),
+    MENTION(GameAsset.ISLAND_TRADER_ICON);
     private final Texture texture;;
 
 	NotificationType(Texture texture) {

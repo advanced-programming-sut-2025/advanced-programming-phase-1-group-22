@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.Timer;
+import io.github.some_example_name.client.GameClient;
 import io.github.some_example_name.client.MainGradle;
 import io.github.some_example_name.client.controller.WorldController;
 import io.github.some_example_name.common.model.Entry;
@@ -13,26 +14,20 @@ import io.github.some_example_name.common.model.Salable;
 import io.github.some_example_name.common.model.records.Response;
 import io.github.some_example_name.common.model.relations.Friendship;
 import io.github.some_example_name.common.model.relations.Player;
-import io.github.some_example_name.server.service.RelationService;
 import io.github.some_example_name.common.utils.App;
+import io.github.some_example_name.server.service.RelationService;
 import lombok.Setter;
 
 import java.util.ArrayList;
 
 @Setter
-public class TalkMenu extends PopUp {
-    private Friendship friendship;
-    private Player friend;
+public class PublicChatMenu extends PopUp {
     private Window window;
     private Float scrollY;
+    private int lastMessage = 0;
 
     public void createMenu(Stage stage, Skin skin, WorldController worldController) {
         super.createMenu(stage, skin, worldController);
-        if (friendship.getSecondPlayer() == App.getInstance().getCurrentGame().getCurrentPlayer()) {
-            friend = (Player) friendship.getFirstPlayer();
-        } else {
-            friend = (Player) friendship.getSecondPlayer();
-        }
         createInventory(skin, getMenuGroup(), stage);
     }
 
@@ -40,6 +35,9 @@ public class TalkMenu extends PopUp {
     protected void handleDragRelease(InputEvent event, float x, float y, int pointer, Image itemImage, Salable item, Image dragImage, Boolean flag) {}
 
     private void createInventory(Skin skin, Group menuGroup, Stage stage) {
+        synchronized (App.getInstance().getCurrentGame().getDialogsUpdated()) {
+            App.getInstance().getCurrentGame().getDialogsUpdated().set(false);
+        }
         Player currentPlayer = App.getInstance().getCurrentGame().getCurrentPlayer();
         OrthographicCamera camera = MainGradle.getInstance().getCamera();
 
@@ -64,28 +62,9 @@ public class TalkMenu extends PopUp {
         scrollPane.layout();
         scrollPane.setTouchable(Touchable.enabled);
 
-        Table otherPlayer = new Table();
-
-        otherPlayer.add(new Image(friend.getAvatar())).size(200).row();
-        otherPlayer.add(new Label(friend.getUser().getNickname(), skin)).width(200).expandX().row();
-        for (Entry<String, io.github.some_example_name.common.model.Actor> dialog : friendship.getDialogs()) {
-            boolean isGifting = dialog.getValue() == currentPlayer;
-            Table giftTable = new Table(skin);
-            for (String line : wrapString(dialog.getKey(), 20)) {
-                giftTable.add(new Label(line, skin));
-                if (!isGifting) giftTable.right();
-                giftTable.row();
-            }
-            Table rowWrapper = new Table();
-
-            if (isGifting) {
-                rowWrapper.add(giftTable).left().expandX();
-                rowWrapper.add();
-            } else {
-                rowWrapper.add();
-                rowWrapper.add(giftTable).right().expandX();
-            }
-            inventory.add(rowWrapper).padRight(10).expandX().fillX().row();
+        for (Entry<String, io.github.some_example_name.common.model.Actor> dialog : App.getInstance().getCurrentGame().getDialogs()) {
+            addMessage(dialog, currentPlayer, skin, inventory);
+            lastMessage++;
         }
 
         ArrayList<Actor> array = new ArrayList<>();
@@ -96,14 +75,13 @@ public class TalkMenu extends PopUp {
         Table content = new Table();
         content.setFillParent(true);
         content.center();
-        content.add(scrollPane).width(window.getWidth() * 0.7f).height(window.getHeight() * 0.8f - 100).padBottom(20).padTop(50);
-        content.add(otherPlayer).width(window.getWidth() * 0.15f).row();
+        content.add(scrollPane).width(window.getWidth() * 0.8f).height(window.getHeight() * 0.8f - 100).padBottom(20).padTop(50).row();
 
 
         TextArea input = new TextArea("", skin);
-        content.add(input).fillX().height(window.getHeight()*0.1f);
+        content.add(input).width(window.getWidth() * 0.65f).height(window.getHeight()*0.1f);
         TextButton send = new TextButton("Send", skin);
-        content.add(send).fillX().height(window.getHeight()*0.1f).row();
+        content.add(send).width(window.getWidth() * 0.15f).height(window.getHeight()*0.1f).row();
 
         window.add(content).fill().pad(10);
         Group group = new Group() {
@@ -123,27 +101,19 @@ public class TalkMenu extends PopUp {
                 if (send.isChecked() || Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
                     String message = input.getText();
                     if (!"".equals(message) && !wrapString(message, 100).isEmpty()) {
-                        Response resp = RelationService.getInstance().talkToAnotherPlayer(friend, message);
-                        if (!resp.shouldBeBack()) getController().showResponse(resp);
-                        else {
-                            input.setText("");
-                            Table giftTable = new Table(skin);
-                            for (String line : wrapString(message, 20)) {
-                                giftTable.add(new Label(line, skin)).row();
-                            }
-                            Table rowWrapper = new Table();
-                            rowWrapper.add(giftTable).left().expandX();
-                            rowWrapper.add();
-                            inventory.add(rowWrapper).expandX().fillX().row();
-                            Timer.schedule(new Timer.Task() {
-                                @Override
-                                public void run() {
-                                    scrollPane.setScrollY(scrollPane.getMaxY());
-                                }
-                            }, 0.2f);
-                        }
+                        input.setText("");
+                        GameClient.getInstance().sendPublic(message);
                     }
                     send.setChecked(false);
+                }
+
+                synchronized (App.getInstance().getCurrentGame()) {
+                    if (App.getInstance().getCurrentGame().getDialogsUpdated().get()) {
+                        for (; lastMessage <  App.getInstance().getCurrentGame().getDialogs().size(); lastMessage++) {
+                            Entry<String, io.github.some_example_name.common.model.Actor> dialog = App.getInstance().getCurrentGame().getDialogs().get(lastMessage);
+                            addMessage(dialog, currentPlayer, skin, inventory);
+                        }
+                    }
                 }
 
                 super.act(delta);
@@ -158,5 +128,27 @@ public class TalkMenu extends PopUp {
                 scrollPane.setScrollY(scrollY == null ? scrollPane.getMaxY() : Math.max(0, scrollY));
             }
         }, 0.2f);
+    }
+
+    private void addMessage(Entry<String, io.github.some_example_name.common.model.Actor> dialog, Player currentPlayer, Skin skin, Table inventory) {
+        boolean isGifting = dialog.getValue() == currentPlayer;
+        Table giftTable = new Table(skin);
+        Table rowWrapper = new Table();
+        for (String line : wrapString(dialog.getKey(), 20)) {
+            giftTable.add(new Label(line, skin));
+            if (!isGifting) giftTable.right();
+            giftTable.row();
+        }
+
+        if (isGifting) {
+            rowWrapper.add(giftTable).left().expandX();
+            rowWrapper.add();
+            rowWrapper.add();
+        } else {
+            rowWrapper.add();
+            rowWrapper.add(giftTable).right().expandX();
+            rowWrapper.add(new Image(dialog.getValue().getAvatar())).size(64);
+        }
+        inventory.add(rowWrapper).padRight(10).expandX().fillX().row();
     }
 }
