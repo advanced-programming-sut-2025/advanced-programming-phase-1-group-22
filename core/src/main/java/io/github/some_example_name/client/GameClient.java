@@ -50,7 +50,6 @@ public class GameClient {
     private final ClientService service = new ClientService();
     private final AtomicReference<TerminateMenu> terminateMenu = new AtomicReference<>();
     private final AtomicReference<FireMenu> fireMenu = new AtomicReference<>();
-    private final ObjectMapper objectMapper = new ObjectMapper();
 
     public static GameClient getInstance() {
         if (instance == null) {
