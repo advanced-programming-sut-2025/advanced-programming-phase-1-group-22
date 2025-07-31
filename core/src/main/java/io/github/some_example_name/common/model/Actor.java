@@ -19,4 +19,6 @@ public abstract class Actor extends Structure {
         if (obj.getClass() != this.getClass()) return false;
         return getName().equals(((Actor) obj).getName());
     }
+
+    public abstract String getNickname();
 }

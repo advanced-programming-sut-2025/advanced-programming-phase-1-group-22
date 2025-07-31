@@ -90,6 +90,10 @@ public class NotificationMenu extends PopUp {
                                 TradeHistoryMenu menu = new TradeHistoryMenu();
                                 menu.createMenu(stage, skin, getController());
                             } break;
+                            case MENTION: {
+                                PublicChatMenu menu = new PublicChatMenu();
+                                menu.createMenu(stage, skin, getController());
+                            }
                             case MARRIAGE: {
                                 //todo
                             }

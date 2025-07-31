@@ -301,6 +301,11 @@ public class GameClient {
                                 body.get("count").getAsInt(),
                                 body.get("shouldRespond").getAsBoolean()
                             );
+                        }  else if (obj.get("action").getAsString().equals("_send_public")) {
+                            App.getInstance().getCurrentGame().addPublicMessage(
+                                service.getPlayerByUsername(obj.get("id").getAsString()),
+                                body.get("message").getAsString()
+                            );
                         } else if (obj.get("action").getAsString().equals("notify")) {
                             Actor source = null;
                             if (body.get("isFromPlayer").getAsBoolean()) {
@@ -1328,6 +1333,22 @@ public class GameClient {
                     key == null ? "price" : "salable", key == null ? "" : encodeObject(key),
                     "count", value
                 )
+            );
+            out.println(GSON.toJson(msg));
+        } catch (IOException e) {
+            debug(e);
+        }
+    }
+
+    public void sendPublic(String message) {
+        try {
+            out = new PrintWriter(socket.getOutputStream(), true);
+            in  = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+            Map<String, Object> msg = Map.of(
+                "action", "_send_public",
+                "id", Session.getCurrentUser().getUsername(),
+                "body", Map.of("message", message)
             );
             out.println(GSON.toJson(msg));
         } catch (IOException e) {
