@@ -22,7 +22,8 @@ public class Account {
             if (player1.getAccount() == this) player = player1;
         }
         if (player != null) {
-            if (player.getCouple() != null) GameClient.getInstance().setGolds(count, player.getCouple().getUser().getUsername());
+            if (player.getCouple() != null)
+                GameClient.getInstance().setGolds(count, player.getCouple().getUser().getUsername());
             setGoldsByServer(count);
         }
     }
