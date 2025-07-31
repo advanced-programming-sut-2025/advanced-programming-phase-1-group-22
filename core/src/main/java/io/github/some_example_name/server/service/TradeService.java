@@ -311,6 +311,7 @@ public class TradeService {
                             return;
                         }
                         trade.getCustomer().getAccount().setGolds(trade.getCustomer().getAccount().getGolds() - trade.getPrice());
+                        GameClient.getInstance().updatePlayerGold(trade.getCustomer());
                         GameClient.getInstance().sendTrade(trade.getCustomer(), trade, trade.getPrice(), null, true);
                     } else {
                         Map.Entry<Salable, Integer> itemFromInventory1 = trade.getCustomer().getItemFromInventory(trade.getRequiredItem());
@@ -353,6 +354,7 @@ public class TradeService {
                 currentPlayer = App.getInstance().getCurrentGame().getCurrentPlayer();
                 if (salable == null) {
                     currentPlayer.getAccount().setGolds(currentPlayer.getAccount().getGolds() + count);
+                    GameClient.getInstance().updatePlayerGold(currentPlayer);
                 } else {
                     currentPlayer.getInventory().addProductToBackPack(salable, count);
                 }
@@ -360,6 +362,7 @@ public class TradeService {
                     if (trade.getCustomer().equals(currentPlayer)) {
                         if (trade.getPrice() != null) {
                             trade.getCustomer().getAccount().setGolds(trade.getCustomer().getAccount().getGolds() - trade.getPrice());
+                            GameClient.getInstance().updatePlayerGold(trade.getCustomer());
                             trade.setIsAnswered(true);
                             trade.setIsSuccessfulled(true);
                             relationService.changeFriendShipLevelUp(relationService.getFriendShipBetweenTwoActors(trade.getTrader(), trade.getCustomer()), 50);
