@@ -4,11 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d95100ff-6e61-4571-9e87-dcef3d963dba" name="Changes" comment="complete DC reconnect">
+    <list default="true" id="d95100ff-6e61-4571-9e87-dcef3d963dba" name="Changes" comment="change crow attack">
+      <change afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/common/JsonMessageHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/build/libs/core-1.0.0.jar" beforeDir="false" afterPath="$PROJECT_DIR$/core/build/libs/core-1.0.0.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/client/controller/CrowAttackController.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/client/controller/CrowAttackController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/client/service/ClientService.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/client/service/ClientService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/client/GameClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/client/GameClient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/server/ClientHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/server/ClientHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/server/model/GameServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/server/model/GameServer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/server/service/ServerService.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/github/some_example_name/server/service/ServerService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -224,14 +227,6 @@
       <workItem from="1753437821215" duration="14591000" />
       <workItem from="1753572312868" duration="181000" />
       <workItem from="1753609176199" duration="6869000" />
-    </task>
-    <task id="LOCAL-00021" summary="added Scrolling">
-      <option name="closed" value="true" />
-      <created>1751668528828</created>
-      <option name="number" value="00021" />
-      <option name="presentableId" value="LOCAL-00021" />
-      <option name="project" value="LOCAL" />
-      <updated>1751668528828</updated>
     </task>
     <task id="LOCAL-00022" summary="implemented gift menu">
       <option name="closed" value="true" />
@@ -617,7 +612,15 @@
       <option name="project" value="LOCAL" />
       <updated>1753899718676</updated>
     </task>
-    <option name="localTasksCounter" value="70" />
+    <task id="LOCAL-00070" summary="change crow attack">
+      <option name="closed" value="true" />
+      <created>1753923666976</created>
+      <option name="number" value="00070" />
+      <option name="presentableId" value="LOCAL-00070" />
+      <option name="project" value="LOCAL" />
+      <updated>1753923666976</updated>
+    </task>
+    <option name="localTasksCounter" value="71" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -635,7 +638,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="tidy up pause menus" />
     <MESSAGE value="tidy up gifts menus" />
     <MESSAGE value="tidy up talk menu" />
     <MESSAGE value="tidy up some Menus" />
@@ -660,7 +662,8 @@
     <MESSAGE value="debug MultiMission" />
     <MESSAGE value="add DC termination" />
     <MESSAGE value="complete DC reconnect" />
-    <option name="LAST_COMMIT_MESSAGE" value="complete DC reconnect" />
+    <MESSAGE value="change crow attack" />
+    <option name="LAST_COMMIT_MESSAGE" value="change crow attack" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
