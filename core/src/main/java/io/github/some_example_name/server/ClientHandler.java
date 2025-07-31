@@ -33,6 +33,7 @@ public class ClientHandler extends Thread {
     private BufferedReader in;
     private boolean dead = false;
     private boolean ready = false;
+    private boolean running = true;
     private boolean inFavor = false;
     private GameServer gameServer;
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -53,7 +54,7 @@ public class ClientHandler extends Thread {
             in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             out = new PrintWriter(clientSocket.getOutputStream(), true);
             String message;
-            while ((message = in.readLine()) != null) {
+            while (running && (message = in.readLine()) != null) {
                 try {
                     JsonObject obj = JsonParser.parseString(message).getAsJsonObject();
 
@@ -121,12 +122,7 @@ public class ClientHandler extends Thread {
                     } else if (obj.get("action").getAsString().equals("continue_termination")) {
                         inFavor = true;
                         if (gameServer.isMajority()) {
-                            Map<String, Object> msg = Map.of(
-                                "action", "terminate_game",
-                                "id", "!server!",
-                                "body", Map.of()
-                            );
-                            gameServer.sendAll(GSON.toJson(msg));
+                            gameServer.terminate();
                         }
                     } else if (obj.get("action").getAsString().equals("propose_fire")) {
                         gameServer.clearFavors();

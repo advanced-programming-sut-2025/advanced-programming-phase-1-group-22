@@ -1,6 +1,8 @@
 package io.github.some_example_name.server.model;
 
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import io.github.some_example_name.client.service.ClientService;
 import io.github.some_example_name.common.model.Entry;
 import io.github.some_example_name.server.ClientHandler;
@@ -8,9 +10,11 @@ import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 @Getter
 public class GameServer {
+    private static final Gson GSON = new GsonBuilder().serializeNulls().create();
     private final ArrayList<Entry<ServerPlayer, ClientHandler>> clients = new ArrayList<>();
 
     public boolean isReady() {
@@ -83,5 +87,24 @@ public class GameServer {
             if (client.getKey().username.equals(player)) return client.getValue();
         }
         return null;
+    }
+
+    public void terminate() {
+        Map<String, Object> msg = Map.of(
+            "action", "terminate_game",
+            "id", "!server!",
+            "body", Map.of()
+        );
+        sendAll(GSON.toJson(msg));
+        for (Entry<ServerPlayer, ClientHandler> client : clients) {
+            client.getValue().setRunning(false);
+        }
+        clients.clear();
+        for (Map.Entry<Integer, GameServer> entry : GameThread.getInstance().getGames().entrySet()) {
+            if (entry.getValue() == this) {
+                GameThread.getInstance().getGames().remove(entry.getKey());
+                break;
+            }
+        }
     }
 }
