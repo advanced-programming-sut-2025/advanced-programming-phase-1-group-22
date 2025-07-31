@@ -72,7 +72,8 @@ public enum CarpenterShopMineralStuff implements Shop {
         GameClient.getInstance().updatePlayerGold(player);
 		salable.dailySold += count;
 		player.getInventory().addProductToBackPack(new Mineral(salable.mineralType), count);
-		return new Response("Bought successfully", true);
+        GameClient.getInstance().updatePlayerAddToInventory(player,new Mineral(salable.mineralType),count);
+        return new Response("Bought successfully", true);
 	}
 
 	public void resetDailySold() {

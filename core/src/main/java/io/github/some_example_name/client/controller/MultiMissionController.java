@@ -26,29 +26,35 @@ public class MultiMissionController {
 
     private boolean haveEnough(Player player, Salable salable, int amount) {
         int sum = 0;
-        for (Map.Entry<Salable, Integer> salableIntegerEntry : player.getInventory().getProducts().entrySet()) {
-            if (salableIntegerEntry.getKey().getClass().equals(salable.getClass())) {
-                sum += salableIntegerEntry.getValue();
+        synchronized (player.getInventory().getProducts()) {
+            for (Map.Entry<Salable, Integer> salableIntegerEntry : player.getInventory().getProducts().entrySet()) {
+                if (salableIntegerEntry.getKey().getClass().equals(salable.getClass())) {
+                    sum += salableIntegerEntry.getValue();
+                }
             }
         }
         return sum >= amount;
     }
 
     private void deleteProduct(Player player, Salable salable, int amount) {
-        List<Map.Entry<Salable, Integer>> entries =
-            new ArrayList<>(player.getInventory().getProducts().entrySet());
+        synchronized (player.getInventory().getProducts()) {
+            List<Map.Entry<Salable, Integer>> entries =
+                new ArrayList<>(player.getInventory().getProducts().entrySet());
 
-        for (Map.Entry<Salable, Integer> entry : entries) {
-            if (entry.getKey().getClass().equals(salable.getClass())) {
-                if (amount == 0) break;
+            for (Map.Entry<Salable, Integer> entry : entries) {
+                if (entry.getKey().getClass().equals(salable.getClass())) {
+                    if (amount == 0) break;
 
-                int currentAmount = entry.getValue();
-                if (amount <= currentAmount) {
-                    player.getInventory().deleteProductFromBackPack(entry.getKey(), player, amount);
-                    break;
-                } else {
-                    player.getInventory().deleteProductFromBackPack(entry.getKey(), player, currentAmount);
-                    amount -= currentAmount;
+                    int currentAmount = entry.getValue();
+                    if (amount <= currentAmount) {
+                        player.getInventory().deleteProductFromBackPack(entry.getKey(), player, amount);
+                        GameClient.getInstance().updatePlayerDeleteFromInventory(player, entry.getKey(), amount);
+                        break;
+                    } else {
+                        player.getInventory().deleteProductFromBackPack(entry.getKey(), player, currentAmount);
+                        GameClient.getInstance().updatePlayerDeleteFromInventory(player, entry.getKey(), amount);
+                        amount -= currentAmount;
+                    }
                 }
             }
         }

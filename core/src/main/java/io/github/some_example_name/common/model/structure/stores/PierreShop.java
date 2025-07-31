@@ -1,6 +1,7 @@
 package io.github.some_example_name.common.model.structure.stores;
 
 import io.github.some_example_name.client.GameClient;
+import io.github.some_example_name.common.model.source.Mineral;
 import lombok.Getter;
 import io.github.some_example_name.common.model.Salable;
 import io.github.some_example_name.common.model.enums.Season;
@@ -351,6 +352,7 @@ public enum PierreShop implements Shop {
         }
         if (item == null) throw new InvalidInputException("Item not found in pierreShop");
         player.getInventory().addProductToBackPack(item, count);
+        GameClient.getInstance().updatePlayerAddToInventory(player,item,count);
         return new Response(item.getName() + " bought successfully", true);
     }
 

@@ -73,7 +73,7 @@ public class GameClient {
         }
     }
 
-    public void DCReconnect(String username){
+    public void DCReconnect(String username) {
         try {
             out = new PrintWriter(socket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -190,6 +190,27 @@ public class GameClient {
                             int position_Y = body.get("position_y").getAsInt();
                             Direction direction = Direction.values()[body.get("direction").getAsInt()];
                             service.handleUpdatePosition(username, position_x, position_Y, direction);
+                        } else if (obj.get("action").getAsString().equals("=update_player_energy")) {
+                            String username = obj.get("id").getAsString();
+                            int energy = body.get("energy").getAsInt();
+                            int maxEnergy = body.get("maxEnergy").getAsInt();
+                            boolean isEnergyUnlimited = body.get("energyIsInfinite").getAsBoolean();
+                            service.handlePlayerEnergy(username, energy, maxEnergy, isEnergyUnlimited);
+                        } else if (obj.get("action").getAsString().equals("=update_player_add_to_inventory")) {
+                            String username = obj.get("id").getAsString();
+                            int amount = obj.get("amount").getAsInt();
+                            Object salable = decodeObject(body);
+                            service.handleAddToInventory(username, (Salable) salable, amount);
+                        } else if (obj.get("action").getAsString().equals("=update_player_delete_from_inventory")) {
+                            String username = obj.get("id").getAsString();
+                            int amount = obj.get("amount").getAsInt();
+                            Object salable = decodeObject(body);
+                            service.handleDeleteFromInventory(username, (Salable) salable, amount);
+                        } else if (obj.get("action").getAsString().equals("=update_player_just_delete_from_inventory")) {
+                            String username = obj.get("id").getAsString();
+                            int amount = obj.get("amount").getAsInt();
+                            Object salable = decodeObject(body);
+                            service.handleJustDeleteFromInventory(username, (Salable) salable, amount);
                         } else if (obj.get("action").getAsString().equals("=update_tile")) {
                             JsonObject tileObject = body.get("tile").getAsJsonObject();
                             Tile tile = GSON.fromJson(tileObject, Tile.class);
@@ -376,10 +397,10 @@ public class GameClient {
                                 MainGradle.getInstance().initialMenu();
                             });
                             //TODO transfer to lobby
-                        } else if (obj.get("action").getAsString().equals("update_player_connection")){
+                        } else if (obj.get("action").getAsString().equals("update_player_connection")) {
                             String username = obj.get("id").getAsString();
                             service.handlePlayerReConnect(username);
-                        } else if (obj.get("action").getAsString().equals("finish_reconnect")){
+                        } else if (obj.get("action").getAsString().equals("finish_reconnect")) {
                             StartGameMenuController.getInstance().setReconnect(false);
                         }
                     } catch (JsonParseException e) {
@@ -486,6 +507,74 @@ public class GameClient {
                 "id", player.getUser().getUsername(),
                 "body", Map.of("position_x", player.getTiles().get(0).getX(),
                     "position_y", player.getTiles().get(0).getY(), "direction", player.getDirection().ordinal())
+            );
+            out.println(GSON.toJson(msg));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updatePlayerEnergy(Player player) {
+        try {
+            out = new PrintWriter(socket.getOutputStream(), true);
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+            Map<String, Object> msg = Map.of(
+                "action", "=update_player_energy",
+                "id", player.getUser().getUsername(),
+                "body", Map.of("energy", player.getEnergy(),
+                    "energyIsInfinite", player.getEnergyIsInfinite(), "maxEnergy", player.getMaxEnergy())
+            );
+            out.println(GSON.toJson(msg));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updatePlayerAddToInventory(Player player, Salable salable, int amount) {
+        try {
+            out = new PrintWriter(socket.getOutputStream(), true);
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+            Map<String, Object> msg = Map.of(
+                "action", "=update_player_add_to_inventory",
+                "id", player.getUser().getUsername(),
+                "amount", amount,
+                "body", encodeObject(salable)
+            );
+            out.println(GSON.toJson(msg));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updatePlayerDeleteFromInventory(Player player, Salable salable, int amount) {
+        try {
+            out = new PrintWriter(socket.getOutputStream(), true);
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+            Map<String, Object> msg = Map.of(
+                "action", "=update_player_delete_from_inventory",
+                "id", player.getUser().getUsername(),
+                "amount", amount,
+                "body", encodeObject(salable)
+            );
+            out.println(GSON.toJson(msg));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updatePlayerJustDeleteFromInventory(Player player, Salable salable, int amount) {
+        try {
+            out = new PrintWriter(socket.getOutputStream(), true);
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+            Map<String, Object> msg = Map.of(
+                "action", "=update_player_just_delete_from_inventory",
+                "id", player.getUser().getUsername(),
+                "amount", amount,
+                "body", encodeObject(salable)
             );
             out.println(GSON.toJson(msg));
         } catch (IOException e) {

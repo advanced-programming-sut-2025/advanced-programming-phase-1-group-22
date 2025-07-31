@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import io.github.some_example_name.client.GameClient;
 import io.github.some_example_name.common.model.StructureUpdateState;
+import io.github.some_example_name.common.model.source.Mineral;
 import io.github.some_example_name.common.utils.GameAsset;
 import lombok.Getter;
 import io.github.some_example_name.common.model.relations.Player;
@@ -87,7 +88,8 @@ public enum Shear implements Tool {
 						AnimalProduct animalProduct = currentAnimal.getTodayProduct();
 						if (player.getInventory().isInventoryHaveCapacity(animalProduct)) {
 							player.getInventory().addProductToBackPack(animalProduct, 1);
-							currentAnimal.setTodayProduct(null);
+                            GameClient.getInstance().updatePlayerAddToInventory(player,animalProduct,1);
+                            currentAnimal.setTodayProduct(null);
 							currentAnimal.changeFriendShip(5);
                             GameClient.getInstance().updateStructureState(currentAnimal, StructureUpdateState.UPDATE,true,currentAnimal.getTiles().get(0));
 							return "you collect produce of " + currentAnimal.getName() + ": " + animalProduct.getName() +

@@ -189,7 +189,9 @@ public class CameraViewController {
 
     private void updateInventoryBar(){
         Player player = App.getInstance().getCurrentGame().getCurrentPlayer();
-        items = new ArrayList<>(player.getInventory().getProducts().keySet());
+        synchronized (player.getInventory().getProducts()){
+            items = new ArrayList<>(player.getInventory().getProducts().keySet());
+        }
 
         boolean flag = true;
         for (int i = 0; i < itemStacks.size(); i++) {
@@ -201,29 +203,31 @@ public class CameraViewController {
                 Salable item = items.get(i);
                 Image itemImage = new Image(item.getTexture());
                 itemImage.setSize(90, 90);
-                Container<Label> labelContainer = PopUp.getLabelContainer(player.getInventory().getProducts(), item);
-                if (item.equals(player.getCurrentCarrying())) {
-                    itemImage.setColor(1f,1f, 1f,1f);
-                    flag = false;
-                }
-                else itemImage.setColor(1f,1f,1f,0.5f);
-                if (item instanceof WateringCan wateringCan) {
-                    ProgressBar progressBar = new ProgressBar(0, wateringCan.getWateringCanType().getCapacity(), 1, false, GameAsset.SKIN);
-                    progressBar.setValue(wateringCan.getRemain());
-                    progressBar.setAnimateDuration(0.2f);
-                    progressBar.setSize(80, 5);
-                    progressBar.setTouchable(Touchable.disabled);
-                    progressBar.setColor(Color.BLUE);
+                synchronized (player.getInventory().getProducts()){
+                    Container<Label> labelContainer = PopUp.getLabelContainer(player.getInventory().getProducts(), item);
+                    if (item.equals(player.getCurrentCarrying())) {
+                        itemImage.setColor(1f,1f, 1f,1f);
+                        flag = false;
+                    }
+                    else itemImage.setColor(1f,1f,1f,0.5f);
+                    if (item instanceof WateringCan wateringCan) {
+                        ProgressBar progressBar = new ProgressBar(0, wateringCan.getWateringCanType().getCapacity(), 1, false, GameAsset.SKIN);
+                        progressBar.setValue(wateringCan.getRemain());
+                        progressBar.setAnimateDuration(0.2f);
+                        progressBar.setSize(80, 5);
+                        progressBar.setTouchable(Touchable.disabled);
+                        progressBar.setColor(Color.BLUE);
 
-                    Table group = new Table();
-                    group.add(itemImage).size(90, 90).row();
-                    group.add(progressBar).width(80).height(8).padTop(4);
+                        Table group = new Table();
+                        group.add(itemImage).size(90, 90).row();
+                        group.add(progressBar).width(80).height(8).padTop(4);
 
-                    stack.add(group);
-                    stack.add(labelContainer);
-                }else {
-                    stack.add(itemImage);
-                    stack.add(labelContainer);
+                        stack.add(group);
+                        stack.add(labelContainer);
+                    }else {
+                        stack.add(itemImage);
+                        stack.add(labelContainer);
+                    }
                 }
             }
         }
@@ -366,29 +370,35 @@ public class CameraViewController {
             };
             for (int i = 0; i < shortcuts.length; i++) {
                 if (Gdx.input.isKeyJustPressed(shortcuts[i])) {
-                    if (i < player.getInventory().getProducts().size()) {
-                        player.setCurrentCarrying(items.get(i));
-                        GameClient.getInstance().updatePlayerCarryingObject(player);
-                        currentToolIndex = i;
+                    synchronized (player.getInventory().getProducts()){
+                        if (i < player.getInventory().getProducts().size()) {
+                            player.setCurrentCarrying(items.get(i));
+                            GameClient.getInstance().updatePlayerCarryingObject(player);
+                            currentToolIndex = i;
+                        }
                     }
                 }
             }
             if (Gdx.input.isKeyJustPressed(Input.Keys.TAB)) {
                 if (currentToolIndex == null) currentToolIndex = -1;
-                player.setCurrentCarrying(items.get(++currentToolIndex % Math.min(12, player.getInventory().getProducts().size())));
+                synchronized (player.getInventory().getProducts()){
+                    player.setCurrentCarrying(items.get(++currentToolIndex % Math.min(12, player.getInventory().getProducts().size())));
+                }
                 GameClient.getInstance().updatePlayerCarryingObject(player);
             }
             if (GameView.scrollY != 0) {
-                int mod = Math.min(12, player.getInventory().getProducts().size());
-                if (mod != 0) {
-                    if (currentToolIndex == null) currentToolIndex = GameView.scrollY > 0 ? mod - 1 : 0;
-                    currentToolIndex += (int) Math.ceil(GameView.scrollY / 3);
-                    currentToolIndex %= mod;
-                    currentToolIndex += mod;
-                    currentToolIndex %= mod;
-                    player.setCurrentCarrying(items.get(currentToolIndex));
-                    GameClient.getInstance().updatePlayerCarryingObject(player);
-                    GameView.scrollY = 0;
+                synchronized (player.getInventory().getProducts()){
+                    int mod = Math.min(12, player.getInventory().getProducts().size());
+                    if (mod != 0) {
+                        if (currentToolIndex == null) currentToolIndex = GameView.scrollY > 0 ? mod - 1 : 0;
+                        currentToolIndex += (int) Math.ceil(GameView.scrollY / 3);
+                        currentToolIndex %= mod;
+                        currentToolIndex += mod;
+                        currentToolIndex %= mod;
+                        player.setCurrentCarrying(items.get(currentToolIndex));
+                        GameClient.getInstance().updatePlayerCarryingObject(player);
+                        GameView.scrollY = 0;
+                    }
                 }
             }
         }

@@ -31,6 +31,32 @@ public class ClientService {
         }, 0.2f);
     }
 
+    public void handlePlayerEnergy(String username, int energy, int maxEnergy, boolean isFinite) {
+        Player player = getPlayerByUsername(username);
+        if (player == null) return;
+        player.setEnergy(energy);
+        player.setMaxEnergy(maxEnergy);
+        player.setEnergyIsInfinite(isFinite);
+    }
+
+    public void handleAddToInventory(String username, Salable salable, int amount) {
+        Player player = getPlayerByUsername(username);
+        if (player == null) return;
+        player.getInventory().addProductToBackPack(salable, amount);
+    }
+
+    public void handleDeleteFromInventory(String username, Salable salable, int amount) {
+        Player player = getPlayerByUsername(username);
+        if (player == null) return;
+        player.getInventory().deleteProductFromBackPack(salable, player, amount);
+    }
+
+    public void handleJustDeleteFromInventory(String username, Salable salable, int amount) {
+        Player player = getPlayerByUsername(username);
+        if (player == null) return;
+        player.getInventory().justDelete(salable, amount);
+    }
+
     public void updateTileState(Tile tile) {
         for (Tile[] tiles : App.getInstance().getCurrentGame().tiles) {
             for (Tile tile1 : tiles) {
@@ -137,14 +163,14 @@ public class ClientService {
         });
     }
 
-    public void handleDCPlayer(String username,long time){
+    public void handleDCPlayer(String username, long time) {
         Player player = getPlayerByUsername(username);
         if (player == null) return;
         if (!App.getInstance().getCurrentGame().getDCPlayers().containsKey(player))
-            App.getInstance().getCurrentGame().getDCPlayers().put(player,time);
+            App.getInstance().getCurrentGame().getDCPlayers().put(player, time);
     }
 
-    public void handlePlayerReConnect(String username){
+    public void handlePlayerReConnect(String username) {
         Player player = getPlayerByUsername(username);
         if (player == null) return;
         App.getInstance().getCurrentGame().getDCPlayers().remove(player);

@@ -135,68 +135,70 @@ public class InventoryMenu extends PopUp {
 
     private void refreshInventory(Stage stage, Table inventory, Player player, Texture slotTexture, Player currentPlayer, ImageButton trashCan, ScrollPane scrollPane) {
         inventory.clear();
-        java.util.List<Salable> items = new ArrayList<>(player.getInventory().getProducts().keySet());
-        int maxCol = 12;
-        int maxRow;
-        BackPack backPack = App.getInstance().getCurrentGame().getCurrentPlayer().getInventory();
-        if (backPack.getBackPackType().getIsInfinite()) {
-            maxRow = Math.max(5, backPack.getProducts().size() / maxCol + 1);
-        } else {
-            maxRow = (int) Math.ceil((double) backPack.getBackPackType().getCapacity() / maxCol);
-        }
-
-        for (int row = 0; row < maxRow; row++) {
-            for (int col = 0; col < maxCol; col++) {
-                Image slot = new Image(slotTexture);
-                int index = row * maxCol + col;
-
-                if (index < items.size()) {
-                    Salable item = items.get(index);
-                    Image itemImage = new Image(item.getTexture());
-                    itemImage.setSize(90, 90);
-                    ArrayList<ScrollPane> list = new ArrayList<>();
-                    list.add(scrollPane);
-                    addDrag(itemImage, stage, currentPlayer, item, list, true);
-                    itemImage.addListener(new ClickListener() {
-                        @Override
-                        public void clicked(InputEvent event, float x, float y) {
-                            if (getTapCount() == 2) {
-                                currentPlayer.setCurrentCarrying(item);
-                                GameClient.getInstance().updatePlayerCarryingObject(currentPlayer);
-                                refreshInventory(stage, inventory, currentPlayer, slotTexture, currentPlayer, trashCan, scrollPane);
-                            }
-                        }
-                    });
-                    Container<Label> labelContainer = getLabelContainer(currentPlayer.getInventory().getProducts(), item);
-                    if (item == currentPlayer.getCurrentCarrying()) itemImage.setColor(1, 1, 1, 1f);
-                    else itemImage.setColor(1, 1, 1, 0.5f);
-                    Stack stack = new Stack();
-                    if (item instanceof WateringCan wateringCan) {
-                        ProgressBar progressBar = new ProgressBar(0, wateringCan.getWateringCanType().getCapacity(), 1, false, skin);
-                        progressBar.setValue(wateringCan.getRemain());
-                        progressBar.setAnimateDuration(0.2f);
-                        progressBar.setSize(80, 5);
-                        progressBar.setTouchable(Touchable.disabled);
-                        progressBar.setColor(Color.BLUE);
-
-                        Table group = new Table();
-                        group.add(itemImage).size(90, 90).row();
-                        group.add(progressBar).width(80).height(8).padTop(4);
-
-                        stack.add(slot);
-                        stack.add(group);
-                        stack.add(labelContainer);
-                    } else {
-                        stack.add(slot);
-                        stack.add(itemImage);
-                        stack.add(labelContainer);
-                    }
-                    inventory.add(stack).size(96, 96);
-                } else {
-                    inventory.add(slot).size(96, 96);
-                }
+        synchronized (player.getInventory().getProducts()) {
+            java.util.List<Salable> items = new ArrayList<>(player.getInventory().getProducts().keySet());
+            int maxCol = 12;
+            int maxRow;
+            BackPack backPack = App.getInstance().getCurrentGame().getCurrentPlayer().getInventory();
+            if (backPack.getBackPackType().getIsInfinite()) {
+                maxRow = Math.max(5, backPack.getProducts().size() / maxCol + 1);
+            } else {
+                maxRow = (int) Math.ceil((double) backPack.getBackPackType().getCapacity() / maxCol);
             }
-            inventory.row();
+
+            for (int row = 0; row < maxRow; row++) {
+                for (int col = 0; col < maxCol; col++) {
+                    Image slot = new Image(slotTexture);
+                    int index = row * maxCol + col;
+
+                    if (index < items.size()) {
+                        Salable item = items.get(index);
+                        Image itemImage = new Image(item.getTexture());
+                        itemImage.setSize(90, 90);
+                        ArrayList<ScrollPane> list = new ArrayList<>();
+                        list.add(scrollPane);
+                        addDrag(itemImage, stage, currentPlayer, item, list, true);
+                        itemImage.addListener(new ClickListener() {
+                            @Override
+                            public void clicked(InputEvent event, float x, float y) {
+                                if (getTapCount() == 2) {
+                                    currentPlayer.setCurrentCarrying(item);
+                                    GameClient.getInstance().updatePlayerCarryingObject(currentPlayer);
+                                    refreshInventory(stage, inventory, currentPlayer, slotTexture, currentPlayer, trashCan, scrollPane);
+                                }
+                            }
+                        });
+                        Container<Label> labelContainer = getLabelContainer(currentPlayer.getInventory().getProducts(), item);
+                        if (item == currentPlayer.getCurrentCarrying()) itemImage.setColor(1, 1, 1, 1f);
+                        else itemImage.setColor(1, 1, 1, 0.5f);
+                        Stack stack = new Stack();
+                        if (item instanceof WateringCan wateringCan) {
+                            ProgressBar progressBar = new ProgressBar(0, wateringCan.getWateringCanType().getCapacity(), 1, false, skin);
+                            progressBar.setValue(wateringCan.getRemain());
+                            progressBar.setAnimateDuration(0.2f);
+                            progressBar.setSize(80, 5);
+                            progressBar.setTouchable(Touchable.disabled);
+                            progressBar.setColor(Color.BLUE);
+
+                            Table group = new Table();
+                            group.add(itemImage).size(90, 90).row();
+                            group.add(progressBar).width(80).height(8).padTop(4);
+
+                            stack.add(slot);
+                            stack.add(group);
+                            stack.add(labelContainer);
+                        } else {
+                            stack.add(slot);
+                            stack.add(itemImage);
+                            stack.add(labelContainer);
+                        }
+                        inventory.add(stack).size(96, 96);
+                    } else {
+                        inventory.add(slot).size(96, 96);
+                    }
+                }
+                inventory.row();
+            }
         }
     }
 
@@ -240,74 +242,76 @@ public class InventoryMenu extends PopUp {
 
         int maxCol = 12;
         int maxRow;
-        BackPack backPack = App.getInstance().getCurrentGame().getCurrentPlayer().getInventory();
-        if (backPack.getBackPackType().getIsInfinite()) {
-            maxRow = Math.max(5, backPack.getProducts().size() / maxCol + 1);
-        } else {
-            maxRow = (int) Math.ceil((double) backPack.getBackPackType().getCapacity() / maxCol);
-        }
-
-        for (int row = 0; row < maxRow; row++) {
-            for (int col = 0; col < maxCol; col++) {
-                Image slot = new Image(slotTexture);
-
-                int index = row * maxCol + col;
-                if (index < currentPlayer.getInventory().getProducts().size()) {
-                    java.util.List<Salable> items = new ArrayList<>(currentPlayer.getInventory().getProducts().keySet());
-                    Salable item = items.get(index);
-                    Image itemImage = new Image(item.getTexture());
-                    ArrayList<ScrollPane> list = new ArrayList<>();
-                    list.add(scrollPane);
-                    addDrag(itemImage, stage, currentPlayer, item, list, true);
-                    itemImage.addListener(new ClickListener() {
-                        @Override
-                        public void clicked(InputEvent event, float x, float y) {
-                            if (getTapCount() == 2) {
-                                currentPlayer.setCurrentCarrying(item);
-                                GameClient.getInstance().updatePlayerCarryingObject(currentPlayer);
-                                refreshInventory(stage, inventory, currentPlayer, slotTexture, currentPlayer, trashCan, scrollPane);
-                            }
-                        }
-                    });
-                    int count = currentPlayer.getInventory().getProducts().get(item);
-                    Label countLabel = new Label(String.valueOf(count), skin);
-                    countLabel.setFontScale(0.7f);
-                    countLabel.setAlignment(Align.right);
-                    countLabel.setColor(Color.GREEN);
-                    Container<Label> labelContainer = new Container<>(countLabel);
-                    labelContainer.setFillParent(false);
-                    labelContainer.setSize(30, 20);
-                    labelContainer.setPosition(66, 5);
-                    if (item == currentPlayer.getCurrentCarrying()) itemImage.setColor(1, 1, 1, 1f);
-                    else itemImage.setColor(1, 1, 1, 0.5f);
-                    itemImage.setSize(90, 90);
-                    Stack stack = new Stack();
-                    if (item instanceof WateringCan wateringCan) {
-                        ProgressBar progressBar = new ProgressBar(0, wateringCan.getWateringCanType().getCapacity(), 1, false, skin);
-                        progressBar.setValue(wateringCan.getRemain());
-                        progressBar.setAnimateDuration(0.2f);
-                        progressBar.setSize(80, 5);
-                        progressBar.setTouchable(Touchable.disabled);
-                        progressBar.setColor(Color.BLUE);
-
-                        Table group = new Table();
-                        group.add(itemImage).size(90, 90).row();
-                        group.add(progressBar).width(80).height(8).padTop(4);
-
-                        stack.add(slot);
-                        stack.add(group);
-                        stack.add(labelContainer);
-                    } else {
-                        stack.add(slot);
-                        stack.add(itemImage);
-                        stack.add(labelContainer);
-                    }
-                    inventory.add(stack).size(96, 96);
-                } else {
-                    inventory.add(slot).size(96, 96);
-                }
+        synchronized (currentPlayer.getInventory().getProducts()) {
+            BackPack backPack = App.getInstance().getCurrentGame().getCurrentPlayer().getInventory();
+            if (backPack.getBackPackType().getIsInfinite()) {
+                maxRow = Math.max(5, backPack.getProducts().size() / maxCol + 1);
+            } else {
+                maxRow = (int) Math.ceil((double) backPack.getBackPackType().getCapacity() / maxCol);
             }
-            inventory.row();
+
+            for (int row = 0; row < maxRow; row++) {
+                for (int col = 0; col < maxCol; col++) {
+                    Image slot = new Image(slotTexture);
+
+                    int index = row * maxCol + col;
+                    if (index < currentPlayer.getInventory().getProducts().size()) {
+                        java.util.List<Salable> items = new ArrayList<>(currentPlayer.getInventory().getProducts().keySet());
+                        Salable item = items.get(index);
+                        Image itemImage = new Image(item.getTexture());
+                        ArrayList<ScrollPane> list = new ArrayList<>();
+                        list.add(scrollPane);
+                        addDrag(itemImage, stage, currentPlayer, item, list, true);
+                        itemImage.addListener(new ClickListener() {
+                            @Override
+                            public void clicked(InputEvent event, float x, float y) {
+                                if (getTapCount() == 2) {
+                                    currentPlayer.setCurrentCarrying(item);
+                                    GameClient.getInstance().updatePlayerCarryingObject(currentPlayer);
+                                    refreshInventory(stage, inventory, currentPlayer, slotTexture, currentPlayer, trashCan, scrollPane);
+                                }
+                            }
+                        });
+                        int count = currentPlayer.getInventory().getProducts().get(item);
+                        Label countLabel = new Label(String.valueOf(count), skin);
+                        countLabel.setFontScale(0.7f);
+                        countLabel.setAlignment(Align.right);
+                        countLabel.setColor(Color.GREEN);
+                        Container<Label> labelContainer = new Container<>(countLabel);
+                        labelContainer.setFillParent(false);
+                        labelContainer.setSize(30, 20);
+                        labelContainer.setPosition(66, 5);
+                        if (item == currentPlayer.getCurrentCarrying()) itemImage.setColor(1, 1, 1, 1f);
+                        else itemImage.setColor(1, 1, 1, 0.5f);
+                        itemImage.setSize(90, 90);
+                        Stack stack = new Stack();
+                        if (item instanceof WateringCan wateringCan) {
+                            ProgressBar progressBar = new ProgressBar(0, wateringCan.getWateringCanType().getCapacity(), 1, false, skin);
+                            progressBar.setValue(wateringCan.getRemain());
+                            progressBar.setAnimateDuration(0.2f);
+                            progressBar.setSize(80, 5);
+                            progressBar.setTouchable(Touchable.disabled);
+                            progressBar.setColor(Color.BLUE);
+
+                            Table group = new Table();
+                            group.add(itemImage).size(90, 90).row();
+                            group.add(progressBar).width(80).height(8).padTop(4);
+
+                            stack.add(slot);
+                            stack.add(group);
+                            stack.add(labelContainer);
+                        } else {
+                            stack.add(slot);
+                            stack.add(itemImage);
+                            stack.add(labelContainer);
+                        }
+                        inventory.add(stack).size(96, 96);
+                    } else {
+                        inventory.add(slot).size(96, 96);
+                    }
+                }
+                inventory.row();
+            }
         }
         Table finances = new Table();
         finances.left();

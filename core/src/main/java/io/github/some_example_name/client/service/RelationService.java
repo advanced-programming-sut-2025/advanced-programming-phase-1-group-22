@@ -1,5 +1,6 @@
 package io.github.some_example_name.client.service;
 
+import io.github.some_example_name.client.GameClient;
 import io.github.some_example_name.common.model.*;
 import io.github.some_example_name.common.model.relations.*;
 import io.github.some_example_name.common.model.enums.Gender;
@@ -670,6 +671,7 @@ public class RelationService {
             int value = salableIntegerEntry.getValue();
             Salable salable = salableIntegerEntry.getKey();
             currentPlayer.getInventory().justDelete(salable, value);
+            GameClient.getInstance().updatePlayerJustDeleteFromInventory(currentPlayer,salable,value);
         }
         Friendship friendShipBetweenTwoActors = getFriendShipBetweenTwoActors(npc);
         int multi;

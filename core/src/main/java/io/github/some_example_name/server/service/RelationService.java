@@ -10,6 +10,7 @@ import io.github.some_example_name.common.model.gameSundry.SundryType;
 import io.github.some_example_name.common.model.relations.*;
 import io.github.some_example_name.common.model.enums.Gender;
 import io.github.some_example_name.common.model.records.Response;
+import io.github.some_example_name.common.model.source.Mineral;
 import io.github.some_example_name.common.model.structure.Structure;
 import io.github.some_example_name.common.model.structure.stores.PierreShop;
 import io.github.some_example_name.common.model.tools.Tool;
@@ -155,10 +156,12 @@ public class RelationService {
 //        if (!areNeighbors) {
 //            return new Response("the other player is not next You");
 //        }
-        for (Map.Entry<Salable, Integer> salableIntegerEntry : currentPlayer.getInventory().getProducts().entrySet()) {
-            if (salableIntegerEntry.getKey().getName().equals(itemName) && salableIntegerEntry.getValue() >= amount) {
-                gift = salableIntegerEntry.getKey();
-                break;
+        synchronized (currentPlayer.getInventory().getProducts()){
+            for (Map.Entry<Salable, Integer> salableIntegerEntry : currentPlayer.getInventory().getProducts().entrySet()) {
+                if (salableIntegerEntry.getKey().getName().equals(itemName) && salableIntegerEntry.getValue() >= amount) {
+                    gift = salableIntegerEntry.getKey();
+                    break;
+                }
             }
         }
         if (gift == null) {
@@ -170,11 +173,14 @@ public class RelationService {
     public Response giveGift(Player player, Salable gift, int amount) {
         game = App.getInstance().getCurrentGame();
         currentPlayer = game.getCurrentPlayer();
-        if (!currentPlayer.getInventory().getProducts().containsKey(gift)
-            || currentPlayer.getInventory().getProducts().get(gift) < amount) {
-            return new Response("You don't enough amount of the item : " + gift.getName());
+        synchronized (currentPlayer.getInventory().getProducts()){
+            if (!currentPlayer.getInventory().getProducts().containsKey(gift)
+                || currentPlayer.getInventory().getProducts().get(gift) < amount) {
+                return new Response("You don't enough amount of the item : " + gift.getName());
+            }
         }
         currentPlayer.getInventory().deleteProductFromBackPack(gift, currentPlayer, amount);
+        GameClient.getInstance().updatePlayerDeleteFromInventory(currentPlayer,gift,amount);
         Friendship friendship = getFriendShipBetweenWithActor(player);
         friendship.getGifts().add(new Gift(currentPlayer, player, amount, gift, friendship.getGifts().size()));
         player.notify(new Response("%s sent you a gift".formatted(currentPlayer.getUser().getUsername())),
@@ -510,9 +516,11 @@ public class RelationService {
             return new Response("the other player is not next You");
         }
         Salable wRing = null;
-        for (Map.Entry<Salable, Integer> salableIntegerEntry : currentPlayer.getInventory().getProducts().entrySet()) {
-            if (salableIntegerEntry.getKey().getName().equals(ring)) {
-                wRing = salableIntegerEntry.getKey();
+        synchronized (currentPlayer.getInventory().getProducts()){
+            for (Map.Entry<Salable, Integer> salableIntegerEntry : currentPlayer.getInventory().getProducts().entrySet()) {
+                if (salableIntegerEntry.getKey().getName().equals(ring)) {
+                    wRing = salableIntegerEntry.getKey();
+                }
             }
         }
         if (wRing == null) {
@@ -541,12 +549,14 @@ public class RelationService {
         if (requested.getUser().getUsername().equals(App.getInstance().getCurrentGame().getCurrentPlayer().getUser().getUsername())) {
             Salable wRing = new Sundry(SundryType.WEDDING_RING);
             requested.getInventory().addProductToBackPack(wRing, 1);
+            GameClient.getInstance().updatePlayerAddToInventory(requested,wRing,1);
             requested.getAccount().removeGolds(0);
             GameClient.getInstance().updatePlayerGold(requested);
         }
         if (requester.getUser().getUsername().equals(App.getInstance().getCurrentGame().getCurrentPlayer().getUser().getUsername())) {
             Salable wRing = requester.getInventory().findProductInBackPackByNAme(SundryType.WEDDING_RING.getName());
             requester.getInventory().deleteProductFromBackPack(wRing, requester, 1);
+            GameClient.getInstance().updatePlayerDeleteFromInventory(requester,wRing,1);
             requester.getAccount().removeGolds(0);
             GameClient.getInstance().updatePlayerGold(requested);
         }
@@ -660,6 +670,7 @@ public class RelationService {
             npc.setGiftedToday(true);
         }
         currentPlayer.getInventory().deleteProductFromBackPack(itemFromInventory.getKey(), currentPlayer, 1);
+        GameClient.getInstance().updatePlayerDeleteFromInventory(currentPlayer, itemFromInventory.getKey(), 1);
         return new Response("gift gived successfully");
     }
 
@@ -807,9 +818,11 @@ public class RelationService {
                 canPrepare = false;
                 break;
             }
-            if (currentPlayer.getInventory().getProducts().get(salable) < salableIntegerEntry.getValue()) {
-                canPrepare = false;
-                break;
+            synchronized (currentPlayer.getInventory().getProducts()){
+                if (currentPlayer.getInventory().getProducts().get(salable) < salableIntegerEntry.getValue()) {
+                    canPrepare = false;
+                    break;
+                }
             }
         }
         if (!canPrepare) {
@@ -819,6 +832,7 @@ public class RelationService {
             int value = salableIntegerEntry.getValue();
             Salable salable = salableIntegerEntry.getKey();
             currentPlayer.getInventory().justDelete(salable, value);
+            GameClient.getInstance().updatePlayerJustDeleteFromInventory(currentPlayer,salable,value);
         }
         Friendship friendShipBetweenTwoActors = getFriendShipBetweenWithActor(npc);
         int multi;
@@ -827,6 +841,7 @@ public class RelationService {
             int value = salableIntegerEntry.getValue();
             Salable salable = salableIntegerEntry.getKey();
             currentPlayer.getInventory().addProductToBackPack(salable, multi * value);
+            GameClient.getInstance().updatePlayerAddToInventory(currentPlayer,salable,multi * value);
         }
         mission.setDoer(currentPlayer);
         for (NPCType value : NPCType.values()) {

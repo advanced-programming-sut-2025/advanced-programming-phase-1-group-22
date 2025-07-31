@@ -192,7 +192,9 @@ public class Player extends Actor implements JsonPreparable {
         this.getAbilities().put(ability, oldValue + ability.getUpgradeAbility());
         GameClient.getInstance().updatePlayerSkill(this,ability);
         if (ability.equals(Ability.MINING) && this.getAbilities().get(Ability.MINING) >= 2) {
-            this.getInventory().addProductToBackPack(generateRandomElement(), 1);
+            Salable salable = generateRandomElement();
+            this.getInventory().addProductToBackPack(salable, 1);
+            GameClient.getInstance().updatePlayerAddToInventory(App.getInstance().getCurrentGame().getCurrentPlayer(),salable,1);
         }
     }
 
@@ -238,9 +240,11 @@ public class Player extends Actor implements JsonPreparable {
     }
 
     public Map.Entry<Salable, Integer> getItemFromInventory(String name) {
-        for (Map.Entry<Salable, Integer> salableIntegerEntry : this.getInventory().getProducts().entrySet()) {
-            if (salableIntegerEntry.getKey().getName().equals(name)) {
-                return salableIntegerEntry;
+        synchronized (this.getInventory().getProducts()){
+            for (Map.Entry<Salable, Integer> salableIntegerEntry : this.getInventory().getProducts().entrySet()) {
+                if (salableIntegerEntry.getKey().getName().equals(name)) {
+                    return salableIntegerEntry;
+                }
             }
         }
         return null;

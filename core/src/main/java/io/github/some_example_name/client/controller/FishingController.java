@@ -3,6 +3,7 @@ package io.github.some_example_name.client.controller;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector3;
+import io.github.some_example_name.client.GameClient;
 import io.github.some_example_name.client.MainGradle;
 import io.github.some_example_name.common.model.Farm;
 import io.github.some_example_name.common.model.Tile;
@@ -70,6 +71,7 @@ public class FishingController {
         }
         int count = miniGame.getFishingPole().generateNumberOfFish(player);
         player.getInventory().addProductToBackPack(fish, count);
+        GameClient.getInstance().updatePlayerAddToInventory(App.getInstance().getCurrentGame().getCurrentPlayer(),fish,count);
     }
 
     private void fishing() {
