@@ -42,6 +42,7 @@ public class PlayerController {
 
     public void update(float delta) {
         for (Player player : App.getInstance().getCurrentGame().getPlayers()) {
+            if (player.getDead()) continue;
             Sprite playerSprite = player.getSprites().get(0).getSprite();
             if (playerSprite instanceof AnimatedSprite) {
                 ((AnimatedSprite) playerSprite).update(delta);

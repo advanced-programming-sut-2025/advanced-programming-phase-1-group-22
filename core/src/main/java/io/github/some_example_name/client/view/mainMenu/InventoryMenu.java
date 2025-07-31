@@ -954,9 +954,9 @@ public class InventoryMenu extends PopUp {
 
             Table row = new Table();
             row.defaults().pad(10).align(Align.left);
-            row.add(iconImage).size(128).padRight(20);
-            row.add(nameLabel).width(250).padRight(20);
-            row.add(xpBar).width(300).padRight(20);
+            row.add(iconImage).size(128).padRight(5);
+            row.add(nameLabel).width(230).padRight(10);
+            row.add(xpBar).width(250).padRight(10);
             row.add(levelLabel).width(200).align(Align.right).padRight(5);
             row.add(gift).size(64).padRight(5);
             row.add(history).size(64).padRight(5);
