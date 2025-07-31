@@ -12,6 +12,7 @@ import io.github.some_example_name.server.saveGame.JsonPreparable;
 import io.github.some_example_name.server.saveGame.ObjectMapWrapper;
 
 import java.lang.reflect.Field;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -21,7 +22,7 @@ import java.util.Objects;
 @NoArgsConstructor
 public class BackPack implements JsonPreparable {
     private BackPackType backPackType;
-    private Map<Salable, Integer> products = new HashMap<>();
+    private final Map<Salable, Integer> products = Collections.synchronizedMap(new HashMap<>());
 
     public BackPack(BackPackType backPackType) {
         this.backPackType = backPackType;
@@ -29,8 +30,10 @@ public class BackPack implements JsonPreparable {
 
     public String showInventory() {
         StringBuilder message = new StringBuilder();
-        for (Map.Entry<Salable, Integer> salableIntegerEntry : products.entrySet()) {
-            message.append(salableIntegerEntry.getKey().getName()).append(" : ").append(salableIntegerEntry.getValue()).append("\n");
+        synchronized (products) {
+            for (Map.Entry<Salable, Integer> salableIntegerEntry : products.entrySet()) {
+                message.append(salableIntegerEntry.getKey().getName()).append(" : ").append(salableIntegerEntry.getValue()).append("\n");
+            }
         }
         return message.toString();
     }
@@ -43,46 +46,60 @@ public class BackPack implements JsonPreparable {
         if (trashCan != null) {
             trashCan.givePlayerProductPrice(player, product, itemNumber);
         }
-        Salable equivalentProduct = findEquivalentProduct(product);
-        if (equivalentProduct != null) {
-            if (products.get(equivalentProduct) == itemNumber) {
-                products.remove(equivalentProduct);
-            } else if (products.get(product) > itemNumber) {
-                int oldItemNumber = products.getOrDefault(equivalentProduct, 0);
-                products.put(equivalentProduct, oldItemNumber - itemNumber);
+        synchronized (products) {
+            Salable equivalentProduct = findEquivalentProduct(product);
+            if (equivalentProduct != null) {
+                Integer count = products.get(equivalentProduct);
+                if (count == null) return;
+                if (products.get(equivalentProduct) == itemNumber) {
+                    products.remove(equivalentProduct);
+                    return;
+                }
+                Integer count2 = products.get(product);
+                if (count2 == null) return;
+                if (products.get(product) > itemNumber) {
+                    int oldItemNumber = products.getOrDefault(equivalentProduct, 0);
+                    products.put(equivalentProduct, oldItemNumber - itemNumber);
+                }
             }
         }
     }
 
-    public void justDelete(Salable product,int itemNumber){
+    public void justDelete(Salable product, int itemNumber) {
         if (product == null) {
             return;
         }
-        Salable equivalentProduct = findEquivalentProduct(product);
-        if (equivalentProduct != null) {
-            if (products.get(equivalentProduct) == itemNumber) {
-                products.remove(equivalentProduct);
-            } else if (products.get(product) > itemNumber) {
-                int oldItemNumber = products.getOrDefault(equivalentProduct, 0);
-                products.put(equivalentProduct, oldItemNumber - itemNumber);
+        synchronized (products) {
+            Salable equivalentProduct = findEquivalentProduct(product);
+            if (equivalentProduct != null) {
+                if (products.get(equivalentProduct) == itemNumber) {
+                    products.remove(equivalentProduct);
+                } else if (products.get(product) > itemNumber) {
+                    int oldItemNumber = products.getOrDefault(equivalentProduct, 0);
+                    products.put(equivalentProduct, oldItemNumber - itemNumber);
+                }
             }
         }
     }
 
     public void addProductToBackPack(Salable product, int itemNumber) {
-        Salable existingProduct = findEquivalentProduct(product);
-        if (existingProduct != null) {
-            int currentQuantity = products.getOrDefault(existingProduct, 0);
-            products.put(existingProduct, currentQuantity + itemNumber);
-        } else {
-            products.put(product, itemNumber);
+        synchronized (products) {
+            Salable existingProduct = findEquivalentProduct(product);
+            if (existingProduct != null) {
+                int currentQuantity = products.getOrDefault(existingProduct, 0);
+                products.put(existingProduct, currentQuantity + itemNumber);
+            } else {
+                products.put(product, itemNumber);
+            }
         }
     }
 
     private Salable findEquivalentProduct(Salable newProduct) {
-        for (Salable existingProduct : products.keySet()) {
-            if (areProductsEquivalent(existingProduct, newProduct)) {
-                return existingProduct;
+        synchronized (products) {
+            for (Salable existingProduct : products.keySet()) {
+                if (areProductsEquivalent(existingProduct, newProduct)) {
+                    return existingProduct;
+                }
             }
         }
         return null;
@@ -129,9 +146,11 @@ public class BackPack implements JsonPreparable {
     }
 
     public Salable getProductFromBackPack(String name) {
-        for (Map.Entry<Salable, Integer> salableIntegerEntry : products.entrySet()) {
-            if (salableIntegerEntry.getKey().getName().equalsIgnoreCase(name)) {
-                return salableIntegerEntry.getKey();
+        synchronized (products) {
+            for (Map.Entry<Salable, Integer> salableIntegerEntry : products.entrySet()) {
+                if (salableIntegerEntry.getKey().getName().equalsIgnoreCase(name)) {
+                    return salableIntegerEntry.getKey();
+                }
             }
         }
         return null;
@@ -140,7 +159,9 @@ public class BackPack implements JsonPreparable {
     public Integer countProductFromBackPack(String salable) {
         Salable product = findProductInBackPackByNAme(salable);
         if (product == null) return 0;
-        return products.get(product);
+        synchronized (products) {
+            return products.get(product);
+        }
     }
 
     public Boolean isInventoryHaveCapacity(Salable product) {
@@ -148,18 +169,24 @@ public class BackPack implements JsonPreparable {
         if (!(product instanceof Tool)) {
             product1 = findProductInBackPackByNAme(product.getName());
             if (product1 == null) {
-                return backPackType.getIsInfinite() || (backPackType.getCapacity() > products.size());
+                synchronized (products) {
+                    return backPackType.getIsInfinite() || (backPackType.getCapacity() > products.size());
+                }
             }
             product = product1;
         }
-        return backPackType.getIsInfinite() || (backPackType.getCapacity() > products.size()) ||
+        synchronized (products) {
+            return backPackType.getIsInfinite() || (backPackType.getCapacity() > products.size()) ||
                 productsAreEquivalent(product);
+        }
     }
 
     private boolean productsAreEquivalent(Salable product) {
-        for (Map.Entry<Salable, Integer> salableIntegerEntry : products.entrySet()) {
-            if (areProductsEquivalent(product, salableIntegerEntry.getKey())) {
-                return true;
+        synchronized (products) {
+            for (Map.Entry<Salable, Integer> salableIntegerEntry : products.entrySet()) {
+                if (areProductsEquivalent(product, salableIntegerEntry.getKey())) {
+                    return true;
+                }
             }
         }
         return false;
@@ -172,7 +199,9 @@ public class BackPack implements JsonPreparable {
     public boolean checkProductAvailabilityInBackPack(String name, int count) {
         Salable product = findProductInBackPackByNAme(name);
         if (product == null) return false;
-        return products.get(product) >= count;
+        synchronized (products) {
+            return products.get(product) >= count;
+        }
     }
 
     public Salable findProductInBackPackByNAme(String product) {
@@ -185,16 +214,17 @@ public class BackPack implements JsonPreparable {
 //        return null;
 
     }
+
     @JsonProperty("productsWrapper")
     private ObjectMapWrapper productsWrapper;
 
     @Override
     public void prepareForSave(ObjectMapper mapper) {
-        this.productsWrapper = new ObjectMapWrapper((Map<Object, Integer>)(Map<?, ?>) products, mapper);
+        this.productsWrapper = new ObjectMapWrapper((Map<Object, Integer>) (Map<?, ?>) products, mapper);
     }
 
     @Override
     public void unpackAfterLoad(ObjectMapper mapper) {
-        this.products = (Map<Salable, Integer>) (Map<?, ?>) productsWrapper.toMap(mapper);
+        //  this.products = (Map<Salable, Integer>) (Map<?, ?>) productsWrapper.toMap(mapper);
     }
 }

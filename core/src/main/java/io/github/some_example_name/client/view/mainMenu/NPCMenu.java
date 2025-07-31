@@ -158,7 +158,9 @@ public class NPCMenu extends PopUp {
         int maxRow;
         BackPack backPack = App.getInstance().getCurrentGame().getCurrentPlayer().getInventory();
         if (backPack.getBackPackType().getIsInfinite()) {
-            maxRow = Math.max(5, backPack.getProducts().size() / maxCol + 1);
+            synchronized (backPack.getProducts()){
+                maxRow = Math.max(5, backPack.getProducts().size() / maxCol + 1);
+            }
         } else {
             maxRow = (int) Math.ceil((double) backPack.getBackPackType().getCapacity() / maxCol);
         }
@@ -168,36 +170,38 @@ public class NPCMenu extends PopUp {
                 Image slot = new Image(slotTexture);
 
                 int index = row * 9 + col;
-                if (index < currentPlayer.getInventory().getProducts().size()) {
-                    java.util.List<Salable> items = new ArrayList<>(currentPlayer.getInventory().getProducts().keySet());
-                    Salable item = items.get(index);
-                    Image itemImage = new Image(item.getTexture());
-                    ArrayList<ScrollPane> list = new ArrayList<>();
-                    list.add(scrollPane);
-                    itemImage.addListener(new ClickListener() {
-                        @Override
-                        public void clicked(InputEvent event, float x, float y) {
-                            createGiftDialog(item);
-                        }
-                    });
-                    int count = currentPlayer.getInventory().getProducts().get(item);
-                    Label countLabel = new Label(String.valueOf(count), skin);
-                    countLabel.setFontScale(0.7f);
-                    countLabel.setAlignment(Align.right);
-                    countLabel.setColor(Color.GREEN);
-                    Container<Label> labelContainer = new Container<>(countLabel);
-                    labelContainer.setFillParent(false);
-                    labelContainer.setSize(30, 20);
-                    labelContainer.setPosition(66, 5);
-                    itemImage.setColor(1, 1, 1, 1f);
-                    itemImage.setSize(90, 90);
-                    Stack stack = new Stack();
-                    stack.add(slot);
-                    stack.add(itemImage);
-                    stack.add(labelContainer);
-                    inventory.add(stack).size(96, 96);
-                } else {
-                    inventory.add(slot).size(96, 96);
+                synchronized (currentPlayer.getInventory().getProducts()){
+                    if (index < currentPlayer.getInventory().getProducts().size()) {
+                        java.util.List<Salable> items = new ArrayList<>(currentPlayer.getInventory().getProducts().keySet());
+                        Salable item = items.get(index);
+                        Image itemImage = new Image(item.getTexture());
+                        ArrayList<ScrollPane> list = new ArrayList<>();
+                        list.add(scrollPane);
+                        itemImage.addListener(new ClickListener() {
+                            @Override
+                            public void clicked(InputEvent event, float x, float y) {
+                                createGiftDialog(item);
+                            }
+                        });
+                        int count = currentPlayer.getInventory().getProducts().get(item);
+                        Label countLabel = new Label(String.valueOf(count), skin);
+                        countLabel.setFontScale(0.7f);
+                        countLabel.setAlignment(Align.right);
+                        countLabel.setColor(Color.GREEN);
+                        Container<Label> labelContainer = new Container<>(countLabel);
+                        labelContainer.setFillParent(false);
+                        labelContainer.setSize(30, 20);
+                        labelContainer.setPosition(66, 5);
+                        itemImage.setColor(1, 1, 1, 1f);
+                        itemImage.setSize(90, 90);
+                        Stack stack = new Stack();
+                        stack.add(slot);
+                        stack.add(itemImage);
+                        stack.add(labelContainer);
+                        inventory.add(stack).size(96, 96);
+                    } else {
+                        inventory.add(slot).size(96, 96);
+                    }
                 }
             }
             inventory.row();

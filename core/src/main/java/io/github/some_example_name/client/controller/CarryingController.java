@@ -78,9 +78,11 @@ public class CarryingController {
         GameService gameService = new GameService();
         Direction direction = Direction.getByXAndY(xTransmit, yTransmit);
         if (direction != null) worldController.showResponse(gameService.placeItem(item, direction));
-        if (!App.getInstance().getCurrentGame().getCurrentPlayer().getInventory().getProducts().containsKey(item)) {
-            App.getInstance().getCurrentGame().getCurrentPlayer().setCurrentCarrying(null);
-            GameClient.getInstance().updatePlayerCarryingObject(App.getInstance().getCurrentGame().getCurrentPlayer());
+        synchronized (App.getInstance().getCurrentGame().getCurrentPlayer().getInventory().getProducts()){
+            if (!App.getInstance().getCurrentGame().getCurrentPlayer().getInventory().getProducts().containsKey(item)) {
+                App.getInstance().getCurrentGame().getCurrentPlayer().setCurrentCarrying(null);
+                GameClient.getInstance().updatePlayerCarryingObject(App.getInstance().getCurrentGame().getCurrentPlayer());
+            }
         }
     }
 

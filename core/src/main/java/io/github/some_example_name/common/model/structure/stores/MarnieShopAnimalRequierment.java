@@ -1,6 +1,7 @@
 package io.github.some_example_name.common.model.structure.stores;
 
 import io.github.some_example_name.client.GameClient;
+import io.github.some_example_name.common.model.source.Mineral;
 import lombok.Getter;
 import io.github.some_example_name.common.model.Salable;
 import io.github.some_example_name.common.model.products.Hay;
@@ -84,6 +85,7 @@ public enum MarnieShopAnimalRequierment  implements Shop{
         GameClient.getInstance().updatePlayerGold(player);
         salable.dailySold += count;
         player.getInventory().addProductToBackPack(salable.getProduct(), count);
+        GameClient.getInstance().updatePlayerAddToInventory(player, salable.getProduct(), count);
         return new Response("Bought successfully", true);
     }
 

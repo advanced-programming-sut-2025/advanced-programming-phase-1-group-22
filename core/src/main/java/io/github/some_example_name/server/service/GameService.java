@@ -236,43 +236,6 @@ public class GameService {
         return new Response("Moved to the tile.", true);
     }
 
-    public Response helpReadingMap() {
-        String resp = "" +
-            "\uD83E\uDDCD\tYou\n" +
-            "👴\tNPC\n\nTile Types:\n" +
-            "🌿\tGrass\n" +
-            "🌸\tFlower\n" +
-            "❄️\uFE0F\tSnow\n" +
-            "▫️\uFE0F\tFlat\n" +
-            "\uD83E\uDDF1\tPath\n" +
-            "🚧\tFence\n" +
-            "🚪\tDoor\n" +
-            "\uD83D\uDFEB️\tPlowed\n" +
-            "\uD83C\uDF29️\tthundered\n" +
-            "Buildings:\n" +
-            "\uD83C\uDFEC\tStore\n" +
-            "\uD83C\uDFE1\ttNPC House\n" +
-            "\uD83C\uDF0A\tFountain\n" +
-            "\uD83C\uDFE1\ttCottage\n" +
-            "\uD83C\uDF0A\ttLake\n" +
-            "\uD83D\uDDFF\tQuarry\n" +
-            "🚧\tGreenhouse\n" +
-            "🏢\tBuilt Greenhouse\n" +
-            "\uD83C\uDFDA️\tFarm Building\n" +
-            "\uD83C\uDF33\tTrunk\n" +
-            "🌲\tTree\n" +
-            "🗿\tStone\n" +
-            "🐄\tAnimal\n" +
-            "🔨\tCraft\n" +
-            "🥚\tAnimalProduct\n" +
-            "\uD83D\uDDF3️\tShipping Bin\n" +
-            "🌾\tCrop\n" +
-            "🔷\tMineral\n" +
-            "🌱\tMixed Seed\n" +
-            "🫘\tSeed\n";
-        return new Response(resp, true);
-    }
-
     public Response showPlayerEnergy() {
         return new Response("player energy : " + getCurrentPlayer().getEnergy(), true);
     }
@@ -287,27 +250,6 @@ public class GameService {
         return Response.empty();
     }
 
-    public Response showPlayerInventory() {
-        return new Response("Account: " + getCurrentPlayer().getAccount().getGolds() + "\n\n" +
-            getCurrentPlayer().getInventory().showInventory(), true);
-    }
-
-    public Response removeFromPlayerInventory(String itemName, boolean haveItemNumber, int... itemNumbers) {
-        Player currentPlayer = getCurrentPlayer();
-        Salable currentProduct = getProductFromInventory(currentPlayer, itemName.trim());
-        if (currentProduct == null) {
-            return new Response("the inventory does not contain this item");
-        }
-        if (!haveItemNumber) {
-            currentPlayer.getInventory().deleteProductFromBackPack(currentProduct, currentPlayer,
-                currentPlayer.getInventory().getProducts().get(currentProduct));
-            return new Response("you delete " + itemName + " completely", true);
-        }
-        int itemNumber = Math.min(itemNumbers[0], currentPlayer.getInventory().getProducts().get(currentProduct));
-        currentPlayer.getInventory().deleteProductFromBackPack(currentProduct, currentPlayer, itemNumber);
-        return new Response(itemNumber + " of " + itemName + "removed", true);
-    }
-
     public Response toolEquip(String name) {
         Player currentPlayer = getCurrentPlayer();
         Tool currentTool = getToolFromPlayerInventory(name.trim(), currentPlayer);
@@ -317,19 +259,6 @@ public class GameService {
         currentPlayer.setCurrentCarrying(currentTool);
         GameClient.getInstance().updatePlayerCarryingObject(currentPlayer);
         return new Response("you carrying " + name + " now", true);
-    }
-
-    public Response showCurrentTool() {
-        Player currentPlayer = getCurrentPlayer();
-        if (currentPlayer.getCurrentCarrying() == null || !(currentPlayer.getCurrentCarrying() instanceof Tool)) {
-            return new Response("you do not carry any Tool");
-        }
-        return new Response("tool name : " + currentPlayer.getCurrentCarrying().getName(), true);
-    }
-
-    public Response showAvailableTools() {
-        Player currentPlayer = getCurrentPlayer();
-        return new Response(makeTokenToShowAvailableTools(currentPlayer), true);
     }
 
     public Response upgradeTool(Tool upgradeTool) {
@@ -626,11 +555,13 @@ public class GameService {
             if (giantCrop(currentPlayer, (Crop) harvestableProduct)) {
                 setScareCrowAndSprinklerForAll();
                 currentPlayer.getInventory().deleteProductFromBackPack(getProductFromInventory(currentPlayer, name), currentPlayer, 1);
+                GameClient.getInstance().updatePlayerDeleteFromInventory(currentPlayer, getProductFromInventory(currentPlayer, name), 1);
                 return new Response("you plant and it become a giant crop", true);
             }
         }
         setScareCrowAndSprinklerForAll();
         currentPlayer.getInventory().deleteProductFromBackPack(getProductFromInventory(currentPlayer, name), currentPlayer, 1);
+        GameClient.getInstance().updatePlayerDeleteFromInventory(currentPlayer, getProductFromInventory(currentPlayer, name), 1);
         GameClient.getInstance().updateStructureState(harvestableProduct, StructureUpdateState.ADD, true, null);
         GameClient.getInstance().updateTileState(currentTile);
         return new Response("you plant successfully", true);
@@ -663,6 +594,7 @@ public class GameService {
         }
         harvestAbleProduct.setFertilized(true);
         currentPlayer.getInventory().deleteProductFromBackPack(currentFertilize, currentPlayer, 1);
+        GameClient.getInstance().updatePlayerDeleteFromInventory(currentPlayer, currentFertilize, 1);
         harvestAbleProduct.getFertilizes().add(currentFertilize.getSundryType());
         GameClient.getInstance().updateStructureState(harvestAbleProduct, StructureUpdateState.UPDATE, true, harvestAbleProduct.getTiles().get(0));
         return new Response("you successfully fertilize " + harvestAbleProduct.getName(), true);
@@ -700,9 +632,11 @@ public class GameService {
 
     private Salable getProductFromInventory(Player currentPlayer, String itemName) {
         Salable currentProduct = null;
-        for (Map.Entry<Salable, Integer> salableIntegerEntry : currentPlayer.getInventory().getProducts().entrySet()) {
-            if (salableIntegerEntry.getKey().getName().equalsIgnoreCase(itemName)) {
-                currentProduct = salableIntegerEntry.getKey();
+        synchronized (currentPlayer.getInventory().getProducts()) {
+            for (Map.Entry<Salable, Integer> salableIntegerEntry : currentPlayer.getInventory().getProducts().entrySet()) {
+                if (salableIntegerEntry.getKey().getName().equalsIgnoreCase(itemName)) {
+                    currentProduct = salableIntegerEntry.getKey();
+                }
             }
         }
 
@@ -711,10 +645,12 @@ public class GameService {
 
     private Tool getToolFromPlayerInventory(String name, Player player) {
         Tool currentTool = null;
-        for (Map.Entry<Salable, Integer> salableIntegerEntry : player.getInventory().getProducts().entrySet()) {
-            if (salableIntegerEntry.getKey().getName().equalsIgnoreCase(name) &&
-                salableIntegerEntry.getKey() instanceof Tool) {
-                currentTool = (Tool) salableIntegerEntry.getKey();
+        synchronized (player.getInventory().getProducts()) {
+            for (Map.Entry<Salable, Integer> salableIntegerEntry : player.getInventory().getProducts().entrySet()) {
+                if (salableIntegerEntry.getKey().getName().equalsIgnoreCase(name) &&
+                    salableIntegerEntry.getKey() instanceof Tool) {
+                    currentTool = (Tool) salableIntegerEntry.getKey();
+                }
             }
         }
         if (player.getCurrentTrashCan().getName().equalsIgnoreCase(name)) return player.getCurrentTrashCan();
@@ -749,25 +685,6 @@ public class GameService {
         player.setCurrentMenu(Menu.GAME_MAIN_MENU);
     }
 
-
-    private String makeTokenToShowAvailableTools(Player player) {
-        if (player.getInventory().getProducts().isEmpty()) {
-            return "the inventory is empty";
-        }
-        StringBuilder token = new StringBuilder();
-        token.append("tools: " + "\n");
-        for (Map.Entry<Salable, Integer> salableIntegerEntry : player.getInventory().getProducts().entrySet()) {
-            if (salableIntegerEntry.getKey() instanceof Tool) {
-                token.append(salableIntegerEntry.getKey().getName()).append("\n");
-            }
-        }
-        return token.toString();
-    }
-
-    private Boolean isPlayerInStore(StoreType storeType) {
-        return App.getInstance().getCurrentGame().getCurrentPlayer().getStoreType() == storeType;
-    }
-
     private Boolean playerHaveEnoughResourceToUpgrade(Player player, BlackSmithUpgrade blackSmithUpgrade) {
         if (blackSmithUpgrade.getCost() > player.getAccount().getGolds()) {
             return false;
@@ -777,8 +694,10 @@ public class GameService {
             if (salable == null) {
                 return false;
             }
-            if (player.getInventory().getProducts().get(salable) < productIntegerEntry.getValue()) {
-                return false;
+            synchronized (player.getInventory().getProducts()) {
+                if (player.getInventory().getProducts().get(salable) < productIntegerEntry.getValue()) {
+                    return false;
+                }
             }
         }
         return true;
@@ -792,6 +711,7 @@ public class GameService {
         for (Map.Entry<Salable, Integer> productIntegerEntry : blackSmithUpgrade.getIngredients().entrySet()) {
             Salable salable = player.getInventory().getProductFromBackPack(productIntegerEntry.getKey().getName());
             player.getInventory().deleteProductFromBackPack(salable, player, productIntegerEntry.getValue());
+            GameClient.getInstance().updatePlayerDeleteFromInventory(player, salable, productIntegerEntry.getValue());
         }
         if (oldtool instanceof WateringCanType) {
             WateringCan wateringCan = (WateringCan) player.getInventory().getProductFromBackPack(oldtool.getName());
@@ -799,8 +719,10 @@ public class GameService {
         } else if (oldtool instanceof TrashCan) {
             player.setCurrentTrashCan((TrashCan) upgradeTool);
         } else {
-            player.getInventory().getProducts().remove(oldtool);
-            player.getInventory().getProducts().put(upgradeTool, 1);
+            synchronized (player.getInventory().getProducts()) {
+                player.getInventory().getProducts().remove(oldtool);
+                player.getInventory().getProducts().put(upgradeTool, 1);
+            }
         }
     }
 
@@ -826,6 +748,7 @@ public class GameService {
     private boolean tryToPickUp(Player player, Structure structure) {
         if (player.getInventory().isInventoryHaveCapacity((Salable) structure)) {
             player.getInventory().addProductToBackPack((Salable) structure, 1);
+            GameClient.getInstance().updatePlayerAddToInventory(player, (Salable) structure, 1);
             for (Tile structureTile : structure.getTiles()) {
                 structureTile.setIsFilled(false);
             }
@@ -889,8 +812,10 @@ public class GameService {
             if (salable == null) {
                 return false;
             }
-            if (player.getInventory().getProducts().get(salable) < productIntegerEntry.getValue()) {
-                return false;
+            synchronized (player.getInventory().getProducts()) {
+                if (player.getInventory().getProducts().get(salable) < productIntegerEntry.getValue()) {
+                    return false;
+                }
             }
         }
         return true;
@@ -933,6 +858,7 @@ public class GameService {
         for (Map.Entry<Salable, Integer> productIntegerEntry : carpenterShopFarmBuildings.getCost().entrySet()) {
             Salable salable = player.getInventory().getProductFromBackPack(productIntegerEntry.getKey().getName());
             player.getInventory().deleteProductFromBackPack(salable, player, productIntegerEntry.getValue());
+            GameClient.getInstance().updatePlayerDeleteFromInventory(player, salable, productIntegerEntry.getValue());
         }
     }
 
@@ -1087,11 +1013,14 @@ public class GameService {
 
     private Hay getPlayerHay(Player player) {
         Hay hay = null;
-        for (Map.Entry<Salable, Integer> salableIntegerEntry : player.getInventory().getProducts().entrySet()) {
-            if (salableIntegerEntry.getKey() instanceof Hay) {
-                hay = (Hay) salableIntegerEntry.getKey();
-                player.getInventory().deleteProductFromBackPack(hay, player, 1);
-                break;
+        synchronized (player.getInventory().getProducts()) {
+            for (Map.Entry<Salable, Integer> salableIntegerEntry : player.getInventory().getProducts().entrySet()) {
+                if (salableIntegerEntry.getKey() instanceof Hay) {
+                    hay = (Hay) salableIntegerEntry.getKey();
+                    player.getInventory().deleteProductFromBackPack(hay, player, 1);
+                    GameClient.getInstance().updatePlayerDeleteFromInventory(player, hay, 1);
+                    break;
+                }
             }
         }
         return hay;
@@ -1158,6 +1087,7 @@ public class GameService {
                     AnimalProduct animalProduct = animal.getTodayProduct();
                     if (player.getInventory().isInventoryHaveCapacity(animalProduct)) {
                         player.getInventory().addProductToBackPack(animalProduct, 1);
+                        GameClient.getInstance().updatePlayerAddToInventory(player, animalProduct, 1);
                         animal.setTodayProduct(null);
                         GameClient.getInstance().updateStructureState(animal, StructureUpdateState.UPDATE, true, animal.getTiles().get(0));
                         return "you collect produce of " + animal.getName() + ": " + animalProduct.getName() +
@@ -1173,6 +1103,7 @@ public class GameService {
             AnimalProduct animalProduct = animal.getTodayProduct();
             if (player.getInventory().isInventoryHaveCapacity(animalProduct)) {
                 player.getInventory().addProductToBackPack(animalProduct, 1);
+                GameClient.getInstance().updatePlayerAddToInventory(player, animalProduct, 1);
                 animal.setTodayProduct(null);
                 GameClient.getInstance().updateStructureState(animal, StructureUpdateState.UPDATE, true, animal.getTiles().get(0));
                 return "you collect produce of " + animal.getName() + ": " + animalProduct.getName() +
@@ -1220,6 +1151,7 @@ public class GameService {
         if (!(product instanceof Structure))
             return new Response(product.getName() + " Cannot be put on ground");
         player.getInventory().deleteProductFromBackPack(product, player, 1);
+        GameClient.getInstance().updatePlayerDeleteFromInventory(player, product, 1);
         product = product.copy();
         ((Structure) product).getTiles().add(tile);
         Farm currentFarm = getPlayerInWitchFarm(player);
@@ -1435,6 +1367,7 @@ public class GameService {
         if (salable == null) return new Response(name + " cannot be added to the backpack");
         if (!inventory.isInventoryHaveCapacity(salable)) return new Response("Backpack hasn't enough space");
         inventory.addProductToBackPack(salable, Integer.parseInt(count));
+        GameClient.getInstance().updatePlayerAddToInventory(getCurrentPlayer(), salable, Integer.parseInt(count));
         return new Response(name + " x" + count + " added to backpack.", true);
     }
 
@@ -1623,19 +1556,23 @@ public class GameService {
 //        }
         Salable product1 = null, product2 = null;
         if (item1 != null && !item1.isEmpty()) {
-            for (Salable value : player.getInventory().getProducts().keySet()) {
-                if (item1.equalsIgnoreCase(value.getName())) {
-                    product1 = value;
-                    break;
+            synchronized (player.getInventory().getProducts()) {
+                for (Salable value : player.getInventory().getProducts().keySet()) {
+                    if (item1.equalsIgnoreCase(value.getName())) {
+                        product1 = value;
+                        break;
+                    }
                 }
             }
         }
         if (item1 != null && product1 == null) return new Response(item1 + " not found in your backpack.");
         if (item2 != null && !item2.isEmpty()) {
-            for (Salable value : player.getInventory().getProducts().keySet()) {
-                if (item2.equalsIgnoreCase(value.getName())) {
-                    product2 = value;
-                    break;
+            synchronized (player.getInventory().getProducts()) {
+                for (Salable value : player.getInventory().getProducts().keySet()) {
+                    if (item2.equalsIgnoreCase(value.getName())) {
+                        product2 = value;
+                        break;
+                    }
                 }
             }
             if (product2 == null) return new Response(item2 + " not found in your backpack.");
@@ -1662,10 +1599,12 @@ public class GameService {
         if (product1 != null) {
             product1 = player.getInventory().findProductInBackPackByNAme(product1.getName());
             player.getInventory().deleteProductFromBackPack(product1, player, madeProductType.countIngredient());
+            GameClient.getInstance().updatePlayerDeleteFromInventory(player, product1, madeProductType.countIngredient());
         }
         if (product2 != null) {
             product2 = player.getInventory().findProductInBackPackByNAme(MadeProductType.COAL.getName());
             player.getInventory().deleteProductFromBackPack(product2, player, 1);
+            GameClient.getInstance().updatePlayerDeleteFromInventory(player, product2, 1);
         }
         craft.setMadeProduct(new MadeProduct(madeProductType, product1));
         craft.setETA(madeProductType.calcETA(product1));
@@ -1706,10 +1645,12 @@ public class GameService {
         if (product1 != null) {
             product1 = player.getInventory().findProductInBackPackByNAme(product1.getName());
             player.getInventory().deleteProductFromBackPack(product1, player, madeProductType.countIngredient());
+            GameClient.getInstance().updatePlayerDeleteFromInventory(player, product1, madeProductType.countIngredient());
         }
         if (product2 != null) {
             product2 = player.getInventory().findProductInBackPackByNAme(MadeProductType.COAL.getName());
             player.getInventory().deleteProductFromBackPack(product2, player, 1);
+            GameClient.getInstance().updatePlayerDeleteFromInventory(player, product2, 1);
         }
         craft.setMadeProduct(new MadeProduct(madeProductType, product1));
         craft.getIngredients().clear();
@@ -1741,6 +1682,7 @@ public class GameService {
             return new Response("Still not ready!");
         }
         player.getInventory().addProductToBackPack(craft.getMadeProduct(), 1);
+        GameClient.getInstance().updatePlayerAddToInventory(player, craft.getMadeProduct(), 1);
         craft.setETA(null);
         craft.setMadeProduct(null);
         return new Response("The artisan collected", true);
@@ -1775,6 +1717,7 @@ public class GameService {
         }
         if (false) return new Response("Item not salable"); //TODO checking not salable
         player.getInventory().deleteProductFromBackPack(salable, player, Integer.parseInt(count));
+        GameClient.getInstance().updatePlayerDeleteFromInventory(player, salable, Integer.parseInt(count));
         shippingBin.add(salable, Integer.parseInt(count));
         return new Response("Item(s) is(are) put in the bin");
     }
@@ -1800,6 +1743,7 @@ public class GameService {
         int count = player.getInventory().countProductFromBackPack(salable.getName());
         if (salable.getSellPrice() == 0) return new Response("Item not salable");
         player.getInventory().deleteProductFromBackPack(salable, player, count);
+        GameClient.getInstance().updatePlayerDeleteFromInventory(player, salable, count);
         shippingBin.add(salable, count);
         return new Response("Item(s) is(are) put in the bin");
     }
@@ -1875,6 +1819,7 @@ public class GameService {
         if (food == null) return new Response(foodName + " not found in your backpack.");
         if (food.getContainingEnergy() == 0) return new Response(foodName + " is not edible");
         player.getInventory().deleteProductFromBackPack(food, player, 1);
+        GameClient.getInstance().updatePlayerDeleteFromInventory(player, food, 1);
         player.changeEnergy(food.getContainingEnergy());
         if (food instanceof Food) {
             if (((Food) food).getFoodType().getBuff() != null) {
@@ -1995,6 +1940,7 @@ public class GameService {
         player.removeEnergy(2);
         recipe.getCraft().removeIngredients(player);
         player.getInventory().addProductToBackPack(new Craft(recipe.getCraft(), null, null), 1);
+        GameClient.getInstance().updatePlayerAddToInventory(player, new Craft(recipe.getCraft(), null, null), 1);
         if (player.getEnergy() == 0) {
             player.faint();
         }
@@ -2012,6 +1958,7 @@ public class GameService {
             return new Response("Not enough space in backpack.");
         }
         player.getInventory().addProductToBackPack(product, fridge.countProduct(product));
+        GameClient.getInstance().updatePlayerAddToInventory(player, product, fridge.countProduct(product));
         fridge.deleteProduct(product, fridge.countProduct(product));
         GameClient.getInstance().refrigeratorPick(product.getName());
         return new Response("Picked up.");
@@ -2036,6 +1983,7 @@ public class GameService {
         Integer count = player.getInventory().countProductFromBackPack(product.getName());
         fridge.addProduct(product, count);
         player.getInventory().deleteProductFromBackPack(product, player, count);
+        GameClient.getInstance().updatePlayerDeleteFromInventory(player, product, count);
         GameClient.getInstance().refrigeratorPut(product, count);
         return new Response("Put down.");
     }
@@ -2059,6 +2007,7 @@ public class GameService {
         player.removeEnergy(3);
         recipe.getIngredients().removeIngredients(fridge, player);
         player.getInventory().addProductToBackPack(new Food(recipe.getIngredients()), 1);
+        GameClient.getInstance().updatePlayerAddToInventory(player, new Food(recipe.getIngredients()), 1);
         if (player.getEnergy() == 0) {
             player.faint();
         }

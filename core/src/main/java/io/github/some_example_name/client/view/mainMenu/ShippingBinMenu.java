@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
+import io.github.some_example_name.client.GameClient;
 import io.github.some_example_name.client.MainGradle;
 import io.github.some_example_name.client.controller.WorldController;
 import io.github.some_example_name.common.model.Salable;
@@ -57,7 +58,9 @@ public class ShippingBinMenu extends PopUp {
         int maxRow;
         BackPack backPack = App.getInstance().getCurrentGame().getCurrentPlayer().getInventory();
         if (backPack.getBackPackType().getIsInfinite()) {
-            maxRow = Math.max(5, backPack.getProducts().size() / maxCol + 1);
+            synchronized (backPack.getProducts()) {
+                maxRow = Math.max(5, backPack.getProducts().size() / maxCol + 1);
+            }
         } else {
             maxRow = (int) Math.ceil((double) backPack.getBackPackType().getCapacity() / maxCol);
         }
@@ -67,41 +70,43 @@ public class ShippingBinMenu extends PopUp {
                 Image slot = new Image(slotTexture);
 
                 int index = row * 9 + col;
-                if (index < currentPlayer.getInventory().getProducts().size()) {
-                    java.util.List<Salable> items = new ArrayList<>(currentPlayer.getInventory().getProducts().keySet());
-                    Salable item = items.get(index);
-                    Image itemImage = new Image(item.getTexture());
-                    ArrayList<ScrollPane> list = new ArrayList<>();
-                    list.add(scrollPane);
-                    itemImage.addListener(new ClickListener() {
-                        @Override
-                        public void clicked(InputEvent event, float x, float y) {
-                            if (item.getSellPrice() == 0)
-                                playerController.showResponse(new Response("you can't sell this Item"));
-                            else {
-                                createSellMenu(stage, inventory, currentPlayer, slotTexture, currentPlayer, scrollPane, item, currentPlayer.getInventory().getProducts().get(item));
-                                refreshInventory(stage, inventory, currentPlayer, slotTexture, currentPlayer, scrollPane);
+                synchronized (currentPlayer.getInventory().getProducts()) {
+                    if (index < currentPlayer.getInventory().getProducts().size()) {
+                        java.util.List<Salable> items = new ArrayList<>(currentPlayer.getInventory().getProducts().keySet());
+                        Salable item = items.get(index);
+                        Image itemImage = new Image(item.getTexture());
+                        ArrayList<ScrollPane> list = new ArrayList<>();
+                        list.add(scrollPane);
+                        itemImage.addListener(new ClickListener() {
+                            @Override
+                            public void clicked(InputEvent event, float x, float y) {
+                                if (item.getSellPrice() == 0)
+                                    playerController.showResponse(new Response("you can't sell this Item"));
+                                else {
+                                    createSellMenu(stage, inventory, currentPlayer, slotTexture, currentPlayer, scrollPane, item, currentPlayer.getInventory().getProducts().get(item));
+                                    refreshInventory(stage, inventory, currentPlayer, slotTexture, currentPlayer, scrollPane);
+                                }
                             }
-                        }
-                    });
-                    int count = currentPlayer.getInventory().getProducts().get(item);
-                    Label countLabel = new Label(String.valueOf(count), skin);
-                    countLabel.setFontScale(0.7f);
-                    countLabel.setAlignment(Align.right);
-                    countLabel.setColor(Color.GREEN);
-                    Container<Label> labelContainer = new Container<>(countLabel);
-                    labelContainer.setFillParent(false);
-                    labelContainer.setSize(30, 20);
-                    labelContainer.setPosition(66, 5);
-                    itemImage.setColor(1, 1, 1, 1f);
-                    itemImage.setSize(90, 90);
-                    Stack stack = new Stack();
-                    stack.add(slot);
-                    stack.add(itemImage);
-                    stack.add(labelContainer);
-                    inventory.add(stack).size(96, 96);
-                } else {
-                    inventory.add(slot).size(96, 96);
+                        });
+                        int count = currentPlayer.getInventory().getProducts().get(item);
+                        Label countLabel = new Label(String.valueOf(count), skin);
+                        countLabel.setFontScale(0.7f);
+                        countLabel.setAlignment(Align.right);
+                        countLabel.setColor(Color.GREEN);
+                        Container<Label> labelContainer = new Container<>(countLabel);
+                        labelContainer.setFillParent(false);
+                        labelContainer.setSize(30, 20);
+                        labelContainer.setPosition(66, 5);
+                        itemImage.setColor(1, 1, 1, 1f);
+                        itemImage.setSize(90, 90);
+                        Stack stack = new Stack();
+                        stack.add(slot);
+                        stack.add(itemImage);
+                        stack.add(labelContainer);
+                        inventory.add(stack).size(96, 96);
+                    } else {
+                        inventory.add(slot).size(96, 96);
+                    }
                 }
             }
             inventory.row();
@@ -141,42 +146,44 @@ public class ShippingBinMenu extends PopUp {
 
     private void refreshInventory(Stage stage, Table inventory, Player player, Texture slotTexture, Player currentPlayer, ScrollPane scrollPane) {
         inventory.clear();
-        java.util.List<Salable> items = new ArrayList<>(player.getInventory().getProducts().keySet());
+        synchronized (player.getInventory().getProducts()) {
+            java.util.List<Salable> items = new ArrayList<>(player.getInventory().getProducts().keySet());
 
-        for (int row = 0; row < 3; row++) {
-            for (int col = 0; col < 9; col++) {
-                Image slot = new Image(slotTexture);
-                int index = row * 9 + col;
+            for (int row = 0; row < 3; row++) {
+                for (int col = 0; col < 9; col++) {
+                    Image slot = new Image(slotTexture);
+                    int index = row * 9 + col;
 
-                if (index < items.size()) {
-                    Salable item = items.get(index);
-                    Image itemImage = new Image(item.getTexture());
-                    itemImage.setSize(90, 90);
-                    ArrayList<ScrollPane> list = new ArrayList<>();
-                    list.add(scrollPane);
-                    itemImage.addListener(new ClickListener() {
-                        @Override
-                        public void clicked(InputEvent event, float x, float y) {
-                            if (item.getSellPrice() == 0)
-                                getController().showResponse(new Response("you can't sell this Item"));
-                            else {
-                                createSellMenu(stage, inventory, currentPlayer, slotTexture, currentPlayer, scrollPane, item, currentPlayer.getInventory().getProducts().get(item));
-                                refreshInventory(stage, inventory, currentPlayer, slotTexture, currentPlayer, scrollPane);
+                    if (index < items.size()) {
+                        Salable item = items.get(index);
+                        Image itemImage = new Image(item.getTexture());
+                        itemImage.setSize(90, 90);
+                        ArrayList<ScrollPane> list = new ArrayList<>();
+                        list.add(scrollPane);
+                        itemImage.addListener(new ClickListener() {
+                            @Override
+                            public void clicked(InputEvent event, float x, float y) {
+                                if (item.getSellPrice() == 0)
+                                    getController().showResponse(new Response("you can't sell this Item"));
+                                else {
+                                    createSellMenu(stage, inventory, currentPlayer, slotTexture, currentPlayer, scrollPane, item, currentPlayer.getInventory().getProducts().get(item));
+                                    refreshInventory(stage, inventory, currentPlayer, slotTexture, currentPlayer, scrollPane);
+                                }
                             }
-                        }
-                    });
-                    Container<Label> labelContainer = getLabelContainer(currentPlayer.getInventory().getProducts(), item);
-                    itemImage.setColor(1, 1, 1, 1f);
-                    Stack stack = new Stack();
-                    stack.add(slot);
-                    stack.add(itemImage);
-                    stack.add(labelContainer);
-                    inventory.add(stack).size(96, 96);
-                } else {
-                    inventory.add(slot).size(96, 96);
+                        });
+                        Container<Label> labelContainer = getLabelContainer(currentPlayer.getInventory().getProducts(), item);
+                        itemImage.setColor(1, 1, 1, 1f);
+                        Stack stack = new Stack();
+                        stack.add(slot);
+                        stack.add(itemImage);
+                        stack.add(labelContainer);
+                        inventory.add(stack).size(96, 96);
+                    } else {
+                        inventory.add(slot).size(96, 96);
+                    }
                 }
+                inventory.row();
             }
-            inventory.row();
         }
     }
 
@@ -252,6 +259,7 @@ public class ShippingBinMenu extends PopUp {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 player.getInventory().justDelete(salable, amount[0]);
+                GameClient.getInstance().updatePlayerJustDeleteFromInventory(player, salable, amount[0]);
                 shippingBin.add(salable, amount[0]);
                 buyWindow.remove();
                 exitButton.remove();

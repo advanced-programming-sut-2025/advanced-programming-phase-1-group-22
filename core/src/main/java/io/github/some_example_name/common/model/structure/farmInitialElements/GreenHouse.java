@@ -43,6 +43,7 @@ public class GreenHouse extends HardCodeFarmElements {
         GameClient.getInstance().updatePlayerGold(player);
         Salable salable = player.getInventory().findProductInBackPackByNAme(MineralType.WOOD.getName());
         player.getInventory().deleteProductFromBackPack(salable, player,500);
+        GameClient.getInstance().updatePlayerDeleteFromInventory(player,salable,500);
         isBuilt = true;
         sprite =  new Sprite(GameAsset.GREENHOUSE);
         this.sprite.setSize(this.farmBuildingType.getWidth() * App.tileWidth,this.farmBuildingType.getHeight() * App.tileHeight);

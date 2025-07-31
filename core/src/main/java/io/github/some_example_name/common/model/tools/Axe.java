@@ -191,7 +191,8 @@ public enum Axe implements Tool {
 
 	private void addToInventoryAndDeleteStructure(Salable mineralOrSeed, Player player, Structure structure) {
 		player.getInventory().addProductToBackPack(mineralOrSeed, 1);
-		for (Tile tile : structure.getTiles()) {
+        GameClient.getInstance().updatePlayerAddToInventory(player,mineralOrSeed,1);
+        for (Tile tile : structure.getTiles()) {
 			tile.setIsFilled(false);
             tile.setIsPassable(true);
 			tile.setTileType(TileType.FLAT);

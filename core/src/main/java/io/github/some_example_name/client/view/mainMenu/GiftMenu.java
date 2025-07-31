@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import io.github.some_example_name.client.GameClient;
 import io.github.some_example_name.client.MainGradle;
 import io.github.some_example_name.client.controller.WorldController;
 import io.github.some_example_name.common.model.Farm;
@@ -46,6 +47,7 @@ public class GiftMenu extends PopUp {
         if (isOverActor(dragImage, trashCan)) {
             if (flag) {
                 currentPlayer.getInventory().deleteProductFromBackPack(item, currentPlayer, 1);
+                GameClient.getInstance().updatePlayerDeleteFromInventory(currentPlayer,item,1);
             } else {
                 this.item = null;
                 count = 0;
@@ -91,7 +93,9 @@ public class GiftMenu extends PopUp {
         int maxRow;
         BackPack backPack = App.getInstance().getCurrentGame().getCurrentPlayer().getInventory();
         if (backPack.getBackPackType().getIsInfinite()) {
-            maxRow = Math.max(5, backPack.getProducts().size() / maxCol + 1);
+            synchronized (backPack.getProducts()){
+                maxRow = Math.max(5, backPack.getProducts().size() / maxCol + 1);
+            }
         } else {
             maxRow = (int) Math.ceil((double) backPack.getBackPackType().getCapacity() / maxCol);
         }
@@ -101,22 +105,24 @@ public class GiftMenu extends PopUp {
                 Image slot = new Image(slotTexture);
 
                 int index = row * maxCol + col;
-                if (index < backPack.getProducts().size()) {
-                    java.util.List<Salable> items = new ArrayList<>(backPack.getProducts().keySet());
-                    Salable item = items.get(index);
-                    Image itemImage = new Image(item.getTexture());
-                    ArrayList<ScrollPane> list = new ArrayList<>();
-                    list.add(scrollPane);
-                    addDrag(itemImage, stage, currentPlayer, item, list,true);
-                    itemImage.setSize(90, 90);
-                    Container<Label> labelContainer = getLabelContainer(backPack.getProducts(), item);
-                    Stack stack = new Stack();
-                    stack.add(slot);
-                    stack.add(itemImage);
-                    stack.add(labelContainer);
-                    inventory.add(stack).size(96, 96);
-                } else {
-                    inventory.add(slot).size(96, 96);
+                synchronized (backPack.getProducts()){
+                    if (index < backPack.getProducts().size()) {
+                        java.util.List<Salable> items = new ArrayList<>(backPack.getProducts().keySet());
+                        Salable item = items.get(index);
+                        Image itemImage = new Image(item.getTexture());
+                        ArrayList<ScrollPane> list = new ArrayList<>();
+                        list.add(scrollPane);
+                        addDrag(itemImage, stage, currentPlayer, item, list,true);
+                        itemImage.setSize(90, 90);
+                        Container<Label> labelContainer = getLabelContainer(backPack.getProducts(), item);
+                        Stack stack = new Stack();
+                        stack.add(slot);
+                        stack.add(itemImage);
+                        stack.add(labelContainer);
+                        inventory.add(stack).size(96, 96);
+                    } else {
+                        inventory.add(slot).size(96, 96);
+                    }
                 }
             }
             inventory.row();

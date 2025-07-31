@@ -155,7 +155,8 @@ public enum Pickaxe implements Tool {
 	private String breakStone(Mineral mineral, Player player, Structure structure) {
 		if (player.getInventory().isInventoryHaveCapacity(mineral)) {
 			player.getInventory().addProductToBackPack(mineral, 1);
-			player.upgradeAbility(Ability.MINING);
+            GameClient.getInstance().updatePlayerAddToInventory(player,mineral,1);
+            player.upgradeAbility(Ability.MINING);
 			player.upgradeAbility(Ability.FORAGING);
 			player.changeEnergy(-this.getEnergy(player));
 			App.getInstance().getCurrentGame().getVillage().removeStructure(structure);

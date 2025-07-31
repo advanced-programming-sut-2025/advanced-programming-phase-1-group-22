@@ -405,6 +405,8 @@ public class Game implements Serializable {
                     Salable[] array = (Salable[]) mission.getReward().keySet().toArray();
                     Salable gift = array[size % 4];
                     ((Player) friendship.getSecondPlayer()).getInventory().addProductToBackPack(gift, 1);
+                    if (!StartGameMenuController.getInstance().isReconnect())
+                        GameClient.getInstance().updatePlayerAddToInventory(App.getInstance().getCurrentGame().getCurrentPlayer(),gift,1);
                 }
             }
             if ((friendship.getSecondPlayer() instanceof NPC && friendship.getFirstPlayer() instanceof Player)) {
@@ -415,6 +417,8 @@ public class Game implements Serializable {
                     Salable[] array = (Salable[]) mission.getReward().keySet().toArray();
                     Salable gift = array[size % 4];
                     ((Player) friendship.getFirstPlayer()).getInventory().addProductToBackPack(gift, 1);
+                    if (!StartGameMenuController.getInstance().isReconnect())
+                        GameClient.getInstance().updatePlayerAddToInventory(App.getInstance().getCurrentGame().getCurrentPlayer(),gift,1);
                 }
             }
         }

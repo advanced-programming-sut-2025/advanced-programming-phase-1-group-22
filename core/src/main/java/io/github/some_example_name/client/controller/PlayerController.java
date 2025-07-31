@@ -139,6 +139,7 @@ public class PlayerController {
             }
             if (response != null && response.shouldBeBack()) {
                 GameClient.getInstance().updatePlayerPosition(App.getInstance().getCurrentGame().getCurrentPlayer());
+                GameClient.getInstance().updatePlayerEnergy(App.getInstance().getCurrentGame().getCurrentPlayer());
             }
         }
     }

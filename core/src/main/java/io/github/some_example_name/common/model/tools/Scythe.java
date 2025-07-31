@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import io.github.some_example_name.client.GameClient;
 import io.github.some_example_name.client.MainGradle;
 import io.github.some_example_name.common.model.StructureUpdateState;
+import io.github.some_example_name.common.model.source.Mineral;
 import io.github.some_example_name.common.utils.GameAsset;
 import lombok.Getter;
 import io.github.some_example_name.common.model.TimeAndDate;
@@ -101,6 +102,7 @@ public class Scythe implements Tool {
                     Fruit fruit = new Fruit(((Tree) structure).getTreeType().getFruit());
                     if (player.getInventory().isInventoryHaveCapacity(fruit)) {
                         player.getInventory().addProductToBackPack(fruit, 1);
+                        GameClient.getInstance().updatePlayerAddToInventory(player,fruit,1);
                         TimeAndDate timeAndDate = new TimeAndDate();
                         timeAndDate.setDay(App.getInstance().getCurrentGame().getTimeAndDate().getTotalDays());
                         ((HarvestAbleProduct) structure).setLastHarvest(timeAndDate);
@@ -114,6 +116,7 @@ public class Scythe implements Tool {
                     if (player.getInventory().isInventoryHaveCapacity(crop)) {
                         int numberOfHarvest = ((Crop) structure).getIsGiant() ? 10 : 1;
                         player.getInventory().addProductToBackPack(crop, numberOfHarvest);
+                        GameClient.getInstance().updatePlayerAddToInventory(player,crop,numberOfHarvest);
                         App.getInstance().getCurrentGame().getVillage().removeStructure(structure);
                         GameClient.getInstance().updateStructureState(structure, StructureUpdateState.DELETE, true, null);
                         tile.setTileType(TileType.FLAT);
@@ -129,6 +132,7 @@ public class Scythe implements Tool {
                     if (player.getInventory().isInventoryHaveCapacity(crop)) {
                         int numberOfHarvest = ((Crop) structure).getIsGiant() ? 10 : 1;
                         player.getInventory().addProductToBackPack(crop, numberOfHarvest);
+                        GameClient.getInstance().updatePlayerAddToInventory(player,crop,numberOfHarvest);
                         TimeAndDate timeAndDate = new TimeAndDate();
                         timeAndDate.setDay(App.getInstance().getCurrentGame().getTimeAndDate().getTotalDays());
                         ((HarvestAbleProduct) structure).setLastHarvest(timeAndDate);

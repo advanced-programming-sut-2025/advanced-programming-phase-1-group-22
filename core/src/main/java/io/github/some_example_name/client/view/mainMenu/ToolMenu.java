@@ -44,9 +44,11 @@ public class ToolMenu extends PopUp {
         scrollPane.setTouchable(Touchable.enabled);
 
         java.util.List<Tool> tools = new ArrayList<>();
-        for (Map.Entry<Salable, Integer> salableIntegerEntry : currentPlayer.getInventory().getProducts().entrySet()) {
-            if (salableIntegerEntry.getKey() instanceof Tool) {
-                tools.add((Tool) salableIntegerEntry.getKey());
+        synchronized (currentPlayer.getInventory().getProducts()){
+            for (Map.Entry<Salable, Integer> salableIntegerEntry : currentPlayer.getInventory().getProducts().entrySet()) {
+                if (salableIntegerEntry.getKey() instanceof Tool) {
+                    tools.add((Tool) salableIntegerEntry.getKey());
+                }
             }
         }
 
@@ -135,9 +137,11 @@ public class ToolMenu extends PopUp {
     private void refreshInventory(Stage stage, Table inventory, Player player, Texture slotTexture, Player currentPlayer, ImageButton trashCan, ScrollPane scrollPane) {
         inventory.clear();
         java.util.List<Tool> tools = new ArrayList<>();
-        for (Map.Entry<Salable, Integer> salableIntegerEntry : currentPlayer.getInventory().getProducts().entrySet()) {
-            if (salableIntegerEntry.getKey() instanceof Tool) {
-                tools.add((Tool) salableIntegerEntry.getKey());
+        synchronized (currentPlayer.getInventory().getProducts()){
+            for (Map.Entry<Salable, Integer> salableIntegerEntry : currentPlayer.getInventory().getProducts().entrySet()) {
+                if (salableIntegerEntry.getKey() instanceof Tool) {
+                    tools.add((Tool) salableIntegerEntry.getKey());
+                }
             }
         }
 

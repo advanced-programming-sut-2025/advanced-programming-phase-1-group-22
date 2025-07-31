@@ -1,6 +1,7 @@
 package io.github.some_example_name.common.model.craft;
 
 import com.badlogic.gdx.graphics.Texture;
+import io.github.some_example_name.client.GameClient;
 import io.github.some_example_name.common.utils.GameAsset;
 import lombok.Getter;
 import lombok.ToString;
@@ -183,6 +184,7 @@ public enum CraftType implements Product {
         for (Map.Entry<Salable, Integer> entry : this.getIngredients().entrySet()) {
             Salable salable = inventory.findProductInBackPackByNAme(entry.getKey().getName());
             inventory.deleteProductFromBackPack(salable, player, entry.getValue());
+            GameClient.getInstance().updatePlayerDeleteFromInventory(player,salable,entry.getValue());
         }
     }
 

@@ -5,6 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import io.github.some_example_name.client.GameClient;
 import io.github.some_example_name.common.utils.GameAsset;
 import lombok.Getter;
 import lombok.ToString;
@@ -54,7 +55,10 @@ public enum FoodType implements Product {
                     AnimalProductType.DUCK_EGG, AnimalProductType.HEN_BIG_EGG};
             for (AnimalProductType egg : eggs) {
                 if (fridge.checkProductInFridge(egg)) fridge.deleteProduct(egg, 1);
-                else player.getInventory().deleteProductFromBackPack(egg, player, 1);
+                else{
+                    player.getInventory().deleteProductFromBackPack(egg, player, 1);
+                    GameClient.getInstance().updatePlayerDeleteFromInventory(player,egg,1);
+                }
             }
         }
     },
@@ -87,11 +91,17 @@ public enum FoodType implements Product {
                     AnimalProductType.BIG_GOAT_MILK, AnimalProductType.GOAT_MILK};
             for (AnimalProductType egg : eggs) {
                 if (fridge.checkProductInFridge(egg)) fridge.deleteProduct(egg, 1);
-                else player.getInventory().deleteProductFromBackPack(egg, player, 1);
+                else{
+                    player.getInventory().deleteProductFromBackPack(egg, player, 1);
+                    GameClient.getInstance().updatePlayerDeleteFromInventory(player,egg,1);
+                }
             }
             for (AnimalProductType milk : milks) {
                 if (fridge.checkProductInFridge(milk)) fridge.deleteProduct(milk, 1);
-                else player.getInventory().deleteProductFromBackPack(milk, player, 1);
+                else{
+                    player.getInventory().deleteProductFromBackPack(milk, player, 1);
+                    GameClient.getInstance().updatePlayerDeleteFromInventory(player,milk,1);
+                }
             }
         }
     },
@@ -126,7 +136,10 @@ public enum FoodType implements Product {
                     AnimalProductType.BIG_GOAT_MILK, AnimalProductType.GOAT_MILK};
             for (AnimalProductType milk : milks) {
                 if (fridge.checkProductInFridge(milk)) fridge.deleteProduct(milk, 1);
-                else player.getInventory().deleteProductFromBackPack(milk, player, 1);
+                else{
+                    player.getInventory().deleteProductFromBackPack(milk, player, 1);
+                    GameClient.getInstance().updatePlayerDeleteFromInventory(player,milk,1);
+                }
             }
             removeProduct(fridge, player, CropType.PUMPKIN, 1);
             removeProduct(fridge, player, SundryType.WHEAT_FLOUR, 1);
@@ -145,8 +158,10 @@ public enum FoodType implements Product {
             for (Salable salable : fridge.getProducts().keySet()) {
                 if (salable instanceof Fish) return true;
             }
-            for (Salable salable : player.getInventory().getProducts().keySet()) {
-                if (salable instanceof Fish) return true;
+            synchronized (player.getInventory().getProducts()){
+                for (Salable salable : player.getInventory().getProducts().keySet()) {
+                    if (salable instanceof Fish) return true;
+                }
             }
             return false;
         }
@@ -175,10 +190,13 @@ public enum FoodType implements Product {
                     return;
                 }
             }
-            for (Salable salable : player.getInventory().getProducts().keySet()) {
-                if (salable instanceof Fish) {
-                    player.getInventory().deleteProductFromBackPack(salable, player, 1);
-                    return;
+            synchronized (player.getInventory().getProducts()){
+                for (Salable salable : player.getInventory().getProducts().keySet()) {
+                    if (salable instanceof Fish) {
+                        player.getInventory().deleteProductFromBackPack(salable, player, 1);
+                        GameClient.getInstance().updatePlayerDeleteFromInventory(player,salable,1);
+                        return;
+                    }
                 }
             }
         }
@@ -472,6 +490,7 @@ public enum FoodType implements Product {
                 BackPack inventory = player.getInventory();
                 product1 = inventory.findProductInBackPackByNAme(product.getName());
                 inventory.deleteProductFromBackPack(product1, player, this.getIngredients().get(product));
+                GameClient.getInstance().updatePlayerDeleteFromInventory(player,product1,this.getIngredients().get(product));
             }
         }
     }
@@ -513,6 +532,7 @@ public enum FoodType implements Product {
         else {
             salable = player.getInventory().findProductInBackPackByNAme(salable.getName());
             player.getInventory().deleteProductFromBackPack(salable, player, 1);
+            GameClient.getInstance().updatePlayerDeleteFromInventory(player,salable,1);
         }
     }
 

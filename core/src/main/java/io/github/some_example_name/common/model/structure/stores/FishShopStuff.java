@@ -1,6 +1,7 @@
 package io.github.some_example_name.common.model.structure.stores;
 
 import io.github.some_example_name.client.GameClient;
+import io.github.some_example_name.common.model.source.Mineral;
 import lombok.Getter;
 import io.github.some_example_name.common.model.abilitiy.Ability;
 import io.github.some_example_name.common.model.cook.Food;
@@ -128,7 +129,8 @@ public enum FishShopStuff  implements Shop{
             GameClient.getInstance().updatePlayerGold(player);
 			salable.dailySold += count;
 			player.getInventory().addProductToBackPack(new Food(salable.foodType), count);
-			return new Response("Bought successfully", true);
+            GameClient.getInstance().updatePlayerAddToInventory(player,new Food(salable.foodType),count);
+            return new Response("Bought successfully", true);
 		}
 		for (FishShopStuff value : FishShopStuff.values()) {
 			if (value.ordinal() < 2) continue;
@@ -152,7 +154,8 @@ public enum FishShopStuff  implements Shop{
         GameClient.getInstance().updatePlayerGold(player);
 		salable.dailySold += count;
 		player.getInventory().addProductToBackPack(salable.fishingPole, count);
-		return new Response("Bought successfully", true);
+        GameClient.getInstance().updatePlayerAddToInventory(player, salable.fishingPole, count);
+        return new Response("Bought successfully", true);
 	}
 
 	public boolean isAvailable() {
