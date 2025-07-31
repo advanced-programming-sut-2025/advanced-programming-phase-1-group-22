@@ -15,6 +15,11 @@ public class ServerService {
     public void DCReconnect(String username) {
         clientHandler.getGameServer().getServerToClientsMessages().stream()
             .sorted(Comparator.comparingLong(Message::getTime))
-            .forEach(message -> clientHandler.send(message.getMessage()));
+            .forEach(message -> {
+                try {
+                    clientHandler.send(message.getMessage());
+                } catch (Exception ignored) {
+                }
+            });
     }
 }

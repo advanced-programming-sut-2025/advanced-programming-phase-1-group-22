@@ -34,21 +34,32 @@ public class GameServer {
     public void sendAll(String message) {
         serverToClientsMessages.add(new Message(message));
         clients.forEach(client -> {
-            client.getValue().send(message);
+            try {
+                client.getValue().send(message);
+            } catch (Exception ignored) {
+            }
         });
     }
 
     public void sendAllBut(String message, String username) {
         serverToClientsMessages.add(new Message(message));
         for (Entry<ServerPlayer, ClientHandler> client : clients) {
-            if (!client.getKey().username.equals(username)) client.getValue().send(message);
+            if (!client.getKey().username.equals(username)) {
+                try {
+                    client.getValue().send(message);
+                } catch (Exception ignored) {
+                }
+            }
         }
     }
 
     public void sendFire(String message, String username) {
         for (Entry<ServerPlayer, ClientHandler> client : clients) {
-            if (!client.getKey().username.equals(username))  {
-                client.getValue().send(message);
+            if (!client.getKey().username.equals(username)) {
+                try {
+                    client.getValue().send(message);
+                } catch (Exception ignored) {
+                }
             } else {
                 client.getValue().setInFavor(true);
             }

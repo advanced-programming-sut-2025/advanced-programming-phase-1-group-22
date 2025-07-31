@@ -1,6 +1,7 @@
 package io.github.some_example_name.server;
 
 import com.google.gson.*;
+import io.github.some_example_name.common.JsonMessageHandler;
 import io.github.some_example_name.common.model.*;
 import io.github.some_example_name.server.model.GameServer;
 import io.github.some_example_name.server.model.GameThread;
@@ -9,10 +10,7 @@ import io.github.some_example_name.server.service.ServerService;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.List;
@@ -27,8 +25,7 @@ import java.util.concurrent.TimeUnit;
 public class ClientHandler extends Thread {
     private static final Gson GSON = new GsonBuilder().serializeNulls().create();
     private Socket clientSocket;
-    private PrintWriter out;
-    private BufferedReader in;
+    private JsonMessageHandler jsonMessageHandler;
     private boolean dead = false;
     private boolean ready = false;
     private boolean running = true;
@@ -40,6 +37,10 @@ public class ClientHandler extends Thread {
 
     public ClientHandler(Socket socket) {
         this.clientSocket = socket;
+        try {
+            this.jsonMessageHandler = new JsonMessageHandler(clientSocket.getInputStream(), clientSocket.getOutputStream());
+        } catch (Exception ignored) {
+        }
     }
 
     private void handlePlayerDC(String username, long DCTime, long lastPing) {
@@ -83,10 +84,8 @@ public class ClientHandler extends Thread {
     @Override
     public void run() {
         try {
-            in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-            out = new PrintWriter(clientSocket.getOutputStream(), true);
             String message;
-            while (running && (message = in.readLine()) != null) {
+            while (running && (message = jsonMessageHandler.receive()) != null) {
                 try {
                     JsonObject obj = JsonParser.parseString(message).getAsJsonObject();
 
@@ -241,7 +240,7 @@ public class ClientHandler extends Thread {
         return random.nextInt(end - start + 1) + start;
     }
 
-    public void send(String message) {
-        if (!dead) out.println(message);
+    public void send(String message) throws IOException {
+        if (!dead) jsonMessageHandler.send(message);
     }
 }
