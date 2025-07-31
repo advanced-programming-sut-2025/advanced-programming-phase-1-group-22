@@ -60,7 +60,7 @@ public class ClientService {
         for (Farm farm : App.getInstance().getCurrentGame().getVillage().getFarms()) {
             if (farm.getFarmType().equals(farmType1)) {
                 farm.setCrowAttackToday(isCrowAttack);
-                if (isCrowAttack) farm.setAttackedProduct(harvestAbleProduct);
+                farm.setAttackedProduct(harvestAbleProduct);
             }
         }
     }

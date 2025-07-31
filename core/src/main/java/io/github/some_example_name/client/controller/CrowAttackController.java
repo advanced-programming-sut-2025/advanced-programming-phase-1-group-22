@@ -9,7 +9,6 @@ import io.github.some_example_name.common.model.StructureUpdateState;
 import io.github.some_example_name.common.model.products.HarvestAbleProduct;
 import io.github.some_example_name.common.model.products.TreesAndFruitsAndSeeds.Tree;
 import io.github.some_example_name.common.model.source.Crop;
-import io.github.some_example_name.common.model.structure.Structure;
 import io.github.some_example_name.common.utils.App;
 import io.github.some_example_name.client.view.CrowAttack;
 
@@ -61,7 +60,8 @@ public class CrowAttackController {
 //                        CrowAttack newCrowAttack = new CrowAttack(new Vector2(harvestAbleProduct.getTiles().get(0).getX() * App.tileWidth,
 //                            harvestAbleProduct.getTiles().get(0).getY() * App.tileHeight), 4, 10, harvestAbleProduct);
 //                        crowAttacks.put(farm, newCrowAttack);
-//                        System.out.println("put");
+//                        farm.setCrowAttackToday(true);
+//                        farm.setAttackedProduct(null);
 //                    }
 //                }
 //            }
@@ -89,6 +89,7 @@ public class CrowAttackController {
                 CrowAttack crowAttack = new CrowAttack(new Vector2(harvestAbleProduct.getTiles().get(0).getX() * App.tileWidth,
                     harvestAbleProduct.getTiles().get(0).getY() * App.tileHeight), 4, 10, harvestAbleProduct);
                 farm.setCrowAttackToday(true);
+                farm.setAttackedProduct(null);
                 crowAttacks.put(farm, crowAttack);
                 GameClient.getInstance().updateFarmCrowAttack(farm, false, harvestAbleProduct);
             }
