@@ -35,8 +35,8 @@ public enum NPCType {
             new Mission(1, () -> Map.of(MineralType.IRON, 50), () -> Map.of(MineralType.DIAMOND, 2), 0),
             new Mission(2, () -> Map.of(FoodType.PUMPKIN_PIE, 1), () -> Map.of(MineralType.GOLD, 5000), 0),
             new Mission(3, () -> Map.of(MineralType.STONE, 150), () -> Map.of(MineralType.QUARTZ, 50), Season.FALL)
-        ), 256, 128, 65, 65,
-        1),
+        ), 256, 128, 65, 65, 1,
+        "I'm a young kind man with lovely and flirty attributes and I'm so loved here. And I'm very concerned of my dishes."),
 
     ABIGIL("ebigel", GameAsset.ABIGAIL_FULL_NPC, GameAsset.CABIN2, GameAsset.ABIGAIL,
         () -> List.of(MineralType.IRON_ORE, MineralType.STONE, MadeProductType.COFFE),
@@ -44,8 +44,8 @@ public enum NPCType {
             new Mission(1, () -> Map.of(MadeProductType.GOLD_BAR, 1), () -> Map.of(MineralType.GOLD, 1), 0),
             new Mission(2, () -> Map.of(CropType.PUMPKIN, 1), () -> Map.of(MineralType.GOLD, 500), 1),
             new Mission(3, () -> Map.of(CropType.WHEAT, 50), () -> Map.of(WateringCanType.IRIDIUM, 1), Season.WINTER)
-        ),256, 128, 65, 65,
-        2),
+        ),256, 128, 65, 65, 2,
+        "I'm lovely gorgeous girl with purple attributes and I'm in love."),
 
     HARVEY("harvey", GameAsset.HARVEY_FULL_NPC, GameAsset.CABIN3, GameAsset.HARVEY,
         () -> List.of(MadeProductType.PICKLES, MadeProductType.WINE, MadeProductType.COFFE),
@@ -53,8 +53,8 @@ public enum NPCType {
             new Mission(1, () -> Map.of(MineralType.GOLD, 12), () -> Map.of(MineralType.GOLD, 750), 0),
             new Mission(2, () -> Map.of(FishType.SALMON, 1), () -> Map.of(MineralType.GOLD, 1), 1),
             new Mission(3, () -> Map.of(MadeProductType.WINE, 1), () -> Map.of(FoodType.SALAD, 5), Season.WINTER)
-        ),256, 128, 65, 65,
-        3),
+        ),256, 128, 65, 65, 3,
+        "I'm an old man trying to make a living through reading books; I'm so wise everyone comes to me."),
 
     LIA("lia", GameAsset.LEAH_FULL_NPC, GameAsset.CABIN4, GameAsset.LIA_ICON,
         () -> List.of(MadeProductType.WINE, CropType.GRAPE, FoodType.SALAD),
@@ -62,8 +62,8 @@ public enum NPCType {
             new Mission(1, () -> Map.of(MineralType.HARD_WOOD, 10), () -> Map.of(MineralType.GOLD, 500), 0),
             new Mission(2, () -> Map.of(FishType.SALMON, 1), () -> Map.of(CookingRecipe.SALMON_DINNER_RECIPE, 1), 1),
             new Mission(3, () -> Map.of(MineralType.WOOD, 200), () -> Map.of(CraftType.DELUXE_SCARECROW, 3), Season.SUMMER)
-        ),256, 96, 65, 65,
-        4),
+        ),256, 96, 65, 65, 4,
+        "I'm flirty mean teenage girl who tries to have anything she wants."),
 
     RABIN("rabin", GameAsset.ROBIN_FULL_NPC, GameAsset.CABIN5, GameAsset.ROBIN,
         () -> List.of(FoodType.SPAGHETTI, MineralType.WOOD, MadeProductType.IRON_BAR),
@@ -71,14 +71,15 @@ public enum NPCType {
             new Mission(1, () -> Map.of(MineralType.WOOD, 80), () -> Map.of(MineralType.GOLD, 1000), 0),
             new Mission(2, () -> Map.of(MadeProductType.IRON_BAR, 10), () -> Map.of(CraftType.BEE_HOUSE, 3), 1),
             new Mission(3, () -> Map.of(MineralType.WOOD, 1000), () -> Map.of(MineralType.GOLD, 25_000), Season.WINTER)
-        ),256, 128, 65, 65,
-        5);
+        ),256, 128, 65, 65, 5,
+        "I'm hardworking man in love of wood and iron. Somehow like a carpenter.");
 
     private final String name;
     private final transient Texture textureCharacter;
     private final transient Texture textureHouse;
     private final transient TextureRegion textureIcon;
     private final transient TextureRegion[][] miniTextures;
+    private final String personality;
     private final List<Mission> missions = new ArrayList<>();
     private final int missionSeasonDis;
     private final HashMap<Direction, Integer> directions;
@@ -129,7 +130,7 @@ public enum NPCType {
     }
 
     NPCType(String name, Texture textureCharacter, Texture textureHouse, Texture textureIcon, IngredientsSupplier ingredientsSupplier,
-            MissionsSupplier missionsSupplier, int avatarX, int avatarY, int avatarWidth, int avatarHeight, int missionSeasonDis) {
+            MissionsSupplier missionsSupplier, int avatarX, int avatarY, int avatarWidth, int avatarHeight, int missionSeasonDis, String personality) {
         this.name = name;
         this.textureCharacter = textureCharacter;
         this.textureHouse = textureHouse;
@@ -138,6 +139,7 @@ public enum NPCType {
         this.ingredientsSupplier = ingredientsSupplier;
         this.missionsSupplier = missionsSupplier;
         this.missionSeasonDis = missionSeasonDis;
+        this.personality = personality;
         directions =  new HashMap<>();
         directions.put(Direction.NORTH, 2);
         directions.put(Direction.CENTRE, 0);
