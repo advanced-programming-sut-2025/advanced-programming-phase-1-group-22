@@ -2121,6 +2121,11 @@ Mineral/Star_Shards.png
 Mineral/Thunder_Egg.png
 Mineral/Tigerseye.png
 Morris.png
+NPC/Abigail.png
+NPC/Harvey.png
+NPC/Leah.png
+NPC/Robin.png
+NPC/Sebastian.png
 Neighbor_Cabin_Stage_3.png
 Night/Green.png
 Night/Yellow.png

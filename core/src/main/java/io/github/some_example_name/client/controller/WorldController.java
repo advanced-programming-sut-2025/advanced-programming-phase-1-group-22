@@ -370,16 +370,7 @@ public class WorldController {
         currentGame.getVillage().applyPendingChanges();
         for (Structure structure : currentGame.getVillage().getStructuresSnapshot()) {
             if (structure.getSprite() != null) {
-                if (structure instanceof NPC npc) {
-                    drawRawSprite(delta, structure.getSprite(), structure);
-                    if (npc.isHaveDialog()) {
-                        npc.getSpriteDialogBox().setPosition(structure.getTiles().get(0).getX() * App.tileWidth,
-                            structure.getTiles().get(0).getY() * App.tileHeight + npc.getSprite().getHeight());
-                        npc.getSpriteDialogBox().draw(MainGradle.getInstance().getBatch());
-                    }
-                } else {
-                    drawRawSprite(delta, structure.getSprite(), structure);
-                }
+                drawRawSprite(delta, structure.getSprite(), structure);
             }
             if (structure.getSprites() != null) {
                 for (SpriteHolder sprite : structure.getSprites()) {
