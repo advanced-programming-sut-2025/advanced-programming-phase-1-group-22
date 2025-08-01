@@ -72,6 +72,7 @@ public class TimeAndDate {
     public void moveTimeForward() {
         boolean nextDay = false;
         minute += 1;
+        App.getInstance().getCurrentGame().getVillage().updateNpcs(this);
         if (minute >= 60) {
             hour++;
             minute = 0;

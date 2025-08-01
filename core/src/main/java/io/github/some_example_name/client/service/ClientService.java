@@ -7,6 +7,7 @@ import io.github.some_example_name.common.model.*;
 import io.github.some_example_name.common.model.abilitiy.Ability;
 import io.github.some_example_name.common.model.products.HarvestAbleProduct;
 import io.github.some_example_name.common.model.relations.Mission;
+import io.github.some_example_name.common.model.relations.NPC;
 import io.github.some_example_name.common.model.relations.NPCType;
 import io.github.some_example_name.common.model.relations.Player;
 import io.github.some_example_name.common.model.structure.Structure;
@@ -220,6 +221,15 @@ public class ClientService {
         for (Player player : App.getInstance().getCurrentGame().getPlayers()) {
             if (player.getUser().getUsername().equals(username)) {
                 return player;
+            }
+        }
+        return null;
+    }
+
+    public NPC getNpcByName(String name) {
+        for (NPC npc : App.getInstance().getCurrentGame().getNpcs()) {
+            if (npc.getName().equals(name)) {
+                return npc;
             }
         }
         return null;
