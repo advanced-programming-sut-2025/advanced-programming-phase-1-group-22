@@ -351,6 +351,13 @@ public class GameClient {
                                 service.getPlayerByUsername(obj.get("id").getAsString()),
                                 body.get("message").getAsString()
                             );
+                        } else if (obj.get("action").getAsString().equals("_npc_walk")) {
+                            LinkedList<Pair> path = new LinkedList<>();
+                            for (int i = 0; i < body.get("path").getAsJsonArray().size(); ) {
+                                path.add(new Pair(body.get("path").getAsJsonArray().get(i++).getAsInt(),
+                                    body.get("path").getAsJsonArray().get(i++).getAsInt()));
+                            }
+                            service.getNpcByName(body.get("name").getAsString()).applyWalk(path);
                         } else if (obj.get("action").getAsString().equals("notify")) {
                             Actor source = null;
                             if (body.get("isFromPlayer").getAsBoolean()) {
@@ -1474,6 +1481,28 @@ public class GameClient {
         } catch (IOException e) {
             debug(e);
         }
+    }
+
+    public void npcWalk(String name, ArrayList<Pair> path) {
+        try {
+            Map<String, Object> msg = Map.of(
+                "action", "_npc_walk",
+                "id", Session.getCurrentUser().getUsername(),
+                "body", Map.of("name", name, "path", encodePath(path))
+            );
+            jsonMessageHandler.send(GSON.toJson(msg));
+        } catch (IOException e) {
+            debug(e);
+        }
+    }
+
+    private ArrayList<Integer> encodePath(ArrayList<Pair> path) {
+        ArrayList<Integer> list = new ArrayList<>();
+        for (Pair tile : path) {
+            list.add(tile.getX());
+            list.add(tile.getY());
+        }
+        return list;
     }
 }
 

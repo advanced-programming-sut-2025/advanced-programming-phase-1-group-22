@@ -12,6 +12,7 @@ import io.github.some_example_name.common.model.cook.Food;
 import io.github.some_example_name.common.model.craft.Craft;
 import io.github.some_example_name.common.model.products.AnimalProduct;
 import io.github.some_example_name.common.model.products.TreesAndFruitsAndSeeds.Fruit;
+import io.github.some_example_name.common.model.relations.*;
 import io.github.some_example_name.common.model.source.*;
 import io.github.some_example_name.common.model.records.Response;
 import io.github.some_example_name.common.model.structure.stores.*;
@@ -23,10 +24,6 @@ import io.github.some_example_name.common.model.enums.Weather;
 import io.github.some_example_name.common.model.gameSundry.SundryType;
 import io.github.some_example_name.common.model.products.HarvestAbleProduct;
 import io.github.some_example_name.common.model.products.TreesAndFruitsAndSeeds.Tree;
-import io.github.some_example_name.common.model.relations.Friendship;
-import io.github.some_example_name.common.model.relations.Mission;
-import io.github.some_example_name.common.model.relations.NPC;
-import io.github.some_example_name.common.model.relations.Player;
 import io.github.some_example_name.common.model.shelter.ShippingBin;
 import io.github.some_example_name.common.model.structure.Structure;
 import io.github.some_example_name.common.utils.App;
@@ -165,6 +162,10 @@ public class Game implements Serializable {
         App.getInstance().getCurrentGame().getVillage().forEachStructure(structure -> {
             if (structure instanceof NPC npc) {
                 npc.setGiftedToday(false);
+            }
+            if (structure instanceof NPCHouse npcHouse) {
+                npcHouse.getOwner().getTiles().clear();
+                npcHouse.getOwner().getTiles().add(npcHouse.getTiles().get(0));
             }
         });
         applyPendingChanges();
