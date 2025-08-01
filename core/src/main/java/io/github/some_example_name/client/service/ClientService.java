@@ -251,4 +251,11 @@ public class ClientService {
             MainGradle.getInstance().initialMenu();
         });
     }
+
+    public Actor getActor(String name) {
+        Actor actor;
+        actor = getPlayerByUsername(name);
+        if (actor != null) return actor;
+        return getNpcByName(name);
+    }
 }

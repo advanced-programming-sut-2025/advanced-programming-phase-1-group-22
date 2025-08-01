@@ -16,10 +16,7 @@ import io.github.some_example_name.client.service.ClientService;
 import io.github.some_example_name.common.model.*;
 import io.github.some_example_name.common.model.products.HarvestAbleProduct;
 import io.github.some_example_name.common.model.records.Response;
-import io.github.some_example_name.common.model.relations.Mission;
-import io.github.some_example_name.common.model.relations.NPC;
-import io.github.some_example_name.common.model.relations.Player;
-import io.github.some_example_name.common.model.relations.Trade;
+import io.github.some_example_name.common.model.relations.*;
 import io.github.some_example_name.common.model.structure.Structure;
 import io.github.some_example_name.common.model.structure.stores.Shop;
 import io.github.some_example_name.common.model.tools.MilkPail;
@@ -358,6 +355,16 @@ public class GameClient {
                                     body.get("path").getAsJsonArray().get(i++).getAsInt()));
                             }
                             service.getNpcByName(body.get("name").getAsString()).applyWalk(path);
+                        } else if (obj.get("action").getAsString().equals("_set_friendship_xp")) {
+                            RelationService.getInstance().getFriendShipBetweenTwoActors(
+                                service.getActor(body.get("first").getAsString()),
+                                service.getActor(body.get("second").getAsString())
+                            ).setXpByServer(body.get("xp").getAsInt());
+                        } else if (obj.get("action").getAsString().equals("_set_friendship_level")) {
+                            RelationService.getInstance().getFriendShipBetweenTwoActors(
+                                service.getActor(body.get("first").getAsString()),
+                                service.getActor(body.get("second").getAsString())
+                            ).setFriendShipLevelByServer(body.get("level").getAsInt());
                         } else if (obj.get("action").getAsString().equals("notify")) {
                             Actor source = null;
                             if (body.get("isFromPlayer").getAsBoolean()) {
@@ -1503,6 +1510,40 @@ public class GameClient {
             list.add(tile.getY());
         }
         return list;
+    }
+
+    public void setFriendShipLevel(Integer friendShipLevel, Friendship friendship) {
+        try {
+            Map<String, Object> msg = Map.of(
+                "action", "_set_friendship_level",
+                "id", Session.getCurrentUser().getUsername(),
+                "body", Map.of(
+                    "level", friendShipLevel,
+                    "first", friendship.getFirstPlayer().getName(),
+                    "second", friendship.getSecondPlayer().getName()
+                )
+            );
+            jsonMessageHandler.send(GSON.toJson(msg));
+        } catch (IOException e) {
+            debug(e);
+        }
+    }
+
+    public void setFriendShipXp(Integer xp, Friendship friendship) {
+        try {
+            Map<String, Object> msg = Map.of(
+                "action", "_set_friendship_xp",
+                "id", Session.getCurrentUser().getUsername(),
+                "body", Map.of(
+                    "xp", xp,
+                    "first", friendship.getFirstPlayer().getName(),
+                    "second", friendship.getSecondPlayer().getName()
+                )
+            );
+            jsonMessageHandler.send(GSON.toJson(msg));
+        } catch (IOException e) {
+            debug(e);
+        }
     }
 }
 

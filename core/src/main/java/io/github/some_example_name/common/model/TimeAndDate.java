@@ -103,8 +103,10 @@ public class TimeAndDate {
     }
 
     public int getTotalDays(){
-        int days = App.getInstance().getCurrentGame().getTimeAndDate().getSeason().ordinal() * 28;
-        days += App.getInstance().getCurrentGame().getTimeAndDate().getDay();
+        int days = year * 4;
+        days += season.ordinal();
+        days *= 28;
+        days += day;
         return days;
     }
 

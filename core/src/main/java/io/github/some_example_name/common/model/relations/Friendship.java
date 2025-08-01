@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.github.some_example_name.client.GameClient;
 import io.github.some_example_name.common.model.Entry;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,9 +31,7 @@ public class Friendship implements JsonPreparable {
     private Integer friendShipLevel;
     private Integer xp;
     private ArrayList<Entry<String, Actor>> dialogs;
-//    @JsonBackReference
-    private TimeAndDate lastSeen = new TimeAndDate(1, 9, Season.SPRING, 0);
-//    @JsonBackReference
+    private TimeAndDate lastSeen = new TimeAndDate(0, 9, Season.SPRING, 0);
     private TimeAndDate timeFromGettingFirstLevel = new TimeAndDate(1, 9, Season.SPRING, 0);
 
     public Friendship(Integer id, Actor firstPlayer, Actor secondPlayer) {
@@ -45,19 +44,27 @@ public class Friendship implements JsonPreparable {
         this.dialogs = new ArrayList<>();
     }
 
-    public void talkToNPC() {
-
+    public void setFriendShipLevel(Integer friendShipLevel) {
+        GameClient.getInstance().setFriendShipLevel(friendShipLevel, this);
     }
 
-    public void talkToPlayer() {
+    public void setXp(Integer xp) {
+        GameClient.getInstance().setFriendShipXp(xp, this);
+    }
 
+    public void setFriendShipLevelByServer(Integer friendShipLevel) {
+        this.friendShipLevel = friendShipLevel;
+        if (firstPlayer instanceof NPC && secondPlayer instanceof Player) {
+            if (friendShipLevel > 3) this.friendShipLevel = 3;
+            xp -= 200;
+        } else {
+            xp = 0;
+        }
     }
 
     public Integer getFriendShipLevel() {
-        if (secondPlayer instanceof NPC || firstPlayer instanceof NPC) {
-            return friendShipLevel + xp / 200;
-        }
-        return friendShipLevel + xp / 100;
+        if (friendShipLevel == null) return 0;
+        return friendShipLevel;
     }
 
     @Override
@@ -67,6 +74,26 @@ public class Friendship implements JsonPreparable {
             ", friendShipLevel=" + friendShipLevel +
             ", xp=" + xp +
             '}';
+    }
+
+    public void setXpByServer(Integer xp) {
+        if (xp < 0) xp = 0;
+        this.xp = xp;
+        if (xp > getXpNeeded()) {
+            setFriendShipLevel(getFriendShipLevel() + 1);
+        }
+    }
+
+    public Integer getXp() {
+        return xp == null ? 0 : xp;
+    }
+
+    private Integer getXpNeeded() {
+        if (firstPlayer instanceof NPC && secondPlayer instanceof Player) {
+            return 200;
+        } else {
+            return (friendShipLevel + 1) * 100;
+        }
     }
 
     private ObjectWrapper firstPlayerWrapper;
@@ -114,5 +141,9 @@ public class Friendship implements JsonPreparable {
                 dialogs.add(new Entry<>(String.valueOf(entry.amount), actor));
             }
         }
+    }
+
+    public void setLastSeen(TimeAndDate lastSeen) {
+        this.lastSeen = lastSeen.copy();
     }
 }

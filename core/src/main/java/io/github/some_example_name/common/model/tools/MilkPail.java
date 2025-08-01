@@ -15,6 +15,7 @@ import io.github.some_example_name.common.model.animal.AnimalType;
 import io.github.some_example_name.common.model.products.AnimalProduct;
 import io.github.some_example_name.common.model.structure.Structure;
 import io.github.some_example_name.common.utils.App;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
