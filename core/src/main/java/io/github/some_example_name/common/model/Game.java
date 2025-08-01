@@ -151,11 +151,11 @@ public class Game implements Serializable {
         }
         for (Friendship friendship : this.getFriendships()) {
             if (friendship.getLastSeen().getDay().equals(this.getTimeAndDate().getDay())) {
-                friendship.setXp(friendship.getXp() + -10);
-                if (friendship.getXp() <= 0) {
-                    friendship.setXp(90);
-                    friendship.setFriendShipLevel(friendship.getFriendShipLevel() - 1);
-                }
+                friendship.setXp(friendship.getXp() - 10);
+//                if (friendship.getXp() <= 0) {
+//                    friendship.setXp(90);
+//                    friendship.setFriendShipLevel(friendship.getFriendShipLevel() - 1);
+//                }
             }
         }
         App.getInstance().getCurrentGame().getVillage().applyPendingChanges();
@@ -406,7 +406,7 @@ public class Game implements Serializable {
 
     private void giveRewardToLevelThreeFriends() {
         for (Friendship friendship : this.getFriendships()) {
-            if ((friendship.getFirstPlayer() instanceof NPC && friendship.getSecondPlayer() instanceof Player)) {
+            if ((friendship.getFirstPlayer() instanceof NPC || friendship.getSecondPlayer() instanceof NPC)) {
                 if (friendship.getFriendShipLevel() == 3) {
                     NPC npc = (NPC) friendship.getFirstPlayer();
                     Mission mission = npc.getType().getMissions().get(npc.getType().getMissions().size() % 3);
@@ -418,7 +418,7 @@ public class Game implements Serializable {
                         GameClient.getInstance().updatePlayerAddToInventory(App.getInstance().getCurrentGame().getCurrentPlayer(),gift,1);
                 }
             }
-            if ((friendship.getSecondPlayer() instanceof NPC && friendship.getFirstPlayer() instanceof Player)) {
+            if ((friendship.getSecondPlayer() instanceof NPC || friendship.getFirstPlayer() instanceof NPC)) {
                 if (friendship.getFriendShipLevel() == 3) {
                     NPC npc = (NPC) friendship.getSecondPlayer();
                     Mission mission = npc.getType().getMissions().get(npc.getType().getMissions().size() % 3);
