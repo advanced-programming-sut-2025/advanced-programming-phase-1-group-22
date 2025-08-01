@@ -474,17 +474,14 @@ public class Village implements JsonPreparable {
         for (NPC npc : App.getInstance().getCurrentGame().getNpcs()) {
             switch (npc.getMovingState()) {
                 case 0: {
-                    if (random.nextInt(40) == 1) {
+                    if (random.nextInt(150) == 1) {
                         npc.goToStore();
                     }
                 } break;
                 case 1: {
-                    if (time.getHour() > 10 && random.nextInt(30) == 1) {
+                    if (time.getHour() > 16 && random.nextInt(30) == 1) {
                         npc.moveRandomly();
-                    }
-                } break;
-                case 2: {
-                    if (time.getHour() > 11 && random.nextInt(40) == 1) {
+                    } else if (time.getHour() > 20 && random.nextInt(40) == 1) {
                         npc.goHome();
                     }
                 }

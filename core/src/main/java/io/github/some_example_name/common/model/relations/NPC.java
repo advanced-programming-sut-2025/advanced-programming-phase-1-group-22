@@ -51,6 +51,7 @@ public class NPC extends Actor {
         if (dirChanged) {
             dirChanged = false;
             this.sprites.get(0).setSprite(type.getWalking(direction));
+            ((AnimatedSprite) this.sprites.get(0).getSprite()).setLooping(true);
         }
         if (isHaveDialog() && sprites.size() < 2) {
             sprites.add(spriteDialogBox);
@@ -63,8 +64,8 @@ public class NPC extends Actor {
     public void setDirection(Direction direction) {
         if (this.direction != direction) {
             dirChanged = true;
+            this.direction = direction;
         }
-        this.direction = direction;
     }
 
     public void setLazyDirection(Direction direction) {
@@ -83,16 +84,18 @@ public class NPC extends Actor {
     }
 
     public void walk(Tile tile) {
-        NpcWalkingStrategy walkingStrategy = new NpcWalkingStrategy();
-        ArrayList<Pair> path = walkingStrategy.getPath(
-            new Pair(getTiles().getFirst().getX(), getTiles().getFirst().getY()),
-            new Pair(tile.getX(), tile.getY()), house
-        );
-        if (path == null) {
-            movingState--;
-            return;
-        }
-        GameClient.getInstance().npcWalk(getName(), path);
+        new Thread(() -> {
+            NpcWalkingStrategy walkingStrategy = new NpcWalkingStrategy();
+            ArrayList<Pair> path = walkingStrategy.getPath(
+                new Pair(getTiles().getFirst().getX(), getTiles().getFirst().getY()),
+                new Pair(tile.getX(), tile.getY()), house
+            );
+            if (path == null) {
+                movingState--;
+                return;
+            }
+            GameClient.getInstance().npcWalk(type.getName(), path);
+        }).start();
     }
 
     public void applyWalk(LinkedList<Pair> path) {
@@ -101,10 +104,14 @@ public class NPC extends Actor {
             return;
         }
         Pair pair = path.getFirst();
-        setDirection(Direction.getByXAndY(
+        Direction dir = Direction.getByXAndY(
             pair.getX() - getTiles().getFirst().getX(),
             pair.getY() - getTiles().getFirst().getY()
-        ));
+        );
+        if (dir == null) {
+            dir = Direction.SOUTH; //todo bug
+        }
+        setDirection(dir);
         getTiles().clear();
         getTiles().add(App.getInstance().getCurrentGame().getTiles()[pair.getX()][pair.getY()]);
         path.removeFirst();
@@ -113,7 +120,7 @@ public class NPC extends Actor {
             public void run() {
                 applyWalk(path);
             }
-        }, 0.6f);
+        }, 0.3f);
     }
 
 
@@ -131,10 +138,10 @@ public class NPC extends Actor {
         if (x < (maxX + 1)/2 - 3 || x >= (maxX + 1)/2 + 3) y = random.nextInt(6) + (maxY + 1)/2 - 3;
         else y = random.nextInt(maxY);
         walk(App.getInstance().getCurrentGame().getTiles()[x][y]);
-        movingState = 2;
     }
 
     public void goHome() {
         walk(house.getTiles().getFirst());
+        movingState = 3;
     }
 }

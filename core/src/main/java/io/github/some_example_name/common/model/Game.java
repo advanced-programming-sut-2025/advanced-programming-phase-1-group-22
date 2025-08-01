@@ -162,6 +162,7 @@ public class Game implements Serializable {
         App.getInstance().getCurrentGame().getVillage().forEachStructure(structure -> {
             if (structure instanceof NPC npc) {
                 npc.setGiftedToday(false);
+                npc.setMovingState(0);
             }
             if (structure instanceof NPCHouse npcHouse) {
                 npcHouse.getOwner().getTiles().clear();
