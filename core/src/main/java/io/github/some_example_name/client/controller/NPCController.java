@@ -33,7 +33,8 @@ public class NPCController {
             App.getInstance().getCurrentGame().getVillage().applyPendingChanges();
             App.getInstance().getCurrentGame().getVillage().forEachStructure(structure -> {
                 if (structure instanceof NPC npc) {
-                    if (collisionWithDialog(npc.getSpriteDialogBox(), worldX, worldY)) {
+                    if (npc.getSprites().size() > 1 &&
+                        collisionWithDialog(npc.getSprites().get(1).getSprite(), worldX, worldY)) {
                         DialogMenu dialogMenu = new DialogMenu(npc);
                         dialogMenu.createMenu(GameView.stage, GameAsset.SKIN, worldController);
                     }
