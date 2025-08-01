@@ -39,6 +39,7 @@ public class PlayerController {
     private final PopUpReaction reactionMenu = new PopUpReaction();
     private final ScoreBoard scoreBoard = new ScoreBoard();
     private final MultiMissionMenu multiMissionMenu = new MultiMissionMenu();
+    private final RadioMenu radioMenu = new RadioMenu();
 
     public PlayerController(WorldController worldController) {
         this.worldController = worldController;
@@ -204,6 +205,9 @@ public class PlayerController {
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.U)) {
             multiMissionMenu.createMenu(GameView.stage, GameAsset.SKIN, getWorldController());
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.G)) {
+            radioMenu.createMenu(GameView.stage, GameAsset.SKIN, getWorldController());
         }
         if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
             Vector3 worldCoords = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
