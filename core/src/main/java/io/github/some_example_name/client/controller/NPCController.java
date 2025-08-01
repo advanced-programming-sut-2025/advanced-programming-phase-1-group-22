@@ -5,14 +5,18 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector3;
+import io.github.some_example_name.client.GameClient;
 import io.github.some_example_name.client.MainGradle;
 import io.github.some_example_name.common.model.relations.NPC;
+import io.github.some_example_name.common.model.relations.Player;
 import io.github.some_example_name.common.model.structure.Structure;
 import io.github.some_example_name.common.utils.App;
 import io.github.some_example_name.common.utils.GameAsset;
 import io.github.some_example_name.client.view.GameView;
 import io.github.some_example_name.client.view.mainMenu.DialogMenu;
 import io.github.some_example_name.client.view.mainMenu.NPCMenu;
+
+import java.util.Random;
 
 public class NPCController {
     private final WorldController worldController = WorldController.getInstance();
@@ -59,18 +63,16 @@ public class NPCController {
     }
 
     private void handleDialog() {
-        OrthographicCamera camera = MainGradle.getInstance().getCamera();
-        int tileMinX = (int) ((camera.position.x - (camera.viewportWidth / 2)) / App.tileWidth);
-        int tileMaxX = (int) ((camera.position.x + (camera.viewportWidth / 2)) / App.tileWidth);
-        int tileMinY = (int) ((camera.position.y - (camera.viewportHeight / 2)) / App.tileHeight);
-        int tileMaxY = (int) ((camera.position.y + (camera.viewportHeight / 2)) / App.tileHeight);
         App.getInstance().getCurrentGame().getVillage().applyPendingChanges();
+        for (Player player : App.getInstance().getCurrentGame().getPlayers()) {
+            if (player.getDead()) continue;
+            if (player.equals(App.getInstance().getCurrentGame().getCurrentPlayer())) break;
+            return;
+        }
+        Random random = new Random();
         App.getInstance().getCurrentGame().getVillage().forEachStructure(structure -> {
-            if (structure instanceof NPC npc) {
-                int tileX = npc.getTiles().get(0).getX();
-                int tileY = npc.getTiles().get(0).getY();
-                npc.setHaveDialog(tileX >= tileMinX && tileX <= tileMaxX &&
-                    tileY >= tileMinY && tileY <= tileMaxY);
+            if (structure instanceof NPC npc && !npc.isHaveDialog() && random.nextInt(20) == 1) {
+                GameClient.getInstance().addDialog(npc);
             }
         });
     }

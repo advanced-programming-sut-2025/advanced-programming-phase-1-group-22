@@ -478,14 +478,12 @@ public class Village implements JsonPreparable {
                     if (random.nextInt(150) == 1) {
                         npc.goToStore();
                     }
-                }
-                break;
+                } break;
                 case 1: {
                     if (time.getHour() > 16 && random.nextInt(30) == 1) {
                         npc.moveRandomly();
                     }
-                }
-                break;
+                } break;
                 case 2: {
                     if (time.getHour() > 20 && random.nextInt(90) == 1) {
                         npc.goHome();

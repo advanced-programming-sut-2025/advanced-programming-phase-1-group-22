@@ -365,6 +365,10 @@ public class GameClient {
                                 service.getActor(body.get("first").getAsString()),
                                 service.getActor(body.get("second").getAsString())
                             ).setFriendShipLevelByServer(body.get("level").getAsInt());
+                        } else if (obj.get("action").getAsString().equals("add_dialog")) {
+                            service.getNpcByName(body.get("npc").getAsString()).addDialog(
+                                body.get("response").getAsString()
+                            );
                         } else if (obj.get("action").getAsString().equals("notify")) {
                             Actor source = null;
                             if (body.get("isFromPlayer").getAsBoolean()) {
@@ -1538,6 +1542,38 @@ public class GameClient {
                     "xp", xp,
                     "first", friendship.getFirstPlayer().getName(),
                     "second", friendship.getSecondPlayer().getName()
+                )
+            );
+            jsonMessageHandler.send(GSON.toJson(msg));
+        } catch (IOException e) {
+            debug(e);
+        }
+    }
+
+    public void npcGift(Salable key, NPC npc) {
+        try {
+            Map<String, Object> msg = Map.of(
+                "action", "npc_gift",
+                "id", Session.getCurrentUser().getUsername(),
+                "body", Map.of(
+                    "key", key,
+                    "npc", npc.getName()
+                )
+            );
+            jsonMessageHandler.send(GSON.toJson(msg));
+        } catch (IOException e) {
+            debug(e);
+        }
+    }
+
+    public void addDialog(NPC npc) {
+        try {
+            Map<String, Object> msg = Map.of(
+                "action", "add_dialog",
+                "id", Session.getCurrentUser().getUsername(),
+                "body", Map.of(
+                    "personality", npc.getType().getPersonality(),
+                    "npc", npc.getName()
                 )
             );
             jsonMessageHandler.send(GSON.toJson(msg));

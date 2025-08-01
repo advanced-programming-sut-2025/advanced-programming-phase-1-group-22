@@ -23,6 +23,7 @@ import java.util.Random;
 public class NPC extends Actor {
     private NPCType type;
     private boolean haveDialog = false;
+    private String dialog = "";
     private transient SpriteHolder spriteDialogBox;
     private transient ArrayList<SpriteHolder> sprites;
     private boolean giftedToday = false;
@@ -143,5 +144,10 @@ public class NPC extends Actor {
     public void goHome() {
         walk(house.getTiles().getFirst());
         movingState = 3;
+    }
+
+    public void addDialog(String response) {
+        haveDialog = true;
+        dialog = response;
     }
 }

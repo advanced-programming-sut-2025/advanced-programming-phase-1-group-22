@@ -587,9 +587,10 @@ public class RelationService {
 //        }
         lastTalkedNPC = npc;
         Friendship friendShipBetweenTwoActors = getFriendShipBetweenWithActor(npc);
-        Dialog dialog = Dialog.getDialog(game.getTimeAndDate(), friendShipBetweenTwoActors.getFriendShipLevel());
+        String dialog = npc.getDialog();
+        npc.setHaveDialog(false);
         friendShipBetweenTwoActors.setXp(friendShipBetweenTwoActors.getXp() + 20);
-        return new Response(dialog.getDialog(), true);
+        return new Response(dialog, true);
     }
 
     public Integer xpNeededForChangeLevel(Friendship friendship) {
@@ -652,6 +653,7 @@ public class RelationService {
         }
         currentPlayer.getInventory().deleteProductFromBackPack(itemFromInventory.getKey(), currentPlayer, 1);
         GameClient.getInstance().updatePlayerDeleteFromInventory(currentPlayer, itemFromInventory.getKey(), 1);
+        GameClient.getInstance().npcGift(itemFromInventory.getKey(), npc);
         return new Response("gift gived successfully");
     }
 
