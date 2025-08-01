@@ -10,6 +10,7 @@ public class App {
     private static App instance;
     public static Integer tileWidth = 80;
     public static Integer tileHeight = 80;
+    public static Integer PORT = 0;
 
     private App() {
 

@@ -9,6 +9,7 @@ public class ServerPlayer {
     public String username;
     public String character;
     public Integer farmId;
+    public Integer port;
 
     public ServerPlayer(String username) {
         this.username = username;

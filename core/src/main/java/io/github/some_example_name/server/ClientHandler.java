@@ -90,9 +90,7 @@ public class ClientHandler extends Thread {
                     JsonObject obj = JsonParser.parseString(message).getAsJsonObject();
 
                     if (obj.get("action").getAsString().equals("connected")) {
-//                        String username = obj.get("id").getAsString();
                         System.out.println("Client Connected");
-//                        send("Game state updated for " + username);
                     } else if (obj.get("action").getAsString().equals("ready_for_game")) {
                         String username = obj.get("id").getAsString();
                         System.out.println("Client Ready: " + username);
@@ -127,6 +125,7 @@ public class ClientHandler extends Thread {
                             obj.getAsJsonObject("body").get("id").getAsInt()
                         );
                         String username = obj.get("id").getAsString();
+                        int port = obj.get("port").getAsInt();
                         synchronized (gameServer) {
                             Entry<ServerPlayer, ClientHandler> entry = null;
                             for (Entry<ServerPlayer, ClientHandler> client : gameServer.getClients()) {
@@ -138,7 +137,9 @@ public class ClientHandler extends Thread {
                             if (entry != null) {
                                 gameServer.getClients().remove(entry);
                             }
-                            gameServer.getClients().add(new Entry<>(new ServerPlayer(username), this));
+                            ServerPlayer serverPlayer = new ServerPlayer(username);
+                            serverPlayer.port = port;
+                            gameServer.getClients().add(new Entry<>(serverPlayer, this));
                         }
                         pingHandler.scheduleAtFixedRate(() -> {
                             for (Map.Entry<String, Long> stringLongEntry : gameServer.getPlayerLastPing().entrySet()) {
@@ -203,6 +204,21 @@ public class ClientHandler extends Thread {
                             gameServer.clearFavors();
                             gameServer.sendAllBut(message, obj.get("id").getAsString());
                         }
+                    } else if (obj.get("action").getAsString().equals("update_radio_connection")) {
+                        String username = obj.get("id").getAsString();
+                        String connect_to = obj.get("connect_to").getAsString();
+                        Integer port = null;
+                        for (Entry<ServerPlayer, ClientHandler> client : gameServer.getClients()) {
+                            if (client.getKey().username.equals(connect_to)) {
+                                port = client.getKey().port;
+                            }
+                        }
+                        if (port == null) continue;
+                        Map<String, Object> msg = Map.of(
+                            "action", "connect_radio",
+                            "port", port
+                        );
+                        gameServer.sendTo(GSON.toJson(msg), username);
                     } else if (obj.get("action").getAsString().charAt(0) == '_') {
                         gameServer.sendAll(message);
                     } else if (obj.get("action").getAsString().charAt(0) == '=') {

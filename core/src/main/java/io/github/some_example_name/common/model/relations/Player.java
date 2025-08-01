@@ -6,12 +6,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.some_example_name.client.GameClient;
+import io.github.some_example_name.client.controller.AudioReceiver;
+import io.github.some_example_name.client.controller.AudioStreamer;
 import io.github.some_example_name.common.model.*;
 import io.github.some_example_name.common.model.dto.SpriteHolder;
 import io.github.some_example_name.common.model.source.*;
 import io.github.some_example_name.common.model.tools.*;
 import io.github.some_example_name.common.utils.GameAsset;
-import io.github.some_example_name.client.view.GameView;
 import lombok.Getter;
 import lombok.Setter;
 import io.github.some_example_name.common.model.abilitiy.Ability;
@@ -27,10 +28,10 @@ import io.github.some_example_name.common.model.structure.stores.StoreType;
 import io.github.some_example_name.server.saveGame.JsonPreparable;
 import io.github.some_example_name.server.saveGame.ObjectMapWrapper;
 import io.github.some_example_name.server.saveGame.ObjectWrapper;
-import io.github.some_example_name.server.service.GameService;
 import io.github.some_example_name.common.utils.App;
 import io.github.some_example_name.client.view.Menu;
 
+import java.net.Socket;
 import java.util.*;
 
 @Getter
@@ -71,6 +72,11 @@ public class Player extends Actor implements JsonPreparable {
     private String textReaction;
     private float lastReaction;
     private final List<MultiMission> activeMissions = new ArrayList<>();
+    private AudioStreamer audioStreamer;
+    private boolean isStreaming = false;
+    private final List<Socket> listener = new ArrayList<>();
+    private AudioReceiver audioReceiver;
+    private boolean isReceiving = false;
     @JsonProperty("abilitiesMap")
     private ObjectMapWrapper abilitiesWrapper;
 

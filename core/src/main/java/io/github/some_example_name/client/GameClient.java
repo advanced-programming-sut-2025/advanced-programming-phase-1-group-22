@@ -3,6 +3,7 @@ package io.github.some_example_name.client;
 import com.badlogic.gdx.Gdx;
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
+import io.github.some_example_name.client.controller.AudioStreamer;
 import io.github.some_example_name.client.controller.WorldController;
 import io.github.some_example_name.client.controller.mainMenu.StartGameMenuController;
 import io.github.some_example_name.client.view.GameView;
@@ -30,10 +31,7 @@ import io.github.some_example_name.server.service.GameService;
 import io.github.some_example_name.server.service.RelationService;
 import io.github.some_example_name.server.service.TradeService;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.lang.reflect.*;
 import java.net.Socket;
 import java.util.*;
@@ -45,6 +43,8 @@ public class GameClient {
     private static final Gson GSON = new GsonBuilder().serializeNulls().create();
     private static GameClient instance;
     private Socket socket;
+    private P2PConnection p2PConnection;
+    private P2PReceiving p2PReceiving;
     private JsonMessageHandler jsonMessageHandler;
     private final Timer timer = new Timer();
     private final ClientService service = new ClientService();
@@ -59,6 +59,12 @@ public class GameClient {
     }
 
     private GameClient() {
+        if (p2PConnection != null && p2PConnection.isAlive()) {
+            System.out.println("already p2p is alive");
+        } else {
+            p2PConnection = new P2PConnection(App.PORT);
+            p2PConnection.start();
+        }
     }
 
     private void pingMassage() {
@@ -100,7 +106,6 @@ public class GameClient {
 
             Map<String, Object> msg = Map.of(
                 "action", "connected",
-//                "id", Session.getCurrentUser().getUsername(),
                 "body", Map.of()
             );
 
@@ -154,6 +159,10 @@ public class GameClient {
                                     body.getAsJsonArray("doors").get(2 * i).getAsInt(),
                                     body.getAsJsonArray("doors").get(2 * i + 1).getAsInt()
                                 );
+                            }
+                            if (App.getInstance().getCurrentGame().getCurrentPlayer().getAudioStreamer() == null) {
+                                App.getInstance().getCurrentGame().getCurrentPlayer().setAudioStreamer(new AudioStreamer());
+                                App.getInstance().getCurrentGame().getCurrentPlayer().getAudioStreamer().start();
                             }
                         } else if (obj.get("action").getAsString().equals("response_choose_farm")) {
                             StartGameMenuController.getInstance().responseToChooseFarm(
@@ -449,6 +458,11 @@ public class GameClient {
                             service.handlePlayerReConnect(username);
                         } else if (obj.get("action").getAsString().equals("finish_reconnect")) {
                             StartGameMenuController.getInstance().setReconnect(false);
+                        } else if (obj.get("action").getAsString().equals("connect_radio")) {
+                            int port = obj.get("port").getAsInt();
+                            p2PReceiving = new P2PReceiving(port);
+                            p2PReceiving.start();
+                            App.getInstance().getCurrentGame().getCurrentPlayer().setReceiving(true);
                         }
                     } catch (JsonParseException e) {
                         System.out.println("Received non-JSON: " + serverMessage);
@@ -472,6 +486,7 @@ public class GameClient {
             Map<String, Object> msg = Map.of(
                 "action", "enter_room",
                 "id", Session.getCurrentUser().getUsername(),
+                "port", App.PORT,
                 "body", Map.of("id", id)
             );
 
@@ -693,6 +708,19 @@ public class GameClient {
             msg.put("id", Session.getCurrentUser().getUsername());
             msg.put("mission_id", mission.getId());
             msg.put("amount", amount);
+
+            jsonMessageHandler.send(GSON.toJson(msg));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updateRadioConnection(String username) {
+        try {
+            Map<String, Object> msg = new HashMap<>();
+            msg.put("action", "update_radio_connection");
+            msg.put("id", Session.getCurrentUser().getUsername());
+            msg.put("connect_to", username);
 
             jsonMessageHandler.send(GSON.toJson(msg));
         } catch (IOException e) {

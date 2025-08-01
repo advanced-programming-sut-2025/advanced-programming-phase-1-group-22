@@ -8,6 +8,7 @@ import io.github.some_example_name.common.model.Entry;
 import io.github.some_example_name.server.ClientHandler;
 import lombok.Getter;
 
+import java.io.IOException;
 import java.util.*;
 
 @Getter
@@ -62,6 +63,17 @@ public class GameServer {
                 }
             } else {
                 client.getValue().setInFavor(true);
+            }
+        }
+    }
+
+    public void sendTo(String message, String username) {
+        for (Entry<ServerPlayer, ClientHandler> client : clients) {
+            if (client.getKey().username.equals(username)) {
+                try {
+                    client.getValue().send(message);
+                } catch (IOException ignored) {
+                }
             }
         }
     }
