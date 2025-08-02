@@ -7,6 +7,7 @@ import io.github.some_example_name.client.service.ClientService;
 import io.github.some_example_name.common.model.Entry;
 import io.github.some_example_name.server.ClientHandler;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.io.IOException;
 import java.util.*;
@@ -14,10 +15,12 @@ import java.util.*;
 @Getter
 public class GameServer {
     private static final Gson GSON = new GsonBuilder().serializeNulls().create();
-    private final ArrayList<Entry<ServerPlayer, ClientHandler>> clients = new ArrayList<>();
-    private final Map<String, Long> DCPlayers = Collections.synchronizedMap(new HashMap<>());
-    private final Map<String, Long> playerLastPing = Collections.synchronizedMap(new HashMap<>());
+    private transient final ArrayList<Entry<ServerPlayer, ClientHandler>> clients = new ArrayList<>();
+    private transient final Map<String, Long> DCPlayers = Collections.synchronizedMap(new HashMap<>());
+    private transient final Map<String, Long> playerLastPing = Collections.synchronizedMap(new HashMap<>());
     private final List<Message> serverToClientsMessages = new ArrayList<>();
+    @Setter
+    private int roomId;
 
     public boolean isReady() {
         for (Entry<ServerPlayer, ClientHandler> entry : clients) {

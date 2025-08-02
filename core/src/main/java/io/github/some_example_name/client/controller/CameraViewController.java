@@ -71,7 +71,7 @@ public class CameraViewController {
     }
 
     private void updateButtons(Sprite mainClock) {
-        bar.setPosition(mainClock.getX() + mainClock.getWidth() * 0.3f,mainClock.getY() - bar.getHeight());
+        bar.setPosition(mainClock.getX() + mainClock.getWidth() * 0.3f, mainClock.getY() - bar.getHeight());
     }
 
     private void initButtons() {
@@ -87,7 +87,7 @@ public class CameraViewController {
         bar.add(socialHolder).size(50, 20).row();
         bar.add(journal).size(50, 50).padRight(70);
         bar.add(social).size(50, 50).row();
-        Group buttons = new Group(){
+        Group buttons = new Group() {
             @Override
             public void act(float delta) {
                 if (social.isChecked()) {
@@ -105,7 +105,7 @@ public class CameraViewController {
                     }
                 }
                 if (hasNotifications != journalVisibility) {
-                    journal.setColor(hasNotifications ? new Color(1,1,1,1) : new Color(1,1,1,0));
+                    journal.setColor(hasNotifications ? new Color(1, 1, 1, 1) : new Color(1, 1, 1, 0));
                     journalHolder.setDrawable(new TextureRegionDrawable(
                         hasNotifications ? GameAsset.GOLDDISPLAY : GameAsset.RAW
                     ));
@@ -133,11 +133,11 @@ public class CameraViewController {
             itemStacks.add(stack);
             bar.add(stack).size(96, 96);
         }
-        inventoryBar = new Group(){
+        inventoryBar = new Group() {
             @Override
             public void act(float delta) {
                 OrthographicCamera camera = MainGradle.getInstance().getCamera();
-                bar.setPosition(camera.position.x - bar.getWidth() / 2f,camera.position.y - camera.viewportHeight / 2f + 40f);
+                bar.setPosition(camera.position.x - bar.getWidth() / 2f, camera.position.y - camera.viewportHeight / 2f + 40f);
                 super.act(delta);
             }
         };
@@ -145,7 +145,7 @@ public class CameraViewController {
         GameView.stage.addActor(inventoryBar);
     }
 
-    private void initEnergyBar(){
+    private void initEnergyBar() {
         Texture texture = GameAsset.GREEN_SQUARE;
         Texture texture1 = GameAsset.ENERGY_BAR_EMPTY;
         OrthographicCamera camera = MainGradle.getInstance().getCamera();
@@ -167,8 +167,8 @@ public class CameraViewController {
         energyBar = new Group() {
             @Override
             public void act(float delta) {
-                setPosition(camera.position.x + camera.viewportWidth/2f - energyBar.getWidth()*1.1f,
-                    camera.position.y - camera.viewportHeight/2f + energyBar.getHeight()*0.3f);
+                setPosition(camera.position.x + camera.viewportWidth / 2f - energyBar.getWidth() * 1.1f,
+                    camera.position.y - camera.viewportHeight / 2f + energyBar.getHeight() * 0.3f);
                 super.act(delta);
             }
         };
@@ -178,7 +178,7 @@ public class CameraViewController {
         GameView.stage.addActor(energyBar);
     }
 
-    private void updateEnergyBar(){
+    private void updateEnergyBar() {
         Player player = App.getInstance().getCurrentGame().getCurrentPlayer();
         float energyPercent = (float) player.getEnergy() / player.getMaxEnergy();
 
@@ -186,13 +186,13 @@ public class CameraViewController {
         float currentHeight = fullHeight * energyPercent;
 
         energyFill.setSize(energyBackground.getWidth() * 0.5f, currentHeight);
-        energyBackground.setScale(1, player.getMaxEnergy()/200f);
+        energyBackground.setScale(1, player.getMaxEnergy() / 200f);
         energyFill.setPosition(energyBackground.getWidth() * 0.25f, energyBackground.getHeight() * 3 / 215);
     }
 
-    private void updateInventoryBar(){
+    private void updateInventoryBar() {
         Player player = App.getInstance().getCurrentGame().getCurrentPlayer();
-        synchronized (player.getInventory().getProducts()){
+        synchronized (player.getInventory().getProducts()) {
             items = new ArrayList<>(player.getInventory().getProducts().keySet());
         }
 
@@ -206,13 +206,12 @@ public class CameraViewController {
                 Salable item = items.get(i);
                 Image itemImage = new Image(item.getTexture());
                 itemImage.setSize(90, 90);
-                synchronized (player.getInventory().getProducts()){
+                synchronized (player.getInventory().getProducts()) {
                     Container<Label> labelContainer = PopUp.getLabelContainer(player.getInventory().getProducts(), item);
                     if (item.equals(player.getCurrentCarrying())) {
-                        itemImage.setColor(1f,1f, 1f,1f);
+                        itemImage.setColor(1f, 1f, 1f, 1f);
                         flag = false;
-                    }
-                    else itemImage.setColor(1f,1f,1f,0.5f);
+                    } else itemImage.setColor(1f, 1f, 1f, 0.5f);
                     if (item instanceof WateringCan wateringCan) {
                         ProgressBar progressBar = new ProgressBar(0, wateringCan.getWateringCanType().getCapacity(), 1, false, GameAsset.SKIN);
                         progressBar.setValue(wateringCan.getRemain());
@@ -227,7 +226,7 @@ public class CameraViewController {
 
                         stack.add(group);
                         stack.add(labelContainer);
-                    }else {
+                    } else {
                         stack.add(itemImage);
                         stack.add(labelContainer);
                     }
@@ -242,24 +241,24 @@ public class CameraViewController {
     private void handleEnergyBar() {
         Player player = App.getInstance().getCurrentGame().getCurrentPlayer();
         energyContainer.setSize(camera.viewportWidth * 0.03f,
-                camera.viewportHeight * 0.2f / 200 * player.getMaxEnergy());
-        energyContainer.setPosition(camera.position.x + camera.viewportWidth/2f - energyContainer.getWidth()*1.1f,
-                camera.position.y - camera.viewportHeight/2f + energyContainer.getHeight()*0.3f);
+            camera.viewportHeight * 0.2f / 200 * player.getMaxEnergy());
+        energyContainer.setPosition(camera.position.x + camera.viewportWidth / 2f - energyContainer.getWidth() * 1.1f,
+            camera.position.y - camera.viewportHeight / 2f + energyContainer.getHeight() * 0.3f);
         energy.setSize(energyContainer.getWidth() * 0.8f,
-                energyContainer.getHeight() * player.getEnergy() / player.getMaxEnergy() * 0.94f);
+            energyContainer.getHeight() * player.getEnergy() / player.getMaxEnergy() * 0.94f);
         energy.setPosition(energyContainer.getX() + 0.1f * energyContainer.getWidth(),
-                energyContainer.getY() + 0.03f * energyContainer.getHeight());
+            energyContainer.getY() + 0.03f * energyContainer.getHeight());
         eSprite.setSize(energyContainer.getWidth(), energyContainer.getWidth());
-        eSprite.setPosition(energyContainer.getX(), energyContainer.getY() + energyContainer.getHeight()*0.90f);
+        eSprite.setPosition(energyContainer.getX(), energyContainer.getY() + energyContainer.getHeight() * 0.90f);
 
         energyContainer.draw(MainGradle.getInstance().getBatch());
         energy.draw(MainGradle.getInstance().getBatch());
         eSprite.draw(MainGradle.getInstance().getBatch());
         GameAsset.MAIN_FONT.draw(MainGradle.getInstance().getBatch(), "E",
-                eSprite.getX() + eSprite.getWidth()*0.2f, eSprite.getY() + eSprite.getHeight()*0.8f);
+            eSprite.getX() + eSprite.getWidth() * 0.2f, eSprite.getY() + eSprite.getHeight() * 0.8f);
     }
 
-    public void handleInput(){
+    public void handleInput() {
         Player player = App.getInstance().getCurrentGame().getCurrentPlayer();
         if (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)) {
             if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) {
@@ -370,7 +369,6 @@ public class CameraViewController {
             }
             if (Gdx.input.isKeyJustPressed(Input.Keys.GRAVE)) {
                 player.setCurrentCarrying(null);
-                GameClient.getInstance().updatePlayerCarryingObject(player);
                 currentToolIndex = -1;
 
             }
@@ -380,7 +378,7 @@ public class CameraViewController {
             };
             for (int i = 0; i < shortcuts.length; i++) {
                 if (Gdx.input.isKeyJustPressed(shortcuts[i])) {
-                    synchronized (player.getInventory().getProducts()){
+                    synchronized (player.getInventory().getProducts()) {
                         if (i < player.getInventory().getProducts().size()) {
                             player.setCurrentCarrying(items.get(i));
                             GameClient.getInstance().updatePlayerCarryingObject(player);
@@ -391,13 +389,13 @@ public class CameraViewController {
             }
             if (Gdx.input.isKeyJustPressed(Input.Keys.TAB)) {
                 if (currentToolIndex == null) currentToolIndex = -1;
-                synchronized (player.getInventory().getProducts()){
+                synchronized (player.getInventory().getProducts()) {
                     player.setCurrentCarrying(items.get(++currentToolIndex % Math.min(12, player.getInventory().getProducts().size())));
                 }
                 GameClient.getInstance().updatePlayerCarryingObject(player);
             }
             if (GameView.scrollY != 0) {
-                synchronized (player.getInventory().getProducts()){
+                synchronized (player.getInventory().getProducts()) {
                     int mod = Math.min(12, player.getInventory().getProducts().size());
                     if (mod != 0) {
                         if (currentToolIndex == null) currentToolIndex = GameView.scrollY > 0 ? mod - 1 : 0;

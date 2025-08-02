@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonArray;
 import io.github.some_example_name.client.GameClient;
+import io.github.some_example_name.client.controller.mainMenu.StartGameMenuController;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -124,7 +125,11 @@ public class Village implements JsonPreparable {
             }
         }
         structures.add(fountain);
-        GameClient.getInstance().enterRoom(100); //todo different room id
+        if (StartGameMenuController.getInstance().isLoad()){
+            GameClient.getInstance().reLoadGame(100); //todo different room id
+        }else {
+            GameClient.getInstance().enterRoom(100); //todo different room id
+        }
     }
 
     private void setPath() {

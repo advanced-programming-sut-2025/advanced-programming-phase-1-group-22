@@ -1,11 +1,13 @@
 package io.github.some_example_name.server;
 
+import com.badlogic.gdx.Gdx;
 import com.google.gson.*;
 import io.github.some_example_name.common.JsonMessageHandler;
 import io.github.some_example_name.common.model.*;
 import io.github.some_example_name.server.model.GameServer;
 import io.github.some_example_name.server.model.GameThread;
 import io.github.some_example_name.server.model.ServerPlayer;
+import io.github.some_example_name.server.saveGame.GameSaver;
 import io.github.some_example_name.server.service.ServerService;
 import lombok.Getter;
 import lombok.Setter;
@@ -69,6 +71,11 @@ public class ClientHandler extends Thread {
             "id", username
         );
         gameServer.sendAllBut(GSON.toJson(msg), username);
+        try {
+            GameSaver.saveGame(gameServer, "games/" + gameServer.getRoomId() + ".json");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void handlePlayerReConnect(String username) {
@@ -124,6 +131,7 @@ public class ClientHandler extends Thread {
                         gameServer = GameThread.getInstance().getGameServer(
                             obj.getAsJsonObject("body").get("id").getAsInt()
                         );
+                        gameServer.setRoomId(obj.getAsJsonObject("body").get("id").getAsInt());
                         String username = obj.get("id").getAsString();
                         int port = obj.get("port").getAsInt();
                         synchronized (gameServer) {
@@ -148,6 +156,48 @@ public class ClientHandler extends Thread {
                                 handlePlayerDC(stringLongEntry.getKey(), now - lastPing, lastPing);
                             }
                         }, 0, 5, TimeUnit.SECONDS);
+                    } else if (obj.get("action").getAsString().equals("load")) {
+                        int id = obj.getAsJsonObject("body").get("id").getAsInt();
+                        try {
+                            if (GameThread.getInstance().haveGame(id)) {
+                                gameServer = GameThread.getInstance().getGameServer(id);
+                            } else {
+                                gameServer = GameSaver.loadGame("games/" + id + ".json");
+                                GameThread.getInstance().addGameServer(id, gameServer);
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            Gdx.app.exit();
+                        }
+                        String username = obj.get("id").getAsString();
+                        int port = obj.get("port").getAsInt();
+                        synchronized (gameServer) {
+                            Entry<ServerPlayer, ClientHandler> entry = null;
+                            for (Entry<ServerPlayer, ClientHandler> client : gameServer.getClients()) {
+                                if (client.getKey().username.equals(username)) {
+                                    entry = client;
+                                    break;
+                                }
+                            }
+                            if (entry != null) {
+                                gameServer.getClients().remove(entry);
+                            }
+                            ServerPlayer serverPlayer = new ServerPlayer(username);
+                            serverPlayer.port = port;
+                            gameServer.getClients().add(new Entry<>(serverPlayer, this));
+                        }
+                        pingHandler.scheduleAtFixedRate(() -> {
+                            for (Map.Entry<String, Long> stringLongEntry : gameServer.getPlayerLastPing().entrySet()) {
+                                long lastPing = stringLongEntry.getValue();
+                                long now = System.currentTimeMillis();
+                                handlePlayerDC(stringLongEntry.getKey(), now - lastPing, lastPing);
+                            }
+                        }, 0, 5, TimeUnit.SECONDS);
+                        service.DCReconnect();
+                        Map<String, Object> msg = Map.of(
+                            "action", "finish_load"
+                        );
+                        send(GSON.toJson(msg));
                     } else if (obj.get("action").getAsString().equals("choose_farm")) {
                         Map<String, Object> msg = Map.of(
                             "action", "response_choose_farm",
@@ -162,7 +212,7 @@ public class ClientHandler extends Thread {
                     } else if (obj.get("action").getAsString().equals("DC_reconnect")) {
                         String username = obj.get("id").getAsString();
                         handlePlayerReConnect(username);
-                        service.DCReconnect(username);
+                        service.DCReconnect();
                         Map<String, Object> msg = Map.of(
                             "action", "finish_reconnect"
                         );
@@ -224,6 +274,7 @@ public class ClientHandler extends Thread {
                     } else if (obj.get("action").getAsString().charAt(0) == '=') {
                         String username = obj.get("id").getAsString();
                         gameServer.sendAllBut(GSON.toJson(obj), username);
+                        System.out.println("receive");
                     } else if (obj.getAsJsonObject("body").has("receiver")) {
                         String username = obj.getAsJsonObject("body").get("receiver").getAsString();
                         for (Entry<ServerPlayer, ClientHandler> client : gameServer.getClients()) {

@@ -27,6 +27,8 @@ public class StartGameMenuController {
     private static StartGameMenuController instance;
     @Getter
     private boolean reconnect = false;
+    @Getter
+    private boolean load = false;
 
     public static StartGameMenuController getInstance() {
         if (instance == null) {
@@ -77,6 +79,17 @@ public class StartGameMenuController {
                         reconnect = true;
                         GameClient.getInstance().DCReconnect(Session.getCurrentUser().getUsername());
                         view.getContinueDC().setChecked(false);
+                    }
+                    if (view.getLoadButton().isChecked()){
+                        load = true;
+                        reconnect = true;
+                        if (Session.getCurrentUser() == null) {
+                            UserRepo userRepo = new UserRepo();
+                            Session.setCurrentUser(userRepo.findByUsername("Roham1234").get());
+                        }
+                        InitialGame initialGame = new InitialGame();
+                        initialGame.initial();
+                        view.getLoadButton().setChecked(false);
                     }
                 }
                 break;

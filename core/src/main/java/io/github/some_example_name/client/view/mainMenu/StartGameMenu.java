@@ -13,6 +13,7 @@ public class StartGameMenu extends PreGameMenu {
     private final TextButton newGameButton;
     private final TextButton loadGameButton;
     private final TextButton continueDC;
+    private final TextButton loadButton;
     private final TextButton enterGameButton;
     private final TextButton wait;
     private final SelectBox<String> farmSelection;
@@ -26,6 +27,7 @@ public class StartGameMenu extends PreGameMenu {
         this.newGameButton = new TextButton("New Game!", skin);
         this.loadGameButton = new TextButton("Load Game!", skin);
         this.continueDC = new TextButton("Continue DC game", skin);
+        this.loadButton = new TextButton("Load Saved Game",skin);
         this.enterGameButton = new TextButton("Enter!", skin);
         this.wait = new TextButton("Wait for server response!", skin);
         farmSelection = new SelectBox<>(skin);
@@ -52,6 +54,7 @@ public class StartGameMenu extends PreGameMenu {
                 table.add(newGameButton).width(400).row();
                 table.add(loadGameButton).width(400).row();
                 table.add(continueDC).width(400).row();
+                table.add(loadButton).width(400).row();
             }
             break;
             case 1: {

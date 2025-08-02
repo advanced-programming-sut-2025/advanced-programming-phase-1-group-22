@@ -32,6 +32,14 @@ public class GameThread extends Thread {
         return games.get(id);
     }
 
+    public void addGameServer(Integer id, GameServer gameServer) {
+        games.put(id, gameServer);
+    }
+
+    public boolean haveGame(Integer id) {
+        return games.containsKey(id);
+    }
+
     @Override
     public void start() {
         try (ServerSocket serverSocket = new ServerSocket(PORT)) {

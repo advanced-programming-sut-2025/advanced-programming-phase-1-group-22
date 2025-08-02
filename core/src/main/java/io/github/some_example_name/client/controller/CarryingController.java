@@ -74,14 +74,13 @@ public class CarryingController {
         }
     }
 
-    private void placeItem(Salable item, int xTransmit, int yTransmit){
+    private void placeItem(Salable item, int xTransmit, int yTransmit) {
         GameService gameService = new GameService();
         Direction direction = Direction.getByXAndY(xTransmit, yTransmit);
         if (direction != null) worldController.showResponse(gameService.placeItem(item, direction));
-        synchronized (App.getInstance().getCurrentGame().getCurrentPlayer().getInventory().getProducts()){
+        synchronized (App.getInstance().getCurrentGame().getCurrentPlayer().getInventory().getProducts()) {
             if (!App.getInstance().getCurrentGame().getCurrentPlayer().getInventory().getProducts().containsKey(item)) {
                 App.getInstance().getCurrentGame().getCurrentPlayer().setCurrentCarrying(null);
-                GameClient.getInstance().updatePlayerCarryingObject(App.getInstance().getCurrentGame().getCurrentPlayer());
             }
         }
     }
