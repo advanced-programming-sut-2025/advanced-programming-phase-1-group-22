@@ -463,6 +463,9 @@ public class GameClient {
                             p2PReceiving = new P2PReceiving(port);
                             p2PReceiving.start();
                             App.getInstance().getCurrentGame().getCurrentPlayer().setReceiving(true);
+                        } else if (obj.get("action").getAsString().equals("finish_load")) {
+                            StartGameMenuController.getInstance().setLoad(false);
+                            StartGameMenuController.getInstance().setReconnect(false);
                         }
                     } catch (JsonParseException e) {
                         System.out.println("Received non-JSON: " + serverMessage);
@@ -485,6 +488,21 @@ public class GameClient {
         try {
             Map<String, Object> msg = Map.of(
                 "action", "enter_room",
+                "id", Session.getCurrentUser().getUsername(),
+                "port", App.PORT,
+                "body", Map.of("id", id)
+            );
+
+            jsonMessageHandler.send(GSON.toJson(msg));
+        } catch (IOException e) {
+            debug(e);
+        }
+    }
+
+    public void reLoadGame(int id) {
+        try {
+            Map<String, Object> msg = Map.of(
+                "action", "load",
                 "id", Session.getCurrentUser().getUsername(),
                 "port", App.PORT,
                 "body", Map.of("id", id)
@@ -822,7 +840,6 @@ public class GameClient {
         }
         return obj;
     }
-
 
     private Map<String, Object> encodeObject(Object object) {
         if (object == null) return null;

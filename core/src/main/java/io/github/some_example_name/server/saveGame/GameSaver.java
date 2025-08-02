@@ -1,23 +1,42 @@
 package io.github.some_example_name.server.saveGame;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import io.github.some_example_name.common.model.Game;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import io.github.some_example_name.server.model.GameServer;
 
 import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class GameSaver {
+    private static final Gson GSON = new GsonBuilder().serializeNulls().create();
 
-        public static void saveGame(Game game, String filePath) throws Exception {
-            ObjectMapper mapper = new ObjectMapper();
-            mapper.findAndRegisterModules();
-            mapper.enable(SerializationFeature.INDENT_OUTPUT);
-            mapper.writeValue(new File(filePath), game);
+    public static void saveGame(GameServer game, String filePath) throws Exception {
+        File file = new File(filePath);
+        File parentDir = file.getParentFile();
+
+        if (parentDir != null && !parentDir.exists()) {
+            boolean created = parentDir.mkdirs();
+            if (!created) {
+                throw new IOException("Could not create directory: " + parentDir.getAbsolutePath());
+            }
         }
 
-        public static Game loadGame(String filePath) throws Exception {
-            ObjectMapper mapper = new ObjectMapper();
-            mapper.findAndRegisterModules();
-            return mapper.readValue(new File(filePath), Game.class);
+        try (FileWriter writer = new FileWriter(filePath)) {
+            String json = GSON.toJson(game);
+            writer.write(json);
         }
+    }
+
+    public static GameServer loadGame(String filePath) throws Exception {
+        File file = new File(filePath);
+        if (!file.exists()) {
+            throw new IOException("Save file not found: " + filePath);
+        }
+
+        try (FileReader reader = new FileReader(file)) {
+            return GSON.fromJson(reader, GameServer.class);
+        }
+    }
 }
