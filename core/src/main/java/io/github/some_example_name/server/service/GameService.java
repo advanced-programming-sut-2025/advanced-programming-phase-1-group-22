@@ -119,16 +119,16 @@ public class GameService {
 
     public Response C_AdvanceDate(String x) {
         int days = Integer.parseInt(x);
-        GameView.advancingTime = true;
         GameClient.getInstance().skipTime(60 * 13 * days);
-        GameView.advancingTime = false;
         return new Response(x + " days passed", true);
     }
 
     public void skipTimeByServer(int minutes) {
+        if (minutes > 13 * 60) GameView.advancingTime = true;
         for (int i = 0; i < minutes; i++) {
             App.getInstance().getCurrentGame().getTimeAndDate().moveTimeForward();
         }
+        if (minutes > 13 * 60) GameView.advancingTime = false;
     }
 
     public Response season() {

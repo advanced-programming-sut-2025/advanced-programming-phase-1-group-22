@@ -447,6 +447,7 @@ public class ClientHandler extends Thread {
                     }
                 } catch (JsonParseException e) {
                     System.out.println("Received non-JSON message: " + message);
+                    e.printStackTrace();
                 }
             }
         } catch (EOFException eofException) {
