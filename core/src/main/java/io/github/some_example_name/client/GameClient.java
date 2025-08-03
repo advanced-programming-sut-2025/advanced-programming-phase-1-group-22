@@ -17,10 +17,7 @@ import io.github.some_example_name.client.service.ClientService;
 import io.github.some_example_name.common.model.*;
 import io.github.some_example_name.common.model.products.HarvestAbleProduct;
 import io.github.some_example_name.common.model.records.Response;
-import io.github.some_example_name.common.model.relations.Mission;
-import io.github.some_example_name.common.model.relations.NPC;
-import io.github.some_example_name.common.model.relations.Player;
-import io.github.some_example_name.common.model.relations.Trade;
+import io.github.some_example_name.common.model.relations.*;
 import io.github.some_example_name.common.model.structure.Structure;
 import io.github.some_example_name.common.model.structure.stores.Shop;
 import io.github.some_example_name.common.model.tools.MilkPail;
@@ -450,6 +447,29 @@ public class GameClient {
                                 service.getPlayerByUsername(obj.get("id").getAsString()),
                                 body.get("message").getAsString()
                             );
+                        } else if (obj.get("action").getAsString().equals("_npc_walk")) {
+                            LinkedList<Pair> path = new LinkedList<>();
+                            for (int i = 0; i < body.get("path").getAsJsonArray().size(); ) {
+                                path.add(new Pair(body.get("path").getAsJsonArray().get(i++).getAsInt(),
+                                    body.get("path").getAsJsonArray().get(i++).getAsInt()));
+                            }
+                            service.getNpcByName(body.get("name").getAsString()).applyWalk(path);
+                        } else if (obj.get("action").getAsString().equals("_set_friendship_xp")) {
+                            RelationService.getInstance().getFriendShipBetweenTwoActors(
+                                service.getActor(body.get("first").getAsString()),
+                                service.getActor(body.get("second").getAsString())
+                            ).setXpByServer(body.get("xp").getAsInt());
+                        } else if (obj.get("action").getAsString().equals("_set_friendship_level")) {
+                            RelationService.getInstance().getFriendShipBetweenTwoActors(
+                                service.getActor(body.get("first").getAsString()),
+                                service.getActor(body.get("second").getAsString())
+                            ).setFriendShipLevelByServer(body.get("level").getAsInt());
+                        } else if (obj.get("action").getAsString().equals("add_dialog")) {
+                            service.getNpcByName(body.get("npc").getAsString()).addDialog(
+                                body.get("response").getAsString()
+                            );
+                        } else if (obj.get("action").getAsString().equals("_meet_npc")) {
+                            service.getNpcByName(body.get("npc").getAsString()).setHaveDialog(false);
                         } else if (obj.get("action").getAsString().equals("notify")) {
                             Actor source = null;
                             if (body.get("isFromPlayer").getAsBoolean()) {
@@ -1632,6 +1652,110 @@ public class GameClient {
                 "action", "_send_public",
                 "id", Session.getCurrentUser().getUsername(),
                 "body", Map.of("message", message)
+            );
+            jsonMessageHandler.send(GSON.toJson(msg));
+        } catch (IOException e) {
+            debug(e);
+        }
+    }
+
+    public void npcWalk(String name, ArrayList<Pair> path) {
+        try {
+            Map<String, Object> msg = Map.of(
+                "action", "_npc_walk",
+                "id", Session.getCurrentUser().getUsername(),
+                "body", Map.of("name", name, "path", encodePath(path))
+            );
+            jsonMessageHandler.send(GSON.toJson(msg));
+        } catch (IOException e) {
+            debug(e);
+        }
+    }
+
+    private ArrayList<Integer> encodePath(ArrayList<Pair> path) {
+        ArrayList<Integer> list = new ArrayList<>();
+        for (Pair tile : path) {
+            list.add(tile.getX());
+            list.add(tile.getY());
+        }
+        return list;
+    }
+
+    public void setFriendShipLevel(Integer friendShipLevel, Friendship friendship) {
+        try {
+            Map<String, Object> msg = Map.of(
+                "action", "_set_friendship_level",
+                "id", Session.getCurrentUser().getUsername(),
+                "body", Map.of(
+                    "level", friendShipLevel,
+                    "first", friendship.getFirstPlayer().getName(),
+                    "second", friendship.getSecondPlayer().getName()
+                )
+            );
+            jsonMessageHandler.send(GSON.toJson(msg));
+        } catch (IOException e) {
+            debug(e);
+        }
+    }
+
+    public void setFriendShipXp(Integer xp, Friendship friendship) {
+        try {
+            Map<String, Object> msg = Map.of(
+                "action", "_set_friendship_xp",
+                "id", Session.getCurrentUser().getUsername(),
+                "body", Map.of(
+                    "xp", xp,
+                    "first", friendship.getFirstPlayer().getName(),
+                    "second", friendship.getSecondPlayer().getName()
+                )
+            );
+            jsonMessageHandler.send(GSON.toJson(msg));
+        } catch (IOException e) {
+            debug(e);
+        }
+    }
+
+    public void npcGift(Salable key, NPC npc) {
+        try {
+            Map<String, Object> msg = Map.of(
+                "action", "npc_gift",
+                "id", Session.getCurrentUser().getUsername(),
+                "body", Map.of(
+                    "key", key,
+                    "npc", npc.getName()
+                )
+            );
+            jsonMessageHandler.send(GSON.toJson(msg));
+        } catch (IOException e) {
+            debug(e);
+        }
+    }
+
+    public void addDialog(NPC npc) {
+        try {
+            Map<String, Object> msg = Map.of(
+                "action", "add_dialog",
+                "id", Session.getCurrentUser().getUsername(),
+                "body", Map.of(
+                    "personality", npc.getType().getPersonality() + "\n Today is a lovely "
+                        + App.getInstance().getCurrentGame().getTimeAndDate().getSeason().name() + " day",
+                    "npc", npc.getName()
+                )
+            );
+            jsonMessageHandler.send(GSON.toJson(msg));
+        } catch (IOException e) {
+            debug(e);
+        }
+    }
+
+    public void meetNpc(String name) {
+        try {
+            Map<String, Object> msg = Map.of(
+                "action", "_meet_npc",
+                "id", Session.getCurrentUser().getUsername(),
+                "body", Map.of(
+                    "npc", name
+                )
             );
             jsonMessageHandler.send(GSON.toJson(msg));
         } catch (IOException e) {

@@ -310,7 +310,11 @@ public class ClientHandler extends Thread {
                         GameThread.getInstance().getLastConnections().put(username, System.currentTimeMillis());
                     } else if (obj.get("action").getAsString().equals("ready_for_sleep")) {
                         ready = true;
-                        if (gameServer.isReady()) gameServer.sendAll(message);
+                        if (gameServer.isReady()) {
+                            gameServer.setDayEvents(new StringBuilder());
+                            gameServer.getDayEvents().append("Today weather is ").append(gameServer.getTomorrowWeather()).append(".");
+                            gameServer.sendAll(message);
+                        }
                     } else if (obj.get("action").getAsString().equals("propose_end")) {
                         gameServer.clearFavors();
                         gameServer.sendAll(message);
@@ -342,7 +346,31 @@ public class ClientHandler extends Thread {
                             gameServer.clearFavors();
                             gameServer.sendAllBut(message, obj.get("id").getAsString());
                         }
-                    } else if (obj.get("action").getAsString().equals("update_radio_connection")) {
+                    } else if (obj.get("action").getAsString().equals("_set_weather")) {
+                        gameServer.setTomorrowWeather(obj.getAsJsonObject("body").get("weather").getAsString());
+                    } else if (obj.get("action").getAsString().equals("_respond_marriage")) {
+                        if (obj.getAsJsonObject("body").get("response").getAsBoolean()) {
+                            gameServer.getDayEvents()
+                                .append(obj.getAsJsonObject("body").get("requested").getAsString())
+                                .append(" has married ").append(obj.get("id").getAsString());
+                        } else {
+                            gameServer.getDayEvents()
+                                .append(obj.getAsJsonObject("body").get("requested").getAsString())
+                                .append(" was rejected by ").append(obj.get("id").getAsString())
+                                .append(". He feels so sad; what will he do with the ring?");
+                        }
+                    } else if (obj.get("action").getAsString().equals("npc_gift")) {
+                        gameServer.addGift(
+                            obj.getAsJsonObject("body").get("npc").getAsString(),
+                            obj.getAsJsonObject("body").get("gift").getAsString(),
+                            obj.get("id").getAsString()
+                        );
+                    } else if (obj.get("action").getAsString().equals("add_dialog")) {
+                        gameServer.addDialog(
+                            obj.getAsJsonObject("body").get("npc").getAsString(),
+                            obj.getAsJsonObject("body").get("personality").getAsString()
+                        );
+                    }  else if (obj.get("action").getAsString().equals("update_radio_connection")) {
                         String username = obj.get("id").getAsString();
                         String connect_to = obj.get("connect_to").getAsString();
                         Integer port = null;
@@ -357,12 +385,14 @@ public class ClientHandler extends Thread {
                             "port", port
                         );
                         gameServer.sendTo(GSON.toJson(msg), username);
-                    } else if (obj.get("action").getAsString().charAt(0) == '_') {
+                    }
+
+                    if (obj.get("action").getAsString().charAt(0) == '_') {
                         gameServer.sendAll(message);
                     } else if (obj.get("action").getAsString().charAt(0) == '=') {
                         String username = obj.get("id").getAsString();
                         gameServer.sendAllBut(GSON.toJson(obj), username);
-                    } else if (obj.getAsJsonObject("body").has("receiver")) {
+                    } else if (obj.has("body") && obj.getAsJsonObject("body").has("receiver")) {
                         String username = obj.getAsJsonObject("body").get("receiver").getAsString();
                         for (Entry<ServerPlayer, ClientHandler> client : gameServer.getClients()) {
                             if (client.getKey().getUsername().equals(username)) {

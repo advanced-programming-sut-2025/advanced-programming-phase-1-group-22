@@ -8,6 +8,7 @@ import io.github.some_example_name.common.model.*;
 import io.github.some_example_name.common.model.abilitiy.Ability;
 import io.github.some_example_name.common.model.products.HarvestAbleProduct;
 import io.github.some_example_name.common.model.relations.Mission;
+import io.github.some_example_name.common.model.relations.NPC;
 import io.github.some_example_name.common.model.relations.NPCType;
 import io.github.some_example_name.common.model.relations.Player;
 import io.github.some_example_name.common.model.structure.Structure;
@@ -300,6 +301,15 @@ public class ClientService {
         return null;
     }
 
+    public NPC getNpcByName(String name) {
+        for (NPC npc : App.getInstance().getCurrentGame().getNpcs()) {
+            if (npc.getName().equals(name)) {
+                return npc;
+            }
+        }
+        return null;
+    }
+
     private Farm getPlayerInWitchFarm(Player player) {
         for (Farm farm : App.getInstance().getCurrentGame().getVillage().getFarms()) {
             if (farm.getTiles().contains(player.getTiles().get(0))) {
@@ -315,5 +325,12 @@ public class ClientService {
             MainGradle.getInstance().getScreen().dispose();
             MainGradle.getInstance().initialMenu();
         });
+    }
+
+    public Actor getActor(String name) {
+        Actor actor;
+        actor = getPlayerByUsername(name);
+        if (actor != null) return actor;
+        return getNpcByName(name);
     }
 }

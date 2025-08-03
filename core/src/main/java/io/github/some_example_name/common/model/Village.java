@@ -1,12 +1,12 @@
 package io.github.some_example_name.common.model;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonArray;
 import io.github.some_example_name.client.GameClient;
+import io.github.some_example_name.common.model.relations.Player;
 import io.github.some_example_name.client.controller.mainMenu.StartGameMenuController;
 import lombok.Getter;
 import lombok.Setter;
@@ -157,62 +157,59 @@ public class Village implements JsonPreparable {
         randomNumber = bodyArray.get(i++).getAsInt();
         addStores(blackSmith, 63, randomNumber, 12, 14);
 
-        StoreType carpenterShop = StoreType.CARPENTER_SHOP;
         randomNumber = bodyArray.get(i++).getAsInt();
-        addStores(carpenterShop, 88, randomNumber, 13, 10);
+        Store carpenterShop = addStores(StoreType.CARPENTER_SHOP, 88, randomNumber, 13, 10);
 
-        StoreType jojaMart = StoreType.JOJA_MART;
         randomNumber = bodyArray.get(i++).getAsInt();
-        addStores(jojaMart, 88, randomNumber, 12, 12);
+        Store jojaMart = addStores(StoreType.JOJA_MART, 88, randomNumber, 12, 12);
 
-        StoreType stardropsalon = StoreType.STARDROPSALON;
         randomNumber = bodyArray.get(i++).getAsInt();
-        addStores(stardropsalon, randomNumber, 49, 12, 9);
+        Store stardropSalon = addStores(StoreType.STARDROPSALON, randomNumber, 49, 12, 9);
 
-        StoreType pierreShop = StoreType.PIERRE_SHOP;
         randomNumber = bodyArray.get(i++).getAsInt();
-        addStores(pierreShop, randomNumber, 49, 12, 9);
+        Store pierreShop = addStores(StoreType.PIERRE_SHOP, randomNumber, 49, 12, 9);
 
-        StoreType marnieShop = StoreType.MARNIE_SHOP;
         randomNumber = bodyArray.get(i++).getAsInt();
-        addStores(marnieShop, randomNumber, 63, 15, 10);
+        Store marnieShop = addStores(StoreType.MARNIE_SHOP, randomNumber, 63, 15, 10);
 
         NPCType lia = NPCType.LIA;
         randomNumber = bodyArray.get(i++).getAsInt();
-        addNPC(lia, randomNumber, 66);
+        addNPC(lia, randomNumber, 66, stardropSalon);
 
 
         NPCType ebigil = NPCType.ABIGIL;
         randomNumber = bodyArray.get(i++).getAsInt();
-        addNPC(ebigil, randomNumber, 66);
+        addNPC(ebigil, randomNumber, 66, pierreShop);
 
         NPCType harvey = NPCType.HARVEY;
         randomNumber = bodyArray.get(i++).getAsInt();
-        addNPC(harvey, randomNumber, 66);
+        addNPC(harvey, randomNumber, 66, marnieShop);
 
         NPCType rabin = NPCType.RABIN;
         randomNumber = bodyArray.get(i++).getAsInt();
-        addNPC(rabin, randomNumber, 49);
+        addNPC(rabin, randomNumber, 49, carpenterShop);
 
         NPCType sebastian = NPCType.SEBASTIAN;
         randomNumber = bodyArray.get(i++).getAsInt();
-        addNPC(sebastian, randomNumber, 49);
+        addNPC(sebastian, randomNumber, 49, carpenterShop);
     }
 
-    public void addStores(StoreType storeType, int xStart, int yStart, int width, int height) {
+    public Store addStores(StoreType storeType, int xStart, int yStart, int width, int height) {
         Store store = new Store(storeType, width, height);
         setTileOfStore(store, xStart, yStart, xStart + width, yStart + height);
         structures.add(store);
+        return store;
     }
 
-    public void addNPC(NPCType NPCType, int xStart, int yStart) {
+    public void addNPC(NPCType NPCType, int xStart, int yStart, Store store) {
 //        NPCType.setMissions();
-        NPC npc = new NPC(NPCType);
+        NPC npc = new NPC(NPCType, store);
         NPCHouse npcHouse = new NPCHouse(npc);
+        npc.setHouse(npcHouse);
 
         setTileOfNPCHouse(npcHouse, xStart, yStart, xStart + npcHouse.getWidth(), yStart + npcHouse.getHeight());
         App.getInstance().getCurrentGame().getNpcs().add(npc);
-        Tile tileByXAndY = getTileByXAndY(npcHouse.getTiles().get(0).getX(), npcHouse.getTiles().get(0).getY() - 1);
+        Tile tileByXAndY = npcHouse.getTiles().get(0);
         tileByXAndY.setIsFilled(true);
         tileByXAndY.setIsPassable(false);
         npc.getTiles().add(tileByXAndY);
@@ -220,22 +217,6 @@ public class Village implements JsonPreparable {
         structures.add(npc);
     }
 
-
-    private Tile getTileByXAndY(int x, int y) {
-        for (Tile[] tile : App.getInstance().getCurrentGame().tiles) {
-            for (Tile tile1 : tile) {
-                if (tile1.getX() == x && tile1.getY() == y) {
-                    return tile1;
-                }
-            }
-        }
-        return null;
-    }
-
-    public int getRandomNumber(int start, int end) {
-        Random random = new Random();
-        return random.nextInt(end - start + 1) + start;
-    }
 
     public void setTileOfStore(Store store, int xStart, int yStart, int xEnd, int yEnd) {
         for (int i = xStart; i < xEnd; i++) {
@@ -488,4 +469,32 @@ public class Village implements JsonPreparable {
         }
     }
 
+    public void updateNpcs(TimeAndDate time) {
+        for (Player player : App.getInstance().getCurrentGame().getPlayers()) {
+            if (player.getDead()) continue;
+            if (player.equals(App.getInstance().getCurrentGame().getCurrentPlayer())) break;
+            return;
+        }
+        Random random = new Random();
+        for (NPC npc : App.getInstance().getCurrentGame().getNpcs()) {
+            if (((AnimatedSprite) npc.getSprites().get(0).getSprite()).isLooping()) continue;
+            switch (npc.getMovingState()) {
+                case 0: {
+                    if (random.nextInt(150) == 1) {
+                        npc.goToStore();
+                    }
+                } break;
+                case 1: {
+                    if (time.getHour() > 16 && random.nextInt(30) == 1) {
+                        npc.moveRandomly();
+                    }
+                } break;
+                case 2: {
+                    if (time.getHour() > 20 && random.nextInt(90) == 1) {
+                        npc.goHome();
+                    }
+                }
+            }
+        }
+    }
 }

@@ -24,7 +24,7 @@ public class DialogMenu extends PopUp {
         super.createMenu(stage, skin, playerController);
         OrthographicCamera camera = MainGradle.getInstance().getCamera();
         Window window = new Window("", skin);
-        window.setSize(camera.viewportWidth * 0.3f, camera.viewportHeight * 0.2f);
+        window.setSize(camera.viewportWidth * 0.5f, camera.viewportHeight * 0.5f);
         window.setPosition(
             (MainGradle.getInstance().getCamera().viewportWidth - window.getWidth()) / 2f,
             (MainGradle.getInstance().getCamera().viewportHeight - window.getHeight()) / 2f
@@ -32,12 +32,27 @@ public class DialogMenu extends PopUp {
         window.setMovable(false);
 
         Table dialog = new Table();
+        ScrollPane scrollPane = new ScrollPane(dialog, skin);
+        scrollPane.setFadeScrollBars(false);
+        scrollPane.setScrollbarsOnTop(true);
+        scrollPane.setScrollingDisabled(true, false);
+        scrollPane.setScrollBarPositions(true, true);
+        scrollPane.setForceScroll(false, true);
+        scrollPane.layout();
+        scrollPane.setTouchable(Touchable.enabled);
         dialog.pack();
 
         Image icon = new Image(npc.getType().getTextureIcon());
-        Label dialogLabel = new Label(relationService.meetNpc(npc).message(), skin);
         dialog.add(icon).pad(5).right();
-        dialog.add(dialogLabel).pad(5).left();
+        boolean flag = false;
+        for (String string : wrapString(relationService.meetNpc(npc).message(), 35)) {
+            if (flag)  dialog.add();
+            flag = true;
+            Label dialogLabel = new Label(string, skin);
+            dialog.add(dialogLabel).pad(5).left();
+            dialog.row();
+        }
+
 
         ArrayList<Actor> array = new ArrayList<>();
         array.add(window);
@@ -45,7 +60,7 @@ public class DialogMenu extends PopUp {
 
         Table content = new Table();
         content.setFillParent(true);
-        content.add(dialog).width(600).height(180).padBottom(10).padTop(80).row();
+        content.add(scrollPane).width(camera.viewportWidth * 0.5f).height(camera.viewportHeight * 0.5f - 100).padBottom(10).padTop(80).row();
 
         window.add(content).expand().fill().pad(10);
         Group group = new Group() {

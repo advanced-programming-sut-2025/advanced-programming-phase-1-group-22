@@ -162,3 +162,7 @@ Thumbs.db
 ## You could also add that configuration to the text in nativeimage.gradle .
 ## You should delete or comment out the next line if you have configuration in a different resource-config.json .
 **/resource-config.json
+
+
+# Ignore ServerConfig.java to prevent committing API keys
+core/src/main/java/io/github/some_example_name/server/model/ServerConfig.java

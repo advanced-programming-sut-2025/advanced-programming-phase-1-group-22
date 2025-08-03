@@ -300,7 +300,7 @@ public class TradeService {
                     }
 
                     trade.setIsAnswered(true);
-                    relationService.changeFriendShipLevelUp(relationService.getFriendShipBetweenTwoActors(trade.getTrader(), trade.getCustomer()), 50);
+                    relationService.changeFriendShipLevelUp(relationService.getFriendShipBetweenTwoActors(trade.getTrader(), trade.getCustomer()), 25);
                     trade.setIsSuccessfulled(true);
                     GameClient.getInstance().sendTrade(trade.getCustomer(), trade, trade.getQuantity(), itemFromInventory.getKey(), true);
                 } else {
@@ -330,7 +330,7 @@ public class TradeService {
                     }
                     trade.setIsAnswered(true);
                     trade.setIsSuccessfulled(true);
-                    relationService.changeFriendShipLevelUp(relationService.getFriendShipBetweenTwoActors(trade.getTrader(), trade.getCustomer()), 50);
+                    relationService.changeFriendShipLevelUp(relationService.getFriendShipBetweenTwoActors(trade.getTrader(), trade.getCustomer()), 25);
                 }
                 return;
             }
@@ -341,7 +341,7 @@ public class TradeService {
         for (Trade trade : customer.getGootenTradeList()) {
             if (trade.getId() == id) {
                 trade.setIsAnswered(true);
-                relationService.changeFriendShipLevelUp(relationService.getFriendShipBetweenTwoActors(trade.getTrader(), trade.getCustomer()), -50);
+                relationService.changeFriendShipLevelUp(relationService.getFriendShipBetweenTwoActors(trade.getTrader(), trade.getCustomer()), -25);
                 trade.setIsSuccessfulled(false);
             }
         }
@@ -365,7 +365,7 @@ public class TradeService {
                             GameClient.getInstance().updatePlayerGold(trade.getCustomer());
                             trade.setIsAnswered(true);
                             trade.setIsSuccessfulled(true);
-                            relationService.changeFriendShipLevelUp(relationService.getFriendShipBetweenTwoActors(trade.getTrader(), trade.getCustomer()), 50);
+                            relationService.changeFriendShipLevelUp(relationService.getFriendShipBetweenTwoActors(trade.getTrader(), trade.getCustomer()), 25);
                             GameClient.getInstance().sendTrade(trade.getTrader(), trade, trade.getPrice(), null, false);
                         } else {
                             Map.Entry<Salable, Integer> itemFromInventory = trade.getCustomer().getItemFromInventory(trade.getRequiredItem());
@@ -376,7 +376,7 @@ public class TradeService {
                             } else {
                                 trade.getCustomer().getInventory().getProducts().replace(itemFromInventory.getKey(), itemFromInventory.getValue() - trade.getQuantity());
                             }
-                            relationService.changeFriendShipLevelUp(relationService.getFriendShipBetweenTwoActors(trade.getTrader(), trade.getCustomer()), 50);
+                            relationService.changeFriendShipLevelUp(relationService.getFriendShipBetweenTwoActors(trade.getTrader(), trade.getCustomer()), 25);
                             GameClient.getInstance().sendTrade(trade.getTrader(), trade, trade.getQuantityRequired(), itemFromInventory.getKey(), false);
                         }
                     } else {
@@ -387,7 +387,7 @@ public class TradeService {
                         }
                         trade.setIsAnswered(true);
                         trade.setIsSuccessfulled(true);
-                        relationService.changeFriendShipLevelUp(relationService.getFriendShipBetweenTwoActors(trade.getTrader(), trade.getCustomer()), 50);
+                        relationService.changeFriendShipLevelUp(relationService.getFriendShipBetweenTwoActors(trade.getTrader(), trade.getCustomer()), 25);
                         GameClient.getInstance().sendTrade(trade.getCustomer(), trade, trade.getQuantity(), itemFromInventory.getKey(), false);
                     }
                 }

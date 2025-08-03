@@ -12,6 +12,7 @@ import io.github.some_example_name.common.model.cook.Food;
 import io.github.some_example_name.common.model.craft.Craft;
 import io.github.some_example_name.common.model.products.AnimalProduct;
 import io.github.some_example_name.common.model.products.TreesAndFruitsAndSeeds.Fruit;
+import io.github.some_example_name.common.model.relations.*;
 import io.github.some_example_name.common.model.source.*;
 import io.github.some_example_name.common.model.records.Response;
 import io.github.some_example_name.common.model.structure.stores.*;
@@ -23,10 +24,6 @@ import io.github.some_example_name.common.model.enums.Weather;
 import io.github.some_example_name.common.model.gameSundry.SundryType;
 import io.github.some_example_name.common.model.products.HarvestAbleProduct;
 import io.github.some_example_name.common.model.products.TreesAndFruitsAndSeeds.Tree;
-import io.github.some_example_name.common.model.relations.Friendship;
-import io.github.some_example_name.common.model.relations.Mission;
-import io.github.some_example_name.common.model.relations.NPC;
-import io.github.some_example_name.common.model.relations.Player;
 import io.github.some_example_name.common.model.shelter.ShippingBin;
 import io.github.some_example_name.common.model.structure.Structure;
 import io.github.some_example_name.common.utils.App;
@@ -154,17 +151,22 @@ public class Game implements Serializable {
         }
         for (Friendship friendship : this.getFriendships()) {
             if (friendship.getLastSeen().getDay().equals(this.getTimeAndDate().getDay())) {
-                friendship.setXp(friendship.getXp() + -10);
-                if (friendship.getXp() <= 0) {
-                    friendship.setXp(90);
-                    friendship.setFriendShipLevel(friendship.getFriendShipLevel() - 1);
-                }
+                friendship.setXp(friendship.getXp() - 10);
+//                if (friendship.getXp() <= 0) {
+//                    friendship.setXp(90);
+//                    friendship.setFriendShipLevel(friendship.getFriendShipLevel() - 1);
+//                }
             }
         }
         App.getInstance().getCurrentGame().getVillage().applyPendingChanges();
         App.getInstance().getCurrentGame().getVillage().forEachStructure(structure -> {
             if (structure instanceof NPC npc) {
                 npc.setGiftedToday(false);
+                npc.setMovingState(0);
+            }
+            if (structure instanceof NPCHouse npcHouse) {
+                npcHouse.getOwner().getTiles().clear();
+                npcHouse.getOwner().getTiles().add(npcHouse.getTiles().get(0));
             }
         });
         applyPendingChanges();
@@ -404,7 +406,7 @@ public class Game implements Serializable {
 
     private void giveRewardToLevelThreeFriends() {
         for (Friendship friendship : this.getFriendships()) {
-            if ((friendship.getFirstPlayer() instanceof NPC && friendship.getSecondPlayer() instanceof Player)) {
+            if ((friendship.getFirstPlayer() instanceof NPC || friendship.getSecondPlayer() instanceof NPC)) {
                 if (friendship.getFriendShipLevel() == 3) {
                     NPC npc = (NPC) friendship.getFirstPlayer();
                     Mission mission = npc.getType().getMissions().get(npc.getType().getMissions().size() % 3);
@@ -416,7 +418,7 @@ public class Game implements Serializable {
                         GameClient.getInstance().updatePlayerAddToInventory(App.getInstance().getCurrentGame().getCurrentPlayer(),gift,1);
                 }
             }
-            if ((friendship.getSecondPlayer() instanceof NPC && friendship.getFirstPlayer() instanceof Player)) {
+            if ((friendship.getSecondPlayer() instanceof NPC || friendship.getFirstPlayer() instanceof NPC)) {
                 if (friendship.getFriendShipLevel() == 3) {
                     NPC npc = (NPC) friendship.getSecondPlayer();
                     Mission mission = npc.getType().getMissions().get(npc.getType().getMissions().size() % 3);
