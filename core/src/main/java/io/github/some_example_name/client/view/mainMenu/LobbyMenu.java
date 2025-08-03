@@ -13,6 +13,7 @@ import io.github.some_example_name.common.model.records.Response;
 import io.github.some_example_name.common.utils.App;
 import io.github.some_example_name.common.utils.InitialGame;
 import io.github.some_example_name.common.variables.Session;
+import lombok.Getter;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 public class LobbyMenu extends Menu {
+    @Getter
     private final LobbyController controller = new LobbyController(this);
     private final TextButton createLobby;
     private final TextButton listLobby;

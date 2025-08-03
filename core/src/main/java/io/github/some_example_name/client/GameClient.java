@@ -619,7 +619,7 @@ public class GameClient {
                             List<Lobby> lobbies = GSON.fromJson(lobbyArray, lobbyListType);
                             service.receiveLobbies(lobbies);
                         } else if (obj.get("action").getAsString().equals("send_users")) {
-                            JsonObject lobbyArray = obj.get("users").getAsJsonObject();
+                            JsonObject lobbyArray = obj.get("body").getAsJsonObject();
                             Type lobbyListType = new TypeToken<Map<String, List<String>>>() {
                             }.getType();
                             Map<String, List<String>> lobbies = GSON.fromJson(lobbyArray, lobbyListType);
