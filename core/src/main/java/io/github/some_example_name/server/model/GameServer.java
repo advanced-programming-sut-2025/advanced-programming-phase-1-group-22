@@ -170,6 +170,7 @@ public class GameServer {
                   ]
                }
                """.formatted(model, finalEvent, iAm);
+            JsonObject obj = null;
             try {
                 InputStream responseStream = getInputStream(requestBody);
                 BufferedReader reader = new BufferedReader(new InputStreamReader(responseStream));
@@ -178,7 +179,7 @@ public class GameServer {
                 while ((line = reader.readLine()) != null) {
                     response.append(line.trim());
                 }
-                JsonObject obj = JsonParser.parseString(response.toString()).getAsJsonObject();
+                obj = JsonParser.parseString(response.toString()).getAsJsonObject();
                 String resp = obj.getAsJsonArray("choices").get(0).getAsJsonObject()
                     .getAsJsonObject("message").get("content").getAsString();
                 Map<String, Object> msg = Map.of(
@@ -188,7 +189,7 @@ public class GameServer {
                 );
                 sendAll(GSON.toJson(msg));
             } catch (IOException | NullPointerException e) {
-                System.err.println(e.getMessage());
+                System.err.println(obj == null ? e.getMessage() : obj.toString());
             }
         }).start();
     }
