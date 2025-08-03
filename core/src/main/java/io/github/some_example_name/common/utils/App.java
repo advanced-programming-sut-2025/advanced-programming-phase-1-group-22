@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Getter
@@ -19,7 +20,7 @@ public class App {
     private final List<User> users = new ArrayList<>();
     private final List<Game> games = new ArrayList<>();
     private Game currentGame = new Game();
-    private final List<Lobby> lobbies = new ArrayList<>();
+    private final List<Lobby> lobbies = Collections.synchronizedList(new ArrayList<>());
 
     private App() {
     }

@@ -6,14 +6,17 @@ import lombok.Getter;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 
 @Getter
 public class GameThread extends Thread {
     private static GameThread instance;
     private static final int PORT = 5000;
     private final HashMap<Integer, GameServer> games = new HashMap<>();
+    private final Map<String, ClientHandler> connections = new HashMap<>();
+    private final Map<String, Long> lastConnections = Collections.synchronizedMap(new HashMap<>());
 
     private GameThread() {
     }
@@ -53,4 +56,25 @@ public class GameThread extends Thread {
             e.printStackTrace();
         }
     }
+
+    public void sendAll(String message) {
+        for (Map.Entry<String, ClientHandler> stringClientHandlerEntry : connections.entrySet()) {
+            try {
+                stringClientHandlerEntry.getValue().send(message);
+            } catch (IOException ignored) {
+            }
+        }
+    }
+
+    public void sendAllBut(String message, String username) {
+        for (Map.Entry<String, ClientHandler> stringClientHandlerEntry : connections.entrySet()) {
+            if (!stringClientHandlerEntry.getKey().equals(username)) {
+                try {
+                    stringClientHandlerEntry.getValue().send(message);
+                } catch (IOException ignored) {
+                }
+            }
+        }
+    }
+
 }

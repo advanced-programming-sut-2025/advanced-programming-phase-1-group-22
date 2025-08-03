@@ -178,6 +178,62 @@ public class ClientService {
         App.getInstance().getCurrentGame().getDCPlayers().remove(player);
     }
 
+
+    public void createLobby(String admin, String lobbyName, boolean isPrivate, String password, boolean isVisible, long id) {
+        Lobby lobby = new Lobby(admin, lobbyName, !isPrivate, password, isVisible);
+        lobby.setId(id);
+        App.getInstance().getLobbies().add(lobby);
+    }
+
+    public void joinLobby(long id, String member) {
+        synchronized (App.getInstance().getLobbies()) {
+            for (Lobby lobby : App.getInstance().getLobbies()) {
+                if (lobby.getId() == id) {
+                    lobby.getMembers().add(member);
+                }
+            }
+        }
+    }
+
+    public void leftLobby(long id, String member) {
+        synchronized (App.getInstance().getLobbies()) {
+            Iterator<Lobby> iterator = App.getInstance().getLobbies().iterator();
+
+            while (iterator.hasNext()) {
+                Lobby lobby = iterator.next();
+
+                if (lobby.getId() == id) {
+                    lobby.getMembers().remove(member);
+                    if (lobby.getAdmin().equals(member)) {
+                        if (!lobby.getMembers().isEmpty()) {
+                            lobby.setAdmin(lobby.getMembers().get(0));
+                        } else {
+                            iterator.remove();
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public void receiveLobbies(List<Lobby> lobbies) {
+        App.getInstance().getLobbies().addAll(lobbies);
+    }
+
+    public void handleDeleteLobby(long id) {
+        synchronized (App.getInstance().getLobbies()) {
+            Iterator<Lobby> iterator = App.getInstance().getLobbies().iterator();
+
+            while (iterator.hasNext()) {
+                Lobby lobby = iterator.next();
+
+                if (lobby.getId() == id) {
+                    iterator.remove();
+                }
+            }
+        }
+    }
+
     private Structure getStructureByTile(List<Tile> tiles) {
         for (Farm farm : App.getInstance().getCurrentGame().getVillage().getFarms()) {
             farm.applyPendingChanges();

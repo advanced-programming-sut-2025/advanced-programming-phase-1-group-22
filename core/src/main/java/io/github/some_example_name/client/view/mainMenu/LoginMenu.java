@@ -3,6 +3,7 @@ package io.github.some_example_name.client.view.mainMenu;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import io.github.some_example_name.client.GameClient;
 import io.github.some_example_name.client.controller.mainMenu.LoginMenuController;
 import io.github.some_example_name.common.variables.Session;
 import lombok.Getter;
@@ -65,7 +66,10 @@ public class LoginMenu extends Menu {
         this.login.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if (controller.login()) setScreen(new MainMenu(skin));
+                if (controller.login()) {
+                    GameClient.getInstance().loggedIn();
+                    setScreen(new MainMenu(skin));
+                }
             }
         });
         this.table.add(login).width(400).padRight(10);

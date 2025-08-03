@@ -8,13 +8,14 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import io.github.some_example_name.client.view.mainMenu.StartGameMenu;
+import io.github.some_example_name.client.view.mainMenu.FirstMenu;
 import io.github.some_example_name.common.utils.GameAsset;
 import io.github.some_example_name.client.view.GameView;
-import io.github.some_example_name.client.view.mainMenu.FirstMenu;
 import lombok.Getter;
 
-/** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
+/**
+ * {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms.
+ */
 @Getter
 public class MainGradle extends Game {
     private SpriteBatch batch;
@@ -45,13 +46,12 @@ public class MainGradle extends Game {
 
     public void initialMenu() {
         GameView.captureInput = true;
-        instance.setScreen(new StartGameMenu(GameAsset.SKIN_MENU, 0));
+        instance.setScreen(new FirstMenu(GameAsset.SKIN_MENU));
     }
 
     @Override
     public void render() {
         camera.update();
-       // camera.zoom = 3f;
         viewport.apply();
         batch.setProjectionMatrix(camera.combined);
         ScreenUtils.clear(0.15f, 0.15f, 0.2f, 1f);
