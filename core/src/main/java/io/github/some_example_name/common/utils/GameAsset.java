@@ -2529,5 +2529,10 @@ public class GameAsset {
     public static final Texture SAM_FULL = new Texture("Player/Sam.png");
     public static final Texture SEBASTIAN_FULL = new Texture("Player/Sebastian.png");
     public static final Texture SHANE_FULL = new Texture("Player/Shane.png");
+    public static final Texture ABIGAIL_FULL_NPC = new Texture("NPC/Abigail.png");
+    public static final Texture HARVEY_FULL_NPC = new Texture("NPC/Harvey.png");
+    public static final Texture LEAH_FULL_NPC = new Texture("NPC/Leah.png");
+    public static final Texture ROBIN_FULL_NPC = new Texture("NPC/Robin.png");
+    public static final Texture SEBASTIAN_FULL_NPC = new Texture("NPC/Sebastian.png");
 
 }

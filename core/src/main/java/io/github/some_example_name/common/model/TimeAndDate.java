@@ -72,6 +72,7 @@ public class TimeAndDate {
     public void moveTimeForward() {
         boolean nextDay = false;
         minute += 1;
+        App.getInstance().getCurrentGame().getVillage().updateNpcs(this);
         if (minute >= 60) {
             hour++;
             minute = 0;
@@ -102,8 +103,10 @@ public class TimeAndDate {
     }
 
     public int getTotalDays(){
-        int days = App.getInstance().getCurrentGame().getTimeAndDate().getSeason().ordinal() * 28;
-        days += App.getInstance().getCurrentGame().getTimeAndDate().getDay();
+        int days = year * 4;
+        days += season.ordinal();
+        days *= 28;
+        days += day;
         return days;
     }
 
