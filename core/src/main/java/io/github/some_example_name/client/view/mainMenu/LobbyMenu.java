@@ -3,14 +3,19 @@ package io.github.some_example_name.client.view.mainMenu;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import io.github.some_example_name.client.GameClient;
+import io.github.some_example_name.client.controller.mainMenu.LobbyController;
 import io.github.some_example_name.common.model.Lobby;
-import io.github.some_example_name.common.model.User;
+import io.github.some_example_name.common.model.records.Response;
 import io.github.some_example_name.common.utils.App;
 import io.github.some_example_name.common.variables.Session;
+import io.github.some_example_name.server.repository.UserRepo;
 
 public class LobbyMenu extends Menu {
+    private final LobbyController controller = new LobbyController(this);
     private final TextButton createLobby;
     private final TextButton listLobby;
+    private final TextButton back;
     private Runnable updateLobbyList;
 
     public LobbyMenu(Skin skin) {
@@ -18,6 +23,7 @@ public class LobbyMenu extends Menu {
         this.title.setText("Lobby Menu");
         this.createLobby = new TextButton("Create Lobby", skin);
         this.listLobby = new TextButton("List Lobbies", skin);
+        this.back = new TextButton("Back", skin);
     }
 
     @Override
@@ -34,6 +40,13 @@ public class LobbyMenu extends Menu {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 lobbyListDialog(skin);
+            }
+        });
+        this.table.add(back).width(400).row();
+        this.back.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                setScreen(new MainMenu(skin));
             }
         });
     }
@@ -80,8 +93,10 @@ public class LobbyMenu extends Menu {
                 boolean isVisible = visibleCheckbox.isChecked();
                 boolean isPrivate = privateCheckbox.isChecked();
                 String password = isPrivate ? passwordField.getText() : "";
-                createLobby();
-                //TODO create lobby
+                Response response = controller.createLobby(Session.getCurrentUser(), lobbyName, isPrivate, password, isVisible);
+                if (!response.shouldBeBack()) {
+                    alert(response.message(), 5);
+                }
                 dialog.hide();
             }
         });
@@ -111,29 +126,42 @@ public class LobbyMenu extends Menu {
         Table lobbyTable = new Table(skin);
         lobbyTable.top().left();
 
+        TextButton refresh = new TextButton("refresh", skin);
+        refresh.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                updateLobbyList.run();
+            }
+        });
+        lobbyTable.add(refresh).left().padBottom(5).row();
+
         updateLobbyList = () -> {
             lobbyTable.clear();
+            lobbyTable.add(refresh).left().padBottom(5).row();
 
             String query = searchField.getText().trim().toLowerCase();
-            Integer id = null;
+            Long id = null;
             try {
-                id = Integer.parseInt(query);
+                id = Long.parseLong(query);
             } catch (NumberFormatException e) {
                 if (!query.isEmpty())
                     alert("You have to enter id to search", 5);
             }
-            for (Lobby lobby : App.getInstance().getLobbies()) {
-                if (lobby.isVisible() || (id != null && lobby.getId() == id)) {
-                    String text = "Name: " + lobby.getName() + " | ID: " + lobby.getId() + " | Owner: " + lobby.getAdmin().getUsername();
-                    TextButton lobbyButton = new TextButton(text, skin);
-                    lobbyTable.add(lobbyButton).left().padBottom(5).row();
+            synchronized (App.getInstance().getLobbies()) {
+                for (Lobby lobby : App.getInstance().getLobbies()) {
+                    if (lobby.isVisible() || (id != null && lobby.getId() == id)
+                        || lobby.getMembers().contains(Session.getCurrentUser().getUsername())) {
+                        String text = "Name: " + lobby.getName() + " | ID: " + lobby.getId() + " | Owner: " + lobby.getAdmin();
+                        TextButton lobbyButton = new TextButton(text, skin);
+                        lobbyTable.add(lobbyButton).left().padBottom(5).row();
 
-                    lobbyButton.addListener(new ClickListener() {
-                        @Override
-                        public void clicked(InputEvent event, float x, float y) {
-                            showLobbyDetailDialog(lobby, skin);
-                        }
-                    });
+                        lobbyButton.addListener(new ClickListener() {
+                            @Override
+                            public void clicked(InputEvent event, float x, float y) {
+                                showLobbyDetailDialog(lobby, skin);
+                            }
+                        });
+                    }
                 }
             }
 
@@ -164,11 +192,11 @@ public class LobbyMenu extends Menu {
 
         detailDialog.getContentTable().add("Lobby Name: " + lobby.getName()).left().row();
         detailDialog.getContentTable().add("Lobby ID: " + lobby.getId()).left().row();
-        detailDialog.getContentTable().add("Owner: " + lobby.getAdmin().getUsername()).left().row();
+        detailDialog.getContentTable().add("Owner: " + lobby.getAdmin()).left().row();
 
         detailDialog.getContentTable().add("Members:").left().row();
-        for (User member : lobby.getMembers()) {
-            detailDialog.getContentTable().add("- " + member.getUsername()).left().row();
+        for (String member : lobby.getMembers()) {
+            detailDialog.getContentTable().add("- " + member).left().row();
         }
 
         TextButton joinButton = new TextButton("Join Lobby", skin);
@@ -180,9 +208,9 @@ public class LobbyMenu extends Menu {
             }
         });
 
-        detailDialog.getContentTable().add(joinButton).padTop(10).row();
-        for (User member : lobby.getMembers()) {
-            if (member.getUsername().equals(Session.getCurrentUser().getUsername())) {
+        detailDialog.getContentTable().add(joinButton).width(400).padTop(10).row();
+        for (String member : lobby.getMembers()) {
+            if (member.equals(Session.getCurrentUser().getUsername())) {
                 TextButton left = new TextButton("Left", skin);
                 left.addListener(new ClickListener() {
                     @Override
@@ -191,11 +219,11 @@ public class LobbyMenu extends Menu {
                         detailDialog.hide();
                     }
                 });
-                detailDialog.getContentTable().add(left).padTop(5).row();
+                detailDialog.getContentTable().add(left).width(400).padTop(5).row();
             }
         }
 
-        if (Session.getCurrentUser().getUsername().equals(lobby.getAdmin().getUsername())) {
+        if (Session.getCurrentUser().getUsername().equals(lobby.getAdmin())) {
             TextButton startGameButton = new TextButton("Start Game", skin);
             startGameButton.addListener(new ClickListener() {
                 @Override
@@ -204,63 +232,65 @@ public class LobbyMenu extends Menu {
                     startGame(lobby);
                 }
             });
-            detailDialog.getContentTable().add(startGameButton).padTop(5).row();
+            detailDialog.getContentTable().add(startGameButton).width(400).padTop(5).row();
         }
 
         detailDialog.button("Back", false);
         detailDialog.show(stage);
     }
 
-    private void createLobby() {
-
-    }
-
     private void joinLobby(Lobby lobby) {
-        Dialog passDialog = new Dialog("Enter Password", skin);
-        TextField passField = new TextField("", skin);
-        passField.setPasswordMode(true);
-        passField.setPasswordCharacter('*');
-        passDialog.getContentTable().add("Password: ");
-        passDialog.getContentTable().add(passField).row();
+        if (lobby.is_public()) {
+            lobby.getMembers().add(Session.getCurrentUser().getUsername());
+            GameClient.getInstance().joinLobbyMessage(lobby.getId());
+        } else {
+            Dialog passDialog = new Dialog("Enter Password", skin);
+            TextField passField = new TextField("", skin);
+            passField.setPasswordMode(true);
+            passField.setPasswordCharacter('*');
+            passDialog.getContentTable().add("Password: ");
+            passDialog.getContentTable().add(passField).row();
 
-        TextButton join = new TextButton("Join", skin);
-        join.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                String password = passField.getText();
+            TextButton join = new TextButton("Join", skin);
+            join.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    String password = passField.getText();
+                    Response response = controller.joinLobby(lobby, Session.getCurrentUser().getUsername(), password);
+                    if (!response.shouldBeBack()) {
+                        alert(response.message(), 5);
+                    }
+                    passDialog.hide();
+                }
+            });
+            TextButton cancel = new TextButton("Cancel", skin);
+            cancel.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    passDialog.hide();
+                }
+            });
 
-                //TODO join lobby
-                passDialog.hide();
-            }
-        });
-        TextButton cancel = new TextButton("Cancel", skin);
-        cancel.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                passDialog.hide();
-            }
-        });
+            passDialog.getButtonTable().add(join);
+            passDialog.getButtonTable().add(cancel);
 
-        passDialog.getButtonTable().add(join);
-        passDialog.getButtonTable().add(cancel);
-
-        passDialog.show(stage);
+            passDialog.show(stage);
+        }
     }
 
-    private void leftLobby(Lobby lobby, User member) {
+    private void leftLobby(Lobby lobby, String member) {
         lobby.getMembers().remove(member);
-        if (lobby.getAdmin().getUsername().equals(member.getUsername())) {
+        if (lobby.getAdmin().equals(member)) {
             if (!lobby.getMembers().isEmpty()) {
                 lobby.setAdmin(lobby.getMembers().get(0));
             } else {
                 App.getInstance().getLobbies().remove(lobby);
-                //TODO remove lobby
             }
         }
+        GameClient.getInstance().leftLobbyMessage(lobby.getId());
     }
 
     private void startGame(Lobby lobby) {
         //TODO startGame
     }
-
 }

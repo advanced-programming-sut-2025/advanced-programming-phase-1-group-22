@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.google.gson.*;
 import io.github.some_example_name.common.JsonMessageHandler;
 import io.github.some_example_name.common.model.*;
+import io.github.some_example_name.common.utils.App;
 import io.github.some_example_name.server.model.GameServer;
 import io.github.some_example_name.server.model.GameThread;
 import io.github.some_example_name.server.model.ServerPlayer;
@@ -12,9 +13,10 @@ import io.github.some_example_name.server.service.ServerService;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.net.Socket;
-import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -33,8 +35,8 @@ public class ClientHandler extends Thread {
     private boolean running = true;
     private boolean inFavor = false;
     private GameServer gameServer;
-    private final Map<String, Long> playerLastPing = new HashMap<>();
     private final ScheduledExecutorService pingHandler = Executors.newScheduledThreadPool(1);
+    private final ScheduledExecutorService loginPingHandler = Executors.newScheduledThreadPool(1);
     private final ServerService service = new ServerService(this);
 
     public ClientHandler(Socket socket) {
@@ -43,6 +45,46 @@ public class ClientHandler extends Thread {
             this.jsonMessageHandler = new JsonMessageHandler(clientSocket.getInputStream(), clientSocket.getOutputStream());
         } catch (Exception ignored) {
         }
+        handleUnUseLobbies();
+    }
+
+    private void handleUnUseLobbies() {
+        ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+
+        executor.scheduleAtFixedRate(() -> {
+            long now = System.currentTimeMillis();
+
+            synchronized (App.getInstance().getLobbies()) {
+                Iterator<Lobby> iterator = App.getInstance().getLobbies().iterator();
+
+                while (iterator.hasNext()) {
+                    Lobby lobby = iterator.next();
+                    boolean hasActiveMembers = false;
+                    for (String member : lobby.getMembers()) {
+                        if (lobby.getAdmin().equals(member)) continue;
+                        if (GameThread.getInstance().getConnections().containsKey(member)) {
+                            hasActiveMembers = true;
+                            break;
+                        }
+                    }
+
+                    long inactiveTime = now - lobby.getLastTimeNoPlayer();
+
+                    if (!lobby.isGameStart() && !hasActiveMembers && inactiveTime > 5 * 60 * 1000) {
+                        iterator.remove();
+                        deleteLobbyMessage(lobby.getId());
+                    }
+                }
+            }
+        }, 0, 30, TimeUnit.SECONDS);
+    }
+
+    private void deleteLobbyMessage(long id) {
+        Map<String, Object> msg = Map.of(
+            "action", "delete_lobby",
+            "lobby_id", id
+        );
+        GameThread.getInstance().sendAll(GSON.toJson(msg));
     }
 
     private void handlePlayerDC(String username, long DCTime, long lastPing) {
@@ -98,6 +140,45 @@ public class ClientHandler extends Thread {
 
                     if (obj.get("action").getAsString().equals("connected")) {
                         System.out.println("Client Connected");
+                    } else if (obj.get("action").getAsString().equals("login")) {
+                        String username = obj.get("id").getAsString();
+                        GameThread.getInstance().getConnections().put(username, this);
+                        if (!App.getInstance().getLobbies().isEmpty()) {
+                            Map<String, Object> msg = Map.of(
+                                "action", "send_lobbies",
+                                "lobbies", App.getInstance().getLobbies()
+                            );
+                            send(GSON.toJson(msg));
+                        }
+                        loginPingHandler.scheduleAtFixedRate(() -> {
+                            for (Map.Entry<String, Long> stringLongEntry : GameThread.getInstance().getLastConnections().entrySet()) {
+                                long lastPing = stringLongEntry.getValue();
+                                long now = System.currentTimeMillis();
+                                if ((now - lastPing) > 30 * 1000) {
+                                    GameThread.getInstance().getConnections().remove(stringLongEntry.getKey());
+                                }
+                            }
+                        }, 0, 5, TimeUnit.SECONDS);
+
+                    } else if (obj.get("action").getAsString().equals("=create_lobby")) {
+                        String username = obj.get("id").getAsString();
+                        String lobbyName = obj.get("name").getAsString();
+                        boolean isPrivate = obj.get("private").getAsBoolean();
+                        boolean visible = obj.get("visible").getAsBoolean();
+                        String password = isPrivate ? obj.get("password").getAsString() : null;
+                        long id = obj.get("lobby_id").getAsLong();
+                        service.createLobby(username, lobbyName, isPrivate, password, visible, id);
+                        GameThread.getInstance().sendAllBut(GSON.toJson(obj), username);
+                    } else if (obj.get("action").getAsString().equals("=join_lobby")) {
+                        String username = obj.get("id").getAsString();
+                        long id = obj.get("lobby_id").getAsLong();
+                        service.joinLobby(id, username);
+                        GameThread.getInstance().sendAllBut(GSON.toJson(obj), username);
+                    } else if (obj.get("action").getAsString().equals("=left_lobby")) {
+                        String username = obj.get("id").getAsString();
+                        long id = obj.get("lobby_id").getAsLong();
+                        service.leftLobby(id, username);
+                        GameThread.getInstance().sendAllBut(GSON.toJson(obj), username);
                     } else if (obj.get("action").getAsString().equals("ready_for_game")) {
                         String username = obj.get("id").getAsString();
                         System.out.println("Client Ready: " + username);
@@ -220,6 +301,9 @@ public class ClientHandler extends Thread {
                     } else if (obj.get("action").getAsString().equals("ping")) {
                         String username = obj.get("id").getAsString();
                         gameServer.getPlayerLastPing().put(username, System.currentTimeMillis());
+                    } else if (obj.get("action").getAsString().equals("login_ping")) {
+                        String username = obj.get("id").getAsString();
+                        GameThread.getInstance().getLastConnections().put(username, System.currentTimeMillis());
                     } else if (obj.get("action").getAsString().equals("ready_for_sleep")) {
                         ready = true;
                         if (gameServer.isReady()) gameServer.sendAll(message);
@@ -274,7 +358,6 @@ public class ClientHandler extends Thread {
                     } else if (obj.get("action").getAsString().charAt(0) == '=') {
                         String username = obj.get("id").getAsString();
                         gameServer.sendAllBut(GSON.toJson(obj), username);
-                        System.out.println("receive");
                     } else if (obj.getAsJsonObject("body").has("receiver")) {
                         String username = obj.getAsJsonObject("body").get("receiver").getAsString();
                         for (Entry<ServerPlayer, ClientHandler> client : gameServer.getClients()) {
@@ -287,6 +370,8 @@ public class ClientHandler extends Thread {
                     System.out.println("Received non-JSON message: " + message);
                 }
             }
+        } catch (EOFException eofException) {
+            System.out.println("client disconnect: " + clientSocket);
         } catch (IOException e) {
             e.printStackTrace();
         } finally {

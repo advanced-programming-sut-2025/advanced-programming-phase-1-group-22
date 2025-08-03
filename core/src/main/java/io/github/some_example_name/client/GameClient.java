@@ -80,6 +80,19 @@ public class GameClient {
         }
     }
 
+    private void lobbyLoginPingMassage() {
+        try {
+            Map<String, Object> msg = Map.of(
+                "action", "login_ping",
+                "id", Session.getCurrentUser().getUsername()
+            );
+
+            jsonMessageHandler.send(GSON.toJson(msg));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void DCReconnect(String username) {
         try {
             Map<String, Object> msg = Map.of(
@@ -117,6 +130,27 @@ public class GameClient {
         }
     }
 
+    public void loggedIn() {
+        try {
+            Map<String, Object> msg = Map.of(
+                "action", "login",
+                "id", Session.getCurrentUser().getUsername()
+            );
+
+            jsonMessageHandler.send(GSON.toJson(msg));
+            Timer userTimer = new Timer();
+            userTimer.scheduleAtFixedRate(new TimerTask() {
+                @Override
+                public void run() {
+                    lobbyLoginPingMassage();
+                }
+            }, 0, 5000);
+        } catch (IOException e) {
+            debug(e);
+            System.err.println(e.getMessage());
+        }
+    }
+
     public void readyForGame() {
         try {
             Map<String, Object> msg = Map.of(
@@ -134,6 +168,49 @@ public class GameClient {
             }, 0, 5000);
         } catch (IOException e) {
             debug(e);
+        }
+    }
+
+    public void createLobbyMessage(String lobbyName, boolean isPrivate, String password, boolean isVisible, long id) {
+        try {
+            Map<String, Object> msg = new HashMap<>();
+            msg.put("action", "=create_lobby");
+            msg.put("id", Session.getCurrentUser().getUsername());
+            msg.put("name", lobbyName);
+            msg.put("private", isPrivate);
+            msg.put("password", password);
+            msg.put("visible", isVisible);
+            msg.put("lobby_id", id);
+
+            jsonMessageHandler.send(GSON.toJson(msg));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void joinLobbyMessage(long id) {
+        try {
+            Map<String, Object> msg = new HashMap<>();
+            msg.put("action", "=join_lobby");
+            msg.put("id", Session.getCurrentUser().getUsername());
+            msg.put("lobby_id", id);
+
+            jsonMessageHandler.send(GSON.toJson(msg));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void leftLobbyMessage(long id) {
+        try {
+            Map<String, Object> msg = new HashMap<>();
+            msg.put("action", "=left_lobby");
+            msg.put("id", Session.getCurrentUser().getUsername());
+            msg.put("lobby_id", id);
+
+            jsonMessageHandler.send(GSON.toJson(msg));
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -466,6 +543,31 @@ public class GameClient {
                         } else if (obj.get("action").getAsString().equals("finish_load")) {
                             StartGameMenuController.getInstance().setLoad(false);
                             StartGameMenuController.getInstance().setReconnect(false);
+                        } else if (obj.get("action").getAsString().equals("=create_lobby")) {
+                            String username = obj.get("id").getAsString();
+                            String lobbyName = obj.get("name").getAsString();
+                            boolean isPrivate = obj.get("private").getAsBoolean();
+                            boolean visible = obj.get("visible").getAsBoolean();
+                            String password = isPrivate ? obj.get("password").getAsString() : null;
+                            long id = obj.get("lobby_id").getAsLong();
+                            service.createLobby(username, lobbyName, isPrivate, password, visible, id);
+                        } else if (obj.get("action").getAsString().equals("=join_lobby")) {
+                            String username = obj.get("id").getAsString();
+                            long id = obj.get("lobby_id").getAsLong();
+                            service.joinLobby(id, username);
+                        } else if (obj.get("action").getAsString().equals("=left_lobby")) {
+                            String username = obj.get("id").getAsString();
+                            long id = obj.get("lobby_id").getAsLong();
+                            service.leftLobby(id, username);
+                        } else if (obj.get("action").getAsString().equals("send_lobbies")) {
+                            JsonArray lobbyArray = obj.get("lobbies").getAsJsonArray();
+                            Type lobbyListType = new TypeToken<List<Lobby>>() {
+                            }.getType();
+                            List<Lobby> lobbies = GSON.fromJson(lobbyArray, lobbyListType);
+                            service.receiveLobbies(lobbies);
+                        } else if (obj.get("action").getAsString().equals("delete_lobby")) {
+                            long id = obj.get("lobby_id").getAsLong();
+                            service.handleDeleteLobby(id);
                         }
                     } catch (JsonParseException e) {
                         System.out.println("Received non-JSON: " + serverMessage);
