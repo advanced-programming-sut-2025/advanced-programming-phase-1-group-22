@@ -214,6 +214,19 @@ public class GameClient {
         }
     }
 
+    public void startGame(long id) {
+        try {
+            Map<String, Object> msg = new HashMap<>();
+            msg.put("action", "=start_game");
+            msg.put("id", Session.getCurrentUser().getUsername());
+            msg.put("lobby_id", id);
+
+            jsonMessageHandler.send(GSON.toJson(msg));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public void startListening() {
         new Thread(() -> {
             try {
@@ -568,6 +581,9 @@ public class GameClient {
                         } else if (obj.get("action").getAsString().equals("delete_lobby")) {
                             long id = obj.get("lobby_id").getAsLong();
                             service.handleDeleteLobby(id);
+                        } else if (obj.get("action").getAsString().equals("=start_game")) {
+                            long id = obj.get("lobby_id").getAsLong();
+                            service.startGame(id);
                         }
                     } catch (JsonParseException e) {
                         System.out.println("Received non-JSON: " + serverMessage);
@@ -586,7 +602,7 @@ public class GameClient {
         }
     }
 
-    public void enterRoom(int id) {
+    public void enterRoom(long id) {
         try {
             Map<String, Object> msg = Map.of(
                 "action", "enter_room",

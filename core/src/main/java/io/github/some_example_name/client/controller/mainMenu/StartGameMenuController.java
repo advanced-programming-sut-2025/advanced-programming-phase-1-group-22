@@ -1,9 +1,9 @@
 package io.github.some_example_name.client.controller.mainMenu;
 
-
 import com.badlogic.gdx.Gdx;
 import com.google.gson.JsonArray;
 import io.github.some_example_name.client.GameClient;
+import io.github.some_example_name.client.MainGradle;
 import io.github.some_example_name.common.model.Farm;
 import io.github.some_example_name.common.model.FarmType;
 import io.github.some_example_name.common.model.PlayerType;
@@ -12,7 +12,6 @@ import io.github.some_example_name.common.model.relations.Player;
 import io.github.some_example_name.server.repository.UserRepo;
 import io.github.some_example_name.server.service.GameInitService;
 import io.github.some_example_name.common.utils.App;
-import io.github.some_example_name.common.utils.InitialGame;
 import io.github.some_example_name.common.variables.Session;
 import io.github.some_example_name.client.view.GameView;
 import io.github.some_example_name.client.view.mainMenu.StartGameMenu;
@@ -40,59 +39,6 @@ public class StartGameMenuController {
     public void handleMainMenuButtons() {
         if (view != null) {
             switch (view.getState()) {
-                case 0: {
-                    if (view.getNewGameButton().isChecked()) {
-                        reconnect = false;
-                        { //todo delete hardcode
-                            if (Session.getCurrentUser() == null) {
-                                UserRepo userRepo = new UserRepo();
-//                                Session.setCurrentUser(new User("Roham1234", "pass", "a@a.a", "Roham", Gender.MALE, SecurityQuestion.QUESTION1, "snf"));
-                                Session.setCurrentUser(userRepo.findByUsername("Roham1234").get());
-                            }
-                        }
-                        if (Session.getCurrentUser().getIsPlaying() == null) {
-                            InitialGame initialGame = new InitialGame();
-                            initialGame.initial();
-                            view.setState(1);
-                            return;
-                        } else {
-                            view.alert("You've got an unfinished game.", 5);
-                        }
-                        view.getNewGameButton().setChecked(false);
-                    }
-                    if (view.getLoadGameButton().isChecked()) {
-                        reconnect = false;
-                        { //todo delete hardcode
-                            UserRepo userRepo = new UserRepo();
-//                        Session.setCurrentUser(new User("Clara1234", "noPass", "a@b.c", "Claire", Gender.FEMALE, SecurityQuestion.QUESTION1,"snf"));
-                            Session.setCurrentUser(userRepo.findByUsername("Clara1234").get());
-                        }
-                        view.alert(GameInitService.getInstance().loadGame().message(), 5);
-                        view.getLoadGameButton().setChecked(false);
-                    }
-                    if (view.getContinueDC().isChecked()) {
-                        //todo delete hardcode
-                        UserRepo userRepo = new UserRepo();
-                        Session.setCurrentUser(userRepo.findByUsername("Roham1234").get());
-                        InitialGame initialGame = new InitialGame();
-                        initialGame.initial();
-                        reconnect = true;
-                        GameClient.getInstance().DCReconnect(Session.getCurrentUser().getUsername());
-                        view.getContinueDC().setChecked(false);
-                    }
-                    if (view.getLoadButton().isChecked()){
-                        load = true;
-                        reconnect = true;
-                        if (Session.getCurrentUser() == null) {
-                            UserRepo userRepo = new UserRepo();
-                            Session.setCurrentUser(userRepo.findByUsername("Roham1234").get());
-                        }
-                        InitialGame initialGame = new InitialGame();
-                        initialGame.initial();
-                        view.getLoadButton().setChecked(false);
-                    }
-                }
-                break;
                 case 1: {
                     if (view.getEnterGameButton().isChecked()) {
                         int farm = view.getFarmSelection().getSelectedIndex();
@@ -138,7 +84,8 @@ public class StartGameMenuController {
                     farm.generateRandomStructures();
             }
         }
-        Gdx.app.postRunnable(() -> view.setScreen(new GameView()));
+        Gdx.app.postRunnable(() -> {
+            MainGradle.getInstance().setScreen(new GameView());
+        });
     }
 }
-

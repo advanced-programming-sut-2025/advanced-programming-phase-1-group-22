@@ -3,6 +3,7 @@ package io.github.some_example_name.client.service;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Timer;
 import io.github.some_example_name.client.MainGradle;
+import io.github.some_example_name.client.view.mainMenu.StartGameMenu;
 import io.github.some_example_name.common.model.*;
 import io.github.some_example_name.common.model.abilitiy.Ability;
 import io.github.some_example_name.common.model.products.HarvestAbleProduct;
@@ -12,6 +13,8 @@ import io.github.some_example_name.common.model.relations.Player;
 import io.github.some_example_name.common.model.structure.Structure;
 import io.github.some_example_name.common.model.structure.stores.Shop;
 import io.github.some_example_name.common.utils.App;
+import io.github.some_example_name.common.utils.GameAsset;
+import io.github.some_example_name.common.utils.InitialGame;
 
 import java.util.*;
 
@@ -229,6 +232,22 @@ public class ClientService {
 
                 if (lobby.getId() == id) {
                     iterator.remove();
+                }
+            }
+        }
+    }
+
+    public void startGame(long id) {
+        synchronized (App.getInstance().getLobbies()) {
+            for (Lobby lobby : App.getInstance().getLobbies()) {
+                if (lobby.getId() == id) {
+                    lobby.setGameStart(true);
+                    App.getInstance().setCurrentLobby(lobby);
+                    InitialGame initialGame = new InitialGame();
+                    initialGame.initial();
+                    Gdx.app.postRunnable(() -> {
+                        MainGradle.getInstance().setScreen(new StartGameMenu(GameAsset.SKIN_MENU,1));
+                    });
                 }
             }
         }

@@ -21,6 +21,7 @@ public class App {
     private final List<Game> games = new ArrayList<>();
     private Game currentGame = new Game();
     private final List<Lobby> lobbies = Collections.synchronizedList(new ArrayList<>());
+    private Lobby currentLobby;
 
     private App() {
     }

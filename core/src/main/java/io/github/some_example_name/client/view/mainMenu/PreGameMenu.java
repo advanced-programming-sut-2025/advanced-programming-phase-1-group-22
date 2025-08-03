@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Timer;
 import io.github.some_example_name.client.MainGradle;
+import io.github.some_example_name.common.utils.GameAsset;
 import lombok.Getter;
 
 @Getter
@@ -14,10 +15,15 @@ public abstract class PreGameMenu implements Screen {
     protected Stage stage;
     protected final Table table;
     protected final Skin skin;
+    private final Image background;
+    protected final Label title;
 
     public PreGameMenu(Skin skin) {
         this.table = new Table();
         this.skin = skin;
+        this.title = new Label("", skin, "title");
+        this.background = new Image(GameAsset.BACKGROUND);
+        this.table.add(title).colspan(2).padBottom(30).padTop(30).row();
     }
 
     protected abstract void showStage();
@@ -32,6 +38,8 @@ public abstract class PreGameMenu implements Screen {
         table.setFillParent(true);
         table.center();
         showStage();
+        background.setFillParent(true);
+        stage.addActor(background);
         stage.addActor(table);
     }
 

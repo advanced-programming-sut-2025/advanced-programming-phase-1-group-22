@@ -179,6 +179,11 @@ public class ClientHandler extends Thread {
                         long id = obj.get("lobby_id").getAsLong();
                         service.leftLobby(id, username);
                         GameThread.getInstance().sendAllBut(GSON.toJson(obj), username);
+                    } else if (obj.get("action").getAsString().equals("=start_game")) {
+                        String username = obj.get("id").getAsString();
+                        long id = obj.get("lobby_id").getAsLong();
+                        service.startGame(id);
+                        GameThread.getInstance().sendAllBut(GSON.toJson(obj), username);
                     } else if (obj.get("action").getAsString().equals("ready_for_game")) {
                         String username = obj.get("id").getAsString();
                         System.out.println("Client Ready: " + username);
@@ -210,9 +215,8 @@ public class ClientHandler extends Thread {
                         }
                     } else if (obj.get("action").getAsString().equals("enter_room")) {
                         gameServer = GameThread.getInstance().getGameServer(
-                            obj.getAsJsonObject("body").get("id").getAsInt()
+                            obj.getAsJsonObject("body").get("id").getAsLong()
                         );
-                        gameServer.setRoomId(obj.getAsJsonObject("body").get("id").getAsInt());
                         String username = obj.get("id").getAsString();
                         int port = obj.get("port").getAsInt();
                         synchronized (gameServer) {
