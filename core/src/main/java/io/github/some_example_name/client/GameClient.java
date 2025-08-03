@@ -369,6 +369,8 @@ public class GameClient {
                             service.getNpcByName(body.get("npc").getAsString()).addDialog(
                                 body.get("response").getAsString()
                             );
+                        } else if (obj.get("action").getAsString().equals("_meet_npc")) {
+                            service.getNpcByName(body.get("npc").getAsString()).setHaveDialog(false);
                         } else if (obj.get("action").getAsString().equals("notify")) {
                             Actor source = null;
                             if (body.get("isFromPlayer").getAsBoolean()) {
@@ -1572,8 +1574,24 @@ public class GameClient {
                 "action", "add_dialog",
                 "id", Session.getCurrentUser().getUsername(),
                 "body", Map.of(
-                    "personality", npc.getType().getPersonality(),
+                    "personality", npc.getType().getPersonality() + "\n Today is a lovely "
+                        + App.getInstance().getCurrentGame().getTimeAndDate().getSeason().name() + " day",
                     "npc", npc.getName()
+                )
+            );
+            jsonMessageHandler.send(GSON.toJson(msg));
+        } catch (IOException e) {
+            debug(e);
+        }
+    }
+
+    public void meetNpc(String name) {
+        try {
+            Map<String, Object> msg = Map.of(
+                "action", "_meet_npc",
+                "id", Session.getCurrentUser().getUsername(),
+                "body", Map.of(
+                    "npc", name
                 )
             );
             jsonMessageHandler.send(GSON.toJson(msg));

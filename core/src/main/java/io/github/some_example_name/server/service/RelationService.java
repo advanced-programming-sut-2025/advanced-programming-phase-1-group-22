@@ -588,7 +588,7 @@ public class RelationService {
         lastTalkedNPC = npc;
         Friendship friendShipBetweenTwoActors = getFriendShipBetweenWithActor(npc);
         String dialog = npc.getDialog();
-        npc.setHaveDialog(false);
+        GameClient.getInstance().meetNpc(npc.getName());
         friendShipBetweenTwoActors.setXp(friendShipBetweenTwoActors.getXp() + 20);
         return new Response(dialog, true);
     }
