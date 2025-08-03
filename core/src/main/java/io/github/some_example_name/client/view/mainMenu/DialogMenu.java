@@ -32,12 +32,20 @@ public class DialogMenu extends PopUp {
         window.setMovable(false);
 
         Table dialog = new Table();
+        ScrollPane scrollPane = new ScrollPane(dialog, skin);
+        scrollPane.setFadeScrollBars(false);
+        scrollPane.setScrollbarsOnTop(true);
+        scrollPane.setScrollingDisabled(true, false);
+        scrollPane.setScrollBarPositions(true, true);
+        scrollPane.setForceScroll(false, true);
+        scrollPane.layout();
+        scrollPane.setTouchable(Touchable.enabled);
         dialog.pack();
 
         Image icon = new Image(npc.getType().getTextureIcon());
         dialog.add(icon).pad(5).right();
         boolean flag = false;
-        for (String string : wrapString(relationService.meetNpc(npc).message(), 60)) {
+        for (String string : wrapString(relationService.meetNpc(npc).message(), 35)) {
             if (flag)  dialog.add();
             flag = true;
             Label dialogLabel = new Label(string, skin);
@@ -52,7 +60,7 @@ public class DialogMenu extends PopUp {
 
         Table content = new Table();
         content.setFillParent(true);
-        content.add(dialog).width(600).height(180).padBottom(10).padTop(80).row();
+        content.add(scrollPane).width(camera.viewportWidth * 0.5f).height(camera.viewportHeight * 0.5f - 100).padBottom(10).padTop(80).row();
 
         window.add(content).expand().fill().pad(10);
         Group group = new Group() {

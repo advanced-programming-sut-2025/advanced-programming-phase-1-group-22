@@ -26,7 +26,7 @@ public class GameServer {
     private final Map<String, Long> DCPlayers = Collections.synchronizedMap(new HashMap<>());
     private final Map<String, Long> playerLastPing = Collections.synchronizedMap(new HashMap<>());
     private final List<Message> serverToClientsMessages = new ArrayList<>();
-    private StringBuilder dayEvents = new StringBuilder();
+    private StringBuilder dayEvents = new StringBuilder("Today it's a sunny spring.");
     private HashMap<String, NpcGift> npcGifts = new HashMap<>();
     private String tomorrowWeather = "sunny";
 
@@ -187,18 +187,16 @@ public class GameServer {
                     "body", Map.of("npc", npc, "response", resp)
                 );
                 sendAll(GSON.toJson(msg));
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+            } catch (IOException | NullPointerException e) {
+                System.err.println(e.getMessage());
             }
         }).start();
     }
     private static InputStream getInputStream(String requestBody) throws IOException {
-        String API_URL = "https://openrouter.ai/api/v1/chat/completions";
-        String API_KEY = "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";
-        HttpURLConnection connection = (HttpURLConnection) new URL(API_URL).openConnection();
+        HttpURLConnection connection = (HttpURLConnection) new URL(ServerConfig.API_URL).openConnection();
         connection.setRequestMethod("POST");
         connection.setDoOutput(true);
-        connection.setRequestProperty("Authorization", "Bearer " + API_KEY);
+        connection.setRequestProperty("Authorization", "Bearer " + ServerConfig.API_KEY);
         connection.setRequestProperty("Content-Type", "application/json");
 
         try (OutputStream os = connection.getOutputStream()) {

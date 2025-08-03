@@ -71,7 +71,7 @@ public class NPCController {
         }
         Random random = new Random();
         App.getInstance().getCurrentGame().getVillage().forEachStructure(structure -> {
-            if (structure instanceof NPC npc && !npc.isHaveDialog() && random.nextInt(20) == 1) {
+            if (structure instanceof NPC npc && !npc.isHaveDialog() && random.nextInt(10000) == 1) {
                 GameClient.getInstance().addDialog(npc);
             }
         });
