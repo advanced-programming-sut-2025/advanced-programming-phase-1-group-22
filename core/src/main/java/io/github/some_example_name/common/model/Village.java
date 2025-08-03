@@ -125,10 +125,10 @@ public class Village implements JsonPreparable {
             }
         }
         structures.add(fountain);
-        if (StartGameMenuController.getInstance().isLoad()){
+        if (StartGameMenuController.getInstance().isLoad()) {
             GameClient.getInstance().reLoadGame(100); //todo different room id
-        }else {
-            GameClient.getInstance().enterRoom(100); //todo different room id
+        } else {
+            GameClient.getInstance().enterRoom(App.getInstance().getCurrentLobby().getId()); //todo different room id
         }
     }
 

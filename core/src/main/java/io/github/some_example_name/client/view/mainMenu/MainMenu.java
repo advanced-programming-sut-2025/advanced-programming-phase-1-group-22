@@ -11,7 +11,6 @@ public class MainMenu extends Menu {
     private final MainMenuController controller = new MainMenuController(this);
     private final TextButton profileMenu;
     private final TextButton lobbyMenu;
-    private final TextButton preGameMenu;
     private final TextButton logout;
     private final TextButton back;
 
@@ -20,7 +19,6 @@ public class MainMenu extends Menu {
         this.title.setText("Main Menu");
         this.profileMenu = new TextButton("Profile Menu", skin);
         this.lobbyMenu = new TextButton("Lobby Menu", skin);
-        this.preGameMenu = new TextButton("PreGame Menu", skin);
         this.logout = new TextButton("Logout", skin);
         this.back = new TextButton("Back", skin);
     }
@@ -41,13 +39,6 @@ public class MainMenu extends Menu {
             }
         });
         this.table.add(lobbyMenu).width(400).row();
-        this.preGameMenu.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                setScreen(new StartGameMenu(skin, 0));
-            }
-        });
-        table.add(preGameMenu).width(400).row();
         this.logout.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {

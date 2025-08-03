@@ -1,5 +1,7 @@
 package io.github.some_example_name.server.model;
 
+import io.github.some_example_name.common.model.Lobby;
+import io.github.some_example_name.common.utils.App;
 import io.github.some_example_name.server.ClientHandler;
 import lombok.Getter;
 
@@ -28,11 +30,16 @@ public class GameThread extends Thread {
         return instance;
     }
 
-    public GameServer getGameServer(Integer id) {
-        if (!games.containsKey(id)) {
-            games.put(id, new GameServer());
+    public GameServer getGameServer(long id) {
+        for (Lobby lobby : App.getInstance().getLobbies()) {
+            if (lobby.getId() == id) {
+                if (lobby.getGameServer() == null) {
+                    lobby.setGameServer(new GameServer());
+                }
+                return lobby.getGameServer();
+            }
         }
-        return games.get(id);
+        return null;
     }
 
     public void addGameServer(Integer id, GameServer gameServer) {

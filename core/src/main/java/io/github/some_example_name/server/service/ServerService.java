@@ -71,4 +71,14 @@ public class ServerService {
             }
         }
     }
+
+    public void startGame(long id) {
+        synchronized (App.getInstance().getLobbies()) {
+            for (Lobby lobby : App.getInstance().getLobbies()) {
+                if (lobby.getId() == id) {
+                    lobby.setGameStart(true);
+                }
+            }
+        }
+    }
 }

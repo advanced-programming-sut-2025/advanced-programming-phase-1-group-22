@@ -5,11 +5,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import io.github.some_example_name.client.GameClient;
 import io.github.some_example_name.client.controller.mainMenu.LobbyController;
+import io.github.some_example_name.client.controller.mainMenu.StartGameMenuController;
 import io.github.some_example_name.common.model.Lobby;
 import io.github.some_example_name.common.model.records.Response;
 import io.github.some_example_name.common.utils.App;
+import io.github.some_example_name.common.utils.InitialGame;
 import io.github.some_example_name.common.variables.Session;
-import io.github.some_example_name.server.repository.UserRepo;
 
 public class LobbyMenu extends Menu {
     private final LobbyController controller = new LobbyController(this);
@@ -220,6 +221,15 @@ public class LobbyMenu extends Menu {
                     }
                 });
                 detailDialog.getContentTable().add(left).width(400).padTop(5).row();
+                TextButton reConnectToGame = new TextButton("Reconnect Game", skin);
+                reConnectToGame.addListener(new ClickListener() {
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        reconnect(lobby);
+                        detailDialog.hide();
+                    }
+                });
+                detailDialog.getContentTable().add(reConnectToGame).width(400).padTop(5).row();
             }
         }
 
@@ -290,7 +300,29 @@ public class LobbyMenu extends Menu {
         GameClient.getInstance().leftLobbyMessage(lobby.getId());
     }
 
+    private void reconnect(Lobby lobby) {
+        if (lobby.getGameServer() != null) {
+            lobby.setGameStart(true);
+            App.getInstance().setCurrentLobby(lobby);
+            InitialGame initialGame = new InitialGame();
+            initialGame.initial();
+            StartGameMenuController.getInstance().setReconnect(true);
+            GameClient.getInstance().DCReconnect(Session.getCurrentUser().getUsername());
+        } else {
+            alert("there is no alive game!", 5);
+        }
+    }
+
     private void startGame(Lobby lobby) {
-        //TODO startGame
+        if (lobby.getMembers().size() >= 2) {
+            lobby.setGameStart(true);
+            App.getInstance().setCurrentLobby(lobby);
+            InitialGame initialGame = new InitialGame();
+            initialGame.initial();
+            GameClient.getInstance().startGame(lobby.getId());
+            setScreen(new StartGameMenu(skin,1));
+        } else {
+            alert("need at least one more player", 5);
+        }
     }
 }
