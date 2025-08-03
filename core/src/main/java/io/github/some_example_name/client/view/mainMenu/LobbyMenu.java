@@ -251,8 +251,12 @@ public class LobbyMenu extends Menu {
 
     private void joinLobby(Lobby lobby) {
         if (lobby.is_public()) {
-            lobby.getMembers().add(Session.getCurrentUser().getUsername());
-            GameClient.getInstance().joinLobbyMessage(lobby.getId());
+            if (lobby.getMembers().size() <= 3 && !lobby.getMembers().contains(Session.getCurrentUser().getUsername())) {
+                lobby.getMembers().add(Session.getCurrentUser().getUsername());
+                GameClient.getInstance().joinLobbyMessage(lobby.getId());
+            } else {
+                alert("lobby is full or you already joined", 5);
+            }
         } else {
             Dialog passDialog = new Dialog("Enter Password", skin);
             TextField passField = new TextField("", skin);
@@ -320,7 +324,7 @@ public class LobbyMenu extends Menu {
             InitialGame initialGame = new InitialGame();
             initialGame.initial();
             GameClient.getInstance().startGame(lobby.getId());
-            setScreen(new StartGameMenu(skin,1));
+            setScreen(new StartGameMenu(skin, 1));
         } else {
             alert("need at least one more player", 5);
         }

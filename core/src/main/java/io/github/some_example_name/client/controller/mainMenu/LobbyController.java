@@ -6,6 +6,7 @@ import io.github.some_example_name.common.model.Lobby;
 import io.github.some_example_name.common.model.User;
 import io.github.some_example_name.common.model.records.Response;
 import io.github.some_example_name.common.utils.App;
+import io.github.some_example_name.common.variables.Session;
 
 public class LobbyController {
     private final LobbyMenu view;
@@ -36,8 +37,11 @@ public class LobbyController {
         if (!lobby.getPassword().equals(password)) {
             return new Response("password is wrong");
         }
-        lobby.getMembers().add(member);
-        GameClient.getInstance().joinLobbyMessage(lobby.getId());
-        return new Response("", true);
+        if (lobby.getMembers().size() <= 3 && !lobby.getMembers().contains(member)) {
+            lobby.getMembers().add(member);
+            GameClient.getInstance().joinLobbyMessage(lobby.getId());
+            return new Response("", true);
+        }
+        return new Response("lobby is full or you already joined");
     }
 }
