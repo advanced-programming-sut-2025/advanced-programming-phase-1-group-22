@@ -160,7 +160,7 @@ public class ClientHandler extends Thread {
                             }
                         }, 0, 5, TimeUnit.SECONDS);
 
-                    } else if (obj.get("action").getAsString().equals("=create_lobby")) {
+                    } else if (obj.get("action").getAsString().equals("create_lobby")) {
                         String username = obj.get("id").getAsString();
                         String lobbyName = obj.get("name").getAsString();
                         boolean isPrivate = obj.get("private").getAsBoolean();
@@ -169,17 +169,17 @@ public class ClientHandler extends Thread {
                         long id = obj.get("lobby_id").getAsLong();
                         service.createLobby(username, lobbyName, isPrivate, password, visible, id);
                         GameThread.getInstance().sendAllBut(GSON.toJson(obj), username);
-                    } else if (obj.get("action").getAsString().equals("=join_lobby")) {
+                    } else if (obj.get("action").getAsString().equals("join_lobby")) {
                         String username = obj.get("id").getAsString();
                         long id = obj.get("lobby_id").getAsLong();
                         service.joinLobby(id, username);
                         GameThread.getInstance().sendAllBut(GSON.toJson(obj), username);
-                    } else if (obj.get("action").getAsString().equals("=left_lobby")) {
+                    } else if (obj.get("action").getAsString().equals("left_lobby")) {
                         String username = obj.get("id").getAsString();
                         long id = obj.get("lobby_id").getAsLong();
                         service.leftLobby(id, username);
                         GameThread.getInstance().sendAllBut(GSON.toJson(obj), username);
-                    } else if (obj.get("action").getAsString().equals("=start_game")) {
+                    } else if (obj.get("action").getAsString().equals("start_game")) {
                         String username = obj.get("id").getAsString();
                         long id = obj.get("lobby_id").getAsLong();
                         service.startGame(id);

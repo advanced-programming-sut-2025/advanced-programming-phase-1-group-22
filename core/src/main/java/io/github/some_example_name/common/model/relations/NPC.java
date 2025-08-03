@@ -88,7 +88,7 @@ public class NPC extends Actor {
         new Thread(() -> {
             NpcWalkingStrategy walkingStrategy = new NpcWalkingStrategy();
             ArrayList<Pair> path = walkingStrategy.getPath(
-                new Pair(getTiles().getFirst().getX(), getTiles().getFirst().getY()),
+                new Pair(getTiles().get(0).getX(), getTiles().get(0).getY()),
                 new Pair(tile.getX(), tile.getY()), house
             );
             if (path == null) {
@@ -106,8 +106,8 @@ public class NPC extends Actor {
         }
         Pair pair = path.getFirst();
         Direction dir = Direction.getByXAndY(
-            pair.getX() - getTiles().getFirst().getX(),
-            pair.getY() - getTiles().getFirst().getY()
+            pair.getX() - getTiles().get(0).getX(),
+            pair.getY() - getTiles().get(0).getY()
         );
         if (dir == null) {
             dir = Direction.SOUTH; //todo bug
@@ -142,7 +142,7 @@ public class NPC extends Actor {
     }
 
     public void goHome() {
-        walk(house.getTiles().getFirst());
+        walk(house.getTiles().get(0));
         movingState = 3;
     }
 
