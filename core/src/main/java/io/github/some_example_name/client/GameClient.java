@@ -470,6 +470,26 @@ public class GameClient {
                             );
                         } else if (obj.get("action").getAsString().equals("_meet_npc")) {
                             service.getNpcByName(body.get("npc").getAsString()).setHaveDialog(false);
+                        } else if (obj.get("action").getAsString().equals("client_status")) {
+                            Map<String, List<String>> users = App.getInstance().getUsers();
+                            synchronized (App.getInstance().getUsersUpdated()) {
+                                App.getInstance().setUsersUpdated(true);
+                            }
+                            synchronized (users) {
+                                if (body.has("lobby")) {
+                                    if (body.get("add").getAsBoolean()) {
+                                        users.get(body.get("username").getAsString()).add(body.get("lobby").getAsString());
+                                    } else {
+                                        users.get(body.get("username").getAsString()).remove(body.get("lobby").getAsString());
+                                    }
+                                } else {
+                                    if (users.containsKey(body.get("username").getAsString())) {
+                                        users.remove(body.get("username").getAsString());
+                                    } else {
+                                        users.put(body.get("username").getAsString(), new ArrayList<>());
+                                    }
+                                }
+                            }
                         } else if (obj.get("action").getAsString().equals("notify")) {
                             Actor source = null;
                             if (body.get("isFromPlayer").getAsBoolean()) {
@@ -598,6 +618,13 @@ public class GameClient {
                             }.getType();
                             List<Lobby> lobbies = GSON.fromJson(lobbyArray, lobbyListType);
                             service.receiveLobbies(lobbies);
+                        } else if (obj.get("action").getAsString().equals("send_users")) {
+                            JsonObject lobbyArray = obj.get("users").getAsJsonObject();
+                            Type lobbyListType = new TypeToken<Map<String, List<String>>>() {
+                            }.getType();
+                            Map<String, List<String>> lobbies = GSON.fromJson(lobbyArray, lobbyListType);
+                            App.getInstance().setUsersUpdated(true);
+                            App.getInstance().setUsers(lobbies);
                         } else if (obj.get("action").getAsString().equals("delete_lobby")) {
                             long id = obj.get("lobby_id").getAsLong();
                             service.handleDeleteLobby(id);

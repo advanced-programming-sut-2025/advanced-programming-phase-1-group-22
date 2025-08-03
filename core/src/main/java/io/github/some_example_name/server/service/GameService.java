@@ -1,6 +1,7 @@
 package io.github.some_example_name.server.service;
 
 import io.github.some_example_name.client.GameClient;
+import io.github.some_example_name.client.view.GameView;
 import io.github.some_example_name.common.model.*;
 import io.github.some_example_name.common.model.products.*;
 import io.github.some_example_name.common.model.products.TreesAndFruitsAndSeeds.*;
@@ -118,7 +119,9 @@ public class GameService {
 
     public Response C_AdvanceDate(String x) {
         int days = Integer.parseInt(x);
+        GameView.advancingTime = true;
         GameClient.getInstance().skipTime(60 * 13 * days);
+        GameView.advancingTime = false;
         return new Response(x + " days passed", true);
     }
 

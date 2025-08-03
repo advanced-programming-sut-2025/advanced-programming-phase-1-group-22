@@ -10,6 +10,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Getter
@@ -19,6 +20,8 @@ public class GameThread extends Thread {
     private final HashMap<Integer, GameServer> games = new HashMap<>();
     private final Map<String, ClientHandler> connections = new HashMap<>();
     private final Map<String, Long> lastConnections = Collections.synchronizedMap(new HashMap<>());
+    private final Map<String, List<String>> users = new HashMap<>();
+
 
     private GameThread() {
     }

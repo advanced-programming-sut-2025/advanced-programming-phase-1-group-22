@@ -29,6 +29,8 @@ public abstract class Menu implements Screen {
 
     protected abstract void showStage();
 
+    protected void update(float delta) {}
+
     @Override
     public void show() {
         stage = new Stage(MainGradle.getInstance().getViewport(), MainGradle.getInstance().getBatch());
@@ -46,7 +48,7 @@ public abstract class Menu implements Screen {
     public void render(float delta) {
         MainGradle.getInstance().getBatch().begin();
         stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
-
+        update(delta);
         MainGradle.getInstance().getBatch().end();
         stage.draw();
     }
