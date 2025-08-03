@@ -171,7 +171,7 @@ public class GameClient {
     public void createLobbyMessage(String lobbyName, boolean isPrivate, String password, boolean isVisible, long id) {
         try {
             Map<String, Object> msg = new HashMap<>();
-            msg.put("action", "=create_lobby");
+            msg.put("action", "create_lobby");
             msg.put("id", Session.getCurrentUser().getUsername());
             msg.put("name", lobbyName);
             msg.put("private", isPrivate);
@@ -188,7 +188,7 @@ public class GameClient {
     public void joinLobbyMessage(long id) {
         try {
             Map<String, Object> msg = new HashMap<>();
-            msg.put("action", "=join_lobby");
+            msg.put("action", "join_lobby");
             msg.put("id", Session.getCurrentUser().getUsername());
             msg.put("lobby_id", id);
 
@@ -201,7 +201,7 @@ public class GameClient {
     public void leftLobbyMessage(long id) {
         try {
             Map<String, Object> msg = new HashMap<>();
-            msg.put("action", "=left_lobby");
+            msg.put("action", "left_lobby");
             msg.put("id", Session.getCurrentUser().getUsername());
             msg.put("lobby_id", id);
 
@@ -214,7 +214,7 @@ public class GameClient {
     public void startGame(long id) {
         try {
             Map<String, Object> msg = new HashMap<>();
-            msg.put("action", "=start_game");
+            msg.put("action", "start_game");
             msg.put("id", Session.getCurrentUser().getUsername());
             msg.put("lobby_id", id);
 
@@ -576,7 +576,7 @@ public class GameClient {
                         } else if (obj.get("action").getAsString().equals("finish_load")) {
                             StartGameMenuController.getInstance().setLoad(false);
                             StartGameMenuController.getInstance().setReconnect(false);
-                        } else if (obj.get("action").getAsString().equals("=create_lobby")) {
+                        } else if (obj.get("action").getAsString().equals("create_lobby")) {
                             String username = obj.get("id").getAsString();
                             String lobbyName = obj.get("name").getAsString();
                             boolean isPrivate = obj.get("private").getAsBoolean();
@@ -584,11 +584,11 @@ public class GameClient {
                             String password = isPrivate ? obj.get("password").getAsString() : null;
                             long id = obj.get("lobby_id").getAsLong();
                             service.createLobby(username, lobbyName, isPrivate, password, visible, id);
-                        } else if (obj.get("action").getAsString().equals("=join_lobby")) {
+                        } else if (obj.get("action").getAsString().equals("join_lobby")) {
                             String username = obj.get("id").getAsString();
                             long id = obj.get("lobby_id").getAsLong();
                             service.joinLobby(id, username);
-                        } else if (obj.get("action").getAsString().equals("=left_lobby")) {
+                        } else if (obj.get("action").getAsString().equals("left_lobby")) {
                             String username = obj.get("id").getAsString();
                             long id = obj.get("lobby_id").getAsLong();
                             service.leftLobby(id, username);
@@ -601,7 +601,7 @@ public class GameClient {
                         } else if (obj.get("action").getAsString().equals("delete_lobby")) {
                             long id = obj.get("lobby_id").getAsLong();
                             service.handleDeleteLobby(id);
-                        } else if (obj.get("action").getAsString().equals("=start_game")) {
+                        } else if (obj.get("action").getAsString().equals("start_game")) {
                             long id = obj.get("lobby_id").getAsLong();
                             service.startGame(id);
                         }
