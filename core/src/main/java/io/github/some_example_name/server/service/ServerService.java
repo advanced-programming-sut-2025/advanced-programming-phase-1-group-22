@@ -41,17 +41,19 @@ public class ServerService {
         App.getInstance().getLobbies().add(lobby);
     }
 
-    public void joinLobby(long id, String member) {
+    public String joinLobby(long id, String member) {
         synchronized (App.getInstance().getLobbies()) {
             for (Lobby lobby : App.getInstance().getLobbies()) {
                 if (lobby.getId() == id) {
                     lobby.getMembers().add(member);
+                    return lobby.is_public() ? lobby.getName() : "<PrivateLobby>";
                 }
             }
         }
+        return "<LobbyLess>";
     }
 
-    public void leftLobby(long id, String member) {
+    public String leftLobby(long id, String member) {
         synchronized (App.getInstance().getLobbies()) {
             Iterator<Lobby> iterator = App.getInstance().getLobbies().iterator();
 
@@ -67,9 +69,11 @@ public class ServerService {
                             iterator.remove();
                         }
                     }
+                    return lobby.is_public() ? lobby.getName() : "<PrivateLobby>";
                 }
             }
         }
+        return "<LobbyLess>";
     }
 
     public void startGame(long id) {
