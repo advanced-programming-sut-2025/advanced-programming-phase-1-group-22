@@ -52,8 +52,8 @@ public class LobbyMenu extends Menu {
     @Override
     protected void update(float delta) {
         synchronized (App.getInstance().getUsersUpdated()) {
-            if (App.getInstance().getUsersUpdated()) {
-                App.getInstance().setUsersUpdated(false);
+            if (App.getInstance().getUsersUpdated().get()) {
+                App.getInstance().getUsersUpdated().set(false);
                 updateUsers();
             }
         }
