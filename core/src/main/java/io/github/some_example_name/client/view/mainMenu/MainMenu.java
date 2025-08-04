@@ -4,6 +4,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import io.github.some_example_name.client.GameClient;
 import io.github.some_example_name.client.controller.mainMenu.MainMenuController;
 import io.github.some_example_name.common.variables.Session;
 
@@ -42,6 +43,7 @@ public class MainMenu extends Menu {
         this.logout.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                GameClient.getInstance().logout();
                 controller.logout();
                 setScreen(new FirstMenu(skin));
             }

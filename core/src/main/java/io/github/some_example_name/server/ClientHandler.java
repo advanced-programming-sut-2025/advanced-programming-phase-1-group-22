@@ -86,7 +86,7 @@ public class ClientHandler extends Thread {
     private void clientStatus(String username, String lobby, boolean add) {
         Map<String, Object> msg;
         if ("".equals(lobby)) {
-             msg = Map.of(
+            msg = Map.of(
                 "action", "client_status",
                 "id", "!server!",
                 "body", Map.of("username", username)
@@ -197,6 +197,7 @@ public class ClientHandler extends Thread {
                                 long now = System.currentTimeMillis();
                                 if ((now - lastPing) > 30 * 1000) {
                                     GameThread.getInstance().getConnections().remove(stringLongEntry.getKey());
+                                    System.out.println(GameThread.getInstance().getConnections().size());
                                 }
                             }
                         }, 0, 5, TimeUnit.SECONDS);
@@ -416,6 +417,10 @@ public class ClientHandler extends Thread {
                             e.printStackTrace();
                         }
                         gameServer.sendAllBut(GSON.toJson(obj), username);
+                    } else if (obj.get("action").getAsString().equals("logout")) {
+                        String username = obj.get("id").getAsString();
+                        GameThread.getInstance().getConnections().remove(username);
+                        clientStatus(username,"",false);
                     } else if (obj.get("action").getAsString().equals("propose_fire")) {
                         gameServer.clearFavors();
                         gameServer.sendFire(message, obj.getAsJsonObject("body").get("player").getAsString());
