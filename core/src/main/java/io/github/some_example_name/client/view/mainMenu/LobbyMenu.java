@@ -373,9 +373,13 @@ public class LobbyMenu extends Menu {
 
     private void loadGame(Lobby lobby) {
         if (lobby.getGameServer() != null && lobby.isGameServerSaved()) {
-            App.getInstance().setCurrentLobby(lobby);
-            GameClient.getInstance().readyForLoadGame(lobby);
-            setScreen(new StartGameMenu(skin, 3));
+            if (!canStartGame(lobby)) {
+                alert("all of players should be online", 5);
+            } else {
+                App.getInstance().setCurrentLobby(lobby);
+                GameClient.getInstance().readyForLoadGame(lobby);
+                setScreen(new StartGameMenu(skin, 3));
+            }
         } else {
             alert("there is no saved game!", 5);
         }
@@ -383,14 +387,27 @@ public class LobbyMenu extends Menu {
 
     private void startGame(Lobby lobby) {
         if (lobby.getMembers().size() >= 2) {
-            lobby.setGameStart(true);
-            App.getInstance().setCurrentLobby(lobby);
-            InitialGame initialGame = new InitialGame();
-            initialGame.initial();
-            GameClient.getInstance().startGame(lobby.getId());
-            setScreen(new StartGameMenu(skin, 1));
+            if (!canStartGame(lobby)) {
+                alert("all of players should be online", 5);
+            } else {
+                lobby.setGameStart(true);
+                App.getInstance().setCurrentLobby(lobby);
+                InitialGame initialGame = new InitialGame();
+                initialGame.initial();
+                GameClient.getInstance().startGame(lobby.getId());
+                setScreen(new StartGameMenu(skin, 1));
+            }
         } else {
             alert("need at least one more player", 5);
         }
+    }
+
+    private boolean canStartGame(Lobby lobby) {
+        for (String member : lobby.getMembers()) {
+            if (!App.getInstance().getUsers().containsKey(member)) {
+                return false;
+            }
+        }
+        return true;
     }
 }

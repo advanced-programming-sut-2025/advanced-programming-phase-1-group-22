@@ -51,39 +51,39 @@ public class MainGradle extends Game {
         batch = new SpriteBatch();
         font = new BitmapFont();
         initialMenu();
-        {//todo delete hardcode
-            if (App.PORT == 5001) {
-                if (screen != null) screen.dispose();
-                LoginMenu loginMenu = new LoginMenu(GameAsset.SKIN_MENU);
-                MainGradle.getInstance().setScreen(loginMenu);
-                loginMenu.getUsername().setText("Roham1234");
-                loginMenu.getPassword().setText("pass");
-                if (loginMenu.getController().login()) {
-                    GameClient.getInstance().loggedIn(false, "");
-                    screen.dispose();
-                    LobbyMenu lobbyMenu = new LobbyMenu(GameAsset.SKIN_MENU);
-                    MainGradle.getInstance().setScreen(lobbyMenu);
-
-                    String lobbyName = "1";
-                    boolean isVisible = true;
-                    boolean isPrivate = false;
-                    String password = "";
-                    lobbyMenu.getController().createLobby(Session.getCurrentUser(), lobbyName, isPrivate, password, isVisible);
-                }
-            } else if (App.PORT == 5002) {
-                if (screen != null) screen.dispose();
-                LoginMenu loginMenu = new LoginMenu(GameAsset.SKIN_MENU);
-                MainGradle.getInstance().setScreen(loginMenu);
-                loginMenu.getUsername().setText("Clara1234");
-                loginMenu.getPassword().setText("noPass");
-                if (loginMenu.getController().login()) {
-                    GameClient.getInstance().loggedIn(false, "");
-                    screen.dispose();
-                    LobbyMenu lobbyMenu = new LobbyMenu(GameAsset.SKIN_MENU);
-                    MainGradle.getInstance().setScreen(lobbyMenu);
-                }
-            }
-        }
+//        {//todo delete hardcode
+//            if (App.PORT == 5001) {
+//                if (screen != null) screen.dispose();
+//                LoginMenu loginMenu = new LoginMenu(GameAsset.SKIN_MENU);
+//                MainGradle.getInstance().setScreen(loginMenu);
+//                loginMenu.getUsername().setText("Roham1234");
+//                loginMenu.getPassword().setText("pass");
+//                if (loginMenu.getController().login()) {
+//                    GameClient.getInstance().loggedIn(false, "");
+//                    screen.dispose();
+//                    LobbyMenu lobbyMenu = new LobbyMenu(GameAsset.SKIN_MENU);
+//                    MainGradle.getInstance().setScreen(lobbyMenu);
+//
+//                    String lobbyName = "1";
+//                    boolean isVisible = true;
+//                    boolean isPrivate = false;
+//                    String password = "";
+//                    lobbyMenu.getController().createLobby(Session.getCurrentUser(), lobbyName, isPrivate, password, isVisible);
+//                }
+//            } else if (App.PORT == 5002) {
+//                if (screen != null) screen.dispose();
+//                LoginMenu loginMenu = new LoginMenu(GameAsset.SKIN_MENU);
+//                MainGradle.getInstance().setScreen(loginMenu);
+//                loginMenu.getUsername().setText("Clara1234");
+//                loginMenu.getPassword().setText("noPass");
+//                if (loginMenu.getController().login()) {
+//                    GameClient.getInstance().loggedIn(false, "");
+//                    screen.dispose();
+//                    LobbyMenu lobbyMenu = new LobbyMenu(GameAsset.SKIN_MENU);
+//                    MainGradle.getInstance().setScreen(lobbyMenu);
+//                }
+//            }
+//        }
     }
 
     public void initialMenu() {
