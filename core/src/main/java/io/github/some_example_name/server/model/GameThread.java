@@ -1,6 +1,7 @@
 package io.github.some_example_name.server.model;
 
 import io.github.some_example_name.common.model.Lobby;
+import io.github.some_example_name.common.model.Tuple;
 import io.github.some_example_name.common.utils.App;
 import io.github.some_example_name.server.ClientHandler;
 import io.github.some_example_name.server.saveGame.GameSaver;
@@ -23,6 +24,7 @@ public class GameThread extends Thread {
     private final Map<String, Long> lastConnections = Collections.synchronizedMap(new HashMap<>());
     private final Map<String, List<String>> users = new HashMap<>();
     private final Map<String, Long> readyPlayersForLoad = new HashMap<>();
+    private final Map<Integer, Tuple<String>> autoLogins = new HashMap<>();
 
     private GameThread() {
         loadSavedLobbies();

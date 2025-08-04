@@ -516,7 +516,7 @@ public class GameClient {
                         } else if (obj.get("action").getAsString().equals("client_status")) {
                             Map<String, List<String>> users = App.getInstance().getUsers();
                             synchronized (App.getInstance().getUsersUpdated()) {
-                                App.getInstance().setUsersUpdated(true);
+                                App.getInstance().getUsersUpdated().set(true);
                             }
                             synchronized (users) {
                                 if (body.has("lobby")) {
@@ -666,7 +666,7 @@ public class GameClient {
                             Type lobbyListType = new TypeToken<Map<String, List<String>>>() {
                             }.getType();
                             Map<String, List<String>> lobbies = GSON.fromJson(lobbyArray, lobbyListType);
-                            App.getInstance().setUsersUpdated(true);
+                            App.getInstance().getUsersUpdated().set(true);
                             App.getInstance().setUsers(lobbies);
                         } else if (obj.get("action").getAsString().equals("delete_lobby")) {
                             long id = obj.get("lobby_id").getAsLong();
