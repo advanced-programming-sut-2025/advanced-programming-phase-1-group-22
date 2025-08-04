@@ -7,7 +7,7 @@ import io.github.some_example_name.server.ClientHandler;
 import io.github.some_example_name.server.saveGame.GameSaver;
 import lombok.Getter;
 
-import java.io.IOException;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Collections;
@@ -24,7 +24,7 @@ public class GameThread extends Thread {
     private final Map<String, Long> lastConnections = Collections.synchronizedMap(new HashMap<>());
     private final Map<String, List<String>> users = new HashMap<>();
     private final Map<String, Long> readyPlayersForLoad = new HashMap<>();
-    private final Map<Integer, Tuple<String>> autoLogins = new HashMap<>();
+    private final Map<String, Tuple<String>> autoLogins = new HashMap<>();
 
     private GameThread() {
         loadSavedLobbies();

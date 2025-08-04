@@ -1,9 +1,14 @@
 package io.github.some_example_name.client.service;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.utils.Timer;
+import io.github.some_example_name.client.GameClient;
 import io.github.some_example_name.client.MainGradle;
 import io.github.some_example_name.client.controller.mainMenu.StartGameMenuController;
+import io.github.some_example_name.client.view.mainMenu.LobbyMenu;
+import io.github.some_example_name.client.view.mainMenu.LoginMenu;
+import io.github.some_example_name.client.view.mainMenu.MainMenu;
 import io.github.some_example_name.client.view.mainMenu.StartGameMenu;
 import io.github.some_example_name.common.model.*;
 import io.github.some_example_name.common.model.abilitiy.Ability;
@@ -348,5 +353,19 @@ public class ClientService {
         actor = getPlayerByUsername(name);
         if (actor != null) return actor;
         return getNpcByName(name);
+    }
+
+    public void autoLogin(String username, String password) {
+        MainGradle.getInstance().getScreen().dispose();
+        LoginMenu loginMenu = new LoginMenu(GameAsset.SKIN_MENU);
+        MainGradle.getInstance().setScreen(loginMenu);
+        loginMenu.getUsername().setText(username);
+        loginMenu.getPassword().setText(password);
+        if (loginMenu.getController().login()) {
+            GameClient.getInstance().loggedIn(false, password);
+            MainGradle.getInstance().getScreen().dispose();
+            MainMenu mainMenu = new MainMenu(GameAsset.SKIN_MENU);
+            MainGradle.getInstance().setScreen(mainMenu);
+        }
     }
 }

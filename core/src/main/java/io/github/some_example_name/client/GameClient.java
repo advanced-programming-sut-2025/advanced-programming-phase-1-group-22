@@ -122,7 +122,8 @@ public class GameClient {
 
             Map<String, Object> msg = Map.of(
                 "action", "connected",
-                "body", Map.of()
+                "body", Map.of(),
+                "port", App.PORT
             );
 
             jsonMessageHandler.send(GSON.toJson(msg));
@@ -133,11 +134,12 @@ public class GameClient {
         }
     }
 
-    public void loggedIn() {
+    public void loggedIn(boolean stayLogged, String password) {
         try {
             Map<String, Object> msg = Map.of(
                 "action", "login",
-                "id", Session.getCurrentUser().getUsername()
+                "id", Session.getCurrentUser().getUsername(),
+                "body", Map.of("port", App.PORT, "stay_logged",  stayLogged, "password", password)
             );
 
             jsonMessageHandler.send(GSON.toJson(msg));
@@ -281,6 +283,7 @@ public class GameClient {
             Map<String, Object> msg = new HashMap<>();
             msg.put("action", "logout");
             msg.put("id", Session.getCurrentUser().getUsername());
+            msg.put("port", App.PORT);
 
             if (userTimer != null) {
                 userTimer.cancel();
@@ -695,6 +698,13 @@ public class GameClient {
                             }.getType();
                             List<Lobby> lobbies = GSON.fromJson(lobbyArray, lobbyListType);
                             service.receiveLobbies(lobbies);
+                        } else if (obj.get("action").getAsString().equals("auto_login")) {
+                            Gdx.app.postRunnable(() -> {
+                                service.autoLogin(
+                                    body.get("username").getAsString(),
+                                    body.get("password").getAsString()
+                                );
+                            });
                         } else if (obj.get("action").getAsString().equals("send_users")) {
                             JsonObject lobbyArray = obj.get("body").getAsJsonObject();
                             Type lobbyListType = new TypeToken<Map<String, List<String>>>() {

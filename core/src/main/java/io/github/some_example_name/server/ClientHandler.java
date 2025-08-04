@@ -179,8 +179,20 @@ public class ClientHandler extends Thread {
                     }
                     if (obj == null) continue;
 
+                    JsonObject body = obj.getAsJsonObject("body");
                     if (obj.get("action").getAsString().equals("connected")) {
-                        System.out.println("Client Connected");
+                        String port = obj.get("port").getAsString();
+                        System.out.println("Client Connected: " + port);
+                        if (GameThread.getInstance().getAutoLogins().containsKey(port)) {
+                            Map<String, Object> msg = Map.of(
+                                "action", "auto_login",
+                                "body", Map.of(
+                                    "username", GameThread.getInstance().getAutoLogins().get(port).getX(),
+                                    "password", GameThread.getInstance().getAutoLogins().get(port).getY()
+                                )
+                            );
+                            send(GSON.toJson(msg));
+                        }
                     } else if (obj.get("action").getAsString().equals("login")) {
                         String username = obj.get("id").getAsString();
                         GameThread.getInstance().getConnections().put(username, this);
@@ -209,7 +221,12 @@ public class ClientHandler extends Thread {
                             send(GSON.toJson(msg));
                         }
                         clientStatus(username, "", false);
-
+                        if (body.get("stay_logged").getAsBoolean()) {
+                            GameThread.getInstance().getAutoLogins().put(
+                                body.get("port").getAsString(),
+                                new Tuple<>(username, body.get("password").getAsString())
+                            );
+                        }
                     } else if (obj.get("action").getAsString().equals("create_lobby")) {
                         String username = obj.get("id").getAsString();
                         String lobbyName = obj.get("name").getAsString();
@@ -279,7 +296,7 @@ public class ClientHandler extends Thread {
                         }
                     } else if (obj.get("action").getAsString().equals("enter_room")) {
                         gameServer = GameThread.getInstance().getGameServerForStart(
-                            obj.getAsJsonObject("body").get("id").getAsLong()
+                            body.get("id").getAsLong()
                         );
                         String username = obj.get("id").getAsString();
                         int port = obj.get("port").getAsInt();
@@ -306,7 +323,7 @@ public class ClientHandler extends Thread {
                             }
                         }, 0, 5, TimeUnit.SECONDS);
                     } else if (obj.get("action").getAsString().equals("load")) {
-                        long id = obj.getAsJsonObject("body").get("id").getAsLong();
+                        long id = body.get("id").getAsLong();
                         synchronized (App.getInstance().getLobbies()) {
                             for (Lobby lobby : App.getInstance().getLobbies()) {
                                 if (lobby.getId() == id) {
@@ -349,8 +366,8 @@ public class ClientHandler extends Thread {
                             "id", "!server!",
                             "body", Map.of("response", gameServer.checkAvailability(
                                 obj.get("id").getAsString(),
-                                obj.getAsJsonObject("body").get("farmId").getAsInt(),
-                                obj.getAsJsonObject("body").get("character").getAsString())
+                                body.get("farmId").getAsInt(),
+                                body.get("character").getAsString())
                             )
                         );
                         send(GSON.toJson(msg));
@@ -421,14 +438,17 @@ public class ClientHandler extends Thread {
                         String username = obj.get("id").getAsString();
                         GameThread.getInstance().getConnections().remove(username);
                         clientStatus(username,"",false);
+                        if (GameThread.getInstance().getAutoLogins().containsKey(obj.get("port").getAsString())) {
+                            GameThread.getInstance().getAutoLogins().remove(obj.get("port").getAsString());
+                        }
                     } else if (obj.get("action").getAsString().equals("propose_fire")) {
                         gameServer.clearFavors();
-                        gameServer.sendFire(message, obj.getAsJsonObject("body").get("player").getAsString());
+                        gameServer.sendFire(message, body.get("player").getAsString());
                     } else if (obj.get("action").getAsString().equals("fire")) {
-                        if (obj.getAsJsonObject("body").get("vote").getAsBoolean()) {
+                        if (body.get("vote").getAsBoolean()) {
                             inFavor = true;
                             if (gameServer.isMajority()) {
-                                String player = obj.getAsJsonObject("body").get("player").getAsString();
+                                String player = body.get("player").getAsString();
                                 Map<String, Object> msg = Map.of(
                                     "action", "fire_accomplished",
                                     "id", "!server!",
@@ -442,28 +462,28 @@ public class ClientHandler extends Thread {
                             gameServer.sendAllBut(message, obj.get("id").getAsString());
                         }
                     } else if (obj.get("action").getAsString().equals("_set_weather")) {
-                        gameServer.setTomorrowWeather(obj.getAsJsonObject("body").get("weather").getAsString());
+                        gameServer.setTomorrowWeather(body.get("weather").getAsString());
                     } else if (obj.get("action").getAsString().equals("_respond_marriage")) {
-                        if (obj.getAsJsonObject("body").get("response").getAsBoolean()) {
+                        if (body.get("response").getAsBoolean()) {
                             gameServer.getDayEvents()
-                                .append(obj.getAsJsonObject("body").get("requested").getAsString())
+                                .append(body.get("requested").getAsString())
                                 .append(" has married ").append(obj.get("id").getAsString());
                         } else {
                             gameServer.getDayEvents()
-                                .append(obj.getAsJsonObject("body").get("requested").getAsString())
+                                .append(body.get("requested").getAsString())
                                 .append(" was rejected by ").append(obj.get("id").getAsString())
                                 .append(". He feels so sad; what will he do with the ring?");
                         }
                     } else if (obj.get("action").getAsString().equals("npc_gift")) {
                         gameServer.addGift(
-                            obj.getAsJsonObject("body").get("npc").getAsString(),
-                            obj.getAsJsonObject("body").get("gift").getAsString(),
+                            body.get("npc").getAsString(),
+                            body.get("gift").getAsString(),
                             obj.get("id").getAsString()
                         );
                     } else if (obj.get("action").getAsString().equals("add_dialog")) {
                         gameServer.addDialog(
-                            obj.getAsJsonObject("body").get("npc").getAsString(),
-                            obj.getAsJsonObject("body").get("personality").getAsString()
+                            body.get("npc").getAsString(),
+                            body.get("personality").getAsString()
                         );
                     } else if (obj.get("action").getAsString().equals("update_radio_connection")) {
                         String username = obj.get("id").getAsString();
@@ -487,8 +507,8 @@ public class ClientHandler extends Thread {
                     } else if (obj.get("action").getAsString().charAt(0) == '=') {
                         String username = obj.get("id").getAsString();
                         gameServer.sendAllBut(GSON.toJson(obj), username);
-                    } else if (obj.has("body") && obj.getAsJsonObject("body").has("receiver")) {
-                        String username = obj.getAsJsonObject("body").get("receiver").getAsString();
+                    } else if (obj.has("body") && body.has("receiver")) {
+                        String username = body.get("receiver").getAsString();
                         for (Entry<ServerPlayer, ClientHandler> client : gameServer.getClients()) {
                             if (client.getKey().getUsername().equals(username)) {
                                 client.getValue().send(message);

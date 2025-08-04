@@ -67,7 +67,7 @@ public class LoginMenu extends Menu {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if (controller.login()) {
-                    GameClient.getInstance().loggedIn();
+                    GameClient.getInstance().loggedIn(stayLoggedIn.isChecked(), password.getText());
                     setScreen(new MainMenu(skin));
                 }
             }
