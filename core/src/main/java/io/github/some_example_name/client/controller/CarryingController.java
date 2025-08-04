@@ -115,7 +115,7 @@ public class CarryingController {
             Timer.schedule(new Timer.Task() {
                 @Override
                 public void run() {
-                    carrying.getSprite().setRegion(0, 0, 24, 18 - 6 * finalI);
+                    carrying.getSprite().setRegion(0, 6 + 6 * finalI, 24, 18 - 6 * finalI);
                     carrying.getSprite().setSize(24,  18 - 6 * finalI);
                     carrying.getSprite().setY(carrying.getSprite().getY() + 0.25f * carrying.getSprite().getTexture().getHeight());
                 }
