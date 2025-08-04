@@ -20,6 +20,7 @@ public class Lobby {
     private long lastTimeNoPlayer;
     private GameServer gameServer;
     private boolean gameStart;
+    private boolean gameServerSaved;
 
     public Lobby(String admin, String name, boolean _public, String password, boolean visible) {
         this.admin = admin;

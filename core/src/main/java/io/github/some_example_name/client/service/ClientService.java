@@ -3,6 +3,7 @@ package io.github.some_example_name.client.service;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Timer;
 import io.github.some_example_name.client.MainGradle;
+import io.github.some_example_name.client.controller.mainMenu.StartGameMenuController;
 import io.github.some_example_name.client.view.mainMenu.StartGameMenu;
 import io.github.some_example_name.common.model.*;
 import io.github.some_example_name.common.model.abilitiy.Ability;
@@ -247,8 +248,23 @@ public class ClientService {
                     InitialGame initialGame = new InitialGame();
                     initialGame.initial();
                     Gdx.app.postRunnable(() -> {
-                        MainGradle.getInstance().setScreen(new StartGameMenu(GameAsset.SKIN_MENU,1));
+                        MainGradle.getInstance().setScreen(new StartGameMenu(GameAsset.SKIN_MENU, 1));
                     });
+                }
+            }
+        }
+    }
+
+    public void loadGame(long id) {
+        synchronized (App.getInstance().getLobbies()) {
+            for (Lobby lobby : App.getInstance().getLobbies()) {
+                if (lobby.getId() == id) {
+                    lobby.setGameStart(true);
+                    App.getInstance().setCurrentLobby(lobby);
+                    StartGameMenuController.getInstance().setLoad(true);
+                    StartGameMenuController.getInstance().setReconnect(true);
+                    InitialGame initialGame = new InitialGame();
+                    initialGame.initial();
                 }
             }
         }

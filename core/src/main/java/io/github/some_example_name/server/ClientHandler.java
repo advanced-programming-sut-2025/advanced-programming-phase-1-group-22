@@ -1,6 +1,5 @@
 package io.github.some_example_name.server;
 
-import com.badlogic.gdx.Gdx;
 import com.google.gson.*;
 import io.github.some_example_name.common.JsonMessageHandler;
 import io.github.some_example_name.common.model.*;
@@ -112,9 +111,17 @@ public class ClientHandler extends Thread {
             "action", "DC_termination",
             "id", username
         );
+        synchronized (App.getInstance().getLobbies()) {
+            for (Lobby lobby : App.getInstance().getLobbies()) {
+                if (lobby.getGameServer().equals(gameServer)) {
+                    lobby.setGameStart(false);
+                    lobby.setGameServerSaved(true);
+                }
+            }
+        }
         gameServer.sendAllBut(GSON.toJson(msg), username);
         try {
-            GameSaver.saveGame(gameServer, "games/" + gameServer.getRoomId() + ".json");
+            GameSaver.saveLobbies(App.getInstance().getLobbies(), "games.json");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -184,6 +191,17 @@ public class ClientHandler extends Thread {
                         long id = obj.get("lobby_id").getAsLong();
                         service.startGame(id);
                         GameThread.getInstance().sendAllBut(GSON.toJson(obj), username);
+                    } else if (obj.get("action").getAsString().equals("ready_for_load_game")) {
+                        String username = obj.get("id").getAsString();
+                        long id = obj.get("lobby_id").getAsLong();
+                        GameThread.getInstance().getReadyPlayersForLoad().put(username, id);
+                        boolean ready = service.handleReadyForLoad(id);
+                        if (ready) {
+                            service.sendReadyMessage(id);
+                        }
+                    } else if (obj.get("action").getAsString().equals("give_up_load")) {
+                        String username = obj.get("id").getAsString();
+                        GameThread.getInstance().getReadyPlayersForLoad().remove(username);
                     } else if (obj.get("action").getAsString().equals("ready_for_game")) {
                         String username = obj.get("id").getAsString();
                         System.out.println("Client Ready: " + username);
@@ -214,7 +232,7 @@ public class ClientHandler extends Thread {
                             gameServer.sendAll(GSON.toJson(msg));
                         }
                     } else if (obj.get("action").getAsString().equals("enter_room")) {
-                        gameServer = GameThread.getInstance().getGameServer(
+                        gameServer = GameThread.getInstance().getGameServerForStart(
                             obj.getAsJsonObject("body").get("id").getAsLong()
                         );
                         String username = obj.get("id").getAsString();
@@ -242,17 +260,13 @@ public class ClientHandler extends Thread {
                             }
                         }, 0, 5, TimeUnit.SECONDS);
                     } else if (obj.get("action").getAsString().equals("load")) {
-                        int id = obj.getAsJsonObject("body").get("id").getAsInt();
-                        try {
-                            if (GameThread.getInstance().haveGame(id)) {
-                                gameServer = GameThread.getInstance().getGameServer(id);
-                            } else {
-                                gameServer = GameSaver.loadGame("games/" + id + ".json");
-                                GameThread.getInstance().addGameServer(id, gameServer);
+                        long id = obj.getAsJsonObject("body").get("id").getAsLong();
+                        synchronized (App.getInstance().getLobbies()) {
+                            for (Lobby lobby : App.getInstance().getLobbies()) {
+                                if (lobby.getId() == id) {
+                                    gameServer = lobby.getGameServer();
+                                }
                             }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            Gdx.app.exit();
                         }
                         String username = obj.get("id").getAsString();
                         int port = obj.get("port").getAsInt();
@@ -324,8 +338,39 @@ public class ClientHandler extends Thread {
                     } else if (obj.get("action").getAsString().equals("continue_termination")) {
                         inFavor = true;
                         if (gameServer.isMajority()) {
+                            synchronized (App.getInstance().getLobbies()) {
+                                for (Lobby lobby : App.getInstance().getLobbies()) {
+                                    if (lobby.getGameServer().equals(gameServer)) {
+                                        lobby.setGameStart(false);
+                                        lobby.setGameServerSaved(false);
+                                        lobby.setGameServer(null);
+                                    }
+                                }
+                            }
+                            try {
+                                GameSaver.saveLobbies(App.getInstance().getLobbies(), "games.json");
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                             gameServer.terminate();
                         }
+                    } else if (obj.get("action").getAsString().equals("save_game")) {
+                        long id = obj.get("lobby_id").getAsLong();
+                        String username = obj.get("id").getAsString();
+                        synchronized (App.getInstance().getLobbies()) {
+                            for (Lobby lobby : App.getInstance().getLobbies()) {
+                                if (lobby.getId() == id) {
+                                    lobby.setGameStart(false);
+                                    lobby.setGameServerSaved(true);
+                                }
+                            }
+                        }
+                        try {
+                            GameSaver.saveLobbies(App.getInstance().getLobbies(), "games.json");
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        gameServer.sendAllBut(GSON.toJson(obj), username);
                     } else if (obj.get("action").getAsString().equals("propose_fire")) {
                         gameServer.clearFavors();
                         gameServer.sendFire(message, obj.getAsJsonObject("body").get("player").getAsString());
@@ -370,7 +415,7 @@ public class ClientHandler extends Thread {
                             obj.getAsJsonObject("body").get("npc").getAsString(),
                             obj.getAsJsonObject("body").get("personality").getAsString()
                         );
-                    }  else if (obj.get("action").getAsString().equals("update_radio_connection")) {
+                    } else if (obj.get("action").getAsString().equals("update_radio_connection")) {
                         String username = obj.get("id").getAsString();
                         String connect_to = obj.get("connect_to").getAsString();
                         Integer port = null;

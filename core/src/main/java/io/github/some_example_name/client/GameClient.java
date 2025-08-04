@@ -8,6 +8,7 @@ import io.github.some_example_name.client.controller.WorldController;
 import io.github.some_example_name.client.controller.mainMenu.StartGameMenuController;
 import io.github.some_example_name.client.view.GameView;
 import io.github.some_example_name.client.view.mainMenu.FireMenu;
+import io.github.some_example_name.client.view.mainMenu.LobbyMenu;
 import io.github.some_example_name.client.view.mainMenu.TerminateMenu;
 import io.github.some_example_name.common.JsonMessageHandler;
 import io.github.some_example_name.common.model.Farm;
@@ -224,6 +225,45 @@ public class GameClient {
         }
     }
 
+    public void readyForLoadGame(Lobby lobby) {
+        try {
+            Map<String, Object> msg = new HashMap<>();
+            msg.put("action", "ready_for_load_game");
+            msg.put("id", Session.getCurrentUser().getUsername());
+            msg.put("lobby_id", lobby.getId());
+
+            jsonMessageHandler.send(GSON.toJson(msg));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void giveUpLoad(Lobby lobby) {
+        try {
+            Map<String, Object> msg = new HashMap<>();
+            msg.put("action", "give_up_load");
+            msg.put("id", Session.getCurrentUser().getUsername());
+            msg.put("lobby_id", lobby.getId());
+
+            jsonMessageHandler.send(GSON.toJson(msg));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void saveGame(long id) {
+        try {
+            Map<String, Object> msg = new HashMap<>();
+            msg.put("action", "save_game");
+            msg.put("id", Session.getCurrentUser().getUsername());
+            msg.put("lobby_id", id);
+
+            jsonMessageHandler.send(GSON.toJson(msg));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public void startListening() {
         new Thread(() -> {
             try {
@@ -371,6 +411,9 @@ public class GameClient {
                                 terminateMenu.get().undoTermination();
                             }
                         } else if (obj.get("action").getAsString().equals("terminate_game")) {
+                            App.getInstance().getCurrentLobby().setGameServer(null);
+                            App.getInstance().getCurrentLobby().setGameStart(false);
+                            App.getInstance().getCurrentLobby().setGameServerSaved(false);
                             synchronized (terminateMenu) {
                                 terminateMenu.get().terminate();
                             }
@@ -557,12 +600,12 @@ public class GameClient {
                             service.handleDCPlayer(username, time);
                         } else if (obj.get("action").getAsString().equals("DC_termination")) {
                             GameService.getInstance().finalTermination();
-                            //TODO delete gameServer
+                            App.getInstance().getCurrentLobby().setGameStart(false);
+                            App.getInstance().getCurrentLobby().setGameServerSaved(true);
                             Gdx.app.postRunnable(() -> {
                                 MainGradle.getInstance().getScreen().dispose();
-                                MainGradle.getInstance().initialMenu();
+                                MainGradle.getInstance().setScreen(new LobbyMenu(GameAsset.SKIN_MENU));
                             });
-                            //TODO transfer to lobby
                         } else if (obj.get("action").getAsString().equals("update_player_connection")) {
                             String username = obj.get("id").getAsString();
                             service.handlePlayerReConnect(username);
@@ -604,6 +647,17 @@ public class GameClient {
                         } else if (obj.get("action").getAsString().equals("start_game")) {
                             long id = obj.get("lobby_id").getAsLong();
                             service.startGame(id);
+                        } else if (obj.get("action").getAsString().equals("load_game")) {
+                            long id = obj.get("lobby_id").getAsLong();
+                            service.loadGame(id);
+                        } else if (obj.get("action").getAsString().equals("save_game")) {
+                            GameService.getInstance().finalTermination();
+                            App.getInstance().getCurrentLobby().setGameStart(false);
+                            App.getInstance().getCurrentLobby().setGameServerSaved(true);
+                            Gdx.app.postRunnable(() -> {
+                                MainGradle.getInstance().getScreen().dispose();
+                                MainGradle.getInstance().setScreen(new LobbyMenu(GameAsset.SKIN_MENU));
+                            });
                         }
                     } catch (JsonParseException e) {
                         System.out.println("Received non-JSON: " + serverMessage);
@@ -637,7 +691,7 @@ public class GameClient {
         }
     }
 
-    public void reLoadGame(int id) {
+    public void reLoadGame(long id) {
         try {
             Map<String, Object> msg = Map.of(
                 "action", "load",

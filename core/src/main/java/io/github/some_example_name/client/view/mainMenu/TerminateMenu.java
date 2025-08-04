@@ -11,6 +11,8 @@ import io.github.some_example_name.common.model.Salable;
 import io.github.some_example_name.common.model.records.Response;
 import io.github.some_example_name.common.model.relations.Player;
 import io.github.some_example_name.common.utils.App;
+import io.github.some_example_name.common.utils.GameAsset;
+import io.github.some_example_name.server.service.GameService;
 import lombok.Setter;
 
 import java.util.ArrayList;
@@ -32,7 +34,8 @@ public class TerminateMenu extends PopUp {
     }
 
     @Override
-    protected void handleDragRelease(InputEvent event, float x, float y, int pointer, Image itemImage, Salable item, Image dragImage, Boolean flag) {}
+    protected void handleDragRelease(InputEvent event, float x, float y, int pointer, Image itemImage, Salable item, Image dragImage, Boolean flag) {
+    }
 
 
     public void setState(int i) {
@@ -46,6 +49,7 @@ public class TerminateMenu extends PopUp {
         }
         state = i;
     }
+
     private void createInventory(Skin skin, Group menuGroup, Stage stage) {
         OrthographicCamera camera = MainGradle.getInstance().getCamera();
 
@@ -73,7 +77,7 @@ public class TerminateMenu extends PopUp {
 
         Table content = new Table();
         content.setFillParent(true);
-        content.add(inventory).width(window.getWidth()).height(window.getHeight()*0.8f - 100).padBottom(20).padTop(50).row();
+        content.add(inventory).width(window.getWidth()).height(window.getHeight() * 0.8f - 100).padBottom(20).padTop(50).row();
 
         window.add(content).fill().pad(10);
         Group group = new Group() {
@@ -91,10 +95,17 @@ public class TerminateMenu extends PopUp {
                 );
 
                 if (pauseButton.isChecked()) {
-                    //todo save and do it for all
-                    getController().showResponse(getGameService().exitGame());
-                    MainGradle.getInstance().getScreen().dispose();
-                    MainGradle.getInstance().initialMenu();
+                    Response response = getGameService().exitGame();
+                    getController().showResponse(response);
+                    if (response.shouldBeBack()) {
+                        GameClient.getInstance().saveGame(App.getInstance().getCurrentLobby().getId());
+                        GameService.getInstance().finalTermination();
+                        App.getInstance().getCurrentLobby().setGameStart(false);
+                        App.getInstance().getCurrentLobby().setGameServerSaved(true);
+                        close();
+                        MainGradle.getInstance().getScreen().dispose();
+                        MainGradle.getInstance().setScreen(new LobbyMenu(GameAsset.SKIN_MENU));
+                    }
                     pauseButton.setChecked(false);
                 }
 
@@ -142,8 +153,9 @@ public class TerminateMenu extends PopUp {
     public void terminate() {
         Gdx.app.postRunnable(() -> {
             getController().showResponse(getGameService().finalTermination());
+            close();
             MainGradle.getInstance().getScreen().dispose();
-            MainGradle.getInstance().initialMenu();
+            MainGradle.getInstance().setScreen(new LobbyMenu(GameAsset.SKIN_MENU));
         });
     }
 

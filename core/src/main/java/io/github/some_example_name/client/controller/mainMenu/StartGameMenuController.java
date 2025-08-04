@@ -4,11 +4,13 @@ import com.badlogic.gdx.Gdx;
 import com.google.gson.JsonArray;
 import io.github.some_example_name.client.GameClient;
 import io.github.some_example_name.client.MainGradle;
+import io.github.some_example_name.client.view.mainMenu.LobbyMenu;
 import io.github.some_example_name.common.model.Farm;
 import io.github.some_example_name.common.model.FarmType;
 import io.github.some_example_name.common.model.PlayerType;
 import io.github.some_example_name.common.model.User;
 import io.github.some_example_name.common.model.relations.Player;
+import io.github.some_example_name.common.utils.GameAsset;
 import io.github.some_example_name.server.repository.UserRepo;
 import io.github.some_example_name.server.service.GameInitService;
 import io.github.some_example_name.common.utils.App;
@@ -45,6 +47,17 @@ public class StartGameMenuController {
                         String character = view.getPlayerSelection().getSelected();
                         GameClient.getInstance().chooseFarm(farm, character);
                         view.getEnterGameButton().setChecked(false);
+                    }
+                }
+                break;
+                case 3: {
+                    if (view.getBack().isChecked()) {
+                        GameClient.getInstance().giveUpLoad(App.getInstance().getCurrentLobby());
+                        App.getInstance().setCurrentLobby(null);
+                        reconnect = false;
+                        load = false;
+                        Gdx.app.postRunnable(() -> MainGradle.getInstance().setScreen(new LobbyMenu(GameAsset.SKIN_MENU)));
+                        view.getBack().setChecked(false);
                     }
                 }
                 break;
