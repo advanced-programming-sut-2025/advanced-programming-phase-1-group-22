@@ -12,6 +12,7 @@ import io.github.some_example_name.client.controller.GameViewController;
 import io.github.some_example_name.common.utils.App;
 
 public class GameView implements Screen, InputProcessor {
+    public static boolean advancingTime;
     private final GameViewController controller = new GameViewController(this);
     public static Stage stage = new Stage(MainGradle.getInstance().getViewport(), MainGradle.getInstance().getBatch());
     public static int screenX;

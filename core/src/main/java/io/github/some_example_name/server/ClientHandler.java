@@ -15,10 +15,7 @@ import lombok.Setter;
 import java.io.EOFException;
 import java.io.IOException;
 import java.net.Socket;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -86,6 +83,36 @@ public class ClientHandler extends Thread {
         GameThread.getInstance().sendAll(GSON.toJson(msg));
     }
 
+    private void clientStatus(String username, String lobby, boolean add) {
+        Map<String, Object> msg;
+        if ("".equals(lobby)) {
+             msg = Map.of(
+                "action", "client_status",
+                "id", "!server!",
+                "body", Map.of("username", username)
+            );
+            if (GameThread.getInstance().getUsers().containsKey(username)) {
+                GameThread.getInstance().getUsers().remove(username);
+            } else {
+                GameThread.getInstance().getUsers().put(username, new ArrayList<>());
+            }
+        } else {
+            msg = Map.of(
+                "action", "client_status",
+                "id", "!server!",
+                "body", Map.of("username", username, "lobby", lobby, "add", add)
+            );
+
+            if (add) {
+                GameThread.getInstance().getUsers().get(username).add(lobby);
+            } else {
+                GameThread.getInstance().getUsers().get(username).remove(lobby);
+            }
+        }
+        GameThread.getInstance().sendAll(GSON.toJson(msg));
+    }
+
+
     private void handlePlayerDC(String username, long DCTime, long lastPing) {
         if (DCTime >= 2 * 60 * 1000) {
             sendTerminationMessage(username);
@@ -93,6 +120,7 @@ public class ClientHandler extends Thread {
             if (!gameServer.getDCPlayers().containsKey(username)) {
                 gameServer.getDCPlayers().put(username, lastPing);
                 sendDCMessage(username, lastPing);
+                clientStatus(username, "", true);
             }
         }
     }
@@ -143,7 +171,13 @@ public class ClientHandler extends Thread {
             String message;
             while (running && (message = jsonMessageHandler.receive()) != null) {
                 try {
-                    JsonObject obj = JsonParser.parseString(message).getAsJsonObject();
+                    JsonObject obj = null;
+                    try {
+                        obj = JsonParser.parseString(message).getAsJsonObject();
+                    } catch (JsonSyntaxException e) {
+                        System.out.println("Received non-JSON message: " + message);
+                    }
+                    if (obj == null) continue;
 
                     if (obj.get("action").getAsString().equals("connected")) {
                         System.out.println("Client Connected");
@@ -166,6 +200,14 @@ public class ClientHandler extends Thread {
                                 }
                             }
                         }, 0, 5, TimeUnit.SECONDS);
+                        if (!GameThread.getInstance().getUsers().isEmpty()) {
+                            Map<String, Object> msg = Map.of(
+                                "action", "send_users",
+                                "body", GameThread.getInstance().getUsers()
+                            );
+                            send(GSON.toJson(msg));
+                        }
+                        clientStatus(username, "", false);
 
                     } else if (obj.get("action").getAsString().equals("create_lobby")) {
                         String username = obj.get("id").getAsString();
@@ -176,16 +218,19 @@ public class ClientHandler extends Thread {
                         long id = obj.get("lobby_id").getAsLong();
                         service.createLobby(username, lobbyName, isPrivate, password, visible, id);
                         GameThread.getInstance().sendAllBut(GSON.toJson(obj), username);
+                        clientStatus(username, isPrivate ? "<PrivateLobby>" : lobbyName, true);
                     } else if (obj.get("action").getAsString().equals("join_lobby")) {
                         String username = obj.get("id").getAsString();
                         long id = obj.get("lobby_id").getAsLong();
-                        service.joinLobby(id, username);
+                        String lobbyName = service.joinLobby(id, username);
                         GameThread.getInstance().sendAllBut(GSON.toJson(obj), username);
+                        clientStatus(username, lobbyName, true);
                     } else if (obj.get("action").getAsString().equals("left_lobby")) {
                         String username = obj.get("id").getAsString();
                         long id = obj.get("lobby_id").getAsLong();
-                        service.leftLobby(id, username);
+                        String lobbyName = service.leftLobby(id, username);
                         GameThread.getInstance().sendAllBut(GSON.toJson(obj), username);
+                        clientStatus(username, lobbyName, false);
                     } else if (obj.get("action").getAsString().equals("start_game")) {
                         String username = obj.get("id").getAsString();
                         long id = obj.get("lobby_id").getAsLong();
@@ -447,6 +492,7 @@ public class ClientHandler extends Thread {
                     }
                 } catch (JsonParseException e) {
                     System.out.println("Received non-JSON message: " + message);
+                    e.printStackTrace();
                 }
             }
         } catch (EOFException eofException) {
