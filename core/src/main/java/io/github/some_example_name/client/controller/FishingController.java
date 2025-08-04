@@ -17,14 +17,18 @@ import io.github.some_example_name.common.model.structure.farmInitialElements.La
 import io.github.some_example_name.common.model.tools.FishingPole;
 import io.github.some_example_name.common.utils.App;
 import io.github.some_example_name.client.view.MiniGame;
+import io.github.some_example_name.common.utils.GameAsset;
 
 public class FishingController {
     private final WorldController worldController = WorldController.getInstance();
     private MiniGame miniGame;
+    private float x;
+    private float y;
 
     public void update() {
         if (miniGame != null) {
             miniGame.draw(MainGradle.getInstance().getBatch(), Gdx.graphics.getDeltaTime());
+            MainGradle.getInstance().getBatch().draw(GameAsset.FISHING_BOBBER, x, y, App.tileWidth, App.tileHeight);
             if (miniGame.isGameOver()) {
                 if (miniGame.isGameWin()) {
                     App.getInstance().getCurrentGame().getCurrentPlayer().upgradeAbility(Ability.FISHING);
@@ -51,6 +55,8 @@ public class FishingController {
                 farm.forEachStructure(structure -> {
                     if (structure instanceof Lake lake) {
                         if (collision(lake, worldX, worldY)) {
+                            x = worldX;
+                            y = worldY;
                             fishing();
                         }
                     }
@@ -71,7 +77,7 @@ public class FishingController {
         }
         int count = miniGame.getFishingPole().generateNumberOfFish(player);
         player.getInventory().addProductToBackPack(fish, count);
-        GameClient.getInstance().updatePlayerAddToInventory(App.getInstance().getCurrentGame().getCurrentPlayer(),fish,count);
+        GameClient.getInstance().updatePlayerAddToInventory(App.getInstance().getCurrentGame().getCurrentPlayer(), fish, count);
     }
 
     private void fishing() {

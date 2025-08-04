@@ -25,6 +25,7 @@ public class GameAsset {
         pixmap.dispose();
     }
 
+    public static final Texture FISHING_BOBBER = new Texture("fishing_bobber.psd.png");
     public static final Texture MINI_GAME_BACKGROUND = new Texture("background.png");
     public static final Texture MINI_GAME_BAR = new Texture("barMini.png");
     public static final Texture BACKGROUND = new Texture("menu_bg.png");

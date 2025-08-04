@@ -3014,6 +3014,7 @@ bar.png
 barMini.png
 dialog.png
 energyBarEmpty.jpg
+fishing_bobber.psd.png
 harvey.png
 lia.png
 lia_Icon.png
