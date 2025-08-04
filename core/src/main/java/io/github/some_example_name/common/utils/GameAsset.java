@@ -35,6 +35,7 @@ public class GameAsset {
     public static final Texture SEBASTIAN_ = new Texture("sebastian.png");
     public static final Texture HARVEY_ = new Texture("harvey.png");
     public static final Texture ABIGEL_ = new Texture("abigel.png");
+    public static final TextureRegion[][] GIFT_ANIMATION = TextureRegion.split(new Texture("Inventory/Gift_Animation.png"), 191, 260);
     public static final Texture GRASS_FARM = new Texture("Farm/Grass_Farm.png");
     public static final Texture FLOWER_FARM = new Texture("Farm/Flower_Farm.png");
     public static final Texture ROCKY_FARM = new Texture("Farm/Rocky_Farm.png");
