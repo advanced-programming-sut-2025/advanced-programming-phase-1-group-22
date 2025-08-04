@@ -208,8 +208,10 @@ public class ClientHandler extends Thread {
                                 long lastPing = stringLongEntry.getValue();
                                 long now = System.currentTimeMillis();
                                 if ((now - lastPing) > 30 * 1000) {
+                                    if (GameThread.getInstance().getConnections().containsKey(stringLongEntry.getKey())) {
+                                        clientStatus(stringLongEntry.getKey(), "", false);
+                                    }
                                     GameThread.getInstance().getConnections().remove(stringLongEntry.getKey());
-                                    System.out.println(GameThread.getInstance().getConnections().size());
                                 }
                             }
                         }, 0, 5, TimeUnit.SECONDS);
@@ -437,7 +439,7 @@ public class ClientHandler extends Thread {
                     } else if (obj.get("action").getAsString().equals("logout")) {
                         String username = obj.get("id").getAsString();
                         GameThread.getInstance().getConnections().remove(username);
-                        clientStatus(username,"",false);
+                        clientStatus(username, "", false);
                         if (GameThread.getInstance().getAutoLogins().containsKey(obj.get("port").getAsString())) {
                             GameThread.getInstance().getAutoLogins().remove(obj.get("port").getAsString());
                         }
