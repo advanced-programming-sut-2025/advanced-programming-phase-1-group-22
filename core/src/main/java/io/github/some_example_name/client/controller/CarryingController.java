@@ -100,8 +100,8 @@ public class CarryingController {
         isEating = true;
         Player player = App.getInstance().getCurrentGame().getCurrentPlayer();
         Salable carrying = player.getCurrentCarrying();
-        int width = 24;
-        int height = 24;
+        int width = (int) carrying.getSprite().getWidth();
+        int height = (int) carrying.getSprite().getHeight();
 
         for (int i = 0; i < 4; i++) {
             Timer.schedule(new Timer.Task() {
@@ -115,8 +115,9 @@ public class CarryingController {
             Timer.schedule(new Timer.Task() {
                 @Override
                 public void run() {
-                    carrying.getSprite().setRegion(0, 6 + 6 * finalI, 24, 18 - 6 * finalI);
-                    carrying.getSprite().setSize(24,  18 - 6 * finalI);
+                    int height1 = (int) (height / 4f * 3 - height / 4f * finalI);
+                    carrying.getSprite().setRegion(0, height - height1, width, height1);
+                    carrying.getSprite().setSize(width,  height1);
                     carrying.getSprite().setY(carrying.getSprite().getY() + 0.25f * carrying.getSprite().getTexture().getHeight());
                 }
             }, 0.8f + 0.2f * i);
@@ -128,7 +129,7 @@ public class CarryingController {
                     carrying.getSprite().getTexture().getHeight());
                 carrying.getSprite().setPosition(player.getTiles().get(0).getX() * App.tileWidth,
                     player.getTiles().get(0).getY() * App.tileHeight);
-                carrying.getSprite().setSize(24,  24);
+                carrying.getSprite().setSize(width,  height);
                 isEating = false;
                 GameView.captureInput = true;
             }
