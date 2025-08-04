@@ -6,9 +6,7 @@ import io.github.some_example_name.common.model.User;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @Getter
 @Setter
@@ -17,7 +15,8 @@ public class App {
     public static Integer tileWidth = 80;
     public static Integer tileHeight = 80;
     public static Integer PORT = 0;
-    private final List<User> users = new ArrayList<>();
+    private Map<String, List<String>> users = new HashMap<>();
+    private Boolean usersUpdated = true;
     private final List<Game> games = new ArrayList<>();
     private Game currentGame = new Game();
     private final List<Lobby> lobbies = Collections.synchronizedList(new ArrayList<>());

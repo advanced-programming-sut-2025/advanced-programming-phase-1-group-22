@@ -1,6 +1,8 @@
 package io.github.some_example_name.client.view.mainMenu;
 
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import io.github.some_example_name.client.GameClient;
@@ -11,11 +13,20 @@ import io.github.some_example_name.common.model.records.Response;
 import io.github.some_example_name.common.utils.App;
 import io.github.some_example_name.common.utils.InitialGame;
 import io.github.some_example_name.common.variables.Session;
+import lombok.Getter;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class LobbyMenu extends Menu {
+    @Getter
     private final LobbyController controller = new LobbyController(this);
     private final TextButton createLobby;
     private final TextButton listLobby;
+    private final ScrollPane usersScroll;
+    private final Table users;
     private final TextButton back;
     private Runnable updateLobbyList;
 
@@ -25,6 +36,27 @@ public class LobbyMenu extends Menu {
         this.createLobby = new TextButton("Create Lobby", skin);
         this.listLobby = new TextButton("List Lobbies", skin);
         this.back = new TextButton("Back", skin);
+        this.users = new Table(skin);
+        this.usersScroll = new ScrollPane(users, skin);
+        users.pack();
+        usersScroll.setFadeScrollBars(false);
+        usersScroll.setScrollbarsOnTop(true);
+        usersScroll.setScrollingDisabled(true, false);
+        usersScroll.setScrollBarPositions(true, true);
+        usersScroll.setForceScroll(false, true);
+        usersScroll.layout();
+        usersScroll.setTouchable(Touchable.enabled);
+        usersScroll.setHeight(200);
+    }
+
+    @Override
+    protected void update(float delta) {
+        synchronized (App.getInstance().getUsersUpdated()) {
+            if (App.getInstance().getUsersUpdated()) {
+                App.getInstance().setUsersUpdated(false);
+                updateUsers();
+            }
+        }
     }
 
     @Override
@@ -50,6 +82,20 @@ public class LobbyMenu extends Menu {
                 setScreen(new MainMenu(skin));
             }
         });
+        this.table.add(usersScroll).width(400).row();
+    }
+
+    private void updateUsers() {
+        users.clearChildren();
+        synchronized (App.getInstance().getUsers()) {
+            List<Map.Entry<String, List<String>>> users = App.getInstance().getUsers().entrySet()
+                .stream().sorted(Map.Entry.comparingByKey()).toList();
+            for (Map.Entry<String, List<String>> entry : users) {
+                this.users.add(new Label(entry.getKey(), skin)).width(185).padRight(30);
+                this.users.add(new Label(entry.getValue().isEmpty() ? "<LobbyLess>" : entry.getValue().getLast(), skin)).width(185);
+                this.users.row();
+            }
+        }
     }
 
     private void createLobbyDialog(Skin skin) {

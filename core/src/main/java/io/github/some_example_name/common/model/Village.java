@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonArray;
 import io.github.some_example_name.client.GameClient;
+import io.github.some_example_name.client.view.GameView;
 import io.github.some_example_name.common.model.relations.Player;
 import io.github.some_example_name.client.controller.mainMenu.StartGameMenuController;
 import lombok.Getter;
@@ -470,6 +471,7 @@ public class Village implements JsonPreparable {
     }
 
     public void updateNpcs(TimeAndDate time) {
+        if (GameView.advancingTime) return;
         for (Player player : App.getInstance().getCurrentGame().getPlayers()) {
             if (player.getDead()) continue;
             if (player.equals(App.getInstance().getCurrentGame().getCurrentPlayer())) break;

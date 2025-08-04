@@ -1,6 +1,7 @@
 package io.github.some_example_name.server.service;
 
 import io.github.some_example_name.client.GameClient;
+import io.github.some_example_name.client.view.GameView;
 import io.github.some_example_name.common.model.*;
 import io.github.some_example_name.common.model.products.*;
 import io.github.some_example_name.common.model.products.TreesAndFruitsAndSeeds.*;
@@ -120,9 +121,11 @@ public class GameService {
     }
 
     public void skipTimeByServer(int minutes) {
+        if (minutes > 13 * 60) GameView.advancingTime = true;
         for (int i = 0; i < minutes; i++) {
             App.getInstance().getCurrentGame().getTimeAndDate().moveTimeForward();
         }
+        if (minutes > 13 * 60) GameView.advancingTime = false;
     }
 
     public Response season() {
