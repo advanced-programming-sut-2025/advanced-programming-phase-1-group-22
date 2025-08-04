@@ -7,10 +7,12 @@ import com.badlogic.gdx.math.Vector3;
 import io.github.some_example_name.client.MainGradle;
 import io.github.some_example_name.client.view.GameView;
 import io.github.some_example_name.client.view.mainMenu.CropsInfo;
+import io.github.some_example_name.client.view.mainMenu.GreenHouseRecipe;
 import io.github.some_example_name.common.model.Farm;
 import io.github.some_example_name.common.model.Tile;
 import io.github.some_example_name.common.model.products.HarvestAbleProduct;
 import io.github.some_example_name.common.model.structure.Structure;
+import io.github.some_example_name.common.model.structure.farmInitialElements.GreenHouse;
 import io.github.some_example_name.common.utils.App;
 import io.github.some_example_name.common.utils.GameAsset;
 
@@ -30,10 +32,16 @@ public class PlantController {
         Tile tile = getTileByXAndY(mouseTileX, mouseTileY);
         if (tile == null) return;
         HarvestAbleProduct harvestAbleProduct = getHarvest(tile);
-        if (harvestAbleProduct == null) return;
         if (Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT)) {
-            CropsInfo cropsInfo = new CropsInfo(harvestAbleProduct);
-            cropsInfo.createMenu(GameView.stage, GameAsset.SKIN, WorldController.getInstance());
+            if (harvestAbleProduct == null) {
+                if (isThereGreenHouse(tile)) {
+                    GreenHouseRecipe greenHouseReciepe = new GreenHouseRecipe();
+                    greenHouseReciepe.createMenu(GameView.stage, GameAsset.SKIN, WorldController.getInstance());
+                }
+            } else {
+                CropsInfo cropsInfo = new CropsInfo(harvestAbleProduct);
+                cropsInfo.createMenu(GameView.stage, GameAsset.SKIN, WorldController.getInstance());
+            }
         }
     }
 
@@ -46,6 +54,20 @@ public class PlantController {
             }
         }
         return null;
+    }
+
+    private boolean isThereGreenHouse(Tile tile) {
+        for (Farm farm : App.getInstance().getCurrentGame().getVillage().getFarms()) {
+            farm.applyPendingChanges();
+            for (Structure structure : farm.getStructuresSnapshot()) {
+                if (structure instanceof GreenHouse) {
+                    if (structure.getTiles().contains(tile)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     private HarvestAbleProduct getHarvest(Tile tile) {
