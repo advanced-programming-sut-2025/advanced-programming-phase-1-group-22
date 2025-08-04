@@ -35,6 +35,11 @@ public class GameAsset {
     public static final Texture SEBASTIAN_ = new Texture("sebastian.png");
     public static final Texture HARVEY_ = new Texture("harvey.png");
     public static final Texture ABIGEL_ = new Texture("abigel.png");
+    public static final Texture GRASS_FARM = new Texture("Farm/Grass_Farm.png");
+    public static final Texture FLOWER_FARM = new Texture("Farm/Flower_Farm.png");
+    public static final Texture ROCKY_FARM = new Texture("Farm/Rocky_Farm.png");
+    public static final Texture BLUE_FARM = new Texture("Farm/Blue_Farm.png");
+    public static final Texture DESERT_FARM = new Texture("Farm/Desert_Farm.png");
     public static final Texture CABIN1 = new Texture("Beach_Cabin_Stage_3.png");
     public static final Texture CABIN2 = new Texture("Neighbor_Cabin_Stage_3.png");
     public static final Texture CABIN3 = new Texture("Plank_Cabin_Stage_3.png");
