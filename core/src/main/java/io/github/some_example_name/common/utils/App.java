@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Getter
 @Setter
@@ -16,7 +17,7 @@ public class App {
     public static Integer tileHeight = 80;
     public static Integer PORT = 0;
     private Map<String, List<String>> users = new HashMap<>();
-    private Boolean usersUpdated = true;
+    private final AtomicReference<Boolean> usersUpdated = new AtomicReference<>(true);
     private final List<Game> games = new ArrayList<>();
     private Game currentGame = new Game();
     private final List<Lobby> lobbies = Collections.synchronizedList(new ArrayList<>());
