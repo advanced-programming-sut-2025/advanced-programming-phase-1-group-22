@@ -139,7 +139,7 @@ public class GameClient {
             Map<String, Object> msg = Map.of(
                 "action", "login",
                 "id", Session.getCurrentUser().getUsername(),
-                "body", Map.of("port", App.PORT, "stay_logged",  stayLogged, "password", password)
+                "body", Map.of("port", App.PORT, "stay_logged", stayLogged, "password", password)
             );
 
             jsonMessageHandler.send(GSON.toJson(msg));
@@ -1850,7 +1850,7 @@ public class GameClient {
                 "action", "npc_gift",
                 "id", Session.getCurrentUser().getUsername(),
                 "body", Map.of(
-                    "key", key,
+                    "gift", key.getName(),
                     "npc", npc.getName()
                 )
             );

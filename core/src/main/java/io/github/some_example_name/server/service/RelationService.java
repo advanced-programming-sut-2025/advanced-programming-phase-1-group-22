@@ -297,10 +297,26 @@ public class RelationService {
         return direction;
     }
 
+    public Direction handleInteractionInitNPC(Player requester, NPC requested) {
+        int dx = requested.getTiles().get(0).getX() - requester.getTiles().get(0).getX();
+        int dy = requested.getTiles().get(0).getY() - requester.getTiles().get(0).getY();
+        if (dx > 0) dx = 1;
+        else if (dx < 0) dx = -1;
+        if (dy > 0) dy = 1;
+        else if (dy < 0) dy = -1;
+        return Direction.getByXAndY(dx, dy);
+    }
+
     public void drawFlower(Player requester, Player requested) {
         Direction direction = handleInteractionInit(requester, requested);
         if (direction == null) return;
         WorldController.getInstance().drawFlower(direction, requester);
+    }
+
+    public void drawGift(Player requester, NPC requested) {
+        Direction direction = handleInteractionInitNPC(requester, requested);
+        if (direction == null) return;
+        WorldController.getInstance().drawGift(direction, requester);
     }
 
     public void handleHug(Player requester, Player requested) {
@@ -654,7 +670,8 @@ public class RelationService {
         currentPlayer.getInventory().deleteProductFromBackPack(itemFromInventory.getKey(), currentPlayer, 1);
         GameClient.getInstance().updatePlayerDeleteFromInventory(currentPlayer, itemFromInventory.getKey(), 1);
         GameClient.getInstance().npcGift(itemFromInventory.getKey(), npc);
-        return new Response("gift gived successfully");
+        drawGift(currentPlayer, npc);
+        return new Response("gift given successfully");
     }
 
     public Response showNpcFriendship() {
