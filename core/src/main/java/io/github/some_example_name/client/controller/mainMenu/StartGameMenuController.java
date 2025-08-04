@@ -1,6 +1,9 @@
 package io.github.some_example_name.client.controller.mainMenu;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.google.gson.JsonArray;
 import io.github.some_example_name.client.GameClient;
 import io.github.some_example_name.client.MainGradle;
@@ -30,6 +33,7 @@ public class StartGameMenuController {
     private boolean reconnect = false;
     @Getter
     private boolean load = false;
+    private int selectedIndex = 0;
 
     public static StartGameMenuController getInstance() {
         if (instance == null) {
@@ -42,6 +46,12 @@ public class StartGameMenuController {
         if (view != null) {
             switch (view.getState()) {
                 case 1: {
+                    if (view.getFarmSelection().getSelectedIndex() != selectedIndex) {
+                        selectedIndex = view.getFarmSelection().getSelectedIndex();
+                        view.getFarmPreview().setDrawable(new TextureRegionDrawable(new TextureRegion(
+                            FarmType.values()[selectedIndex].getTexture()
+                        )));
+                    }
                     if (view.getEnterGameButton().isChecked()) {
                         int farm = view.getFarmSelection().getSelectedIndex();
                         String character = view.getPlayerSelection().getSelected();

@@ -1033,3 +1033,5 @@ Roham1234,pass,a@a.a,Roham,MALE,Your collage name?,sut,0,21,null
 Clara1234,noPass,a@b.c,CLARA,FEMALE,Your collage name?,sut,0,21,null
 Roham1234,pass,a@a.a,Roham,MALE,Your collage name?,sut,0,22,null
 Clara1234,noPass,a@b.c,CLARA,FEMALE,Your collage name?,sut,0,22,null
+Roham1234,pass,a@a.a,Roham,MALE,Your collage name?,sut,0,1,null
+Clara1234,noPass,a@b.c,CLARA,FEMALE,Your collage name?,sut,0,1,null

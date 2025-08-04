@@ -1406,6 +1406,12 @@ Emoji/Emojis191.png
 Emoji/Emojis194.png
 Emoji/Emojis195.png
 EnergyBar.png
+Farm/Blue_Farm.png
+Farm/Desert_Farm.png
+Farm/Flower_Farm.png
+Farm/Grass_Farm.png
+Farm/Rocky_Farm.png
+Farm/Village.png
 Farm_Buildings/Barn.png
 Farm_Buildings/Big_Barn.png
 Farm_Buildings/Big_Coop.png

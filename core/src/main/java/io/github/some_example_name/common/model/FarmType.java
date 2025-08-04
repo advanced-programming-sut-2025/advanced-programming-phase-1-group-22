@@ -1,7 +1,9 @@
 package io.github.some_example_name.common.model;
 
+import com.badlogic.gdx.graphics.Texture;
 import io.github.some_example_name.common.model.shelter.ShippingBin;
 import io.github.some_example_name.common.model.structure.farmInitialElements.*;
+import io.github.some_example_name.common.utils.GameAsset;
 import lombok.Getter;
 
 import java.util.ArrayList;
@@ -9,20 +11,22 @@ import java.util.List;
 
 @Getter
 public enum FarmType {
-    GRASS_FARM("Grass Farm", 50, 40),
-    BLUE_FARM("Blue Farm", 60, 45),
-    FLOWER_FARM("Flower Farm", 50, 40),
-    ROCKY_FARM("Rocky Farm", 60, 45),
-    DESERT_FARM("Desert Farm", 40, 30);
+    GRASS_FARM("Grass Farm", 50, 40, GameAsset.GRASS_FARM),
+    BLUE_FARM("Blue Farm", 60, 45, GameAsset.BLUE_FARM),
+    FLOWER_FARM("Flower Farm", 50, 40, GameAsset.FLOWER_FARM),
+    ROCKY_FARM("Rocky Farm", 60, 45, GameAsset.ROCKY_FARM),
+    DESERT_FARM("Desert Farm", 40, 30, GameAsset.DESERT_FARM);
     private List<HardCodeFarmElements> structures = new ArrayList<>();
     private final Integer length;
     private final String name;
     private final Integer width;
+    private final Texture texture;
 
-    FarmType(String name, int length, int width) {
+    FarmType(String name, int length, int width, Texture texture) {
         this.name = name;
         this.length = length;
         this.width = width;
+        this.texture = texture;
     }
 
     public static FarmType getFromName(String name){
