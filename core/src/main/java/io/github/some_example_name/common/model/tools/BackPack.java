@@ -28,16 +28,6 @@ public class BackPack implements JsonPreparable {
         this.backPackType = backPackType;
     }
 
-    public String showInventory() {
-        StringBuilder message = new StringBuilder();
-        synchronized (products) {
-            for (Map.Entry<Salable, Integer> salableIntegerEntry : products.entrySet()) {
-                message.append(salableIntegerEntry.getKey().getName()).append(" : ").append(salableIntegerEntry.getValue()).append("\n");
-            }
-        }
-        return message.toString();
-    }
-
     public void deleteProductFromBackPack(Salable product, Player player, int itemNumber) {
         if (product == null) {
             return;
@@ -96,9 +86,9 @@ public class BackPack implements JsonPreparable {
 
     private Salable findEquivalentProduct(Salable newProduct) {
         synchronized (products) {
-            for (Salable existingProduct : products.keySet()) {
-                if (areProductsEquivalent(existingProduct, newProduct)) {
-                    return existingProduct;
+            for (Map.Entry<Salable, Integer> salableIntegerEntry : products.entrySet()) {
+                if (areProductsEquivalent(salableIntegerEntry.getKey(), newProduct)) {
+                    return salableIntegerEntry.getKey();
                 }
             }
         }
@@ -126,7 +116,7 @@ public class BackPack implements JsonPreparable {
 
                 if (field.getType().equals(ProductQuality.class)) {
                     hasProductQualityField = true;
-                    productQualityMatches = (value1 == value2);
+                    productQualityMatches = Objects.equals(value1, value2);
                 } else if (!Objects.equals(value1, value2)) {
                     return false;
                 }
@@ -138,7 +128,6 @@ public class BackPack implements JsonPreparable {
                     return level2 == level1;
                 }
             }
-
             return !hasProductQualityField || productQualityMatches;
         } catch (IllegalAccessException e) {
             throw new RuntimeException("Failed to compare products", e);

@@ -878,17 +878,17 @@ public class GameClient {
     }
 
     public void updatePlayerJustDeleteFromInventory(Player player, Salable salable, int amount) {
-        try {
-            Map<String, Object> msg = Map.of(
-                "action", "=update_player_just_delete_from_inventory",
-                "id", player.getUser().getUsername(),
-                "amount", amount,
-                "body", encodeObject(salable)
-            );
-            jsonMessageHandler.send(GSON.toJson(msg));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            Map<String, Object> msg = Map.of(
+//                "action", "=update_player_just_delete_from_inventory",
+//                "id", player.getUser().getUsername(),
+//                "amount", amount,
+//                "body", encodeObject(salable)
+//            );
+//            jsonMessageHandler.send(GSON.toJson(msg));
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
 
     public void updatePlayerCarryingObject(Player player) {
