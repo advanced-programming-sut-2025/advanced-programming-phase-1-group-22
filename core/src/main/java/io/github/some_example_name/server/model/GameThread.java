@@ -3,6 +3,7 @@ package io.github.some_example_name.server.model;
 import io.github.some_example_name.common.model.Lobby;
 import io.github.some_example_name.common.utils.App;
 import io.github.some_example_name.server.ClientHandler;
+import io.github.some_example_name.server.saveGame.GameSaver;
 import lombok.Getter;
 
 import java.io.IOException;
@@ -10,6 +11,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Getter
@@ -19,8 +21,13 @@ public class GameThread extends Thread {
     private final HashMap<Integer, GameServer> games = new HashMap<>();
     private final Map<String, ClientHandler> connections = new HashMap<>();
     private final Map<String, Long> lastConnections = Collections.synchronizedMap(new HashMap<>());
+    private final Map<String, Long> readyPlayersForLoad = new HashMap<>();
 
     private GameThread() {
+        loadSavedLobbies();
+        for (Lobby lobby : App.getInstance().getLobbies()) {
+            lobby.setLastTimeNoPlayer(System.currentTimeMillis());
+        }
     }
 
     public static GameThread getInstance() {
@@ -30,28 +37,25 @@ public class GameThread extends Thread {
         return instance;
     }
 
-    public GameServer getGameServer(long id) {
-        for (Lobby lobby : App.getInstance().getLobbies()) {
-            if (lobby.getId() == id) {
-                if (lobby.getGameServer() == null) {
-                    lobby.setGameServer(new GameServer());
+    public GameServer getGameServerForStart(long id) {
+        synchronized (App.getInstance().getLobbies()) {
+            for (Lobby lobby : App.getInstance().getLobbies()) {
+                if (lobby.getId() == id) {
+                    if (lobby.getGameServer() == null) {
+                        lobby.setGameServer(new GameServer());
+                    } else if (lobby.isGameServerSaved()) {
+                        lobby.setGameServer(new GameServer());
+                        lobby.setGameServerSaved(false);
+                    }
+                    return lobby.getGameServer();
                 }
-                return lobby.getGameServer();
             }
+            return null;
         }
-        return null;
-    }
-
-    public void addGameServer(Integer id, GameServer gameServer) {
-        games.put(id, gameServer);
-    }
-
-    public boolean haveGame(Integer id) {
-        return games.containsKey(id);
     }
 
     @Override
-    public void start() {
+    public void run() {
         try (ServerSocket serverSocket = new ServerSocket(PORT)) {
             while (true) {
                 Socket clientSocket = serverSocket.accept();
@@ -61,6 +65,14 @@ public class GameThread extends Thread {
             }
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void loadSavedLobbies() {
+        try {
+            List<Lobby> lobbies = GameSaver.loadLobbies("games.json");
+            App.getInstance().getLobbies().addAll(lobbies);
+        } catch (IOException ignored) {
         }
     }
 
@@ -76,6 +88,17 @@ public class GameThread extends Thread {
     public void sendAllBut(String message, String username) {
         for (Map.Entry<String, ClientHandler> stringClientHandlerEntry : connections.entrySet()) {
             if (!stringClientHandlerEntry.getKey().equals(username)) {
+                try {
+                    stringClientHandlerEntry.getValue().send(message);
+                } catch (IOException ignored) {
+                }
+            }
+        }
+    }
+
+    public void sentTo(String message, String username) {
+        for (Map.Entry<String, ClientHandler> stringClientHandlerEntry : connections.entrySet()) {
+            if (stringClientHandlerEntry.getKey().equals(username)) {
                 try {
                     stringClientHandlerEntry.getValue().send(message);
                 } catch (IOException ignored) {

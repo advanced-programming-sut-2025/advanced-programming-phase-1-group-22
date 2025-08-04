@@ -12,6 +12,7 @@ import lombok.Getter;
 public class StartGameMenu extends PreGameMenu {
     private final TextButton enterGameButton;
     private final TextButton wait;
+    private final TextButton back;
     private final SelectBox<String> farmSelection;
     private final SelectBox<String> playerSelection;
     private final Integer state;
@@ -23,6 +24,7 @@ public class StartGameMenu extends PreGameMenu {
         this.controller = StartGameMenuController.getInstance();
         this.enterGameButton = new TextButton("Enter!", skin);
         this.wait = new TextButton("Wait for server response!", skin);
+        this.back = new TextButton("Back", skin);
         farmSelection = new SelectBox<>(skin);
         Array<String> farmNames = new Array<>();
         for (FarmType value : FarmType.values()) {
@@ -53,8 +55,15 @@ public class StartGameMenu extends PreGameMenu {
                 table.add(enterGameButton).width(600);
             }
             break;
-            case 2:
+            case 2: {
                 table.add(wait).width(900);
+            }
+            break;
+            case 3: {
+                table.add(wait).width(400);
+                table.add(back).width(400);
+            }
+            break;
         }
     }
 

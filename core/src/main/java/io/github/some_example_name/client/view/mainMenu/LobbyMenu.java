@@ -230,6 +230,15 @@ public class LobbyMenu extends Menu {
                     }
                 });
                 detailDialog.getContentTable().add(reConnectToGame).width(400).padTop(5).row();
+                TextButton load = new TextButton("load Game", skin);
+                load.addListener(new ClickListener() {
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        loadGame(lobby);
+                        detailDialog.hide();
+                    }
+                });
+                detailDialog.getContentTable().add(load).width(400).padTop(5).row();
             }
         }
 
@@ -305,8 +314,7 @@ public class LobbyMenu extends Menu {
     }
 
     private void reconnect(Lobby lobby) {
-        if (lobby.getGameServer() != null) {
-            lobby.setGameStart(true);
+        if (lobby.getGameServer() != null && lobby.isGameStart()) {
             App.getInstance().setCurrentLobby(lobby);
             InitialGame initialGame = new InitialGame();
             initialGame.initial();
@@ -314,6 +322,16 @@ public class LobbyMenu extends Menu {
             GameClient.getInstance().DCReconnect(Session.getCurrentUser().getUsername());
         } else {
             alert("there is no alive game!", 5);
+        }
+    }
+
+    private void loadGame(Lobby lobby) {
+        if (lobby.getGameServer() != null && lobby.isGameServerSaved()) {
+            App.getInstance().setCurrentLobby(lobby);
+            GameClient.getInstance().readyForLoadGame(lobby);
+            setScreen(new StartGameMenu(skin, 3));
+        } else {
+            alert("there is no saved game!", 5);
         }
     }
 

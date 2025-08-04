@@ -142,16 +142,7 @@ public class GameServer {
             "body", Map.of()
         );
         sendAll(GSON.toJson(msg));
-        for (Entry<ServerPlayer, ClientHandler> client : clients) {
-            client.getValue().setRunning(false);
-        }
         clients.clear();
-        for (Map.Entry<Integer, GameServer> entry : GameThread.getInstance().getGames().entrySet()) {
-            if (entry.getValue() == this) {
-                GameThread.getInstance().getGames().remove(entry.getKey());
-                break;
-            }
-        }
     }
 
     public void addDialog(String npc, String events) {
@@ -175,14 +166,14 @@ public class GameServer {
             String model = "mistralai/mistral-7b-instruct";
             String iAm = "Talk as you want to talk to an friend but very short and sound";
             String requestBody = """
-               {
-                  "model": "%s",
-                  "messages": [
-                      {"role": "system", "content": "%s"},
-                      {"role": "user", "content": "%s"}
-                  ]
-               }
-               """.formatted(model, finalEvent, iAm);
+                {
+                   "model": "%s",
+                   "messages": [
+                       {"role": "system", "content": "%s"},
+                       {"role": "user", "content": "%s"}
+                   ]
+                }
+                """.formatted(model, finalEvent, iAm);
             JsonObject obj = null;
             try {
                 InputStream responseStream = getInputStream(requestBody);
@@ -206,6 +197,7 @@ public class GameServer {
             }
         }).start();
     }
+
     private static InputStream getInputStream(String requestBody) throws IOException {
         HttpURLConnection connection = (HttpURLConnection) new URL(ServerConfig.API_URL).openConnection();
         connection.setRequestMethod("POST");

@@ -60,19 +60,16 @@ public class GameService {
     }
 
     public Response exitGame() {
-        if (!app.getCurrentGame().getCurrentPlayer().getUser().getUsername().equals(Session.getCurrentUser().getUsername())) {
+        if (!App.getInstance().getCurrentGame().getCurrentPlayer().getUser().getUsername().equals(App.getInstance().getCurrentLobby().getAdmin())) {
             return new Response("You are not allowed to exit; the player who has started the game can" +
                 " end it");
         }
-        String filePath = Session.getCurrentUser().getUsername();
-        filePath += ".bin";
-        GameSerializer.saveGame(App.getInstance().getCurrentGame(), filePath);
         for (Player player : App.getInstance().getCurrentGame().getPlayers()) {
             User user = player.getUser();
-            user.setIsPlaying(filePath);
+            user.setIsPlaying("games.json");
             userRepository.save(player.getUser());
         }
-        Session.getCurrentUser().setIsPlaying(filePath);
+        Session.getCurrentUser().setIsPlaying("games.json");
         return new Response("Exited from game.", true);
     }
 
