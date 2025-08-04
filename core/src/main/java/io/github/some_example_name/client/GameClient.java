@@ -44,7 +44,8 @@ public class GameClient {
     private P2PConnection p2PConnection;
     private P2PReceiving p2PReceiving;
     private JsonMessageHandler jsonMessageHandler;
-    private final Timer timer = new Timer();
+    private Timer gameTimer;
+    private Timer userTimer;
     private final ClientService service = new ClientService();
     private final AtomicReference<TerminateMenu> terminateMenu = new AtomicReference<>();
     private final AtomicReference<FireMenu> fireMenu = new AtomicReference<>();
@@ -99,7 +100,11 @@ public class GameClient {
             );
 
             jsonMessageHandler.send(GSON.toJson(msg));
-            timer.scheduleAtFixedRate(new TimerTask() {
+            if (gameTimer != null) {
+                gameTimer.cancel();
+            }
+            gameTimer = new Timer();
+            gameTimer.scheduleAtFixedRate(new TimerTask() {
                 @Override
                 public void run() {
                     pingMassage();
@@ -136,7 +141,10 @@ public class GameClient {
             );
 
             jsonMessageHandler.send(GSON.toJson(msg));
-            Timer userTimer = new Timer();
+            if (userTimer != null) {
+                userTimer.cancel();
+            }
+            userTimer = new Timer();
             userTimer.scheduleAtFixedRate(new TimerTask() {
                 @Override
                 public void run() {
@@ -158,7 +166,11 @@ public class GameClient {
             );
 
             jsonMessageHandler.send(GSON.toJson(msg));
-            timer.scheduleAtFixedRate(new TimerTask() {
+            if (gameTimer != null) {
+                gameTimer.cancel();
+            }
+            gameTimer = new Timer();
+            gameTimer.scheduleAtFixedRate(new TimerTask() {
                 @Override
                 public void run() {
                     pingMassage();
@@ -258,6 +270,22 @@ public class GameClient {
             msg.put("id", Session.getCurrentUser().getUsername());
             msg.put("lobby_id", id);
 
+            jsonMessageHandler.send(GSON.toJson(msg));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void logout() {
+        try {
+            Map<String, Object> msg = new HashMap<>();
+            msg.put("action", "logout");
+            msg.put("id", Session.getCurrentUser().getUsername());
+
+            if (userTimer != null) {
+                userTimer.cancel();
+                userTimer.purge();
+            }
             jsonMessageHandler.send(GSON.toJson(msg));
         } catch (Exception e) {
             e.printStackTrace();
@@ -414,6 +442,9 @@ public class GameClient {
                             App.getInstance().getCurrentLobby().setGameServer(null);
                             App.getInstance().getCurrentLobby().setGameStart(false);
                             App.getInstance().getCurrentLobby().setGameServerSaved(false);
+                            if (gameTimer != null) {
+                                gameTimer.cancel();
+                            }
                             synchronized (terminateMenu) {
                                 terminateMenu.get().terminate();
                             }
@@ -622,6 +653,9 @@ public class GameClient {
                             GameService.getInstance().finalTermination();
                             App.getInstance().getCurrentLobby().setGameStart(false);
                             App.getInstance().getCurrentLobby().setGameServerSaved(true);
+                            if (gameTimer != null) {
+                                gameTimer.cancel();
+                            }
                             Gdx.app.postRunnable(() -> {
                                 MainGradle.getInstance().getScreen().dispose();
                                 MainGradle.getInstance().setScreen(new LobbyMenu(GameAsset.SKIN_MENU));
@@ -681,6 +715,9 @@ public class GameClient {
                             GameService.getInstance().finalTermination();
                             App.getInstance().getCurrentLobby().setGameStart(false);
                             App.getInstance().getCurrentLobby().setGameServerSaved(true);
+                            if (gameTimer != null) {
+                                gameTimer.cancel();
+                            }
                             Gdx.app.postRunnable(() -> {
                                 MainGradle.getInstance().getScreen().dispose();
                                 MainGradle.getInstance().setScreen(new LobbyMenu(GameAsset.SKIN_MENU));

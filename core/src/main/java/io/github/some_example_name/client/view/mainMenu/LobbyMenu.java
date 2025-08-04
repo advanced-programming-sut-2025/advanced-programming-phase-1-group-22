@@ -92,7 +92,7 @@ public class LobbyMenu extends Menu {
                 .stream().sorted(Map.Entry.comparingByKey()).toList();
             for (Map.Entry<String, List<String>> entry : users) {
                 this.users.add(new Label(entry.getKey(), skin)).width(185).padRight(30);
-                this.users.add(new Label(entry.getValue().isEmpty() ? "<LobbyLess>" : entry.getValue().getLast(), skin)).width(185);
+                this.users.add(new Label(entry.getValue().isEmpty() ? "<LobbyLess>" : entry.getValue().get(entry.getValue().size() - 1), skin)).width(185);
                 this.users.row();
             }
         }
