@@ -87,11 +87,6 @@ public class CheatCodeMenuController {
         return gameService.showAnimals();
     }
 
-    public Response craftInfo(String[] params) {
-        String name = params[0].trim();
-        return gameService.craftInfo(name);
-    }
-
     public Response showPlant(String[] params) {
         int x = Integer.parseInt(params[0]);
         int y = Integer.parseInt(params[1]);

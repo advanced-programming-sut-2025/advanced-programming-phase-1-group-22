@@ -28,7 +28,6 @@ public class GameCheatCommands extends CommandClass {
     public static final GameCheatCommands CHEAT_SET_FRIENDSHIP_WITH_ANIMAL = new GameCheatCommands("^\\s*cheat\\s+set\\s+friendship\\s+-n\\s+(?<name>.+)\\s+-c\\s+" +
         "(?<count>\\d+)\\s*$");
     public static final GameCheatCommands SHOW_ANIMALS = new GameCheatCommands("^\\s*animals\\s*$");
-    public static final GameCheatCommands CRAFT_INFO = new GameCheatCommands("^\\s*craft\\s+info\\s+-n\\s+(?<craftName>.+)\\s*$");
     public static final GameCheatCommands SHOW_PLANT = new GameCheatCommands("^\\s*showplant\\s+-l\\s+(?<X>\\d+)\\s*,\\s*(?<Y>\\d+)\\s*$");
     public static final GameCheatCommands CHANGE_FRIENDSHIP = new GameCheatCommands("change\\s+friendship\\s+(.*)");
     public static final GameCheatCommands IS_CROW_ATTACK = new GameCheatCommands("is\\s+crow\\s+attack");

@@ -35,7 +35,6 @@ public class CheatCodeMenu implements CommandProcessor {
         commandsFunctionMap.put(SHOW_ENERGY, controller::showPlayerEnergy);
         commandsFunctionMap.put(SET_ENERGY_UNLIMITED, controller::setPlayerUnlimitedEnergy);
         commandsFunctionMap.put(ENERGY_SET, controller::setPlayerEnergy);
-        commandsFunctionMap.put(CRAFT_INFO, controller::craftInfo);
         commandsFunctionMap.put(SHOW_PLANT, controller::showPlant);
         commandsFunctionMap.put(C_AddItem, controller::C_AddItem);
         commandsFunctionMap.put(CHEAT_SET_FRIENDSHIP_WITH_ANIMAL, controller::setFriendship);

@@ -493,14 +493,6 @@ public class GameService {
         return new Response(collectProduce(currentAnimal, currentPlayer), true);
     }
 
-    public Response craftInfo(String name) {
-        Harvestable harvestableType = getHarvestableType(name);
-        if (harvestableType == null) {
-            return new Response("there is no harvestable with this name");
-        }
-        return new Response(harvestableType.craftInfo(), true);
-    }
-
     public Response plantSeed(String name, Tile currentTile) {
         Player currentPlayer = getCurrentPlayer();
         if (currentTile.getIsFilled()) {
