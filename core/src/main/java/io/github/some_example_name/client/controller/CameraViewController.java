@@ -369,6 +369,7 @@ public class CameraViewController {
             }
             if (Gdx.input.isKeyJustPressed(Input.Keys.GRAVE)) {
                 player.setCurrentCarrying(null);
+                GameClient.getInstance().updatePlayerCarryingObject(player);
                 currentToolIndex = -1;
 
             }

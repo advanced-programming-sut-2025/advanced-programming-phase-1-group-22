@@ -599,7 +599,7 @@ public class GameClient {
                             service.handleDeleteStructure(tiles);
                         } else if (obj.get("action").getAsString().equals("=update_player_carrying")) {
                             String username = obj.get("id").getAsString();
-                            Object carrying = decodeObject(body);
+                            Object carrying = body.isEmpty() ? null : decodeObject(body);
                             service.handleCurrentCarrying((Salable) carrying, username);
                         } else if (obj.get("action").getAsString().equals("=update_farm_crow_attack")) {
                             String farmType = obj.get("farmType").getAsString();
@@ -896,7 +896,8 @@ public class GameClient {
             Map<String, Object> msg = Map.of(
                 "action", "=update_player_carrying",
                 "id", player.getUser().getUsername(),
-                "body", encodeObject(player.getCurrentCarrying())
+                "body", player.getCurrentCarrying() == null ? Map.of() :
+                    encodeObject(player.getCurrentCarrying())
             );
             jsonMessageHandler.send(GSON.toJson(msg));
         } catch (IOException e) {

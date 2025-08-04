@@ -52,7 +52,6 @@ public class MainGradle extends Game {
         font = new BitmapFont();
         initialMenu();
         {//todo delete hardcode
-            /*
             if (App.PORT == 5001) {
                 if (screen != null) screen.dispose();
                 LoginMenu loginMenu = new LoginMenu(GameAsset.SKIN_MENU);
@@ -60,7 +59,7 @@ public class MainGradle extends Game {
                 loginMenu.getUsername().setText("Roham1234");
                 loginMenu.getPassword().setText("pass");
                 if (loginMenu.getController().login()) {
-                    GameClient.getInstance().loggedIn();
+                    GameClient.getInstance().loggedIn(false, "");
                     screen.dispose();
                     LobbyMenu lobbyMenu = new LobbyMenu(GameAsset.SKIN_MENU);
                     MainGradle.getInstance().setScreen(lobbyMenu);
@@ -78,12 +77,12 @@ public class MainGradle extends Game {
                 loginMenu.getUsername().setText("Clara1234");
                 loginMenu.getPassword().setText("noPass");
                 if (loginMenu.getController().login()) {
-                    GameClient.getInstance().loggedIn();
+                    GameClient.getInstance().loggedIn(false, "");
                     screen.dispose();
                     LobbyMenu lobbyMenu = new LobbyMenu(GameAsset.SKIN_MENU);
                     MainGradle.getInstance().setScreen(lobbyMenu);
                 }
-            }*/
+            }
         }
     }
 
