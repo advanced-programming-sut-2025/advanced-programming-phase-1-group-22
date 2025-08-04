@@ -1,5 +1,6 @@
 package io.github.some_example_name.common.model.source;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import io.github.some_example_name.common.utils.App;
 import io.github.some_example_name.common.utils.GameAsset;
@@ -15,9 +16,11 @@ import io.github.some_example_name.common.model.structure.Structure;
 public class MixedSeeds extends Structure implements Salable {
     private MixedSeedsType mixedSeedsType;
     private transient Sprite sprite;
+    private transient Texture texture;
 
     public MixedSeeds(MixedSeedsType mixedSeedsType) {
         this.mixedSeedsType = mixedSeedsType;
+        this.texture = GameAsset.MIXED_SEEDS;
     }
 
     @Override
@@ -31,7 +34,9 @@ public class MixedSeeds extends Structure implements Salable {
     }
 
     @Override
-    public Integer getContainingEnergy() {return 0;}
+    public Integer getContainingEnergy() {
+        return 0;
+    }
 
     @Override
     public MixedSeeds copy() {
@@ -41,7 +46,7 @@ public class MixedSeeds extends Structure implements Salable {
     public Sprite getSprite() {
         if (sprite == null) {
             this.sprite = new Sprite(GameAsset.MIXED_SEEDS);
-            this.sprite.setSize(App.tileWidth/2f,App.tileHeight/2f);
+            this.sprite.setSize(App.tileWidth / 2f, App.tileHeight / 2f);
         }
         return sprite;
     }

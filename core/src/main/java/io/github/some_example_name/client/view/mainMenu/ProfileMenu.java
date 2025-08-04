@@ -17,6 +17,7 @@ public class ProfileMenu extends Menu {
     private final User user = Session.getCurrentUser();
     private final Label username;
     private final Label nickname;
+    private final Label email;
     private final Label highestMoneyEarned;
     private final Label numberOfPlayedGames;
     private Runnable updateLabels;
@@ -35,6 +36,7 @@ public class ProfileMenu extends Menu {
         this.back = new TextButton("Back", skin);
         this.username = new Label("Username: " + user.getUsername(), skin);
         this.nickname = new Label("Nickname: " + user.getNickname(), skin);
+        this.email = new Label("email: " + user.getEmail(), skin);
         this.highestMoneyEarned = new Label("Highest Money Earn: " + user.getHighestMoneyEarned(), skin);
         this.numberOfPlayedGames = new Label("Number Of Played Games: " + user.getNumberOfPlayedGames(), skin);
     }
@@ -43,6 +45,7 @@ public class ProfileMenu extends Menu {
     protected void showStage() {
         table.add(username).row();
         table.add(nickname).row();
+        table.add(email).row();
         table.add(highestMoneyEarned).row();
         table.add(numberOfPlayedGames).row();
         this.changeUsername.addListener(new ClickListener() {
