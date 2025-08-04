@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Timer;
 import io.github.some_example_name.client.MainGradle;
+import io.github.some_example_name.client.view.FishActor;
 import io.github.some_example_name.common.model.*;
 import io.github.some_example_name.common.model.animal.Animal;
 import io.github.some_example_name.common.model.craft.Craft;
@@ -266,8 +267,8 @@ public class WorldController {
             structure.getTiles().get(0).getY() * App.tileHeight);
         int width = structure.getWidth() == null ? 1 : structure.getWidth();
         int height = structure.getHeight() == null ? 1 : structure.getHeight();
-        sprite.setPosition((width/2f + structure.getTiles().get(0).getX()) * App.tileWidth - sprite.getWidth()/2,
-            (height/2f + structure.getTiles().get(0).getY()) * App.tileHeight - sprite.getHeight()/2 );
+        sprite.setPosition((width / 2f + structure.getTiles().get(0).getX()) * App.tileWidth - sprite.getWidth() / 2,
+            (height / 2f + structure.getTiles().get(0).getY()) * App.tileHeight - sprite.getHeight() / 2);
         sprite.draw(MainGradle.getInstance().getBatch());
         if (sprite instanceof AnimatedSprite animatedSprite) {
             animatedSprite.update(delta);
@@ -326,6 +327,14 @@ public class WorldController {
                                 structure.getSprite().setPosition(tile.getX() * App.tileWidth,
                                     tile.getY() * App.tileHeight);
                                 structure.getSprite().draw(MainGradle.getInstance().getBatch());
+                                if (!lake.isFishAdded()) {
+                                    for (int i = 0; i < 5; i++) {
+                                        float randomX = lake.getTiles().get(0).getX() * App.tileWidth + (float) Math.random() * lake.getWidth() * App.tileWidth;
+                                        float randomY = lake.getTiles().get(0).getY() * App.tileHeight + (float) Math.random() * lake.getHeight() * App.tileHeight;
+                                        GameView.stage.addActor(new FishActor(lake, randomX, randomY));
+                                    }
+                                    lake.setFishAdded(true);
+                                }
                                 /*
                                 boolean f0 = !structure.getTiles().contains(currentGame.getTiles()[tile.getX()][tile.getY() + 1]);
                                 boolean f1 = !structure.getTiles().contains(currentGame.getTiles()[tile.getX() + 1][tile.getY()]);
@@ -421,7 +430,7 @@ public class WorldController {
 
     public void drawFlower(Direction direction, Player requester) {
         flower = new SpriteHolder(new AnimatedSprite(
-            new Animation<>(0.1f, new TextureRegion(GameAsset.FLOWER))), new Tuple<>(0.5f,0f));
+            new Animation<>(0.1f, new TextureRegion(GameAsset.FLOWER))), new Tuple<>(0.5f, 0f));
         flower.getSprite().setScale(0.4f);
         ((AnimatedSprite) flower.getSprite()).setLooping(false);
         flower.getSprite().setPosition(
@@ -440,8 +449,8 @@ public class WorldController {
         heart = new SpriteHolder(new AnimatedSprite(new Animation<>(0.15f, GameAsset.BEATING_HEARTS[0][4],
             GameAsset.BEATING_HEARTS[0][3], GameAsset.BEATING_HEARTS[0][2], GameAsset.BEATING_HEARTS[0][1],
             GameAsset.BEATING_HEARTS[0][0], GameAsset.BEATING_HEARTS[0][1], GameAsset.BEATING_HEARTS[0][2],
-            GameAsset.BEATING_HEARTS[0][3])), new Tuple<>(0f,0f));
-        heart.getSprite().setSize(App.tileWidth/2f, App.tileHeight/2f);
+            GameAsset.BEATING_HEARTS[0][3])), new Tuple<>(0f, 0f));
+        heart.getSprite().setSize(App.tileWidth / 2f, App.tileHeight / 2f);
         Animation<Float> scale = new Animation<>(0.1f, 0.3f, 0.4f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f, 0.9f, 1f);
         ((AnimatedSprite) heart.getSprite()).setScaleAnimation(scale);
         ((AnimatedSprite) heart.getSprite()).setScaleLooping(false);

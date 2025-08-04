@@ -25,7 +25,7 @@ public enum FarmType {
         this.width = width;
     }
 
-    public static FarmType getFromName(String name){
+    public static FarmType getFromName(String name) {
         for (FarmType value : FarmType.values()) {
             if (value.name.equals(name)) return value;
         }
@@ -57,6 +57,8 @@ public enum FarmType {
         for (int i = 10; i < 18; i++) {
             for (int j = 10; j < 20; j++) {
                 lake.getTilePairList().add(new Pair(i, j));
+                lake.setWidth(8);
+                lake.setHeight(10);
             }
         }
         structures.addAll(List.of(cottage, shippingBin, quarry, greenHouse, lake));
@@ -83,6 +85,8 @@ public enum FarmType {
         for (int i = 4; i < 14; i++) {
             for (int j = 4; j < 24; j++) {
                 lake.getTilePairList().add(new Pair(i, j));
+                lake.setWidth(10);
+                lake.setHeight(20);
             }
         }
         structures.addAll(List.of(cottage, shippingBin, quarry, greenHouse, lake));
@@ -101,6 +105,8 @@ public enum FarmType {
         for (int i = 26; i < 37; i++) {
             for (int j = 14; j < 20; j++) {
                 lake.getTilePairList().add(new Pair(i, j));
+                lake.setWidth(11);
+                lake.setHeight(6);
             }
         }
         structures.addAll(List.of(cottage, shippingBin, quarry, greenHouse, lake));
@@ -119,6 +125,8 @@ public enum FarmType {
         for (int i = 3; i < 7; i++) {
             for (int j = 37; j < 42; j++) {
                 lake.getTilePairList().add(new Pair(i, j));
+                lake.setWidth(4);
+                lake.setHeight(7);
             }
         }
         structures.addAll(List.of(cottage, shippingBin, quarry, greenHouse, lake));
@@ -135,6 +143,8 @@ public enum FarmType {
         setTilePairs(greenHouse, new Pair(16, 18));
         setTilePairs(quarry, new Pair(2, 16));
         lake.getTilePairList().addAll(List.of(new Pair(16, 15), new Pair(16, 14)));
+        lake.setWidth(1);
+        lake.setHeight(2);
         structures.addAll(List.of(cottage, shippingBin, quarry, greenHouse, lake));
     }
 
