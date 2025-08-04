@@ -1,6 +1,7 @@
 package io.github.some_example_name.client.view.mainMenu;
 
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -10,6 +11,7 @@ import io.github.some_example_name.common.variables.Session;
 
 public class MainMenu extends Menu {
     private final MainMenuController controller = new MainMenuController(this);
+    private final Label nickname;
     private final TextButton profileMenu;
     private final TextButton lobbyMenu;
     private final TextButton logout;
@@ -18,6 +20,7 @@ public class MainMenu extends Menu {
     public MainMenu(Skin skin) {
         super(skin);
         this.title.setText("Main Menu");
+        this.nickname = new Label("nickname: " + Session.getCurrentUser().getNickname(), skin);
         this.profileMenu = new TextButton("Profile Menu", skin);
         this.lobbyMenu = new TextButton("Lobby Menu", skin);
         this.logout = new TextButton("Logout", skin);
@@ -26,6 +29,7 @@ public class MainMenu extends Menu {
 
     @Override
     protected void showStage() {
+        table.add(nickname).row();
         this.profileMenu.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {

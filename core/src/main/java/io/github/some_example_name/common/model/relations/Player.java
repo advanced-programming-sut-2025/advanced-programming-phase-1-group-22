@@ -37,17 +37,17 @@ import java.util.*;
 @Getter
 @Setter
 public class Player extends Actor implements JsonPreparable {
-	private Integer id;
-	private User user;
-	private Integer energy;
-	private Integer maxEnergy;
+    private Integer id;
+    private User user;
+    private Integer energy;
+    private Integer maxEnergy;
     private Boolean dead = false;
     private Integer numberOfCompleteMission = 0;
     private Boolean energyIsInfinite = false;
-	private Integer daysOfSadness = 0;
-	private BackPack inventory;
-	private Buff buff;
-	private Ability buffAbility;
+    private Integer daysOfSadness = 0;
+    private BackPack inventory;
+    private Buff buff;
+    private Ability buffAbility;
     private Direction direction = Direction.SOUTH;
     private boolean dirChanged = false;
     private int isLazy = 0;
@@ -96,7 +96,7 @@ public class Player extends Actor implements JsonPreparable {
         this.user = user;
         this.energy = 200;
         this.maxEnergy = 200;
-        this.inventory = new BackPack(BackPackType.NORMAL_BACKPACK);
+        this.inventory = new BackPack(BackPackType.DELUXE_BACKPACK);
         for (Ability ability : Ability.values()) {
             abilities.put(ability, 0);
         }
@@ -186,7 +186,7 @@ public class Player extends Actor implements JsonPreparable {
         throw new InvalidInputException("abilityType is invalid");
     }
 
-    public int getAverageAbilityLevel(){
+    public int getAverageAbilityLevel() {
         int sum = 0;
         for (Map.Entry<Ability, Integer> abilityIntegerEntry : abilities.entrySet()) {
             sum += getAbilityLevel(abilityIntegerEntry.getKey());
@@ -197,11 +197,11 @@ public class Player extends Actor implements JsonPreparable {
     public void upgradeAbility(Ability ability) {
         int oldValue = this.getAbilities().get(ability);
         this.getAbilities().put(ability, oldValue + ability.getUpgradeAbility());
-        GameClient.getInstance().updatePlayerSkill(this,ability);
+        GameClient.getInstance().updatePlayerSkill(this, ability);
         if (ability.equals(Ability.MINING) && this.getAbilities().get(Ability.MINING) >= 2) {
             Salable salable = generateRandomElement();
             this.getInventory().addProductToBackPack(salable, 1);
-            GameClient.getInstance().updatePlayerAddToInventory(App.getInstance().getCurrentGame().getCurrentPlayer(),salable,1);
+            GameClient.getInstance().updatePlayerAddToInventory(App.getInstance().getCurrentGame().getCurrentPlayer(), salable, 1);
         }
     }
 
@@ -247,7 +247,7 @@ public class Player extends Actor implements JsonPreparable {
     }
 
     public Map.Entry<Salable, Integer> getItemFromInventory(String name) {
-        synchronized (this.getInventory().getProducts()){
+        synchronized (this.getInventory().getProducts()) {
             for (Map.Entry<Salable, Integer> salableIntegerEntry : this.getInventory().getProducts().entrySet()) {
                 if (salableIntegerEntry.getKey().getName().equals(name)) {
                     return salableIntegerEntry;
