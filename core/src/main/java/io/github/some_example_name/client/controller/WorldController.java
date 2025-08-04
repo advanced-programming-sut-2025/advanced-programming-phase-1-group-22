@@ -47,8 +47,10 @@ public class WorldController {
     private ArrayList<SpriteContainer> storms = new ArrayList<>();
     private ArrayList<Sprite> snowDrops = new ArrayList<>();
     private SpriteHolder flower;
+    private SpriteHolder gift;
     private SpriteHolder heart;
     private Direction flowerDirection;
+    private Direction giftDirection;
     float delta = 0f;
     private final OrthographicCamera camera = MainGradle.getInstance().getCamera();
 
@@ -395,6 +397,11 @@ public class WorldController {
             flower.getSprite().setY(flower.getSprite().getY() + flowerDirection.getYTransmit() * App.tileHeight * delta / 4);
             flower.getSprite().draw(MainGradle.getInstance().getBatch());
         }
+        if (gift != null) {
+            gift.getSprite().setX(gift.getSprite().getX() + giftDirection.getXTransmit() * App.tileWidth * delta / 4);
+            gift.getSprite().setY(gift.getSprite().getY() + giftDirection.getYTransmit() * App.tileHeight * delta / 4);
+            gift.getSprite().draw(MainGradle.getInstance().getBatch());
+        }
         if (heart != null) {
             heart.getSprite().setY(heart.getSprite().getY() + App.tileHeight * delta / 5);
             heart.getSprite().draw(MainGradle.getInstance().getBatch());
@@ -443,6 +450,23 @@ public class WorldController {
                 flower = null;
             }
         }, 2);
+    }
+
+    public void drawGift(Direction direction, Player requester) {
+        gift = new SpriteHolder(new AnimatedSprite(
+            new Animation<>(0.1f, new TextureRegion(GameAsset.GIFT))), new Tuple<>(0.5f, 0f));
+        gift.getSprite().setScale(0.4f);
+        ((AnimatedSprite) gift.getSprite()).setLooping(false);
+        gift.getSprite().setPosition(
+            (gift.getOffset().getX() + requester.getTiles().get(0).getX()) * App.tileWidth,
+            (gift.getOffset().getY() + requester.getTiles().get(0).getY()) * App.tileHeight);
+        giftDirection = direction;
+        Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+                gift = null;
+            }
+        }, 8);
     }
 
     public void drawHeart(Player player) {

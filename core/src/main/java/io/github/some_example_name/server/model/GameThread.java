@@ -74,7 +74,9 @@ public class GameThread extends Thread {
     private void loadSavedLobbies() {
         try {
             List<Lobby> lobbies = GameSaver.loadLobbies("games.json");
-            App.getInstance().getLobbies().addAll(lobbies);
+            if (lobbies != null) {
+                App.getInstance().getLobbies().addAll(lobbies);
+            }
         } catch (IOException ignored) {
         }
     }
