@@ -3,8 +3,10 @@ package io.github.some_example_name.client.controller;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.Timer;
 import io.github.some_example_name.client.GameClient;
 import io.github.some_example_name.client.MainGradle;
 import io.github.some_example_name.common.model.Direction;
@@ -22,9 +24,12 @@ import io.github.some_example_name.server.service.GameService;
 import io.github.some_example_name.common.utils.App;
 import io.github.some_example_name.client.view.GameView;
 
+import java.util.TimerTask;
+
 public class CarryingController {
     private final GameService gameService = new GameService();
     private final WorldController worldController = WorldController.getInstance();
+    private boolean isEating = false;
 
     public void update() {
         for (Player player : App.getInstance().getCurrentGame().getPlayers()) {
@@ -40,8 +45,10 @@ public class CarryingController {
                 }
                 if (sprite != null) {
                     sprite.draw(MainGradle.getInstance().getBatch());
-                    sprite.setPosition(player.getTiles().get(0).getX() * App.tileWidth,
-                        player.getTiles().get(0).getY() * App.tileHeight);
+                    if (!isEating) {
+                        sprite.setPosition(player.getTiles().get(0).getX() * App.tileWidth,
+                            player.getTiles().get(0).getY() * App.tileHeight);
+                    }
                 }
             }
         }
@@ -55,6 +62,7 @@ public class CarryingController {
 
     private void handleInput(Salable carrying) {
         Player currentPlayer = App.getInstance().getCurrentGame().getCurrentPlayer();
+        if (currentPlayer.getCurrentCarrying() == null) return;
         Vector3 mouse = new Vector3(GameView.screenX, GameView.screenY, 0);
         MainGradle.getInstance().getCamera().unproject(mouse);
         Vector2 mouseWorld = new Vector2(mouse.x, mouse.y);
@@ -72,6 +80,59 @@ public class CarryingController {
                 if (dy <= 1 && dx <= 1) placeItem(carrying, dx, dy);
             }
         }
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.Z)) {
+            int a = 5;
+        }
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.X)) {
+            Response eat = gameService.eat(carrying.getName());
+            if (eat.shouldBeBack()) {
+                handleEating();
+            } else {
+                worldController.showResponse(eat);
+            }
+        }
+    }
+
+    private void handleEating() {
+        GameView.captureInput = false;
+        isEating = true;
+        Player player = App.getInstance().getCurrentGame().getCurrentPlayer();
+        Salable carrying = player.getCurrentCarrying();
+        int width = 24;
+        int height = 24;
+
+        for (int i = 0; i < 4; i++) {
+            Timer.schedule(new Timer.Task() {
+                @Override
+                public void run() {
+                    carrying.getSprite().setY(carrying.getSprite().getY() + 0.08f * App.tileHeight);
+                    carrying.getSprite().setX(carrying.getSprite().getX() + 0.08f * App.tileWidth);
+                }
+            }, 0.2f * i);
+            int finalI = i;
+            Timer.schedule(new Timer.Task() {
+                @Override
+                public void run() {
+                    carrying.getSprite().setRegion(0, 0, 24, 18 - 6 * finalI);
+                    carrying.getSprite().setSize(24,  18 - 6 * finalI);
+                    carrying.getSprite().setY(carrying.getSprite().getY() + 0.25f * carrying.getSprite().getTexture().getHeight());
+                }
+            }, 0.8f + 0.2f * i);
+        }
+        Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+                carrying.getSprite().setRegion(0, 0, carrying.getSprite().getTexture().getWidth(),
+                    carrying.getSprite().getTexture().getHeight());
+                carrying.getSprite().setPosition(player.getTiles().get(0).getX() * App.tileWidth,
+                    player.getTiles().get(0).getY() * App.tileHeight);
+                carrying.getSprite().setSize(24,  24);
+                isEating = false;
+                GameView.captureInput = true;
+            }
+        }, 1.6f);
     }
 
     private void placeItem(Salable item, int xTransmit, int yTransmit) {

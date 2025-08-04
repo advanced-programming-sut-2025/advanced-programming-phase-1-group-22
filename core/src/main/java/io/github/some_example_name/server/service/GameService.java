@@ -1830,7 +1830,7 @@ public class GameService {
                 player.getBuff().affectBuff(player);
             }
         }
-        return new Response(foodName + " is eaten now.");
+        return new Response(foodName + " is eaten now.", true);
     }
 
     public Response buffShow() {
