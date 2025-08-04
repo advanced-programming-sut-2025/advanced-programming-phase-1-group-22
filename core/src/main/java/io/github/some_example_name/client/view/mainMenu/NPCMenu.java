@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import io.github.some_example_name.client.MainGradle;
 import io.github.some_example_name.client.controller.WorldController;
+import io.github.some_example_name.client.view.GameView;
 import io.github.some_example_name.common.model.Salable;
 import io.github.some_example_name.common.model.enums.Season;
 import io.github.some_example_name.common.model.records.Response;
@@ -158,7 +159,7 @@ public class NPCMenu extends PopUp {
         int maxRow;
         BackPack backPack = App.getInstance().getCurrentGame().getCurrentPlayer().getInventory();
         if (backPack.getBackPackType().getIsInfinite()) {
-            synchronized (backPack.getProducts()){
+            synchronized (backPack.getProducts()) {
                 maxRow = Math.max(5, backPack.getProducts().size() / maxCol + 1);
             }
         } else {
@@ -170,7 +171,7 @@ public class NPCMenu extends PopUp {
                 Image slot = new Image(slotTexture);
 
                 int index = row * 9 + col;
-                synchronized (currentPlayer.getInventory().getProducts()){
+                synchronized (currentPlayer.getInventory().getProducts()) {
                     if (index < currentPlayer.getInventory().getProducts().size()) {
                         java.util.List<Salable> items = new ArrayList<>(currentPlayer.getInventory().getProducts().keySet());
                         Salable item = items.get(index);
@@ -485,7 +486,12 @@ public class NPCMenu extends PopUp {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if (unlocked) {
-                    getController().showResponse(relationService.completeMission(mission, npc));
+                    Response response = relationService.completeMission(mission, npc);
+                    getController().showResponse(response);
+                    if (response.shouldBeBack()) {
+                        MissionComplete missionComplete = new MissionComplete(mission);
+                        missionComplete.createMenu(GameView.stage, GameAsset.SKIN, WorldController.getInstance());
+                    }
                 } else {
                     getController().showResponse(new Response("mission is not available"));
                 }
