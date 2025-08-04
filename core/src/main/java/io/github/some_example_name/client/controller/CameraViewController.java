@@ -362,6 +362,51 @@ public class CameraViewController {
                 RelationService.getInstance().talkToAnotherPlayer("Clara1234", "bee_house");
                 RelationService.getInstance().talkToAnotherPlayer("Clara1234", "bee_house");
             }
+            if (Gdx.input.isKeyJustPressed(Input.Keys.F1)) {
+                gameMenuController.C_AddItem("deluxe backpack", "1");
+                gameMenuController.C_AddItem("cherry bomb", "1");
+                gameMenuController.C_AddItem("bomb", "1");
+                gameMenuController.C_AddItem("mega bomb", "1");
+                gameMenuController.C_AddItem("Sprinklers", "1");
+                gameMenuController.C_AddItem("quality Sprinklers", "1");
+                gameMenuController.C_AddItem("iridium Sprinklers", "1");
+                gameMenuController.C_AddItem("charcoal klin", "1");
+                gameMenuController.C_AddItem("furnace", "1");
+                gameMenuController.C_AddItem("scare crow", "1");
+                gameMenuController.C_AddItem("deluxe scarecrow", "1");
+                gameMenuController.C_AddItem("bee house", "1");
+                gameMenuController.C_AddItem("cheese press", "1");
+                gameMenuController.C_AddItem("keg", "1");
+                gameMenuController.C_AddItem("loom", "1");
+                gameMenuController.C_AddItem("mayonnaise machine", "1");
+                gameMenuController.C_AddItem("oil maker", "1");
+                gameMenuController.C_AddItem("preserves jar", "1");
+                gameMenuController.C_AddItem("dehydrator", "1");
+                gameMenuController.C_AddItem("grass started", "1");
+                gameMenuController.C_AddItem("fish smoker", "1");
+                gameMenuController.C_AddItem("mystic tree seed", "1");
+                gameMenuController.C_AddItem("fiber", "60");
+                gameMenuController.C_AddItem("fried egg", "1");
+                gameMenuController.C_AddItem("baked fish", "1");
+                gameMenuController.C_AddItem("salad", "1");
+                gameMenuController.C_AddItem("salmon dinner", "1");
+                gameMenuController.C_AddItem("hashbrowns", "1");
+                gameMenuController.C_AddItem("omelet", "1");
+                gameMenuController.C_AddItem("pancakes", "1");
+                gameMenuController.C_AddItem("bread", "1");
+                gameMenuController.C_AddItem("tortilla", "1");
+                gameMenuController.C_AddItem("pizza", "1");
+                gameMenuController.C_AddItem("maki roll", "1");
+                gameMenuController.C_AddItem("triple shot espresso", "1");
+                gameMenuController.C_AddItem("cookie", "1");
+                gameMenuController.C_AddItem("vegetable medley", "1");
+                gameMenuController.C_AddItem("farmer's lunch", "1");
+                gameMenuController.C_AddItem("survival burger", "1");
+                gameMenuController.C_AddItem("dish O' the Sea", "1");
+                gameMenuController.C_AddItem("seafoam pudding", "1");
+                gameMenuController.C_AddItem("miner's treat", "1");
+                gameMenuController.C_AddItem("triple shot espresso", "1");
+            }
         } else {
             if (Gdx.input.isKeyJustPressed(Input.Keys.F4)) {
                 GameView.captureInput = false;
