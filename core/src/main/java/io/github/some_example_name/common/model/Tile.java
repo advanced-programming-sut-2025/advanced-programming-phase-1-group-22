@@ -27,7 +27,7 @@ public class Tile {
         if (!isPassable) return false;
         boolean flag = switch (tileType) {
             case FENCE -> false;
-            case FLAT, PATH, GRASS, FLOWER, SNOW, PLOWED, THUNDERED -> true;
+            case FLAT, PATH, GRASS, FLOWER, SNOW, PLOWED, THUNDERED, FERTILIZED -> true;
             case DOOR -> checkDoor();
         };
 
@@ -64,7 +64,7 @@ public class Tile {
         return tileType.getTexture()[0][0];
     }
 
-    public void updateTileState(Tile tile){
+    public void updateTileState(Tile tile) {
         x = tile.x;
         y = tile.y;
         isFilled = tile.isFilled;

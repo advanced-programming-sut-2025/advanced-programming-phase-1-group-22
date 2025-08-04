@@ -589,6 +589,8 @@ public class GameService {
         GameClient.getInstance().updatePlayerDeleteFromInventory(currentPlayer, currentFertilize, 1);
         harvestAbleProduct.getFertilizes().add(currentFertilize.getSundryType());
         GameClient.getInstance().updateStructureState(harvestAbleProduct, StructureUpdateState.UPDATE, true, harvestAbleProduct.getTiles().get(0));
+        currentTile.setTileType(TileType.FERTILIZED);
+        GameClient.getInstance().updateTileState(currentTile);
         return new Response("you successfully fertilize " + harvestAbleProduct.getName(), true);
     }
 
