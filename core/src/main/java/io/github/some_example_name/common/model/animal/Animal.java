@@ -29,7 +29,6 @@ public class Animal extends Structure implements Salable {
     private Boolean pet = false;
     private String name;
     private Boolean isAnimalStayOutAllNight = false;
-    private Player owner;
     private transient Texture texture;
     private transient Sprite sprite;
     private Queue<Vector2> movementPath = new LinkedList<>();

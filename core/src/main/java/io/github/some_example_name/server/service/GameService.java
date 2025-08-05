@@ -378,7 +378,6 @@ public class GameService {
             return new Response("you do not have enough resource to buy animal");
         }
         Animal animal = new Animal(marnieShopAnimal.getAnimalType(), name);
-        animal.setOwner(currentPlayer);
         if (animal.getAnimalType().getIsBarnAnimal()) {
             boolean success = addNewBarnAnimal(currentFarm, animal, currentPlayer, marnieShopAnimal);
             if (success) {
