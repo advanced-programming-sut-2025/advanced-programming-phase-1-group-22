@@ -1,5 +1,6 @@
 package io.github.some_example_name.client.view.mainMenu;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -16,6 +17,7 @@ public class MainMenu extends Menu {
     private final TextButton lobbyMenu;
     private final TextButton logout;
     private final TextButton back;
+    private final TextButton exit;
 
     public MainMenu(Skin skin) {
         super(skin);
@@ -25,6 +27,7 @@ public class MainMenu extends Menu {
         this.lobbyMenu = new TextButton("Lobby Menu", skin);
         this.logout = new TextButton("Logout", skin);
         this.back = new TextButton("Back", skin);
+        this.exit = new TextButton("Exit", skin);
     }
 
     @Override
@@ -57,11 +60,19 @@ public class MainMenu extends Menu {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if (!Session.isStayedLoggedIn()) {
+                    GameClient.getInstance().logout();
                     controller.logout();
                 }
                 setScreen(new FirstMenu(skin));
             }
         });
         table.add(back).width(400).row();
+        this.exit.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Gdx.app.exit();
+            }
+        });
+        table.add(exit).width(400).row();
     }
 }

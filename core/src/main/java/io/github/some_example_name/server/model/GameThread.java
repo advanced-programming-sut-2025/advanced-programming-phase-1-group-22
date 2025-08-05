@@ -20,7 +20,7 @@ public class GameThread extends Thread {
     private static GameThread instance;
     private static final int PORT = 5000;
     private final HashMap<Integer, GameServer> games = new HashMap<>();
-    private final Map<String, ClientHandler> connections = new HashMap<>();
+    private final Map<String, ClientHandler> connections = Collections.synchronizedMap(new HashMap<>());
     private final Map<String, Long> lastConnections = Collections.synchronizedMap(new HashMap<>());
     private final Map<String, List<String>> users = new HashMap<>();
     private final Map<String, Long> readyPlayersForLoad = new HashMap<>();
@@ -82,34 +82,39 @@ public class GameThread extends Thread {
     }
 
     public void sendAll(String message) {
-        for (Map.Entry<String, ClientHandler> stringClientHandlerEntry : connections.entrySet()) {
-            try {
-                stringClientHandlerEntry.getValue().send(message);
-            } catch (IOException ignored) {
+        synchronized (connections) {
+            for (Map.Entry<String, ClientHandler> stringClientHandlerEntry : connections.entrySet()) {
+                try {
+                    stringClientHandlerEntry.getValue().send(message);
+                } catch (IOException ignored) {
+                }
             }
         }
     }
 
     public void sendAllBut(String message, String username) {
-        for (Map.Entry<String, ClientHandler> stringClientHandlerEntry : connections.entrySet()) {
-            if (!stringClientHandlerEntry.getKey().equals(username)) {
-                try {
-                    stringClientHandlerEntry.getValue().send(message);
-                } catch (IOException ignored) {
+        synchronized (connections) {
+            for (Map.Entry<String, ClientHandler> stringClientHandlerEntry : connections.entrySet()) {
+                if (!stringClientHandlerEntry.getKey().equals(username)) {
+                    try {
+                        stringClientHandlerEntry.getValue().send(message);
+                    } catch (IOException ignored) {
+                    }
                 }
             }
         }
     }
 
     public void sentTo(String message, String username) {
-        for (Map.Entry<String, ClientHandler> stringClientHandlerEntry : connections.entrySet()) {
-            if (stringClientHandlerEntry.getKey().equals(username)) {
-                try {
-                    stringClientHandlerEntry.getValue().send(message);
-                } catch (IOException ignored) {
+        synchronized (connections) {
+            for (Map.Entry<String, ClientHandler> stringClientHandlerEntry : connections.entrySet()) {
+                if (stringClientHandlerEntry.getKey().equals(username)) {
+                    try {
+                        stringClientHandlerEntry.getValue().send(message);
+                    } catch (IOException ignored) {
+                    }
                 }
             }
         }
     }
-
 }
