@@ -49,7 +49,6 @@ public class WorldController {
     private SpriteHolder flower;
     private SpriteHolder gift;
     private SpriteHolder heart;
-    private SpriteHolder gift;
     private Direction flowerDirection;
     private Direction giftDirection;
     float delta = 0f;
