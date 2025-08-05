@@ -210,6 +210,7 @@ public class GiftMenu extends PopUp {
                 if (resp.shouldBeBack()) {
                     endTask(array, exitButton);
                     createInventory(skin, menuGroup, stage);
+                    getController().drawGift();
                 }
                 return resp.shouldBeBack();
             }

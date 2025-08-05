@@ -15,6 +15,7 @@ public class StartGameMenu extends PreGameMenu {
     private final TextButton back;
     private final SelectBox<String> farmSelection;
     private final SelectBox<String> playerSelection;
+    private final Image farmPreview;
     private final Integer state;
     private final StartGameMenuController controller;
 
@@ -31,6 +32,7 @@ public class StartGameMenu extends PreGameMenu {
             farmNames.add(value.getName());
         }
         farmSelection.setItems(farmNames);
+        this.farmPreview = new Image(FarmType.values()[farmSelection.getSelectedIndex()].getTexture());
         playerSelection = new SelectBox<>(skin);
         this.state = state;
         controller.setView(this);
@@ -53,6 +55,8 @@ public class StartGameMenu extends PreGameMenu {
                 table.add(playerSelection).width(600);
                 table.row().pad(10, 0, 10, 0);
                 table.add(enterGameButton).width(600);
+                table.row().pad(10, 0, 10, 0);
+                table.add(farmPreview).width(1.2f * farmPreview.getWidth());
             }
             break;
             case 2: {

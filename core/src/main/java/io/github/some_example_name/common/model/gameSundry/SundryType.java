@@ -16,7 +16,7 @@ public enum SundryType implements SalableIntegration {
     DELUXE_RETAINING_SOIL("Deluxe Retaining Soil", 150 / 2, GameAsset.DELUXE_RETAINING_SOIL),
     QUALITY_RETAINING_SOIL("Quality Retaining Soil", 150 / 2, GameAsset.QUALITY_RETAINING_SOIL),
     BASIC_RETAINING_SOIL("Basic Retaining Soil", 100 / 2, GameAsset.BASIC_RETAINING_SOIL),
-    GRASS_STARTER("Grass Starter", 100 / 2, GameAsset.GRASS_STARTER),
+//    GRASS_STARTER("Grass Starter", 100 / 2, GameAsset.GRASS_STARTER),
     SPEED_GROW("Speed Grow", 100 / 2, GameAsset.SPEED_GRO),
     JOJA_COLA("Joja Cola", 75 / 2, GameAsset.JOJA_COLA),
     SONAR_BOBBER("sonar bobber", 100, GameAsset.SONAR_BOBBER);

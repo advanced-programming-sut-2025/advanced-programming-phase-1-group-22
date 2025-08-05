@@ -1,6 +1,7 @@
 package io.github.some_example_name.common.model.structure.stores;
 
 import io.github.some_example_name.client.GameClient;
+import io.github.some_example_name.common.model.craft.CraftType;
 import io.github.some_example_name.common.model.source.Mineral;
 import lombok.Getter;
 import io.github.some_example_name.common.model.Salable;
@@ -80,9 +81,9 @@ public enum PierreShop implements Shop {
     DELUXE_RETAINING_SOIL(() -> SundryType.DELUXE_RETAINING_SOIL, SundryType.DELUXE_RETAINING_SOIL.getName(),
             "Keeps soil watered overnight.",
             SundryType.DELUXE_RETAINING_SOIL.getPrice() * 2, -1),
-    GRASS_STARTER(() -> SundryType.GRASS_STARTER, SundryType.GRASS_STARTER.getName(),
+    GRASS_STARTER(() -> CraftType.GRASS_STARTER, CraftType.GRASS_STARTER.getName(),
             "Plant to grow grass outside.",
-            SundryType.GRASS_STARTER.getPrice() * 2, -1),
+            CraftType.GRASS_STARTER.getSellPrice() * 2, -1),
     SPEED_GRO(() -> SundryType.SPEED_GROW, SundryType.SPEED_GROW.getName(),
             "Speeds up plant growth by 10%.",
             SundryType.SPEED_GROW.getPrice() * 2, -1),

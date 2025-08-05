@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import io.github.some_example_name.common.model.enums.Season;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,6 +37,12 @@ public class GameAsset {
     public static final Texture SEBASTIAN_ = new Texture("sebastian.png");
     public static final Texture HARVEY_ = new Texture("harvey.png");
     public static final Texture ABIGEL_ = new Texture("abigel.png");
+    public static final TextureRegion[][] GIFT_ANIMATION = TextureRegion.split(new Texture("Inventory/Gift_Animation.png"), 191, 260);
+    public static final Texture GRASS_FARM = new Texture("Farm/Grass_Farm.png");
+    public static final Texture FLOWER_FARM = new Texture("Farm/Flower_Farm.png");
+    public static final Texture ROCKY_FARM = new Texture("Farm/Rocky_Farm.png");
+    public static final Texture BLUE_FARM = new Texture("Farm/Blue_Farm.png");
+    public static final Texture DESERT_FARM = new Texture("Farm/Desert_Farm.png");
     public static final Texture CABIN1 = new Texture("Beach_Cabin_Stage_3.png");
     public static final Texture CABIN2 = new Texture("Neighbor_Cabin_Stage_3.png");
     public static final Texture CABIN3 = new Texture("Plank_Cabin_Stage_3.png");
@@ -2407,6 +2414,10 @@ public class GameAsset {
     public static final Texture WILD_TREE_STUMP_WINTER = new Texture("Trees/Wild_Tree_stump_Winter.png");
     public static final Texture PELICAN_TOWN = new Texture("Village/Pelican_Town.png");
     public static final Texture FLOORING = new Texture("Village/Flooring.png");
+    public static final Texture OUTDOORS_SPRING = new Texture("Outdoors/Outdoors_Spring.png");
+    public static final Texture OUTDOORS_SUMMER = new Texture("Outdoors/Outdoors_Summer.png");
+    public static final Texture OUTDOORS_FALL = new Texture("Outdoors/Outdoors_Fall.png");
+    public static final Texture OUTDOORS_WINTER = new Texture("Outdoors/Outdoors_Winter.png");
     public static final TextureRegion[][] SNOW_FLOORING = new TextureRegion(FLOORING, 320, 64, 64, 64).split(16, 16);
     public static final TextureRegion[][] PLOWED_FLOORING = new TextureRegion(FLOORING, 64, 64, 64, 64).split(16, 16);
     public static final Texture ABIGAIL = new Texture("Villagers/Abigail.png");
@@ -2536,4 +2547,20 @@ public class GameAsset {
     public static final Texture ROBIN_FULL_NPC = new Texture("NPC/Robin.png");
     public static final Texture SEBASTIAN_FULL_NPC = new Texture("NPC/Sebastian.png");
 
+    public static Texture getOutdoors(Season season) {
+        switch (season) {
+            case SUMMER -> {
+                return OUTDOORS_SUMMER;
+            }
+            case WINTER -> {
+                return OUTDOORS_WINTER;
+            }
+            case FALL -> {
+                return OUTDOORS_FALL;
+            }
+            default -> {
+                return OUTDOORS_SPRING;
+            }
+        }
+    }
 }

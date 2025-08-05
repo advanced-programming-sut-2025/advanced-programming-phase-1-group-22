@@ -199,10 +199,10 @@ public class GameServer {
     }
 
     private static InputStream getInputStream(String requestBody) throws IOException {
-        HttpURLConnection connection = (HttpURLConnection) new URL(ServerConfig.API_URL).openConnection();
+        HttpURLConnection connection = (HttpURLConnection) new URL(io.github.some_example_name.server.model.ServerConfig.API_URL).openConnection();
         connection.setRequestMethod("POST");
         connection.setDoOutput(true);
-        connection.setRequestProperty("Authorization", "Bearer " + ServerConfig.API_KEY);
+        connection.setRequestProperty("Authorization", "Bearer " + io.github.some_example_name.server.model.ServerConfig.API_KEY);
         connection.setRequestProperty("Content-Type", "application/json");
 
         try (OutputStream os = connection.getOutputStream()) {
