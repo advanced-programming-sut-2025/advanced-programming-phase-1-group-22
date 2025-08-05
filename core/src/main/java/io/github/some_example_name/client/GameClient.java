@@ -43,7 +43,7 @@ public class GameClient {
     private Socket socket;
     private P2PConnection p2PConnection;
     private P2PReceiving p2PReceiving;
-    private JsonMessageHandler jsonMessageHandler;
+    private final AtomicReference<JsonMessageHandler> jsonMessageHandler = new AtomicReference<>();
     private Timer gameTimer;
     private Timer userTimer;
     private final ClientService service = new ClientService();
@@ -73,9 +73,15 @@ public class GameClient {
                 "id", Session.getCurrentUser().getUsername()
             );
 
-            jsonMessageHandler.send(GSON.toJson(msg));
+            sendJson(msg);
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void sendJson(Map<String, Object> msg) throws IOException {
+        synchronized (jsonMessageHandler) {
+            jsonMessageHandler.get().send(GSON.toJson(msg));
         }
     }
 
@@ -86,7 +92,7 @@ public class GameClient {
                 "id", Session.getCurrentUser().getUsername()
             );
 
-            jsonMessageHandler.send(GSON.toJson(msg));
+            sendJson(msg);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -99,7 +105,7 @@ public class GameClient {
                 "id", username
             );
 
-            jsonMessageHandler.send(GSON.toJson(msg));
+            sendJson(msg);
             if (gameTimer != null) {
                 gameTimer.cancel();
             }
@@ -118,15 +124,14 @@ public class GameClient {
     public void connectToServer() {
         try {
             socket = new Socket(SERVER_ADDRESS, SERVER_PORT);
-            jsonMessageHandler = new JsonMessageHandler(socket.getInputStream(), socket.getOutputStream());
-
+            jsonMessageHandler.set(new JsonMessageHandler(socket.getInputStream(), socket.getOutputStream()));
             Map<String, Object> msg = Map.of(
                 "action", "connected",
                 "body", Map.of(),
                 "port", App.PORT
             );
 
-            jsonMessageHandler.send(GSON.toJson(msg));
+            sendJson(msg);
             startListening();
         } catch (IOException e) {
             debug(e);
@@ -142,7 +147,7 @@ public class GameClient {
                 "body", Map.of("port", App.PORT, "stay_logged",  stayLogged, "password", password)
             );
 
-            jsonMessageHandler.send(GSON.toJson(msg));
+            sendJson(msg);
             if (userTimer != null) {
                 userTimer.cancel();
             }
@@ -167,7 +172,7 @@ public class GameClient {
                 "body", Map.of()
             );
 
-            jsonMessageHandler.send(GSON.toJson(msg));
+            sendJson(msg);
             if (gameTimer != null) {
                 gameTimer.cancel();
             }
@@ -194,7 +199,7 @@ public class GameClient {
             msg.put("visible", isVisible);
             msg.put("lobby_id", id);
 
-            jsonMessageHandler.send(GSON.toJson(msg));
+            sendJson(msg);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -207,7 +212,7 @@ public class GameClient {
             msg.put("id", Session.getCurrentUser().getUsername());
             msg.put("lobby_id", id);
 
-            jsonMessageHandler.send(GSON.toJson(msg));
+            sendJson(msg);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -220,7 +225,7 @@ public class GameClient {
             msg.put("id", Session.getCurrentUser().getUsername());
             msg.put("lobby_id", id);
 
-            jsonMessageHandler.send(GSON.toJson(msg));
+            sendJson(msg);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -233,7 +238,7 @@ public class GameClient {
             msg.put("id", Session.getCurrentUser().getUsername());
             msg.put("lobby_id", id);
 
-            jsonMessageHandler.send(GSON.toJson(msg));
+            sendJson(msg);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -246,7 +251,7 @@ public class GameClient {
             msg.put("id", Session.getCurrentUser().getUsername());
             msg.put("lobby_id", lobby.getId());
 
-            jsonMessageHandler.send(GSON.toJson(msg));
+            sendJson(msg);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -259,7 +264,7 @@ public class GameClient {
             msg.put("id", Session.getCurrentUser().getUsername());
             msg.put("lobby_id", lobby.getId());
 
-            jsonMessageHandler.send(GSON.toJson(msg));
+            sendJson(msg);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -272,7 +277,7 @@ public class GameClient {
             msg.put("id", Session.getCurrentUser().getUsername());
             msg.put("lobby_id", id);
 
-            jsonMessageHandler.send(GSON.toJson(msg));
+            sendJson(msg);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -289,7 +294,7 @@ public class GameClient {
                 userTimer.cancel();
                 userTimer.purge();
             }
-            jsonMessageHandler.send(GSON.toJson(msg));
+            sendJson(msg);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -299,7 +304,7 @@ public class GameClient {
         new Thread(() -> {
             try {
                 String serverMessage;
-                while ((serverMessage = jsonMessageHandler.receive()) != null) {
+                while ((serverMessage = jsonMessageHandler.get().receive()) != null) {
                     try {
                         JsonObject obj = JsonParser.parseString(serverMessage).getAsJsonObject();
 
@@ -745,7 +750,7 @@ public class GameClient {
 
     public void sendGameStateToServer(String gameState) {
         try {
-            jsonMessageHandler.send(GSON.toJson(gameState));
+            jsonMessageHandler.get().send(GSON.toJson(gameState));
         } catch (Exception e) {
         }
     }
@@ -759,7 +764,7 @@ public class GameClient {
                 "body", Map.of("id", id)
             );
 
-            jsonMessageHandler.send(GSON.toJson(msg));
+            sendJson(msg);
         } catch (IOException e) {
             debug(e);
         }
@@ -774,7 +779,7 @@ public class GameClient {
                 "body", Map.of("id", id)
             );
 
-            jsonMessageHandler.send(GSON.toJson(msg));
+            sendJson(msg);
         } catch (IOException e) {
             debug(e);
         }
@@ -788,7 +793,7 @@ public class GameClient {
                 "body", Map.of("farmId", farmId, "character", character)
             );
 
-            jsonMessageHandler.send(GSON.toJson(msg));
+            sendJson(msg);
         } catch (IOException e) {
             debug(e);
         }
@@ -814,7 +819,7 @@ public class GameClient {
                 );
             }
 
-            jsonMessageHandler.send(GSON.toJson(msg));
+            sendJson(msg);
         } catch (IOException e) {
             debug(e);
         }
@@ -829,7 +834,7 @@ public class GameClient {
                 "body", encodeObject(shop)
             );
 
-            jsonMessageHandler.send(GSON.toJson(msg));
+            sendJson(msg);
         } catch (IOException e) {
             debug(e);
         }
@@ -843,7 +848,7 @@ public class GameClient {
                 "body", Map.of("position_x", player.getTiles().get(0).getX(),
                     "position_y", player.getTiles().get(0).getY(), "direction", player.getDirection().ordinal())
             );
-            jsonMessageHandler.send(GSON.toJson(msg));
+            sendJson(msg);
         } catch (IOException e) {
             debug(e);
         }
@@ -885,7 +890,7 @@ public class GameClient {
                 "amount", amount,
                 "body", encodeObject(salable)
             );
-            jsonMessageHandler.send(GSON.toJson(msg));
+            sendJson(msg);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -899,7 +904,7 @@ public class GameClient {
                 "body", player.getCurrentCarrying() == null ? Map.of() :
                     encodeObject(player.getCurrentCarrying())
             );
-            jsonMessageHandler.send(GSON.toJson(msg));
+            sendJson(msg);
         } catch (IOException e) {
             debug(e);
         }
@@ -913,7 +918,7 @@ public class GameClient {
                 "mission_id", mission.getId(),
                 "npc_type", mission.getRequester().getName()
             );
-            jsonMessageHandler.send(GSON.toJson(msg));
+            sendJson(msg);
         } catch (IOException e) {
             debug(e);
         }
@@ -927,7 +932,7 @@ public class GameClient {
             msg.put("emoji_index", player.getEmojiReactionIndex());
             msg.put("text", player.getTextReaction());
 
-            jsonMessageHandler.send(GSON.toJson(msg));
+            sendJson(msg);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -940,7 +945,7 @@ public class GameClient {
             msg.put("id", Session.getCurrentUser().getUsername());
             msg.put("gold", player.getAccount().getGolds());
 
-            jsonMessageHandler.send(GSON.toJson(msg));
+            sendJson(msg);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -953,7 +958,7 @@ public class GameClient {
             msg.put("id", Session.getCurrentUser().getUsername());
             msg.put("complete_missions", player.getNumberOfCompleteMission());
 
-            jsonMessageHandler.send(GSON.toJson(msg));
+            sendJson(msg);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -967,7 +972,7 @@ public class GameClient {
             msg.put("ability", ability.getName());
             msg.put("amount", player.getAbilities().get(ability));
 
-            jsonMessageHandler.send(GSON.toJson(msg));
+            sendJson(msg);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -980,7 +985,7 @@ public class GameClient {
             msg.put("id", Session.getCurrentUser().getUsername());
             msg.put("mission_id", mission.getId());
 
-            jsonMessageHandler.send(GSON.toJson(msg));
+            sendJson(msg);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -994,7 +999,7 @@ public class GameClient {
             msg.put("mission_id", mission.getId());
             msg.put("amount", amount);
 
-            jsonMessageHandler.send(GSON.toJson(msg));
+            sendJson(msg);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -1007,7 +1012,7 @@ public class GameClient {
             msg.put("id", Session.getCurrentUser().getUsername());
             msg.put("connect_to", username);
 
-            jsonMessageHandler.send(GSON.toJson(msg));
+            sendJson(msg);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -1164,14 +1169,14 @@ public class GameClient {
                     "body", Map.of("tiles", structure.getTiles(),
                         "inFarm", inFarm)
                 );
-                jsonMessageHandler.send(GSON.toJson(msg));
+                sendJson(msg);
             } else {
                 Map<String, Object> msg = Map.of(
                     "action", state.getName(),
                     "id", Session.getCurrentUser().getUsername(),
                     "body", encodeStructure(structure, previousTile)
                 );
-                jsonMessageHandler.send(GSON.toJson(msg));
+                sendJson(msg);
             }
         } catch (IOException e) {
             debug(e);
@@ -1409,7 +1414,7 @@ public class GameClient {
                 "body", Map.of("tile", tile)
             );
 
-            jsonMessageHandler.send(GSON.toJson(msg));
+            sendJson(msg);
         } catch (IOException e) {
             debug(e);
         }
@@ -1423,7 +1428,7 @@ public class GameClient {
                 "body", Map.of("minutes", minutes)
             );
 
-            jsonMessageHandler.send(GSON.toJson(msg));
+            sendJson(msg);
         } catch (IOException e) {
             debug(e);
         }
@@ -1443,7 +1448,7 @@ public class GameClient {
                 "body", Map.of("tomorrowWeather", tomorrowWeather.ordinal())
             );
 
-            jsonMessageHandler.send(GSON.toJson(msg));
+            sendJson(msg);
         } catch (IOException e) {
             debug(e);
         }
@@ -1457,7 +1462,7 @@ public class GameClient {
                 "body", Map.of("x", x, "y", y)
             );
 
-            jsonMessageHandler.send(GSON.toJson(msg));
+            sendJson(msg);
         } catch (IOException e) {
             debug(e);
         }
@@ -1471,7 +1476,7 @@ public class GameClient {
                 "body", Map.of("weather", type)
             );
 
-            jsonMessageHandler.send(GSON.toJson(msg));
+            sendJson(msg);
         } catch (IOException e) {
             debug(e);
         }
@@ -1485,7 +1490,7 @@ public class GameClient {
                 "body", Map.of()
             );
 
-            jsonMessageHandler.send(GSON.toJson(msg));
+            sendJson(msg);
         } catch (IOException e) {
             debug(e);
         }
@@ -1499,7 +1504,7 @@ public class GameClient {
                 "body", Map.of()
             );
 
-            jsonMessageHandler.send(GSON.toJson(msg));
+            sendJson(msg);
         } catch (IOException e) {
             debug(e);
         }
@@ -1517,7 +1522,7 @@ public class GameClient {
                 "body", Map.of("requested", username)
             );
 
-            jsonMessageHandler.send(GSON.toJson(msg));
+            sendJson(msg);
         } catch (IOException e) {
             debug(e);
         }
@@ -1540,7 +1545,7 @@ public class GameClient {
                 "id", Session.getCurrentUser().getUsername(),
                 "body", Map.of("requested", username, "response", b)
             );
-            jsonMessageHandler.send(GSON.toJson(msg));
+            sendJson(msg);
         } catch (IOException e) {
             debug(e);
         }
@@ -1553,7 +1558,7 @@ public class GameClient {
                 "id", Session.getCurrentUser().getUsername(),
                 "body", Map.of("count", count, "receiver", couple)
             );
-            jsonMessageHandler.send(GSON.toJson(msg));
+            sendJson(msg);
         } catch (IOException e) {
             debug(e);
         }
@@ -1567,7 +1572,7 @@ public class GameClient {
                 "body", Map.of("amount", amount, "receiver", player.getUser().getUsername(),
                     "gift", encodeStructure(gift, null))
             );
-            jsonMessageHandler.send(GSON.toJson(msg));
+            sendJson(msg);
         } catch (IOException e) {
             debug(e);
         }
@@ -1582,7 +1587,7 @@ public class GameClient {
                     "response_bool", response.shouldBeBack(), "type", type.ordinal(),
                     "isFromPlayer", source instanceof Player, "source", source.getName())
             );
-            jsonMessageHandler.send(GSON.toJson(msg));
+            sendJson(msg);
         } catch (IOException e) {
             debug(e);
         }
@@ -1595,7 +1600,7 @@ public class GameClient {
                 "id", Session.getCurrentUser().getUsername(),
                 "body", Map.of("message", message, "receiver", anotherPlayer.getName())
             );
-            jsonMessageHandler.send(GSON.toJson(msg));
+            sendJson(msg);
         } catch (IOException e) {
             debug(e);
         }
@@ -1608,7 +1613,7 @@ public class GameClient {
                 "id", Session.getCurrentUser().getUsername(),
                 "body", Map.of("giftId", giftId, "receiver", giver, "rate", rate)
             );
-            jsonMessageHandler.send(GSON.toJson(msg));
+            sendJson(msg);
         } catch (IOException e) {
             debug(e);
         }
@@ -1621,7 +1626,7 @@ public class GameClient {
                 "id", Session.getCurrentUser().getUsername(),
                 "body", Map.of()
             );
-            jsonMessageHandler.send(GSON.toJson(msg));
+            sendJson(msg);
         } catch (IOException e) {
             debug(e);
         }
@@ -1634,7 +1639,7 @@ public class GameClient {
                 "id", Session.getCurrentUser().getUsername(),
                 "body", Map.of("player", name, "vote", b)
             );
-            jsonMessageHandler.send(GSON.toJson(msg));
+            sendJson(msg);
         } catch (IOException e) {
             debug(e);
         }
@@ -1647,7 +1652,7 @@ public class GameClient {
                 "id", Session.getCurrentUser().getUsername(),
                 "body", Map.of("player", name)
             );
-            jsonMessageHandler.send(GSON.toJson(msg));
+            sendJson(msg);
         } catch (IOException e) {
             debug(e);
         }
@@ -1660,7 +1665,7 @@ public class GameClient {
                 "id", Session.getCurrentUser().getUsername(),
                 "body", Map.of("name", encodeStructure(name, null), "count", count)
             );
-            jsonMessageHandler.send(GSON.toJson(msg));
+            sendJson(msg);
         } catch (IOException e) {
             debug(e);
         }
@@ -1673,7 +1678,7 @@ public class GameClient {
                 "id", Session.getCurrentUser().getUsername(),
                 "body", Map.of("name", name)
             );
-            jsonMessageHandler.send(GSON.toJson(msg));
+            sendJson(msg);
         } catch (IOException e) {
             debug(e);
         }
@@ -1695,7 +1700,7 @@ public class GameClient {
                     "id", trade.getId()
                 )
             );
-            jsonMessageHandler.send(GSON.toJson(msg));
+            sendJson(msg);
         } catch (IOException e) {
             debug(e);
         }
@@ -1715,7 +1720,7 @@ public class GameClient {
                     "id", trade.getId()
                 )
             );
-            jsonMessageHandler.send(GSON.toJson(msg));
+            sendJson(msg);
         } catch (IOException e) {
             debug(e);
         }
@@ -1732,7 +1737,7 @@ public class GameClient {
                     "shouldRespond", b
                 )
             );
-            jsonMessageHandler.send(GSON.toJson(msg));
+            sendJson(msg);
         } catch (IOException e) {
             debug(e);
         }
@@ -1748,7 +1753,7 @@ public class GameClient {
                     "id", trade.getId()
                 )
             );
-            jsonMessageHandler.send(GSON.toJson(msg));
+            sendJson(msg);
         } catch (IOException e) {
             debug(e);
         }
@@ -1769,7 +1774,7 @@ public class GameClient {
                     "count", value
                 )
             );
-            jsonMessageHandler.send(GSON.toJson(msg));
+            sendJson(msg);
         } catch (IOException e) {
             debug(e);
         }
@@ -1782,7 +1787,7 @@ public class GameClient {
                 "id", Session.getCurrentUser().getUsername(),
                 "body", Map.of("message", message)
             );
-            jsonMessageHandler.send(GSON.toJson(msg));
+            sendJson(msg);
         } catch (IOException e) {
             debug(e);
         }
@@ -1795,7 +1800,7 @@ public class GameClient {
                 "id", Session.getCurrentUser().getUsername(),
                 "body", Map.of("name", name, "path", encodePath(path))
             );
-            jsonMessageHandler.send(GSON.toJson(msg));
+            sendJson(msg);
         } catch (IOException e) {
             debug(e);
         }
@@ -1821,7 +1826,7 @@ public class GameClient {
                     "second", friendship.getSecondPlayer().getName()
                 )
             );
-            jsonMessageHandler.send(GSON.toJson(msg));
+            sendJson(msg);
         } catch (IOException e) {
             debug(e);
         }
@@ -1838,7 +1843,7 @@ public class GameClient {
                     "second", friendship.getSecondPlayer().getName()
                 )
             );
-            jsonMessageHandler.send(GSON.toJson(msg));
+            sendJson(msg);
         } catch (IOException e) {
             debug(e);
         }
@@ -1854,7 +1859,7 @@ public class GameClient {
                     "npc", npc.getName()
                 )
             );
-            jsonMessageHandler.send(GSON.toJson(msg));
+            sendJson(msg);
         } catch (IOException e) {
             debug(e);
         }
@@ -1871,7 +1876,7 @@ public class GameClient {
                     "npc", npc.getName()
                 )
             );
-            jsonMessageHandler.send(GSON.toJson(msg));
+            sendJson(msg);
         } catch (IOException e) {
             debug(e);
         }
@@ -1886,7 +1891,7 @@ public class GameClient {
                     "npc", name
                 )
             );
-            jsonMessageHandler.send(GSON.toJson(msg));
+            sendJson(msg);
         } catch (IOException e) {
             debug(e);
         }

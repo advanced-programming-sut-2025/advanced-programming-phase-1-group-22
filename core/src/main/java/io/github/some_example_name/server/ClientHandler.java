@@ -19,13 +19,14 @@ import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Getter
 @Setter
 public class ClientHandler extends Thread {
     private static final Gson GSON = new GsonBuilder().serializeNulls().create();
     private Socket clientSocket;
-    private JsonMessageHandler jsonMessageHandler;
+    private final AtomicReference<JsonMessageHandler> jsonMessageHandler = new AtomicReference<>();
     private boolean dead = false;
     private boolean ready = false;
     private boolean running = true;
@@ -38,7 +39,7 @@ public class ClientHandler extends Thread {
     public ClientHandler(Socket socket) {
         this.clientSocket = socket;
         try {
-            this.jsonMessageHandler = new JsonMessageHandler(clientSocket.getInputStream(), clientSocket.getOutputStream());
+            this.jsonMessageHandler.set(new JsonMessageHandler(clientSocket.getInputStream(), clientSocket.getOutputStream()));
         } catch (Exception ignored) {
         }
         handleUnUseLobbies();
@@ -169,7 +170,7 @@ public class ClientHandler extends Thread {
     public void run() {
         try {
             String message;
-            while (running && (message = jsonMessageHandler.receive()) != null) {
+            while (running && (message = jsonMessageHandler.get().receive()) != null) {
                 try {
                     JsonObject obj = null;
                     try {
@@ -543,6 +544,10 @@ public class ClientHandler extends Thread {
     }
 
     public void send(String message) throws IOException {
-        if (!dead) jsonMessageHandler.send(message);
+        if (!dead) {
+            synchronized(jsonMessageHandler) {
+                jsonMessageHandler.get().send(message);
+            }
+        }
     }
 }

@@ -27,4 +27,14 @@ public class Trunk extends Structure {
     public void burn() {
         this.isBurn = true;
     }
+
+    @Override
+    public Integer getHeight() {
+        return trunkType.getWidth();
+    }
+
+    @Override
+    public Integer getWidth() {
+        return trunkType.getLength();
+    }
 }
