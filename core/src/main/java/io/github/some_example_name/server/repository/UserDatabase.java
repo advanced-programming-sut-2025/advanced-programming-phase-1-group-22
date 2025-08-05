@@ -59,6 +59,25 @@ public class UserDatabase {
         return Optional.empty();
     }
 
+    public Optional<User> getUserById(int id) {
+        return queryUser("SELECT * FROM users WHERE id = ?", id);
+    }
+
+    public Optional<User> deleteUserById(int id) {
+        Optional<User> user = getUserById(id);
+        if (user.isPresent()) {
+            String sql = "DELETE FROM users WHERE id = ?";
+            try (Connection connection = DriverManager.getConnection(DB_URL);
+                 PreparedStatement prepareStatement = connection.prepareStatement(sql)) {
+                prepareStatement.setInt(1, id);
+                prepareStatement.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return user;
+    }
+
     public Optional<User> getUserByUsername(String username) {
         return queryUser("SELECT * FROM users WHERE username = ?", username);
     }
@@ -76,7 +95,44 @@ public class UserDatabase {
         return false;
     }
 
-    public Optional<User> deleteUserById(String username) {
+    public boolean updateFullUser(User user) {
+        String sql = """
+                UPDATE users SET
+                    password = ?,
+                    email = ?,
+                    nickname = ?,
+                    gender = ?,
+                    security_question = ?,
+                    answer = ?,
+                    highest_money_earned = ?,
+                    number_of_played_games = ?,
+                    is_playing = ?
+                WHERE username = ?
+            """;
+
+        try (Connection conn = DriverManager.getConnection(DB_URL);
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, user.getPassword());
+            ps.setString(2, user.getEmail());
+            ps.setString(3, user.getNickname());
+            ps.setString(4, user.getGender().name());
+            ps.setString(5, user.getSecurityQuestion().getQuestion());
+            ps.setString(6, user.getAnswer());
+            ps.setInt(7, user.getHighestMoneyEarned());
+            ps.setInt(8, user.getNumberOfPlayedGames());
+            ps.setString(9, user.getIsPlaying());
+            ps.setString(10, user.getUsername());
+
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+
+    public Optional<User> deleteUserByUsername(String username) {
         Optional<User> user = getUserByUsername(username);
         if (user.isPresent()) {
             String sql = "DELETE FROM users WHERE username = ?";

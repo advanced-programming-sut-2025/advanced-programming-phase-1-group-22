@@ -141,7 +141,7 @@ public class ClientHandler extends Thread {
         );
         synchronized (App.getInstance().getLobbies()) {
             for (Lobby lobby : App.getInstance().getLobbies()) {
-                if (lobby.getGameServer().equals(gameServer)) {
+                if (lobby.getGameServer() != null && lobby.getGameServer().equals(gameServer)) {
                     lobby.setGameStart(false);
                     lobby.setGameServerSaved(true);
                 }
@@ -405,7 +405,7 @@ public class ClientHandler extends Thread {
                         if (gameServer.isMajority()) {
                             synchronized (App.getInstance().getLobbies()) {
                                 for (Lobby lobby : App.getInstance().getLobbies()) {
-                                    if (lobby.getGameServer().equals(gameServer)) {
+                                    if (lobby.getGameServer() != null && lobby.getGameServer().equals(gameServer)) {
                                         lobby.setGameStart(false);
                                         lobby.setGameServerSaved(false);
                                         lobby.setGameServer(null);
