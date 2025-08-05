@@ -82,6 +82,30 @@ public class MainGradle extends Game {
                     LobbyMenu lobbyMenu = new LobbyMenu(GameAsset.SKIN_MENU);
                     MainGradle.getInstance().setScreen(lobbyMenu);
                 }
+            } else if (App.PORT == 5003) {
+                if (screen != null) screen.dispose();
+                LoginMenu loginMenu = new LoginMenu(GameAsset.SKIN_MENU);
+                MainGradle.getInstance().setScreen(loginMenu);
+                loginMenu.getUsername().setText("Mahdi1234");
+                loginMenu.getPassword().setText("Pass&1234");
+                if (loginMenu.getController().login()) {
+                    GameClient.getInstance().loggedIn(false, "");
+                    screen.dispose();
+                    LobbyMenu lobbyMenu = new LobbyMenu(GameAsset.SKIN_MENU);
+                    MainGradle.getInstance().setScreen(lobbyMenu);
+                }
+            } else if (App.PORT == 5004) {
+                if (screen != null) screen.dispose();
+                LoginMenu loginMenu = new LoginMenu(GameAsset.SKIN_MENU);
+                MainGradle.getInstance().setScreen(loginMenu);
+                loginMenu.getUsername().setText("Maria1234");
+                loginMenu.getPassword().setText("Pass&1234");
+                if (loginMenu.getController().login()) {
+                    GameClient.getInstance().loggedIn(false, "");
+                    screen.dispose();
+                    LobbyMenu lobbyMenu = new LobbyMenu(GameAsset.SKIN_MENU);
+                    MainGradle.getInstance().setScreen(lobbyMenu);
+                }
             }
         }
     }
