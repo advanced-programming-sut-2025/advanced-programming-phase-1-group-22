@@ -31,4 +31,14 @@ public class Stone extends Structure{
             sprite.setRegion(stoneType.getTexture());
         }
     }
+
+    @Override
+    public Integer getHeight() {
+        return stoneType.getWidth();
+    }
+
+    @Override
+    public Integer getWidth() {
+        return stoneType.getLength();
+    }
 }
