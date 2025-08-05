@@ -515,7 +515,7 @@ public class RelationService {
         }
         //todo uncomment code
 //        Friendship friendShipBetweenTwoActors = getFriendShipBetweenWithActor(player);
-//        if (friendShipBetweenTwoActors.getFriendShipLevel() < 3) {
+//        if (friendShipBetweenTwoActors.getFriendShipLevel() < 3 || friendShipBetweenTwoActors.getXp() < 400) {
 //            return new Response("you are not in that level of friendship");
 //        }
         if (!twoActorsAreNeighbors(currentPlayer, player, 1)) {

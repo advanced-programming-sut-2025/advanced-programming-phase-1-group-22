@@ -444,4 +444,15 @@ public class Game implements Serializable {
             );
         }
     }
+
+    public void startSeason() {
+        for (TileType type : TileType.values()) {
+            type.updateTexture(timeAndDate.getSeason());
+        }
+        for (Farm farm : getVillage().getFarms()) {
+            for (Structure structure : new ArrayList<>(farm.getStructuresSnapshot())) {
+                structure.updateSprite();
+            }
+        }
+    }
 }

@@ -49,6 +49,7 @@ public class WorldController {
     private SpriteHolder flower;
     private SpriteHolder gift;
     private SpriteHolder heart;
+    private SpriteHolder gift;
     private Direction flowerDirection;
     private Direction giftDirection;
     float delta = 0f;
@@ -407,6 +408,10 @@ public class WorldController {
             heart.getSprite().draw(MainGradle.getInstance().getBatch());
             ((AnimatedSprite) heart.getSprite()).update(delta);
         }
+        if (gift != null) {
+            gift.getSprite().draw(MainGradle.getInstance().getBatch());
+            ((AnimatedSprite) gift.getSprite()).update(delta);
+        }
     }
 
     private boolean isStructureInBond(Structure structure) {
@@ -488,5 +493,22 @@ public class WorldController {
                 heart = null;
             }
         }, 20);
+    }
+
+    public void drawGift() {
+        gift = new SpriteHolder(new AnimatedSprite(new Animation<>(0.15f, GameAsset.GIFT_ANIMATION[0][4],
+            GameAsset.GIFT_ANIMATION[0][3], GameAsset.GIFT_ANIMATION[0][2], GameAsset.GIFT_ANIMATION[0][1],
+            GameAsset.GIFT_ANIMATION[0][0])), new Tuple<>(0f,0f));
+        gift.getSprite().setSize(App.tileWidth, App.tileHeight);
+        gift.getSprite().setPosition(
+            gift.getOffset().getX() + camera.position.x,
+            gift.getOffset().getY() + camera.position.y
+        );
+        Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+                gift = null;
+            }
+        }, 1.5f);
     }
 }

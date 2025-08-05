@@ -80,7 +80,7 @@ public class ArtisanMenu extends PopUp {
         );
         window.setMovable(false);
 
-        ImageButton trashCan = new ImageButton(new TextureRegionDrawable(new TextureRegion(GameAsset.WORM_BIN)));
+        trashCan = new ImageButton(new TextureRegionDrawable(new TextureRegion(GameAsset.WORM_BIN)));
         Table inventory = new Table();
         Table fridge = new Table();
         Table info = new Table();
