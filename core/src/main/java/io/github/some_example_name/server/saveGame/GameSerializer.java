@@ -26,7 +26,6 @@ import io.github.some_example_name.common.model.shelter.FarmBuildingType;
 import io.github.some_example_name.common.model.structure.farmInitialElements.Cottage;
 import io.github.some_example_name.common.model.structure.farmInitialElements.GreenHouse;
 import io.github.some_example_name.common.model.structure.farmInitialElements.Lake;
-import io.github.some_example_name.common.model.structure.farmInitialElements.Quarry;
 import io.github.some_example_name.client.view.Menu;
 
 import java.io.FileInputStream;
@@ -104,7 +103,6 @@ public class GameSerializer {
         kryo.register(Cottage.class);
         kryo.register(Direction.class);
         kryo.register(FarmBuildingType.class);
-        kryo.register(Quarry.class);
         kryo.register(Pair.class);
         kryo.register(GreenHouse.class);
         kryo.register(Lake.class);
