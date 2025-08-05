@@ -42,4 +42,6 @@ public abstract class Structure {
     public SpriteComponent getSpriteComponent() {
         return null;
     }
+
+    public void updateSprite() {}
 }

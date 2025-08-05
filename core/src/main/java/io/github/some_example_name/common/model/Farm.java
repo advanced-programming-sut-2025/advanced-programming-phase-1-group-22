@@ -234,7 +234,7 @@ public class Farm implements JsonPreparable {
         int foragingRand3 = random.nextInt(10, 12);
         for (int i = 0; i < trunkRand; i++) {
             Trunk trunk = null;
-            switch (trunkRand % 3) {
+            switch (random.nextInt(10, 15) % 3) {
                 case 0 -> {
                     trunk = new Trunk(TrunkType.SMALL_TRUNK);
                 }
@@ -249,7 +249,7 @@ public class Farm implements JsonPreparable {
         }
         for (int i = 0; i < stoneRand; i++) {
             Stone stone = null;
-            switch (stoneRand % 3) {
+            switch (random.nextInt(10, 15) % 3) {
                 case 0 -> {
                     stone = new Stone(StoneType.SMALL_STONE);
                 }
