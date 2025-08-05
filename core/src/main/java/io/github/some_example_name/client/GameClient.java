@@ -1045,6 +1045,8 @@ public class GameClient {
                     field.set(obj, null);
                 } else if (fieldType.equals(int.class) || fieldType.equals(Integer.class)) {
                     field.set(obj, entry.getValue().getAsInt());
+                } else if (fieldType.equals(long.class) || fieldType.equals(Long.class)) {
+                    field.set(obj, entry.getValue().getAsLong());
                 } else if (fieldType.equals(boolean.class) || fieldType.equals(Boolean.class)) {
                     field.set(obj, entry.getValue().getAsBoolean());
                 } else if (fieldType.equals(String.class)) {
@@ -1066,14 +1068,24 @@ public class GameClient {
         return obj;
     }
 
-
     private Object decodeStructure(JsonObject body) {
         Object obj;
         try {
             Class<?> clazz = Class.forName(body.get("!class").getAsString());
+            if (clazz.isEnum()) {
+                JsonElement valueElem = body.get("value");
+                if (valueElem != null && valueElem.isJsonPrimitive()) {
+                    return clazz.getEnumConstants()[valueElem.getAsInt()];
+                } else {
+                    return clazz.getEnumConstants()[0];
+                }
+            }
+            if (clazz == MilkPail.class) {
+                return MilkPail.getInstance();
+            }
             Constructor<?> constructor = clazz.getConstructor();
             obj = constructor.newInstance();
-            if (Structure.class.isAssignableFrom(clazz)) {
+            if (Structure.class.isAssignableFrom(clazz) && obj instanceof Structure) {
                 updateTiles((Structure) obj, body);
             }
             for (Map.Entry<String, JsonElement> entry : body.entrySet()) {
@@ -1086,6 +1098,8 @@ public class GameClient {
                     field.set(obj, null);
                 } else if (fieldType.equals(int.class) || fieldType.equals(Integer.class)) {
                     field.set(obj, entry.getValue().getAsInt());
+                } else if (fieldType.equals(long.class) || fieldType.equals(Long.class)) {
+                    field.set(obj, entry.getValue().getAsLong());
                 } else if (fieldType.equals(boolean.class) || fieldType.equals(Boolean.class)) {
                     field.set(obj, entry.getValue().getAsBoolean());
                 } else if (fieldType.equals(String.class)) {
@@ -1135,6 +1149,7 @@ public class GameClient {
                             continue;
                         }
                         if (fieldType.equals(int.class) || fieldType.equals(Integer.class) ||
+                            fieldType.equals(long.class) || fieldType.equals(Long.class) ||
                             fieldType.equals(boolean.class) || fieldType.equals(Boolean.class) ||
                             fieldType.equals(String.class) || fieldType.equals(float.class) ||
                             fieldType.equals(Float.class) || fieldType.equals(double.class) ||
@@ -1182,9 +1197,20 @@ public class GameClient {
         Object obj;
         try {
             Class<?> clazz = Class.forName(body.get("!class").getAsString());
+            if (clazz.isEnum()) {
+                JsonElement valueElem = body.get("value");
+                if (valueElem != null && valueElem.isJsonPrimitive()) {
+                    return clazz.getEnumConstants()[valueElem.getAsInt()];
+                } else {
+                    return clazz.getEnumConstants()[0];
+                }
+            }
+            if (clazz == MilkPail.class) {
+                return MilkPail.getInstance();
+            }
             Constructor<?> constructor = clazz.getConstructor();
             obj = constructor.newInstance();
-            if (Structure.class.isAssignableFrom(clazz)) {
+            if (Structure.class.isAssignableFrom(clazz) && obj instanceof Structure) {
                 putBackTiles((Structure) obj, body);
             }
             for (Map.Entry<String, JsonElement> entry : body.entrySet()) {
@@ -1197,6 +1223,8 @@ public class GameClient {
                     field.set(obj, null);
                 } else if (fieldType.equals(int.class) || fieldType.equals(Integer.class)) {
                     field.set(obj, entry.getValue().getAsInt());
+                } else if (fieldType.equals(long.class) || fieldType.equals(Long.class)) {
+                    field.set(obj, entry.getValue().getAsLong());
                 } else if (fieldType.equals(boolean.class) || fieldType.equals(Boolean.class)) {
                     field.set(obj, entry.getValue().getAsBoolean());
                 } else if (fieldType.equals(String.class)) {
@@ -1222,7 +1250,7 @@ public class GameClient {
     private Object decodeStructureUpdate(JsonObject body, Object obj) {
         try {
             Class<?> clazz = Class.forName(body.get("!class").getAsString());
-            if (Structure.class.isAssignableFrom(clazz)) {
+            if (Structure.class.isAssignableFrom(clazz) && obj instanceof Structure) {
                 updateTiles((Structure) obj, body);
             }
             for (Map.Entry<String, JsonElement> entry : body.entrySet()) {
@@ -1235,6 +1263,8 @@ public class GameClient {
                     field.set(obj, null);
                 } else if (fieldType.equals(int.class) || fieldType.equals(Integer.class)) {
                     field.set(obj, entry.getValue().getAsInt());
+                } else if (fieldType.equals(long.class) || fieldType.equals(Long.class)) {
+                    field.set(obj, entry.getValue().getAsLong());
                 } else if (fieldType.equals(boolean.class) || fieldType.equals(Boolean.class)) {
                     field.set(obj, entry.getValue().getAsBoolean());
                 } else if (fieldType.equals(String.class)) {
@@ -1323,6 +1353,10 @@ public class GameClient {
             putTiles(map, (Structure) object);
         }
         Class<?> clazz = object.getClass();
+        if (clazz.isEnum()) {
+            map.put("value", ((Enum<?>) object).ordinal());
+            return map;
+        }
         while (clazz != Object.class && clazz != Structure.class) {
             for (Field field : clazz.getDeclaredFields()) {
                 if (Modifier.isTransient(field.getModifiers()) || Modifier.isStatic(field.getModifiers()) ||
@@ -1339,6 +1373,7 @@ public class GameClient {
                     if (obj == null) {
                         map.put(field.getName(), null);
                     } else if (fieldType.equals(int.class) || fieldType.equals(Integer.class) ||
+                        fieldType.equals(long.class) || fieldType.equals(Long.class) ||
                         fieldType.equals(boolean.class) || fieldType.equals(Boolean.class) ||
                         fieldType.equals(String.class) || fieldType.equals(float.class) ||
                         fieldType.equals(Float.class) || fieldType.equals(double.class) ||

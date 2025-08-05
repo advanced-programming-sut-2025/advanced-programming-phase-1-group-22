@@ -66,19 +66,19 @@ public class Player extends Actor implements JsonPreparable {
     private Menu currentMenu = Menu.COTTAGE;
     private TrashCan currentTrashCan;
     private Boolean isWedding = false;
-    private ArrayList<SpriteHolder> sprites = new ArrayList<>();
-    private ArrayList<Notification<com.badlogic.gdx.scenes.scene2d.Actor, Actor>> notifications = new ArrayList<>();
+    private transient ArrayList<SpriteHolder> sprites = new ArrayList<>();
+    private transient ArrayList<Notification<com.badlogic.gdx.scenes.scene2d.Actor, Actor>> notifications = new ArrayList<>();
     private Integer emojiReactionIndex;
     private String textReaction;
     private float lastReaction;
     private final List<MultiMission> activeMissions = new ArrayList<>();
-    private AudioStreamer audioStreamer;
+    private transient AudioStreamer audioStreamer;
     private boolean isStreaming = false;
-    private final List<Socket> listener = new ArrayList<>();
-    private AudioReceiver audioReceiver;
+    private transient final List<Socket> listener = new ArrayList<>();
+    private transient AudioReceiver audioReceiver;
     private boolean isReceiving = false;
     @JsonProperty("abilitiesMap")
-    private ObjectMapWrapper abilitiesWrapper;
+    private transient ObjectMapWrapper abilitiesWrapper;
 
     @JsonProperty("cookingRecipesMap")
     private ObjectMapWrapper cookingRecipesWrapper;

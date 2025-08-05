@@ -15,6 +15,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import io.github.some_example_name.client.GameClient;
 import io.github.some_example_name.client.MainGradle;
+import io.github.some_example_name.client.view.mainMenu.FeedAnimal;
+import io.github.some_example_name.client.view.mainMenu.ShepherdAnimal;
 import io.github.some_example_name.common.model.Direction;
 import io.github.some_example_name.common.model.Farm;
 import io.github.some_example_name.common.model.StructureUpdateState;
@@ -132,13 +134,13 @@ public class AnimalController {
             if (animal.getTimeSinceLastMove() > 0.3f) {
                 animal.setTimeSinceLastMove(0);
                 Vector2 nextStep = animal.getMovementPath().poll();
-                if (nextStep != null){
-                    Tile tile = getTileByXAndY((int) nextStep.x,(int) nextStep.y);
+                if (nextStep != null) {
+                    Tile tile = getTileByXAndY((int) nextStep.x, (int) nextStep.y);
                     Tile priviousTile = animal.getTiles().get(0);
-                    if (tile!= null){
+                    if (tile != null) {
                         animal.getTiles().clear();
                         animal.getTiles().add(tile);
-                        GameClient.getInstance().updateStructureState(animal, StructureUpdateState.UPDATE,true,priviousTile);
+                        GameClient.getInstance().updateStructureState(animal, StructureUpdateState.UPDATE, true, priviousTile);
                     }
                 }
             }
@@ -215,7 +217,12 @@ public class AnimalController {
         feedButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                worldController.showResponse(gameService.feedHay(animal));
+                Response response = gameService.feedHay(animal);
+                worldController.showResponse(response);
+                if (response.shouldBeBack()) {
+                    FeedAnimal feedAnimal = new FeedAnimal(animal);
+                    feedAnimal.createMenu(GameView.stage, GameAsset.SKIN, WorldController.getInstance());
+                }
                 menuGroup.clear();
                 createAnimalMenu(animal);
             }
@@ -267,7 +274,12 @@ public class AnimalController {
                 try {
                     int positionX = Integer.parseInt(shepherdPositionX.getText());
                     int positionY = Integer.parseInt(shepherdPositionY.getText());
-                    worldController.showResponse(gameService.shepherdAnimals(animal, positionX, positionY));
+                    Response response = gameService.shepherdAnimals(animal, positionX, positionY);
+                    worldController.showResponse(response);
+                    if (response.shouldBeBack()) {
+                        ShepherdAnimal shepherdAnimal = new ShepherdAnimal(animal);
+                        shepherdAnimal.createMenu(GameView.stage, GameAsset.SKIN, WorldController.getInstance());
+                    }
                     menuGroup.clear();
                     createAnimalMenu(animal);
                 } catch (Exception ignored) {
