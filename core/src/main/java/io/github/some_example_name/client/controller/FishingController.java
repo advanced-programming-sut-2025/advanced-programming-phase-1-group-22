@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector3;
 import io.github.some_example_name.client.GameClient;
 import io.github.some_example_name.client.MainGradle;
 import io.github.some_example_name.common.model.Farm;
+import io.github.some_example_name.common.model.Salable;
 import io.github.some_example_name.common.model.Tile;
 import io.github.some_example_name.common.model.abilitiy.Ability;
 import io.github.some_example_name.common.model.animal.Fish;
@@ -34,9 +35,19 @@ public class FishingController {
                     App.getInstance().getCurrentGame().getCurrentPlayer().upgradeAbility(Ability.FISHING);
                     if (!miniGame.isShowWinFish()) {
                         getFish(miniGame);
-                        if (miniGame.isFishingPerfect())
-                            worldController.showResponse(new Response("This Fishing was perfect!", true));
-                        else worldController.showResponse(new Response("You win and get a fish", true));
+                        if (miniGame.isFishingPerfect()) {
+                            if (playerHaveSonarBobber(App.getInstance().getCurrentGame().getCurrentPlayer())) {
+                                worldController.showResponse(new Response("This Fishing was perfect! --> You get a " + miniGame.getFish().getName(), true));
+                            } else {
+                                worldController.showResponse(new Response("This Fishing was perfect!", true));
+                            }
+                        } else {
+                            if (playerHaveSonarBobber(App.getInstance().getCurrentGame().getCurrentPlayer())) {
+                                worldController.showResponse(new Response("You win and get a fish --> You got a " + miniGame.getFish().getName(), true));
+                            } else {
+                                worldController.showResponse(new Response("You win and get a fish", true));
+                            }
+                        }
                         miniGame = null;
                     }
                 } else {
@@ -63,6 +74,11 @@ public class FishingController {
                 });
             }
         }
+    }
+
+    private boolean playerHaveSonarBobber(Player player) {
+        Salable salable = player.getInventory().getProductFromBackPack("sonar bobber");
+        return salable != null;
     }
 
     private void getFish(MiniGame miniGame) {
