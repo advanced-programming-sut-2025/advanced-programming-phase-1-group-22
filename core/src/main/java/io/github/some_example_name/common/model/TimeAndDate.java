@@ -71,6 +71,7 @@ public class TimeAndDate {
 
     public void moveTimeForward() {
         boolean nextDay = false;
+        boolean nextSeason = false;
         minute += 1;
         App.getInstance().getCurrentGame().getVillage().updateNpcs(this);
         if (minute >= 60) {
@@ -85,6 +86,7 @@ public class TimeAndDate {
         if (day >= 29) {
             day = 1;
             season = Season.values()[season.ordinal() + 1];
+            nextSeason = true;
         }
         if (season.ordinal() == 4) {
             year++;
@@ -92,6 +94,9 @@ public class TimeAndDate {
         }
         if (nextDay) {
             App.getInstance().getCurrentGame().startDay();
+        }
+        if (nextSeason) {
+            App.getInstance().getCurrentGame().startSeason();
         }
         Player player = App.getInstance().getCurrentGame().getCurrentPlayer();
         if (player.getBuff() != null) {

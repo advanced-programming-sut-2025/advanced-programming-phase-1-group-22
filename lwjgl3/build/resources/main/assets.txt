@@ -2059,6 +2059,7 @@ Ingredient/Vinegar.png
 Ingredient/Wheat_Flour.png
 Inventory/Filled_Button.png
 Inventory/Gift.png
+Inventory/Gift_Animation.png
 Inventory/Inventory_Parts.png
 Inventory/Inventory_Tab.png
 Inventory/Notification.png
@@ -2172,6 +2173,10 @@ Node/Omni_Geode_Node.png
 Node/Radioactive_Node.png
 Node/Ruby_Node.png
 Node/Topaz_Node.png
+Outdoors/Outdoors_Fall.png
+Outdoors/Outdoors_Spring.png
+Outdoors/Outdoors_Summer.png
+Outdoors/Outdoors_Winter.png
 Pants/Baggy_Pants.png
 Pants/Dinosaur_Pants.png
 Pants/Farmer_Pants.png

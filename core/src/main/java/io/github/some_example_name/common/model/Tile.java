@@ -51,17 +51,27 @@ public class Tile {
     }
 
     public TextureRegion getTextureRegion() {
-        if (tileType == TileType.PLOWED) {
-            Game currentGame = App.getInstance().getCurrentGame();
-            boolean f0 = TileType.PLOWED != currentGame.getTiles()[this.getX()][this.getY() + 1].getTileType();
-            boolean f1 = TileType.PLOWED != currentGame.getTiles()[this.getX() + 1][this.getY()].getTileType();
-            boolean f2 = TileType.PLOWED != currentGame.getTiles()[this.getX()][this.getY() - 1].getTileType();
-            boolean f3 = TileType.PLOWED != currentGame.getTiles()[this.getX() - 1][this.getY()].getTileType();
-            Pair pair = new Pair();
-            TileType.mapBooleansToPair(f0, f1, f2, f3, pair);
-            return tileType.getTexture()[pair.getX()][pair.getY()];
+        Game currentGame = App.getInstance().getCurrentGame();
+        Pair pair = new Pair();
+        switch (tileType) {
+            case PLOWED: {
+                boolean f0 = TileType.PLOWED != currentGame.getTiles()[this.getX()][this.getY() + 1].getTileType();
+                boolean f1 = TileType.PLOWED != currentGame.getTiles()[this.getX() + 1][this.getY()].getTileType();
+                boolean f2 = TileType.PLOWED != currentGame.getTiles()[this.getX()][this.getY() - 1].getTileType();
+                boolean f3 = TileType.PLOWED != currentGame.getTiles()[this.getX() - 1][this.getY()].getTileType();
+                TileType.mapBooleansToPair(f0, f1, f2, f3, pair);
+            }
+            case GRASS: {
+                boolean f0 = TileType.GRASS != currentGame.getTiles()[this.getX()][this.getY() + 1].getTileType();
+                boolean f1 = TileType.GRASS != currentGame.getTiles()[this.getX() + 1][this.getY()].getTileType();
+                boolean f2 = TileType.GRASS != currentGame.getTiles()[this.getX()][this.getY() - 1].getTileType();
+                boolean f3 = TileType.GRASS != currentGame.getTiles()[this.getX() - 1][this.getY()].getTileType();
+                TileType.mapBooleansToPair(f0, f1, f2, f3, pair);
+                return tileType.getTexture()[pair.getX()][pair.getY()];
+            }
+            default:
+                return tileType.getTexture()[0][0];
         }
-        return tileType.getTexture()[0][0];
     }
 
     public void updateTileState(Tile tile){
