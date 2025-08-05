@@ -24,6 +24,7 @@ public class RegisterMenu extends Menu {
     private final TextButton randomPassword;
     private final TextButton securityQuestion;
     private final TextButton back;
+    private final TextButton login;
     private SecurityQuestion securityQuestionValue;
     private final SelectBox<String> securityQuestions;
     private final TextField answer;
@@ -45,6 +46,7 @@ public class RegisterMenu extends Menu {
         this.randomPassword = new TextButton("Random Password", skin);
         this.securityQuestion = new TextButton("Security Question", skin);
         this.back = new TextButton("Back", skin);
+        this.login = new TextButton("Login", skin);
         this.register = new TextButton("Register", skin);
         this.backFromSecurityWindow = new TextButton("Back", skin);
         this.genderBox = new SelectBox<>(skin);
@@ -100,7 +102,14 @@ public class RegisterMenu extends Menu {
                 setScreen(new FirstMenu(GameAsset.SKIN_MENU));
             }
         });
-        table.add(back).width(400).row();
+        table.add(back).width(400).padRight(10);
+        this.login.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                setScreen(new LoginMenu(GameAsset.SKIN_MENU));
+            }
+        });
+        table.add(login).width(400).row();
         createSecurityQuestionWindow();
     }
 

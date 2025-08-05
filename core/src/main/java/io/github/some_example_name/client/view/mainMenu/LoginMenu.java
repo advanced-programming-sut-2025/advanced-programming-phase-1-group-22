@@ -5,6 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import io.github.some_example_name.client.GameClient;
 import io.github.some_example_name.client.controller.mainMenu.LoginMenuController;
+import io.github.some_example_name.common.utils.GameAsset;
 import io.github.some_example_name.common.variables.Session;
 import lombok.Getter;
 
@@ -16,6 +17,7 @@ public class LoginMenu extends Menu {
     private final CheckBox stayLoggedIn;
     private final TextButton login;
     private final TextButton back;
+    private final TextButton register;
     private final TextButton forgetPassword;
     private Dialog forgetPasswordDialog;
     private final TextField answer;
@@ -34,6 +36,7 @@ public class LoginMenu extends Menu {
         this.stayLoggedIn = new CheckBox("Stay logged in", skin);
         this.login = new TextButton("Login", skin);
         this.back = new TextButton("Back", skin);
+        this.register = new TextButton("Register", skin);
         this.forgetPassword = new TextButton("Forget Password", skin);
         this.usernameForDialog = new TextField("", skin);
         this.answer = new TextField("", skin);
@@ -80,7 +83,14 @@ public class LoginMenu extends Menu {
                 setScreen(new FirstMenu(skin));
             }
         });
-        this.table.add(back).width(400).row();
+        this.table.add(back).width(400).padRight(10);
+        this.register.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                setScreen(new RegisterMenu(GameAsset.SKIN_MENU));
+            }
+        });
+        this.table.add(register).width(400).row();
         createForgetPasswordWindow();
     }
 
