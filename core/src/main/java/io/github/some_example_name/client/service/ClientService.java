@@ -22,6 +22,7 @@ import io.github.some_example_name.common.model.structure.stores.Shop;
 import io.github.some_example_name.common.utils.App;
 import io.github.some_example_name.common.utils.GameAsset;
 import io.github.some_example_name.common.utils.InitialGame;
+import io.github.some_example_name.common.variables.Session;
 
 import java.util.*;
 
@@ -249,12 +250,14 @@ public class ClientService {
             for (Lobby lobby : App.getInstance().getLobbies()) {
                 if (lobby.getId() == id) {
                     lobby.setGameStart(true);
-                    App.getInstance().setCurrentLobby(lobby);
-                    InitialGame initialGame = new InitialGame();
-                    initialGame.initial();
-                    Gdx.app.postRunnable(() -> {
-                        MainGradle.getInstance().setScreen(new StartGameMenu(GameAsset.SKIN_MENU, 1));
-                    });
+                    if (lobby.getMembers().contains(Session.getCurrentUser().getUsername())) {
+                        App.getInstance().setCurrentLobby(lobby);
+                        InitialGame initialGame = new InitialGame();
+                        initialGame.initial();
+                        Gdx.app.postRunnable(() -> {
+                            MainGradle.getInstance().setScreen(new StartGameMenu(GameAsset.SKIN_MENU, 1));
+                        });
+                    }
                 }
             }
         }
@@ -265,11 +268,13 @@ public class ClientService {
             for (Lobby lobby : App.getInstance().getLobbies()) {
                 if (lobby.getId() == id) {
                     lobby.setGameStart(true);
-                    App.getInstance().setCurrentLobby(lobby);
-                    StartGameMenuController.getInstance().setLoad(true);
-                    StartGameMenuController.getInstance().setReconnect(true);
-                    InitialGame initialGame = new InitialGame();
-                    initialGame.initial();
+                    if (lobby.getMembers().contains(Session.getCurrentUser().getUsername())) {
+                        App.getInstance().setCurrentLobby(lobby);
+                        StartGameMenuController.getInstance().setLoad(true);
+                        StartGameMenuController.getInstance().setReconnect(true);
+                        InitialGame initialGame = new InitialGame();
+                        initialGame.initial();
+                    }
                 }
             }
         }
