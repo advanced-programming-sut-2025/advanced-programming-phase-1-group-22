@@ -375,6 +375,8 @@ public class LobbyMenu extends Menu {
         if (lobby.getGameServer() != null && lobby.isGameServerSaved()) {
             if (!canStartGame(lobby)) {
                 alert("all of players should be online", 5);
+            } else if (!allMemberNotPlaying(lobby)) {
+                alert("some user are playing now!", 5);
             } else {
                 App.getInstance().setCurrentLobby(lobby);
                 GameClient.getInstance().readyForLoadGame(lobby);
@@ -389,6 +391,8 @@ public class LobbyMenu extends Menu {
         if (lobby.getMembers().size() >= 2) {
             if (!canStartGame(lobby)) {
                 alert("all of players should be online", 5);
+            } else if (!allMemberNotPlaying(lobby)) {
+                alert("some user are playing now!", 5);
             } else {
                 lobby.setGameStart(true);
                 App.getInstance().setCurrentLobby(lobby);
@@ -409,5 +413,21 @@ public class LobbyMenu extends Menu {
             }
         }
         return true;
+    }
+
+    private boolean allMemberNotPlaying(Lobby lobby) {
+        for (String member : lobby.getMembers()) {
+            if (playing(member)) return false;
+        }
+        return true;
+    }
+
+    private boolean playing(String username) {
+        for (Lobby lobby : App.getInstance().getLobbies()) {
+            if (lobby.getMembers().contains(username) && lobby.isGameStart()) {
+                return true;
+            }
+        }
+        return false;
     }
 }
