@@ -196,6 +196,7 @@ public class ClientHandler extends Thread {
                     } else if (obj.get("action").getAsString().equals("login")) {
                         String username = obj.get("id").getAsString();
                         GameThread.getInstance().getConnections().put(username, this);
+                        GameThread.getInstance().getLastConnections().put(username, System.currentTimeMillis());
                         if (!App.getInstance().getLobbies().isEmpty()) {
                             Map<String, Object> msg = Map.of(
                                 "action", "send_lobbies",

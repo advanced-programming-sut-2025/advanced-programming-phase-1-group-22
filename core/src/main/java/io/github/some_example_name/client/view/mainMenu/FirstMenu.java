@@ -5,6 +5,8 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import io.github.some_example_name.client.GameClient;
+import io.github.some_example_name.client.MainGradle;
 import io.github.some_example_name.common.utils.GameAsset;
 import io.github.some_example_name.common.variables.Session;
 
@@ -53,6 +55,8 @@ public class FirstMenu extends Menu {
         this.exit.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                GameClient.getInstance().stopListening();
+                MainGradle.getInstance().getScreen().dispose();
                 Gdx.app.exit();
             }
         });

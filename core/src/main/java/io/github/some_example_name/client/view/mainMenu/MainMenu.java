@@ -7,8 +7,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import io.github.some_example_name.client.GameClient;
+import io.github.some_example_name.client.MainGradle;
 import io.github.some_example_name.client.controller.mainMenu.MainMenuController;
 import io.github.some_example_name.common.variables.Session;
+
+import java.util.Set;
 
 public class MainMenu extends Menu {
     private final MainMenuController controller = new MainMenuController(this);
@@ -70,6 +73,8 @@ public class MainMenu extends Menu {
         this.exit.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                GameClient.getInstance().stopListening();
+                MainGradle.getInstance().getScreen().dispose();
                 Gdx.app.exit();
             }
         });

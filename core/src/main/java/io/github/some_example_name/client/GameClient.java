@@ -41,6 +41,7 @@ public class GameClient {
     private static final Gson GSON = new GsonBuilder().serializeNulls().create();
     private static GameClient instance;
     private Socket socket;
+    private boolean running = true;
     private P2PConnection p2PConnection;
     private P2PReceiving p2PReceiving;
     private JsonMessageHandler jsonMessageHandler;
@@ -299,7 +300,7 @@ public class GameClient {
         new Thread(() -> {
             try {
                 String serverMessage;
-                while ((serverMessage = jsonMessageHandler.receive()) != null) {
+                while (running && (serverMessage = jsonMessageHandler.receive()) != null) {
                     try {
                         JsonObject obj = JsonParser.parseString(serverMessage).getAsJsonObject();
 
@@ -741,6 +742,19 @@ public class GameClient {
                 debug(e);
             }
         }).start();
+    }
+
+    public void stopListening(){
+        running = false;
+        if (p2PConnection != null) p2PConnection.stopThread();
+        if (gameTimer != null){
+            gameTimer.cancel();
+            gameTimer.purge();
+        }
+        if (userTimer != null){
+            userTimer.cancel();
+            userTimer.purge();
+        }
     }
 
     public void sendGameStateToServer(String gameState) {
