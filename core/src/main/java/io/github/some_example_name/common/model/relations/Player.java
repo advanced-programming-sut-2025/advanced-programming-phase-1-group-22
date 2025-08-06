@@ -350,7 +350,7 @@ public class Player extends Actor implements JsonPreparable {
         );
         if (this.getEnergy() < energy || energy == -1) {
             this.walkTillFaint(walkingStrategy.getDistances(), new Pair(x1, y1));
-            this.faint();
+            this.applyFaint();
             walkingStrategy.getDistances().clear();
             return;
         }

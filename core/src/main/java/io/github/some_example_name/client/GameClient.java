@@ -503,7 +503,7 @@ public class GameClient {
                                 ));
                                 tradeMenu.setTrader(false);
                             }
-                        } else if (obj.get("action").getAsString().equals("trade_reject")) {
+                        } else if (obj.get("action").getAsString().equals("reject_trade")) {
                             TradeMenu.getTradeMenu().getController().showResponse(new Response(
                                 body.get("message").getAsString()
                             ));
@@ -1880,7 +1880,8 @@ public class GameClient {
                 "id", Session.getCurrentUser().getUsername(),
                 "body", Map.of(
                     "personality", npc.getType().getPersonality() + "\n Today is a lovely "
-                        + App.getInstance().getCurrentGame().getTimeAndDate().getSeason().name() + " day",
+                        + App.getInstance().getCurrentGame().getTimeAndDate().getSeason().name() + " day. The weather is "
+                        + App.getInstance().getCurrentGame().getVillage().getWeather() + " and I love it.",
                     "npc", npc.getName()
                 )
             );

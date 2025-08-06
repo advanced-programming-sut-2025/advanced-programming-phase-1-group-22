@@ -2,7 +2,9 @@ package io.github.some_example_name.client.view.mainMenu;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.Timer;
@@ -15,6 +17,7 @@ import io.github.some_example_name.common.model.records.Response;
 import io.github.some_example_name.common.model.relations.Friendship;
 import io.github.some_example_name.common.model.relations.Player;
 import io.github.some_example_name.common.utils.App;
+import io.github.some_example_name.common.utils.GameAsset;
 import io.github.some_example_name.server.service.RelationService;
 import lombok.Setter;
 
@@ -134,8 +137,16 @@ public class PublicChatMenu extends PopUp {
         boolean isGifting = dialog.getValue() == currentPlayer;
         Table giftTable = new Table(skin);
         Table rowWrapper = new Table();
+        boolean isTagging = dialog.getKey().contains("@" + App.getInstance().getCurrentGame().getCurrentPlayer().getUser().getUsername());
         for (String line : wrapString(dialog.getKey(), 20)) {
-            giftTable.add(new Label(line, skin));
+            if (isTagging) {
+                Label.LabelStyle labelStyle = new Label.LabelStyle();
+                labelStyle.font = GameAsset.MAIN_FONT;
+                labelStyle.fontColor = Color.RED;
+                giftTable.add(new Label(line, labelStyle));
+            } else {
+                giftTable.add(new Label(line, skin));
+            }
             if (!isGifting) giftTable.right();
             giftTable.row();
         }

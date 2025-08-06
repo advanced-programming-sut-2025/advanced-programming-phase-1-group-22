@@ -52,10 +52,10 @@ public class TradeHistoryMenu extends PopUp {
         scrollPane.setForceScroll(false, true);
         scrollPane.layout();
         scrollPane.setTouchable(Touchable.enabled);
-        inventory.add(new Label("Trader", skin)).width(120).padRight(20);
+        inventory.add(new Label("Trader", skin)).width(140).padRight(20);
         inventory.add(new Label("Trader Offer", skin)).width(320).padRight(20);
-        inventory.add(new Label("Customer", skin)).width(120).padRight(20);
-        inventory.add(new Label("Customer Offer", skin)).width(320).padRight(20);
+        inventory.add(new Label("Customer", skin)).width(140).padRight(20);
+        inventory.add(new Label("Customer Offer", skin)).width(320).row();
         for (Trade trade : App.getInstance().getCurrentGame().getCurrentPlayer().getGootenTradeList()) {
             inventory.add(new Image(trade.getTrader().getAvatar()));
             Table traderTable = new Table();

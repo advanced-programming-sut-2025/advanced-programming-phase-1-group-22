@@ -438,7 +438,7 @@ public class Game implements Serializable {
         synchronized (dialogsUpdated) {dialogsUpdated.set(true);}
         if (message.contains("@" + App.getInstance().getCurrentGame().getCurrentPlayer().getUser().getUsername())) {
             App.getInstance().getCurrentGame().getCurrentPlayer().getNotified(
-                new Response(sender.getNickname() + " has mentioned you.", true),
+                new Response(sender.getNickname() + ": " + message, true),
                 NotificationType.MENTION,
                 sender
             );

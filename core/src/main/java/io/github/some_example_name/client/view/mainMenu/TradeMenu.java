@@ -92,10 +92,9 @@ public class TradeMenu extends PopUp {
             Dialog dialog = new Dialog("How Many?", skin);
             dialog.setWidth(500);
             dialog.setHeight(400);
-            dialog.center();
             TextArea count = new TextArea("", skin);
             TextButton confirm = new TextButton("Confirm", skin);
-            dialog.add(count).width(300);
+            dialog.add(count).width(300).row();
             dialog.add(confirm).width(300);
             confirm.addListener(new  ClickListener() {
                 @Override
