@@ -15,6 +15,7 @@ import io.github.some_example_name.common.utils.App;
 import java.util.Map;
 
 public class TradeService {
+    /*
     Game game = App.getInstance().getCurrentGame();
     Player currentPlayer = game.getCurrentPlayer();
     RelationService relationService = RelationService.getInstance();
@@ -394,4 +395,5 @@ public class TradeService {
             }
         }
     }
+     */
 }

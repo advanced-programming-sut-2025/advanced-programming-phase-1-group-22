@@ -330,24 +330,18 @@ public class CameraViewController {
                 gameMenuController.C_AddItem("triple shot espresso recipe", "1");
             }
             if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_6)) {
-                TradeService.getInstance().tradePriceRequest(
-                    new TradePriceDto("Roham1234", "offer", "flower", 1, 200));
+
             }
             if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_7)) {
                 gameMenuController.C_AddItem("pizza", "5");
                 gameMenuController.C_AddDollars("2000");
-                TradeService.getInstance().tradeProductRequest(
-                    new TradeProductDto("Roham1234", "offer", "flower", 1, "pizza", 1));
             }
             if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_8)) {
-                TradeService.getInstance().tradePriceOffer(
-                    new TradePriceDto("Roham1234", "offer", "pizza", 1, 200));
                 gameMenuController.C_AddItem("bee_house", "1");
                 gameMenuController.placeItem("bee_house", "south");
             }
             if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_9)) {
-                TradeService.getInstance().tradeProductOffer(
-                    new TradeProductDto("Roham1234", "offer", "pizza", 1, "flower", 1));
+
             }
             if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_0)) {
                 gameMenuController.C_AddItem("flower", "2");

@@ -16,8 +16,22 @@ public class Sundry implements Salable {
 
     public Sundry(SundryType sundryType) {
         this.sundryType = sundryType;
+        init();
+    }
+
+    private void init() {
         this.texture = sundryType.getTexture();
         this.sprite = new Sprite(sundryType.getTexture());
+    }
+
+    public Texture getTexture() {
+        if (texture == null) init();
+        return texture;
+    }
+
+    public Sprite getSprite() {
+        if (sprite == null) init();
+        return sprite;
     }
 
     @Override
