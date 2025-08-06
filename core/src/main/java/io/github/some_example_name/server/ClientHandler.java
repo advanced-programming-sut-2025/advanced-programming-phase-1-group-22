@@ -393,7 +393,6 @@ public class ClientHandler extends Thread {
                         ready = true;
                         if (gameServer.isReady()) {
                             gameServer.setDayEvents(new StringBuilder());
-                            gameServer.getDayEvents().append("Today weather is ").append(gameServer.getTomorrowWeather()).append(".");
                             gameServer.sendAll(message);
                         }
                     } else if (obj.get("action").getAsString().equals("propose_end")) {
@@ -463,7 +462,7 @@ public class ClientHandler extends Thread {
                             }
                         } else {
                             gameServer.clearFavors();
-                            gameServer.sendAllBut(message, obj.get("id").getAsString());
+                            gameServer.sendAllBut(message, body.get("player").getAsString());
                         }
                     } else if (obj.get("action").getAsString().equals("_set_weather")) {
                         gameServer.setTomorrowWeather(body.get("weather").getAsString());

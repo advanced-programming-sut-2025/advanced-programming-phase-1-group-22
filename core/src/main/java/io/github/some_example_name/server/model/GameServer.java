@@ -27,7 +27,7 @@ public class GameServer {
     private transient final Map<String, Long> DCPlayers = Collections.synchronizedMap(new HashMap<>());
     private transient final Map<String, Long> playerLastPing = Collections.synchronizedMap(new HashMap<>());
     private final List<Message> serverToClientsMessages = new ArrayList<>();
-    private StringBuilder dayEvents = new StringBuilder("Today it's a sunny spring.");
+    private StringBuilder dayEvents = new StringBuilder();
     private HashMap<String, NpcGift> npcGifts = new HashMap<>();
     private String tomorrowWeather = "sunny";
     private int roomId;
