@@ -28,7 +28,7 @@ public class TimeAndDate {
     @JsonIgnore
     private transient Sprite seasonSprite = new Sprite(GameAsset.ClOCK_MANNERS[1]);
     @JsonIgnore
-    private transient Sprite weather = new Sprite(GameAsset.ClOCK_MANNERS[6]);
+    private transient Sprite weather = new Sprite(GameAsset.ClOCK_MANNERS[7]);
 //    @JsonBackReference
     private transient Game currentGame = App.getInstance().getCurrentGame();
     private float delta = 0f;
