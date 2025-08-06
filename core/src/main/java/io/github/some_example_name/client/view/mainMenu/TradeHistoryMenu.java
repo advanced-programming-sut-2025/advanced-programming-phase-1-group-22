@@ -13,6 +13,8 @@ import io.github.some_example_name.server.service.TradeService;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.Scanner;
 
 @Setter
 public class TradeHistoryMenu extends PopUp {
@@ -50,47 +52,19 @@ public class TradeHistoryMenu extends PopUp {
         scrollPane.setForceScroll(false, true);
         scrollPane.layout();
         scrollPane.setTouchable(Touchable.enabled);
-        inventory.add(new Label("Trader", skin)).width(60).padRight(20);
-        inventory.add(new Label("Customer", skin)).width(60).padRight(20);
-        inventory.add(new Label("Trader Offer", skin)).width(200).padRight(20);
-        inventory.add(new Label("Customer Offer", skin)).width(200).padRight(20);
-        inventory.add(new Label("Status", skin)).colspan(2).width(300).row();
+        inventory.add(new Label("Trader", skin)).width(120).padRight(20);
+        inventory.add(new Label("Trader Offer", skin)).width(320).padRight(20);
+        inventory.add(new Label("Customer", skin)).width(120).padRight(20);
+        inventory.add(new Label("Customer Offer", skin)).width(320).padRight(20);
         for (Trade trade : App.getInstance().getCurrentGame().getCurrentPlayer().getGootenTradeList()) {
             inventory.add(new Image(trade.getTrader().getAvatar()));
+            Table traderTable = new Table();
+            Table customerTable = new Table();
+            fill(traderTable, trade.getProposed());
+            fill(customerTable, trade.getAnswered());
+            inventory.add(traderTable);
             inventory.add(new Image(trade.getCustomer().getAvatar()));
-            inventory.add(new Label(trade.getSalable() + " *" + trade.getQuantity(), skin));
-            inventory.add(new Label(
-                trade.getPrice() == null ?
-                    trade.getRequiredItem() + " *" + trade.getQuantityRequired() :
-                    "Gold *" + trade.getPrice()
-                , skin)
-            );
-            if (trade.getIsAnswered()) {
-                inventory.add(new Label(trade.getIsSuccessfulled() == null ? "Unknown" : trade.getIsSuccessfulled() ? "Accepted" : "Rejected", skin)).colspan(2).row();
-            } else {
-                if (trade.getIShouldAnswer()) {
-                    TextButton accept = new TextButton("Accept", skin);
-                    TextButton reject = new TextButton("Reject", skin);
-                    inventory.add(accept).width(130).padRight(30);
-                    inventory.add(reject).width(130).row();
-                    accept.addListener(new InputListener() {
-                        @Override
-                        public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                            getController().showResponse(TradeService.getInstance().tradeResponse(true, trade.getId()));
-                            return true;
-                        }
-                    });
-                    reject.addListener(new InputListener() {
-                        @Override
-                        public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                            getController().showResponse(TradeService.getInstance().tradeResponse(false, trade.getId()));
-                            return true;
-                        }
-                    });
-                } else {
-                    inventory.add(new Label("Pending...", skin)).colspan(2).row();
-                }
-            }
+            inventory.add(customerTable).row();
         }
 
         ArrayList<Actor> array = new ArrayList<>();
@@ -130,5 +104,33 @@ public class TradeHistoryMenu extends PopUp {
                 scrollPane.setScrollY(scrollY == null ? scrollPane.getMaxY() : Math.max(0, scrollY));
             }
         }, 0.2f);
+    }
+
+    private void fill(Table traderTable, Map<Salable, Integer> proposed) {
+        int maxCol = 5;
+        int maxRow = (int) Math.ceil((double) proposed.size() /4);
+        for (int row = 0; row < maxRow; row++) {
+            for (int col = 0; col < maxCol; col++) {
+                Image slot = new Image(slotTexture);
+
+                int index = row * maxCol + col;
+                if (index < proposed.size()) {
+                    java.util.List<Salable> items = new ArrayList<>(proposed.keySet());
+                    Salable item = items.get(index);
+                    Image itemImage = new Image(item.getTexture());
+                    ArrayList<ScrollPane> list = new ArrayList<>();
+                    itemImage.setSize(64, 64);
+                    Container<Label> labelContainer = getLabelContainer(proposed, item);
+                    Stack stack = new Stack();
+                    stack.add(slot);
+                    stack.add(itemImage);
+                    stack.add(labelContainer);
+                    traderTable.add(stack).size(64, 64);
+                } else {
+                    traderTable.add(slot).size(64, 64);
+                }
+            }
+            traderTable.row();
+        }
     }
 }

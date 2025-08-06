@@ -17,6 +17,7 @@ import io.github.some_example_name.server.service.RelationService;
 import io.github.some_example_name.common.utils.App;
 import io.github.some_example_name.common.utils.GameAsset;
 import io.github.some_example_name.client.view.GameView;
+import io.github.some_example_name.server.service.TradeService;
 import lombok.Setter;
 
 
@@ -87,7 +88,7 @@ public class NotificationMenu extends PopUp {
                                 menu.createMenu(stage, skin, getController());
                             } break;
                             case TRADE: {
-                                TradeHistoryMenu menu = new TradeHistoryMenu();
+                                TradeStartMenu menu = new TradeStartMenu();
                                 menu.createMenu(stage, skin, getController());
                             } break;
                             case MENTION: {

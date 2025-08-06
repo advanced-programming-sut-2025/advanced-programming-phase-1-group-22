@@ -1068,7 +1068,7 @@ public class InventoryMenu extends PopUp {
                     if (trades.get(j).isChecked()) {
                         endTask(array, exitButton);
                         getController().showResponse(new Response(friend.getUser().getNickname()));
-                        TradeMenu tradeMenu = new TradeMenu();
+                        TradeMenu tradeMenu = TradeMenu.getTradeMenu();
                         tradeMenu.setFriendship(friendship);
                         tradeMenu.createMenu(stage, skin, getController());
                         friendships.clear();
