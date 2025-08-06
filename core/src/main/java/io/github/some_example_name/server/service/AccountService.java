@@ -121,18 +121,26 @@ public class AccountService {
     }
 
     public Response changePassword(String newPassword, String oldPassword) {
-        if (!Session.getCurrentUser().getPassword().equals(oldPassword)) {
-            return new Response("your current password is not this: " + oldPassword);
+        try {
+            if (!passwordHasher.verifyPassword(oldPassword, Session.getCurrentUser().getPassword())) {
+                return new Response("your current password is not this: " + oldPassword);
+            }
+        } catch (Exception ignored) {
         }
+
         if (!UserCommands.STRONG_PASSWORD.matches(newPassword)) {
             return new Response("invalid new password");
         }
         if (newPassword.equals(oldPassword)) {
             return new Response("your new password is the same");
         }
-        userRepository.changePassword(Session.getCurrentUser().getUsername(), newPassword);
-        Session.getCurrentUser().setPassword(newPassword);
-        return new Response("password changed successfully", true);
+        try {
+            userRepository.changePassword(Session.getCurrentUser().getUsername(), passwordHasher.hashPassword(newPassword));
+            Session.getCurrentUser().setPassword(passwordHasher.hashPassword(newPassword));
+            return new Response("password changed successfully", true);
+        } catch (Exception ignored) {
+            return new Response("something went wrong");
+        }
     }
 
     public Response changeEmail(String email) {
@@ -179,9 +187,13 @@ public class AccountService {
         if (newPassword.equals(oldPassword)) {
             return new Response("your new password is the same");
         }
-        userRepository.changePassword(currentUser.getUsername(), newPassword);
-        currentUser.setPassword(newPassword);
-        return new Response("password changed successfully", true);
+        try {
+            userRepository.changePassword(currentUser.getUsername(), passwordHasher.hashPassword(newPassword));
+            currentUser.setPassword(passwordHasher.hashPassword(newPassword));
+            return new Response("password changed successfully", true);
+        } catch (Exception e) {
+            return new Response("something went wrong");
+        }
     }
 
     public Response logout() {
