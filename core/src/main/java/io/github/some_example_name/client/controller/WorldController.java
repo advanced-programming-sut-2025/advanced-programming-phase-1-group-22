@@ -48,6 +48,7 @@ public class WorldController {
     private ArrayList<Sprite> snowDrops = new ArrayList<>();
     private SpriteHolder flower;
     private SpriteHolder gift;
+    private SpriteHolder npcGift;
     private SpriteHolder heart;
     private Direction flowerDirection;
     private Direction giftDirection;
@@ -397,10 +398,10 @@ public class WorldController {
             flower.getSprite().setY(flower.getSprite().getY() + flowerDirection.getYTransmit() * App.tileHeight * delta / 4);
             flower.getSprite().draw(MainGradle.getInstance().getBatch());
         }
-        if (gift != null) {
-            gift.getSprite().setX(gift.getSprite().getX() + giftDirection.getXTransmit() * App.tileWidth * delta / 4);
-            gift.getSprite().setY(gift.getSprite().getY() + giftDirection.getYTransmit() * App.tileHeight * delta / 4);
-            gift.getSprite().draw(MainGradle.getInstance().getBatch());
+        if (npcGift != null) {
+            npcGift.getSprite().setX(npcGift.getSprite().getX() + giftDirection.getXTransmit() * App.tileWidth * delta / 4);
+            npcGift.getSprite().setY(npcGift.getSprite().getY() + giftDirection.getYTransmit() * App.tileHeight * delta / 4);
+            npcGift.getSprite().draw(MainGradle.getInstance().getBatch());
         }
         if (heart != null) {
             heart.getSprite().setY(heart.getSprite().getY() + App.tileHeight * delta / 5);
@@ -457,18 +458,18 @@ public class WorldController {
     }
 
     public void drawGift(Direction direction, Player requester) {
-        gift = new SpriteHolder(new AnimatedSprite(
+        npcGift = new SpriteHolder(new AnimatedSprite(
             new Animation<>(0.1f, new TextureRegion(GameAsset.GIFT))), new Tuple<>(0.5f, 0f));
-        gift.getSprite().setScale(0.4f);
-        ((AnimatedSprite) gift.getSprite()).setLooping(false);
-        gift.getSprite().setPosition(
-            (gift.getOffset().getX() + requester.getTiles().get(0).getX()) * App.tileWidth,
-            (gift.getOffset().getY() + requester.getTiles().get(0).getY()) * App.tileHeight);
+        npcGift.getSprite().setScale(0.4f);
+        ((AnimatedSprite) npcGift.getSprite()).setLooping(false);
+        npcGift.getSprite().setPosition(
+            (npcGift.getOffset().getX() + requester.getTiles().get(0).getX()) * App.tileWidth,
+            (npcGift.getOffset().getY() + requester.getTiles().get(0).getY()) * App.tileHeight);
         giftDirection = direction;
         Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
-                gift = null;
+                npcGift = null;
             }
         }, 8);
     }

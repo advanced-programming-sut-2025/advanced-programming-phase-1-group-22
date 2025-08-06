@@ -10,6 +10,7 @@ import io.github.some_example_name.client.view.GameView;
 import io.github.some_example_name.client.view.mainMenu.FireMenu;
 import io.github.some_example_name.client.view.mainMenu.LobbyMenu;
 import io.github.some_example_name.client.view.mainMenu.TerminateMenu;
+import io.github.some_example_name.client.view.mainMenu.TradeMenu;
 import io.github.some_example_name.common.JsonMessageHandler;
 import io.github.some_example_name.common.model.Farm;
 import io.github.some_example_name.common.model.abilitiy.Ability;
@@ -492,39 +493,43 @@ public class GameClient {
                                 }
                             }
                         } else if (obj.get("action").getAsString().equals("trade")) {
-                            TradeService.getInstance().addTradeByServer(
-                                service.getPlayerByUsername(body.get("customer").getAsString()),
-                                service.getPlayerByUsername(body.get("trader").getAsString()),
-                                body.get("salable").getAsString(),
-                                body.get("quantity").getAsInt(),
-                                body.has("requiredItem") ? body.get("requiredItem").getAsString() : null,
-                                body.has("quantityRequired") ? body.get("quantityRequired").getAsInt() : null,
-                                body.has("price") ? body.get("price").getAsInt() : null,
-                                body.get("id").getAsInt()
+                            if (TradeMenu.isInitialized()) {
+                                rejectTrade(obj.get("id").getAsString(), "Currently busy on another negotiation.");
+                            } else {
+                                TradeMenu tradeMenu = TradeMenu.getTradeMenu();
+                                tradeMenu.setFriendship(RelationService.getInstance().getFriendShipBetweenTwoActors(
+                                    service.getPlayerByUsername(body.get("receiver").getAsString()),
+                                    service.getPlayerByUsername(obj.get("id").getAsString())
+                                ));
+                                tradeMenu.setTrader(false);
+                            }
+                        } else if (obj.get("action").getAsString().equals("reject_trade")) {
+                            TradeMenu.getTradeMenu().getController().showResponse(new Response(
+                                body.get("message").getAsString()
+                            ));
+                            TradeMenu.uninit();
+                        } else if (obj.get("action").getAsString().equals("add_trade")) {
+                            TradeMenu tradeMenu = TradeMenu.getTradeMenu();
+                            tradeMenu.getAnswered().put(
+                                (Salable) decodeObject(body.getAsJsonObject("item")),
+                                body.get("count").getAsInt()
                             );
-                        } else if (obj.get("action").getAsString().equals("trade_reject")) {
-                            TradeService.getInstance().rejectTrade(
-                                service.getPlayerByUsername(obj.get("id").getAsString()),
-                                body.get("id").getAsInt()
-                            );
-                        } else if (obj.get("action").getAsString().equals("trade_reject_by_state")) {
-                            TradeService.getInstance().rejectTradeByState(
-                                service.getPlayerByUsername(obj.get("id").getAsString()),
-                                body.get("id").getAsInt()
-                            );
+                            tradeMenu.updateAnswered();
+                        } else if (obj.get("action").getAsString().equals("remove_trade")) {
+                            TradeMenu tradeMenu = TradeMenu.getTradeMenu();
+                            Salable salable1 = null;
+                            for (Salable salable : tradeMenu.getAnswered().keySet()) {
+                                if (salable.getName().equals(body.get("item").getAsString())) {
+                                    salable1 = salable;
+                                    break;
+                                }
+                            }
+                            if (salable1 != null) {
+                                tradeMenu.getAnswered().remove(salable1);
+                            }
+                            tradeMenu.updateAnswered();
                         } else if (obj.get("action").getAsString().equals("trade_accept")) {
-                            TradeService.getInstance().handleAccept(
-                                service.getPlayerByUsername(obj.get("id").getAsString()),
-                                body.get("id").getAsInt()
-                            );
-                        } else if (obj.get("action").getAsString().equals("send_trade")) {
-                            TradeService.getInstance().sendTrade(
-                                service.getPlayerByUsername(body.get("customer").getAsString()),
-                                body.get("id").getAsInt(),
-                                body.has("salable") ? (Salable) decodeObject(body.getAsJsonObject("salable")) : null,
-                                body.get("count").getAsInt(),
-                                body.get("shouldRespond").getAsBoolean()
-                            );
+                            TradeMenu.getTradeMenu().accept();
                         } else if (obj.get("action").getAsString().equals("_send_public")) {
                             App.getInstance().getCurrentGame().addPublicMessage(
                                 service.getPlayerByUsername(obj.get("id").getAsString()),
@@ -1733,20 +1738,29 @@ public class GameClient {
         }
     }
 
-    public void setTrade(Trade trade) {
+    public void setTrade(String customer) {
         try {
             Map<String, Object> msg = Map.of(
                 "action", "trade",
                 "id", Session.getCurrentUser().getUsername(),
                 "body", Map.of(
-                    "receiver", trade.getCustomer().equals(App.getInstance().getCurrentGame().getCurrentPlayer()) ? trade.getTrader().getName() : trade.getCustomer().getName(),
-                    "salable", trade.getSalable(),
-                    "quantity", trade.getQuantity(),
-                    "trader", trade.getTrader().getName(),
-                    "customer", trade.getCustomer().getName(),
-                    trade.getPrice() == null ? "requiredItem" : "gold", trade.getPrice() == null ? trade.getRequiredItem() : "",
-                    trade.getPrice() == null ? "quantityRequired" : "price", trade.getPrice() == null ? trade.getQuantityRequired() : trade.getPrice(),
-                    "id", trade.getId()
+                    "receiver", customer
+                )
+            );
+            sendJson(msg);
+        } catch (IOException e) {
+            debug(e);
+        }
+    }
+
+    public void rejectTrade(String trader, String message) {
+        try {
+            Map<String, Object> msg = Map.of(
+                "action", "reject_trade",
+                "id", Session.getCurrentUser().getUsername(),
+                "body", Map.of(
+                    "receiver", trader,
+                    "message", message
                 )
             );
             sendJson(msg);
@@ -1759,68 +1773,13 @@ public class GameClient {
         e.printStackTrace();
     }
 
-    public void rejectTrade(Trade trade) {
-        try {
-            Map<String, Object> msg = Map.of(
-                "action", "trade_reject",
-                "id", Session.getCurrentUser().getUsername(),
-                "body", Map.of(
-                    "receiver", trade.getTrader().getName(),
-                    "id", trade.getId()
-                )
-            );
-            sendJson(msg);
-        } catch (IOException e) {
-            debug(e);
-        }
-    }
-
-    public void acceptTrade(Player trader, int tradeId, boolean b) {
+    public void acceptTrade(String name) {
         try {
             Map<String, Object> msg = Map.of(
                 "action", "trade_accept",
                 "id", Session.getCurrentUser().getUsername(),
                 "body", Map.of(
-                    "receiver", trader.getName(),
-                    "id", tradeId,
-                    "shouldRespond", b
-                )
-            );
-            sendJson(msg);
-        } catch (IOException e) {
-            debug(e);
-        }
-    }
-
-    public void rejectTradeByState(Trade trade) {
-        try {
-            Map<String, Object> msg = Map.of(
-                "action", "trade_reject_by_state",
-                "id", Session.getCurrentUser().getUsername(),
-                "body", Map.of(
-                    "receiver", trade.getTrader().getName(),
-                    "id", trade.getId()
-                )
-            );
-            sendJson(msg);
-        } catch (IOException e) {
-            debug(e);
-        }
-    }
-
-
-    public void sendTrade(Player receiver, Trade trade, Integer value, Salable key, boolean b) {
-        try {
-            Map<String, Object> msg = Map.of(
-                "action", "send_trade",
-                "id", Session.getCurrentUser().getUsername(),
-                "body", Map.of(
-                    "receiver", receiver.getName(),
-                    "customer", trade.getCustomer().getName(),
-                    "id", trade.getId(),
-                    "shouldRespond", b,
-                    key == null ? "price" : "salable", key == null ? "" : encodeObject(key),
-                    "count", value
+                    "receiver", name
                 )
             );
             sendJson(msg);
@@ -1921,7 +1880,8 @@ public class GameClient {
                 "id", Session.getCurrentUser().getUsername(),
                 "body", Map.of(
                     "personality", npc.getType().getPersonality() + "\n Today is a lovely "
-                        + App.getInstance().getCurrentGame().getTimeAndDate().getSeason().name() + " day",
+                        + App.getInstance().getCurrentGame().getTimeAndDate().getSeason().name() + " day. The weather is "
+                        + App.getInstance().getCurrentGame().getVillage().getWeather() + " and I love it.",
                     "npc", npc.getName()
                 )
             );
@@ -1938,6 +1898,36 @@ public class GameClient {
                 "id", Session.getCurrentUser().getUsername(),
                 "body", Map.of(
                     "npc", name
+                )
+            );
+            sendJson(msg);
+        } catch (IOException e) {
+            debug(e);
+        }
+    }
+
+    public void addTrade(String name, Salable item, int cou) {
+        try {
+            Map<String, Object> msg = Map.of(
+                "action", "add_trade",
+                "id", Session.getCurrentUser().getUsername(),
+                "body", Map.of(
+                    "receiver", name, "item", encodeObject(item), "count", cou
+                )
+            );
+            sendJson(msg);
+        } catch (IOException e) {
+            debug(e);
+        }
+    }
+
+    public void removeTrade(String name, Salable item) {
+        try {
+            Map<String, Object> msg = Map.of(
+                "action", "remove_trade",
+                "id", Session.getCurrentUser().getUsername(),
+                "body", Map.of(
+                    "receiver", name, "item", item.getName()
                 )
             );
             sendJson(msg);

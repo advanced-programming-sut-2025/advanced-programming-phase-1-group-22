@@ -85,7 +85,7 @@ public class FireMenu extends PopUp {
 
                 if (against.isChecked()) {
                     GameClient.getInstance().fire(false, player.getName());
-                    undoTermination();
+//                    undoTermination();
                     return;
                 }
 

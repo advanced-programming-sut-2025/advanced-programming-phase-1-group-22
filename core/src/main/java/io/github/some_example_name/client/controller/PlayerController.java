@@ -175,8 +175,8 @@ public class PlayerController {
             //TODO OPEN JOURNAL?
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.I)) {
-            TradeHistoryMenu tradeHistoryMenu = new TradeHistoryMenu();
-            tradeHistoryMenu.createMenu(GameView.stage, GameAsset.SKIN, getWorldController());
+            TradeStartMenu menu = new TradeStartMenu();
+            menu.createMenu(GameView.stage, GameAsset.SKIN, getWorldController());
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.Y)) {
             PublicChatMenu menu = new PublicChatMenu();
