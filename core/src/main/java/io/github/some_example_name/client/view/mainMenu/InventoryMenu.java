@@ -210,7 +210,7 @@ public class InventoryMenu extends PopUp {
     protected void handleDragRelease(InputEvent event, float x, float y, int pointer, Image itemImage, Salable item, Image dragImage, Boolean flag) {
         Player currentPlayer = App.getInstance().getCurrentGame().getCurrentPlayer();
         if (isOverActor(dragImage, trashCan)) {
-            currentPlayer.getInventory().deleteProductFromBackPack(item, currentPlayer, 1);
+            currentPlayer.getInventory().deleteProductFromBackPack(item, currentPlayer, -1);
         }
 
         dragImage.remove();

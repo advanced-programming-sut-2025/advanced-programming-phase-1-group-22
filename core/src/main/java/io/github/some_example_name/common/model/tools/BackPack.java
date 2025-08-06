@@ -41,6 +41,10 @@ public class BackPack implements JsonPreparable {
             if (equivalentProduct != null) {
                 Integer count = products.get(equivalentProduct);
                 if (count == null) return;
+                if (itemNumber == -1){
+                    products.remove(equivalentProduct);
+                    return;
+                }
                 if (products.get(equivalentProduct) == itemNumber) {
                     products.remove(equivalentProduct);
                     return;

@@ -329,7 +329,7 @@ public class WorldController {
                                 structure.getSprite().setPosition(tile.getX() * App.tileWidth,
                                     tile.getY() * App.tileHeight);
                                 structure.getSprite().draw(MainGradle.getInstance().getBatch());
-                                if (!lake.isFishAdded()) {
+                                if (!lake.isFishAdded() && !lake.isInGreenHouse()) {
                                     for (int i = 0; i < 5; i++) {
                                         float randomX = lake.getTiles().get(0).getX() * App.tileWidth + (float) Math.random() * lake.getWidth() * App.tileWidth;
                                         float randomY = lake.getTiles().get(0).getY() * App.tileHeight + (float) Math.random() * lake.getHeight() * App.tileHeight;
