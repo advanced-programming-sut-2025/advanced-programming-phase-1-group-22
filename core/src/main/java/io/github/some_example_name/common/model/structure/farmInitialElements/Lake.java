@@ -12,6 +12,7 @@ public class Lake extends HardCodeFarmElements {
     private final FarmBuildingType farmBuildingType = FarmBuildingType.Lake;
     private final Sprite sprite;
     private boolean fishAdded = false;
+    private boolean isInGreenHouse = false;
 //    private TextureRegion[][] regions = GameAsset.SEA_FLOORING;
 
     public Lake(Lake lake) {
