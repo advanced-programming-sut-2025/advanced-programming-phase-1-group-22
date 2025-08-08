@@ -744,6 +744,8 @@ public class GameClient {
                         }
                     } catch (JsonParseException e) {
                         System.out.println("Received non-JSON: " + serverMessage);
+                    } catch (Exception e) {
+                        System.out.println(e.getMessage());
                     }
                 }
             } catch (IOException e) {

@@ -345,13 +345,15 @@ public class RelationService {
             }
         }
 
-        for (int i = 0; i < structures.size(); i++) {
-            Structure player1 = structures.get(i);
-            if (player1 == requester) x = i;
-            if (requested == player1) y = i;
-        }
         if (flag) {
-            Collections.swap(structures, x, y);
+            for (int i = 0; i < structures.size(); i++) {
+                Structure player1 = structures.get(i);
+                if (player1 == requester) x = i;
+                if (requested == player1) y = i;
+            }
+            synchronized (App.getInstance().getCurrentGame().getVillage().getStructures()) {
+                Collections.swap(App.getInstance().getCurrentGame().getVillage().getStructures(), x, y);
+            }
         }
         com.badlogic.gdx.utils.Timer.schedule(new com.badlogic.gdx.utils.Timer.Task() {
             @Override
@@ -380,7 +382,9 @@ public class RelationService {
                 requested.setLazyDirection(direction.reverse());
                 GameView.captureInput = true;
                 if (finalFlag) {
-                    Collections.swap(structures, finalX, finalY);
+                    synchronized (App.getInstance().getCurrentGame().getVillage().getStructures()) {
+                        Collections.swap(App.getInstance().getCurrentGame().getVillage().getStructures(), finalX, finalY);
+                    }
                 }
             }
         }, 3.6f);
