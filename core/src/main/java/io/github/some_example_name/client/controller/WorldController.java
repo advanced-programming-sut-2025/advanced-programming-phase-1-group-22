@@ -325,19 +325,19 @@ public class WorldController {
                 if (isStructureInBond(structure)) {
                     if (structure.getSprite() != null) {
                         if (structure instanceof Lake lake) {
+                            if (!lake.isFishAdded() && !lake.isInGreenHouse() && !lake.isInDesert()) {
+                                for (int i = 0; i < lake.getHeight() - 1; i++) {
+                                    float randomX = lake.getTiles().get(0).getX() * App.tileWidth + (float) Math.random() * lake.getWidth() * App.tileWidth;
+                                    float randomY = lake.getTiles().get(0).getY() * App.tileHeight + (float) Math.random() * lake.getHeight() / 2 * App.tileHeight;
+                                    GameView.stage.addActor(new FishActor(lake, randomX, randomY));
+                                }
+                                lake.setFishAdded(true);
+                            }
                             for (Tile tile : structure.getTiles()) {
                                 structure.getSprite().setSize(App.tileWidth, App.tileHeight);
                                 structure.getSprite().setPosition(tile.getX() * App.tileWidth,
                                     tile.getY() * App.tileHeight);
                                 structure.getSprite().draw(MainGradle.getInstance().getBatch());
-                                if (!lake.isFishAdded() && !lake.isInGreenHouse()) {
-                                    for (int i = 0; i < 5; i++) {
-                                        float randomX = lake.getTiles().get(0).getX() * App.tileWidth + (float) Math.random() * lake.getWidth() * App.tileWidth;
-                                        float randomY = lake.getTiles().get(0).getY() * App.tileHeight + (float) Math.random() * lake.getHeight() * App.tileHeight;
-                                        GameView.stage.addActor(new FishActor(lake, randomX, randomY));
-                                    }
-                                    lake.setFishAdded(true);
-                                }
                                 /*
                                 boolean f0 = !structure.getTiles().contains(currentGame.getTiles()[tile.getX()][tile.getY() + 1]);
                                 boolean f1 = !structure.getTiles().contains(currentGame.getTiles()[tile.getX() + 1][tile.getY()]);
@@ -498,7 +498,7 @@ public class WorldController {
     public void drawGift() {
         gift = new SpriteHolder(new AnimatedSprite(new Animation<>(0.15f, GameAsset.GIFT_ANIMATION[0][4],
             GameAsset.GIFT_ANIMATION[0][3], GameAsset.GIFT_ANIMATION[0][2], GameAsset.GIFT_ANIMATION[0][1],
-            GameAsset.GIFT_ANIMATION[0][0])), new Tuple<>(0f,0f));
+            GameAsset.GIFT_ANIMATION[0][0])), new Tuple<>(0f, 0f));
         gift.getSprite().setSize(App.tileWidth, App.tileHeight);
         gift.getSprite().setPosition(
             gift.getOffset().getX() + camera.position.x,

@@ -26,8 +26,12 @@ public class FishActor extends Actor {
         float dx = delta * speed * (movingRight ? 1 : -1);
         moveBy(dx, 0);
 
-        if (getX() < lake.getTiles().get(0).getX() * App.tileWidth || getX() + getWidth() > lake.getTiles().get(0).getX() * App.tileWidth + lake.getWidth() * App.tileWidth) {
-            movingRight = !movingRight;
+        if (getX() < lake.getTiles().get(0).getX() * App.tileWidth) {
+            setX(lake.getTiles().get(0).getX() * App.tileWidth);
+            movingRight = true;
+        } else if (getX() + getWidth() > lake.getTiles().get(0).getX() * App.tileWidth + lake.getWidth() * App.tileWidth) {
+            setX(lake.getTiles().get(0).getX() * App.tileWidth + lake.getWidth() * App.tileWidth - getWidth());
+            movingRight = false;
         }
     }
 
