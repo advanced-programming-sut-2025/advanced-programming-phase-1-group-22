@@ -139,6 +139,7 @@ public enum FarmType {
         lake.getTilePairList().addAll(List.of(new Pair(16, 15), new Pair(16, 14)));
         lake.setWidth(1);
         lake.setHeight(2);
+        lake.setInDesert(true);
         structures.addAll(List.of(cottage, shippingBin, greenHouse, lake));
     }
 

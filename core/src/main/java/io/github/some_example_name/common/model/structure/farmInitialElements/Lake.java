@@ -13,10 +13,12 @@ public class Lake extends HardCodeFarmElements {
     private final Sprite sprite;
     private boolean fishAdded = false;
     private boolean isInGreenHouse = false;
+    private boolean isInDesert = false;
 //    private TextureRegion[][] regions = GameAsset.SEA_FLOORING;
 
     public Lake(Lake lake) {
         super(lake);
+        this.isInDesert = lake.isInDesert;
         this.sprite = new Sprite(GameAsset.WATER);
     }
 
