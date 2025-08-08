@@ -487,7 +487,6 @@ public class RelationService {
             -requested.getTiles().get(0).getY() + origin.getY());
         if (direction == null) return;
         requested.setLazyDirection(direction.reverse());
-        requester.setDirection(Direction.SOUTH);
         requester.setDirection(direction);
         requester.getTiles().clear();
         requester.getTiles().add(App.getInstance().getCurrentGame().getTiles()[origin.getX()][origin.getY()]);
@@ -538,7 +537,7 @@ public class RelationService {
         return new Response("request sent", true);
     }
 
-    public Response Respond(boolean accept, Player requested, Player requester) {
+    public Response Respond(boolean accept, Player requester, Player requested) {
         game = App.getInstance().getCurrentGame();
         Friendship friendShipBetweenTwoActors = getFriendShipBetweenTwoActors(requested, requester);
 

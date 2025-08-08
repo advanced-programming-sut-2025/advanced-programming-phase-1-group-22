@@ -82,6 +82,7 @@ public class DoYouMarryMePopUp extends PopUp {
         Group group = new Group() {
             @Override
             public void act(float delta) {
+                if (player.getTiles().isEmpty()) return;
                 window.setPosition(
                     (player.getTiles().get(0).getX() + 1) * App.tileWidth,
                     player.getTiles().get(0).getY() * App.tileHeight
