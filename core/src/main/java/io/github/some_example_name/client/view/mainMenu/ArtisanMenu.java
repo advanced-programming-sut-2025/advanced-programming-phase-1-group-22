@@ -201,7 +201,7 @@ public class ArtisanMenu extends PopUp {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 Response resp;
                 if (craft.getCraftType() == CraftType.BEE_HOUSE) {
-                    resp = getGameService().artisanUse("bee_house", null, null);
+                    resp = getGameService().artisanUse(craft, null, 0, null, 0);
                 } else if (craft.getIngredients().isEmpty()) {
                     resp = new Response("This craft needs ingredients.");
                 } else {

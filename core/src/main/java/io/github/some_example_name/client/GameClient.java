@@ -393,8 +393,7 @@ public class GameClient {
                             service.getPlayerByUsername(username).applyFaint();
                         } else if (obj.get("action").getAsString().equals("_ask_marriage")) {
                             Player requester = service.getPlayerByUsername(obj.get("id").getAsString());
-                            Player requested = service.getPlayerByUsername(obj.getAsJsonObject("body")
-                                .get("requested").getAsString());
+                            Player requested = service.getPlayerByUsername(body.get("requested").getAsString());
                             RelationService.getInstance().handleAskMarriage(requester, requested);
                         } else if (obj.get("action").getAsString().equals("_handle_flower")) {
                             Player requester = service.getPlayerByUsername(obj.get("id").getAsString());
@@ -407,14 +406,13 @@ public class GameClient {
                                 .get("requested").getAsString());
                             RelationService.getInstance().handleHug(requester, requested);
                         } else if (obj.get("action").getAsString().equals("_respond_marriage")) {
-                            Player requester = service.getPlayerByUsername(obj.get("id").getAsString());
-                            Player requested = service.getPlayerByUsername(body.get("requested").getAsString());
+                            Player requested = service.getPlayerByUsername(obj.get("id").getAsString());
+                            Player requester = service.getPlayerByUsername(body.get("requested").getAsString());
                             if (body.get("response").getAsBoolean()) {
                                 RelationService.getInstance().handleYes(requester, requested);
                             } else {
                                 RelationService.getInstance().handleNo(requester, requested);
                             }
-                            RelationService.getInstance().handleHug(requester, requested);
                         } else if (obj.get("action").getAsString().equals("set_golds")) {
                             App.getInstance().getCurrentGame().getCurrentPlayer().getAccount().setGoldsByServer(
                                 body.get("count").getAsInt()

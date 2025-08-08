@@ -47,7 +47,7 @@ public class PlayerController {
 
     public void update(float delta) {
         for (Player player : App.getInstance().getCurrentGame().getPlayers()) {
-            if (player.getDead()) continue;
+            if (player.getDead() || player.getTiles().isEmpty()) continue;
             Sprite playerSprite = player.getSprites().get(0).getSprite();
             if (playerSprite instanceof AnimatedSprite) {
                 ((AnimatedSprite) playerSprite).update(delta);
@@ -103,6 +103,7 @@ public class PlayerController {
     }
 
     private void setCameraPosition(Player currentPlayer) {
+        if (currentPlayer.getTiles().isEmpty()) return;
         float cameraX = currentPlayer.getTiles().get(0).getX() * App.tileWidth;
         float cameraY = currentPlayer.getTiles().get(0).getY() * App.tileHeight;
         float viewportWidth = MainGradle.getInstance().getCamera().viewportWidth;
