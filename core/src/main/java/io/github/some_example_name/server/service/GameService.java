@@ -1648,7 +1648,7 @@ public class GameService {
         craft.setMadeProduct(new MadeProduct(madeProductType, product1));
         craft.getIngredients().clear();
         craft.setETA(madeProductType.calcETA(product1));
-        return new Response("The item will be ready in due time.");
+        return new Response("The item will be ready in due time.", true);
     }
 
     public Response artisanGet(String name) {

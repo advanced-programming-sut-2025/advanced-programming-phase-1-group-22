@@ -41,6 +41,7 @@ public class GameClient {
     private static final int SERVER_PORT = 5000;
     private static final Gson GSON = new GsonBuilder().serializeNulls().create();
     private static GameClient instance;
+    private AtomicReference<Farm> farm = new AtomicReference<>(null);
     private Socket socket;
     private boolean running = true;
     private P2PConnection p2PConnection;
@@ -599,7 +600,16 @@ public class GameClient {
                         } else if (obj.get("action").getAsString().equals(StructureUpdateState.ADD.getName())) {
                             decodeStructureAdd(body);
                         } else if (obj.get("action").getAsString().equals(StructureUpdateState.UPDATE.getName())) {
-                            decodeStructureUpdate(body, findObject(body));
+                            Object object = findObject(body);
+                            if (this.farm.get() == null) {
+                                synchronized (App.getInstance().getCurrentGame().getVillage().getStructures()) {
+                                    decodeStructureUpdate(body, object);
+                                }
+                            } else {
+                                synchronized (this.farm.get().getStructures()) {
+                                    decodeStructureUpdate(body, object);
+                                }
+                            }
                         } else if (obj.get("action").getAsString().equals(StructureUpdateState.DELETE.getName())) {
                             JsonArray jsonTiles = body.get("tiles").getAsJsonArray();
                             Type listType = new TypeToken<List<Tile>>() {
@@ -1325,6 +1335,7 @@ public class GameClient {
             }
         }
         if (farm == null) {
+            this.farm.set(null);
             App.getInstance().getCurrentGame().getVillage().applyPendingChanges();
             List<Structure> structures = App.getInstance().getCurrentGame().getVillage().getStructuresSnapshot();
             for (Structure structure : structures) {
@@ -1339,6 +1350,7 @@ public class GameClient {
                 }
             }
         } else {
+            this.farm.set(farm);
             farm.applyPendingChanges();
             List<Structure> structures = farm.getStructuresSnapshot();
             for (Structure structure : structures) {

@@ -9,9 +9,9 @@ import org.w3c.dom.Text;
 
 @Getter
 public enum StoneType {
-    SMALL_STONE(1, 1, 368, 565, 32, 32),
+    SMALL_STONE(1, 1, 368, 592, 32, 32),
     NORMAL_STONE(3, 1, 336, 672, 48, 16),
-    LARGE_STONE(2, 2, 368, 535, 32, 31);
+    LARGE_STONE(2, 2, 368, 560, 32, 31);
     private final Integer length;
     private final Integer width;
     private final Integer offsetX;
