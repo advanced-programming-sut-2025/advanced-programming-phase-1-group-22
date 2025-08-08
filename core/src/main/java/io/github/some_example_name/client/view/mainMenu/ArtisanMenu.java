@@ -12,6 +12,7 @@ import io.github.some_example_name.client.MainGradle;
 import io.github.some_example_name.client.controller.WorldController;
 import io.github.some_example_name.common.model.Farm;
 import io.github.some_example_name.common.model.Salable;
+import io.github.some_example_name.common.model.StructureUpdateState;
 import io.github.some_example_name.common.model.craft.Craft;
 import io.github.some_example_name.common.model.craft.CraftType;
 import io.github.some_example_name.common.model.products.TreesAndFruitsAndSeeds.MadeProductType;
@@ -202,6 +203,8 @@ public class ArtisanMenu extends PopUp {
                 Response resp;
                 if (craft.getCraftType() == CraftType.BEE_HOUSE) {
                     resp = getGameService().artisanUse(craft, null, 0, null, 0);
+                    if (resp.shouldBeBack())
+                        GameClient.getInstance().updateStructureState(craft, StructureUpdateState.UPDATE, true, craft.getTiles().get(0));
                 } else if (craft.getIngredients().isEmpty()) {
                     resp = new Response("This craft needs ingredients.");
                 } else {
@@ -236,6 +239,8 @@ public class ArtisanMenu extends PopUp {
                         salable2 = null;
                     }
                     resp = getGameService().artisanUse(craft, salable1, count1, salable2, count2);
+                    if (resp.shouldBeBack())
+                        GameClient.getInstance().updateStructureState(craft, StructureUpdateState.UPDATE, true, craft.getTiles().get(0));
                 }
                 getController().showResponse(resp);
                 return resp.shouldBeBack();
