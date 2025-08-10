@@ -45,6 +45,16 @@ public class FarmBuilding extends Structure {
         return spriteInterior;
     }
 
+    @Override
+    public Integer getWidth() {
+        return farmBuildingType.getWidth();
+    }
+
+    @Override
+    public Integer getHeight() {
+        return farmBuildingType.getHeight();
+    }
+
     public Boolean canAddNewAnimal(){
 		return farmBuildingType.getCapacity() >= animals.size() + 1;
 	}
