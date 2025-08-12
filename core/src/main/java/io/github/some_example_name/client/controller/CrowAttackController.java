@@ -24,48 +24,48 @@ public class CrowAttackController {
     }
 
     public void update() {
-//        for (Map.Entry<Farm, CrowAttack> farmCrowAttackEntry : crowAttacks.entrySet()) {
-//            Farm farm = farmCrowAttackEntry.getKey();
-//            CrowAttack crowAttack = farmCrowAttackEntry.getValue();
-//            if (crowAttack != null) {
-//                crowAttack.draw(MainGradle.getInstance().getBatch());
-//                crowAttack.update(Gdx.graphics.getDeltaTime());
-//                if (!farm.getPlayers().isEmpty() && farm.getPlayers().get(0).equals(App.getInstance().getCurrentGame().getCurrentPlayer())) {
-//                    if (crowAttack.isFinished()) {
-//                        if (crowAttack.getHarvestAbleProduct() instanceof Tree tree) {
-//                            tree.setAttackByCrow(true);
-//                            GameClient.getInstance().updateStructureState(tree, StructureUpdateState.UPDATE, true, tree.getTiles().get(0));
-//                        } else {
-//                            Crop crop = (Crop) crowAttack.getHarvestAbleProduct();
-//                            App.getInstance().getCurrentGame().getVillage().removeStructure(crop);
-//                            GameClient.getInstance().updateStructureState(crop, StructureUpdateState.DELETE, true, null);
-//                        }
-//                        crowAttacks.put(farm, null);
-//                        farm.setAttackedProduct(null);
-//                    }
-//                } else {
-//                    if (crowAttack.isFinished()) {
-//                        crowAttacks.put(farm, null);
-//                        farm.setAttackedProduct(null);
-//                    }
-//                }
-//            } else {
-//                if (!farm.getPlayers().isEmpty() && farm.getPlayers().get(0).equals(App.getInstance().getCurrentGame().getCurrentPlayer())) {
-//                    if (!farm.getCrowAttackToday()) {
-//                        crowAttack(farm);
-//                    }
-//                } else {
-//                    if (!farm.getCrowAttackToday() && farm.getAttackedProduct() != null) {
-//                        HarvestAbleProduct harvestAbleProduct = farm.getAttackedProduct();
-//                        CrowAttack newCrowAttack = new CrowAttack(new Vector2(harvestAbleProduct.getTiles().get(0).getX() * App.tileWidth,
-//                            harvestAbleProduct.getTiles().get(0).getY() * App.tileHeight), 4, 10, harvestAbleProduct);
-//                        crowAttacks.put(farm, newCrowAttack);
-//                        farm.setCrowAttackToday(true);
-//                        farm.setAttackedProduct(null);
-//                    }
-//                }
-//            }
-//        }
+        for (Map.Entry<Farm, CrowAttack> farmCrowAttackEntry : crowAttacks.entrySet()) {
+            Farm farm = farmCrowAttackEntry.getKey();
+            CrowAttack crowAttack = farmCrowAttackEntry.getValue();
+            if (crowAttack != null) {
+                crowAttack.draw(MainGradle.getInstance().getBatch());
+                crowAttack.update(Gdx.graphics.getDeltaTime());
+                if (!farm.getPlayers().isEmpty() && farm.getPlayers().get(0).equals(App.getInstance().getCurrentGame().getCurrentPlayer())) {
+                    if (crowAttack.isFinished()) {
+                        if (crowAttack.getHarvestAbleProduct() instanceof Tree tree) {
+                            tree.setAttackByCrow(true);
+                            GameClient.getInstance().updateStructureState(tree, StructureUpdateState.UPDATE, true, tree.getTiles().get(0));
+                        } else {
+                            Crop crop = (Crop) crowAttack.getHarvestAbleProduct();
+                            App.getInstance().getCurrentGame().getVillage().removeStructure(crop);
+                            GameClient.getInstance().updateStructureState(crop, StructureUpdateState.DELETE, true, null);
+                        }
+                        crowAttacks.put(farm, null);
+                        farm.setAttackedProduct(null);
+                    }
+                } else {
+                    if (crowAttack.isFinished()) {
+                        crowAttacks.put(farm, null);
+                        farm.setAttackedProduct(null);
+                    }
+                }
+            } else {
+                if (!farm.getPlayers().isEmpty() && farm.getPlayers().get(0).equals(App.getInstance().getCurrentGame().getCurrentPlayer())) {
+                    if (!farm.getCrowAttackToday()) {
+                        crowAttack(farm);
+                    }
+                } else {
+                    if (!farm.getCrowAttackToday() && farm.getAttackedProduct() != null) {
+                        HarvestAbleProduct harvestAbleProduct = farm.getAttackedProduct();
+                        CrowAttack newCrowAttack = new CrowAttack(new Vector2(harvestAbleProduct.getTiles().get(0).getX() * App.tileWidth,
+                            harvestAbleProduct.getTiles().get(0).getY() * App.tileHeight), 4, 10, harvestAbleProduct);
+                        crowAttacks.put(farm, newCrowAttack);
+                        farm.setCrowAttackToday(true);
+                        farm.setAttackedProduct(null);
+                    }
+                }
+            }
+        }
     }
 
     private void crowAttack(Farm farm) {

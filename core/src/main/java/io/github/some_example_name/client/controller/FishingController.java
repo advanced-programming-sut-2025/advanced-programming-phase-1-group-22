@@ -10,6 +10,7 @@ import io.github.some_example_name.common.model.Salable;
 import io.github.some_example_name.common.model.Tile;
 import io.github.some_example_name.common.model.abilitiy.Ability;
 import io.github.some_example_name.common.model.animal.Fish;
+import io.github.some_example_name.common.model.animal.FishType;
 import io.github.some_example_name.common.model.products.ProductQuality;
 import io.github.some_example_name.common.model.records.Response;
 import io.github.some_example_name.common.model.relations.Player;
