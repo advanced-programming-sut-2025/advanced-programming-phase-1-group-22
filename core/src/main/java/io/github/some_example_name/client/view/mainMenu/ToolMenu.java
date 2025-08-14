@@ -9,6 +9,7 @@ import io.github.some_example_name.client.GameClient;
 import io.github.some_example_name.client.MainGradle;
 import io.github.some_example_name.client.controller.WorldController;
 import io.github.some_example_name.common.model.Salable;
+import io.github.some_example_name.common.model.craft.Craft;
 import io.github.some_example_name.common.model.relations.Player;
 import io.github.some_example_name.common.model.tools.Tool;
 import io.github.some_example_name.common.model.tools.WateringCan;
@@ -68,6 +69,7 @@ public class ToolMenu extends PopUp {
                         public void clicked(InputEvent event, float x, float y) {
                             if (getTapCount() == 2) {
                                 currentPlayer.setCurrentCarrying(item);
+                                getController().setCraftHanded(currentPlayer.getCurrentCarrying() instanceof Craft);
                                 GameClient.getInstance().updatePlayerCarryingObject(currentPlayer);
                                 refreshInventory(stage, inventory, currentPlayer, slotTexture, currentPlayer, trashCan, scrollPane);
                             }
@@ -162,6 +164,7 @@ public class ToolMenu extends PopUp {
                         public void clicked(InputEvent event, float x, float y) {
                             if (getTapCount() == 2) {
                                 currentPlayer.setCurrentCarrying(item);
+                                getController().setCraftHanded(currentPlayer.getCurrentCarrying() instanceof Craft);
                                 GameClient.getInstance().updatePlayerCarryingObject(player);
                                 refreshInventory(stage, inventory, currentPlayer, slotTexture, currentPlayer, trashCan, scrollPane);
                             }

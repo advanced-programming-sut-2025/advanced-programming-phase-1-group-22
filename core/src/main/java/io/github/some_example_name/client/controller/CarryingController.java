@@ -13,6 +13,7 @@ import io.github.some_example_name.common.model.Direction;
 import io.github.some_example_name.common.model.Salable;
 import io.github.some_example_name.common.model.StructureUpdateState;
 import io.github.some_example_name.common.model.Tile;
+import io.github.some_example_name.common.model.craft.Craft;
 import io.github.some_example_name.common.model.gameSundry.Sundry;
 import io.github.some_example_name.common.model.records.Response;
 import io.github.some_example_name.common.model.relations.Player;
@@ -143,6 +144,7 @@ public class CarryingController {
         synchronized (App.getInstance().getCurrentGame().getCurrentPlayer().getInventory().getProducts()) {
             if (!App.getInstance().getCurrentGame().getCurrentPlayer().getInventory().getProducts().containsKey(item)) {
                 App.getInstance().getCurrentGame().getCurrentPlayer().setCurrentCarrying(null);
+                worldController.setCraftHanded(false);
             }
         }
     }

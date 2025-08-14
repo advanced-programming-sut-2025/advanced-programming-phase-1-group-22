@@ -34,6 +34,7 @@ import io.github.some_example_name.client.view.mainMenu.ArtisanMenu;
 import io.github.some_example_name.client.view.mainMenu.CraftPopUp;
 import io.github.some_example_name.client.view.mainMenu.FridgeMenu;
 import io.github.some_example_name.client.view.mainMenu.FriendPopUp;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +47,8 @@ public class WorldController {
     private ArrayList<SpriteContainer> rainDrops = new ArrayList<>();
     private ArrayList<SpriteContainer> storms = new ArrayList<>();
     private ArrayList<Sprite> snowDrops = new ArrayList<>();
+    @Setter
+    private boolean isCraftHanded = false;
     private SpriteHolder flower;
     private SpriteHolder gift;
     private SpriteHolder npcGift;
@@ -310,6 +313,7 @@ public class WorldController {
         for (int i = 0; i < 160; i++) {
             for (int j = 0; j < 120; j++) {
                 if (camera.frustum.pointInFrustum(i * App.tileWidth, j * App.tileHeight, 0)) {
+                    if (isCraftHanded && tiles[i][j].getIsFilled()) continue;
                     MainGradle.getInstance().getBatch().draw(TileType.FLAT.getTexture()[0][0],
                         i * App.tileWidth, j * App.tileHeight, App.tileWidth, App.tileHeight);
                     MainGradle.getInstance().getBatch().draw(tiles[i][j].getTextureRegion(),

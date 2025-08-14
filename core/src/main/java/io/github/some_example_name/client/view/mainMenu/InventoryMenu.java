@@ -17,6 +17,7 @@ import io.github.some_example_name.client.MainGradle;
 import io.github.some_example_name.client.controller.WorldController;
 import io.github.some_example_name.common.model.Salable;
 import io.github.some_example_name.common.model.abilitiy.Ability;
+import io.github.some_example_name.common.model.craft.Craft;
 import io.github.some_example_name.common.model.enums.Season;
 import io.github.some_example_name.common.model.receipe.CookingRecipe;
 import io.github.some_example_name.common.model.receipe.CraftingRecipe;
@@ -167,6 +168,7 @@ public class InventoryMenu extends PopUp {
                             public void clicked(InputEvent event, float x, float y) {
                                 if (getTapCount() == 2) {
                                     currentPlayer.setCurrentCarrying(item);
+                                    getController().setCraftHanded(player.getCurrentCarrying() instanceof Craft);
                                     GameClient.getInstance().updatePlayerCarryingObject(currentPlayer);
                                     refreshInventory(stage, inventory, currentPlayer, slotTexture, currentPlayer, trashCan, scrollPane);
                                 }
@@ -271,6 +273,7 @@ public class InventoryMenu extends PopUp {
                             public void clicked(InputEvent event, float x, float y) {
                                 if (getTapCount() == 2) {
                                     currentPlayer.setCurrentCarrying(item);
+                                    getController().setCraftHanded(currentPlayer.getCurrentCarrying() instanceof Craft);
                                     GameClient.getInstance().updatePlayerCarryingObject(currentPlayer);
                                     refreshInventory(stage, inventory, currentPlayer, slotTexture, currentPlayer, trashCan, scrollPane);
                                 }

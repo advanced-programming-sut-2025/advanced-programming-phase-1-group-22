@@ -15,6 +15,7 @@ import io.github.some_example_name.client.GameClient;
 import io.github.some_example_name.client.MainGradle;
 import io.github.some_example_name.common.model.Salable;
 import io.github.some_example_name.common.model.Tile;
+import io.github.some_example_name.common.model.craft.Craft;
 import io.github.some_example_name.common.model.dto.TradePriceDto;
 import io.github.some_example_name.common.model.dto.TradeProductDto;
 import io.github.some_example_name.common.model.relations.Player;
@@ -408,6 +409,7 @@ public class CameraViewController {
             }
             if (Gdx.input.isKeyJustPressed(Input.Keys.GRAVE)) {
                 player.setCurrentCarrying(null);
+                worldController.setCraftHanded(false);
                 GameClient.getInstance().updatePlayerCarryingObject(player);
                 currentToolIndex = -1;
 
@@ -421,6 +423,7 @@ public class CameraViewController {
                     synchronized (player.getInventory().getProducts()) {
                         if (i < player.getInventory().getProducts().size()) {
                             player.setCurrentCarrying(items.get(i));
+                            worldController.setCraftHanded(player.getCurrentCarrying() instanceof Craft);
                             GameClient.getInstance().updatePlayerCarryingObject(player);
                             currentToolIndex = i;
                         }
@@ -431,6 +434,7 @@ public class CameraViewController {
                 if (currentToolIndex == null) currentToolIndex = -1;
                 synchronized (player.getInventory().getProducts()) {
                     player.setCurrentCarrying(items.get(++currentToolIndex % Math.min(12, player.getInventory().getProducts().size())));
+                    worldController.setCraftHanded(player.getCurrentCarrying() instanceof Craft);
                 }
                 GameClient.getInstance().updatePlayerCarryingObject(player);
             }
@@ -444,6 +448,7 @@ public class CameraViewController {
                         currentToolIndex += mod;
                         currentToolIndex %= mod;
                         player.setCurrentCarrying(items.get(currentToolIndex));
+                        worldController.setCraftHanded(player.getCurrentCarrying() instanceof Craft);
                         GameClient.getInstance().updatePlayerCarryingObject(player);
                         GameView.scrollY = 0;
                     }
